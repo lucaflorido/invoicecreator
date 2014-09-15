@@ -1,0 +1,317 @@
+.GECO_table{
+	margin: 0 auto;
+	width:100%;
+}
+.row_table{
+	margin-top:-2px;
+}
+.input_field{
+	width:95%;
+}
+/* 2_2 2Rows 2 semirows*/
+.two_two .row_table{
+	width:40%;
+}
+.two_two .row_table.half{
+	width:7%;
+}
+
+.two_two .row_table.total{
+	font-weight:bold;
+}
+.two_two .row_table.double{
+	width:50%;
+}
+/* 2_2 2Rows 2 semirows*/
+.three_two .row_table{
+	width:22%;
+}
+.three_two .row_table.half{
+	width:5%;
+}
+.three_two .row_table.double{
+	width:40%;
+}
+.three_two .row_table.threequarter{
+	width:30%;
+}
+
+/* 4_2 2Rows 2 semirows*/
+.four_two .row_table{
+	width:15%;
+}
+.four_two .row_table.half{
+	width:5%;
+}
+.four_two .row_table.threequarter{
+	width:10%;
+}
+.four_two .row_table.double{
+	width:33%;
+}
+/* 4_2 2Rows 2 semirows*/
+.four_two_detail .row_table{
+	width:18%;
+}
+.four_two_detail .row_table.double{
+	width:25%;
+}
+.four_two_detail .row_table.half{
+	width:5%;
+}
+/* 10_2 10Rows 2 semirows*/
+
+.ten_two .row_table{
+	width:8%;
+}
+.ten_two .row_table.half{
+	width:4%;
+}
+.ten_two .row_table.double{
+	width:16%;
+}
+
+/* 10_2 10Rows 2 semirows*/
+.thirteen_two{
+	font-size: 10px;
+}
+.thirteen_two .row_table{
+	width:6%;
+}
+.thirteen_two .row_table.half{
+	width:3%;
+}
+.thirteen_two .row_table.double{
+	width:15%;
+}
+.thirteen_two .row_table.double_less{
+	width:10%;
+}
+.thirteen_two .row_table.threequarter{
+width:5%;
+}
+/**/
+.six_two{
+	font-size: 10px;
+}
+.six_two .row_table{
+	width:15%;
+}
+.six_two .row_table.threequarter{
+	width:10%;
+}
+.six_two .row_table.half{
+	width:4%;
+}
+.six_two .row_table.double{
+	width:21%;
+}
+/* 10_2 10Rows 2 semirows*/
+.seven_two{
+	font-size: 10px;
+}
+.seven_two .row_table{
+	width:12.5%;
+}
+.seven_two .row_table.half{
+	width:4%;
+}
+.seven_two .row_table.threequarter{
+	width:8%;
+}
+
+.seven_two .row_table.double{
+	width:21%;
+}
+/* 10_2 10Rows 2 semirows*/
+.eight_two{
+	font-size: 10px;
+}
+.eight_two .row_table{
+	width:11%;
+}
+.eight_two .row_table.half{
+	width:4%;
+}
+.eight_two .row_table.threequarter{
+	width:8%;
+}
+.eight_two .row_table.double{
+	width:19%;
+}
+* .row_table.quarter{
+	width:16px;
+}
+.eight_two .row_table.quarter{
+	width:16px;
+}
+/* 9_2 9 Rows 2 semirows*/
+.nine_two{
+	font-size: 10px;
+}
+.nine_two .row_table{
+	width:10%;
+}
+.nine_two .row_table.half{
+	width:5%;
+}
+.nine_two .row_table.double{
+	width:22%;
+}
+.font_two{
+	font-size: 10px;
+}
+
+.navcontainer ul
+{
+margin: 0 auto;
+padding: 0;
+list-style-type: none;
+text-align: center;
+}
+
+.navcontainer ul li { display: inline; 
+	overflow:hidden;
+	float:left;
+}
+
+.navcontainer ul li div
+{
+	text-decoration: none;
+	padding: .2em 1em;
+	color: #fff;
+	background-color: #bbbbbb;
+	float:left;
+	border-right: 1px solid #888888;
+	border-bottom: 1px solid #888888;
+	border-top: 1px solid #888888;
+}
+
+.navcontainer ul li div:hover
+{
+color: #fff;
+background-color: #369;
+cursor:pointer;
+}
+.pagination{
+width:100%;
+margin-bottom:5px;
+margin-left:3px;
+overflow:hidden;
+}
+.navcontainer .first{
+border-left: 1px solid #888888;
+}
+.navcontainer .selected{
+
+background-color: #1E8CBE;
+}
+.pagination .filter{
+	float:right;
+}
+.pagination .label{
+	margin-left:2px;
+	padding-top:3px;
+	width: 10%;
+}
+/****************
+GECO_table_detail
+
+*/
+.GECO_table_container{
+	overflow:auto;
+	
+}
+.GECO_table_detail{
+	width: 100%;
+	margin: 0px auto;
+	
+}
+
+.GECO_table_detail tr{
+	
+	height:20px;
+}
+td .td_col{
+	float:left;
+}
+td .td_ten{
+	width:10%;
+}
+td .td_twenty{
+	width:20%;
+}
+td .td_thirty{
+	width:30%;
+}
+td .td_fourty{
+	width:40%;
+}
+td .td_fifty{
+	width:50%;
+}
+td .td_sixty{
+	width:60%;
+}
+td .td_seventy{
+	width:70%;
+}
+td .td_eighty{
+	width:80%;
+}
+td .td_ninty{
+	width:90%;
+}
+td .td_hundred{
+	width:100%;
+}
+
+.scrollable { display: block; }
+
+.scrollable tbody {
+    height: 100px;       /* Just for the demo          */
+    overflow-y: auto;    /* Trigger vertical scroll    */
+    overflow-x: hidden;  /* Hide the horizontal scroll */
+}
+.contain_input_td{
+	width:90%;
+	margin:0 auto;
+}
+.red_signal{
+	color:red;
+	font-weight:bold;
+}
+.GECO_table_subdetail{
+	float: right;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    width: 55%;
+}
+.GECO_right_table{
+	overflow:hidden;
+}
+.sorter{
+	padding-left:2px;
+	cursor:pointer;
+}
+.sorter_label{
+	
+	padding-right: 5px;
+	padding-top: 1px;
+}
+.sortericon{
+	position:relative;
+	top:-15px;
+	left:-6px;
+	
+}
+.sortericon.up{
+	width:16px;
+	height:16px;
+	background: url('../assets/Stock Index Up/tab_up.png');
+}
+.sortericon.down{
+	width:16px;
+	height:16px;
+	background: url('../assets/Stock Index Down/tab_down.png');
+}

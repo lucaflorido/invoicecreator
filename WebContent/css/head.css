@@ -1,0 +1,159 @@
+.heads{
+    
+	font-size: 9.5px;
+}
+.heads .single{
+	width:12%;
+	padding-top:6px;
+}
+
+.heads .double{
+	width:22%;
+	padding-top:6px;
+}
+.heads .modify{
+	padding-top:6px;
+}
+
+.heads .delete{
+	padding-top:6px;
+}
+
+.head_main_detail .info .code{
+	width:33%;
+	float:left;
+}
+.head_main_detail .info .name{
+	width:70%;
+	float:left;
+}
+.head_main_detail .info{
+	height:30px;
+}
+.head_main_detail .info.added_info{
+	height:80px;
+}
+.head_address_detail .contact{
+	height:100px;
+}
+.head_lists .tabledetail_header{
+	width:90%;
+	
+}
+.tabledetail_content.head_lists{
+	width:90%;
+}
+.head_lists .tabledetail_header .tabledetail_row {
+	width:30%;
+}
+.head_lists .tabledetail_rows{
+	width:90%;
+}
+.head_lists .tabledetail_rows .tabledetail_row {
+	width:30%;
+}
+.head_lists .tabledetail_rows .modify {
+	width:3%;
+}
+.head_lists .tabledetail_rows .delete {
+	width:3%;
+}
+.head_lists .tabledetail_header .modify {
+	width:3%;
+}
+.head_lists .tabledetail_header .delete {
+	width:3%;
+}
+.category_group{
+	overflow:hidden;
+	width:100%;
+	float:left;
+}
+.tabledetail_content.head_rows{
+	overflow:hidden;
+	width: 90%;
+}
+
+.head_destinations .tabledetail_header{
+	
+	margin: 0 auto;
+}
+
+.head_single{
+	width:20%;
+}
+.head_double{
+	width:35%;
+}
+.row_single{
+	width:12%;
+}
+.row_double{
+	width:25%;
+}
+.row_half{
+	width:5%;
+}
+.row_grid{
+	height:150px;
+}
+.tabledetail_generate{
+	padding-top:20px;
+	padding-bottom:20px;
+	
+}
+.add_container_doc{
+	width:100%;
+	overflow:hidden;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.dialog_box{
+	width:50%;
+}
+.HEAD_dialog_prod_container{
+	width:100%;
+	margin-top:5px;
+}
+.HEAD_total_container{
+	width:100%;
+	overflow:hidden;
+}
+.HEAD_Total_group{
+	float:left;
+	height:50%;
+	width:30%;
+}       
+.HEAD_addrow{
+	position:relative;
+	bottom:50px;
+	z-index:10;
+	background:#dcdcdc;
+	width:100%;
+	
+}
+.HEAD_overlay{
+	/*background: none repeat scroll 0 0 #fff;*/
+    position: absolute;
+    top: -150px;
+    width: 300px;
+	height:100px;
+	margin-left:35px
+}
+.HEAD_dialog_box{
+	position: absolute; 
+	left: 50%;
+	top:100%;
+	width:50%;
+}
+.HEAD_dialog_box_content{
+	position: relative; 
+	left: -50%;
+	width:100%;
+}
+.HEAD_note{
+	width:90%;
+}
+.addrow_container{
+	padding:0;
+}

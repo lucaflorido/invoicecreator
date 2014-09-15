@@ -1,0 +1,47 @@
+.ACC_maincontainer{
+	overflow:hidden;
+}
+.ACC_tablecontainer{
+	width:80%;
+	float:left;
+}
+.ACC_container{
+	width:20%;
+	float:left;
+}
+.ACC_button_container{
+
+}
+.ACC_button{
+	height:20px;
+	padding-top:15px;
+	padding-bottom:5px;
+	background:#1E8CBE;
+	border-top:1px solid #fff;
+	border-bottom:1px solid #fff;
+	border-right:2px solid #fff;
+	border-left:2px solid #fff;
+	cursor:pointer;
+}
+.ACC_button:hover{
+	background:#bcbcbc;
+}
+.ACC_button.first{
+	border-top:2px solid #fff;
+}
+.ACC_button.last{
+	border-bottom:2px solid #fff;
+}
+.ACC_button_label{
+	margin: 0 auto;
+	text-align:center;
+	color:#fff;
+}
+.ACC_details_suspended{
+	overflow:hidden;
+}
+.ACC_details_suspended_table{
+	float:right;
+	width:60%;
+	
+}

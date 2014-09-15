@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+      "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+      "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd" >
+<hibernate-configuration>  
+  
+    <session-factory>  
+  
+        <!-- Database connection settings -->  
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>  
+        <property name="connection.url">jdbc:mysql://127.0.0.1/gecosofttest_2</property>  
+        <property name="connection.username">root</property>  
+        <property name="connection.password">09050303</property>
+        <!--property name="connection.username">lflorido_2</property>  
+        <property name="connection.password">svnf0rl0s</property-->
+        <!--property name="connection.url">jdbc:mysql://91.121.185.14/it.progess.invoicecreatorsofttest</property>
+        <property name="connection.url">jdbc:mysql://localhost/it.progess.invoicecreatorsofttest</property-->  
+        <!-- property name="connection.username">lflorido</property>  
+        <property name="connection.password">svnf0rl0s</property-->  
+  
+        <!-- JDBC connection pool (use the built-in) -->  
+        <property name="connection.pool_size">1</property>  
+  
+        <!-- SQL dialect -->  
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>  
+  
+		<!--  >property name="hibernate.cache.use_second_level_cache"></property>
+        <property name="hibernate.cache.use_query_cache">false</property-->
+        
+        <!-- Disable the second-level cache  >
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property-->  
+        <!-- Echo all executed SQL to stdout -->  
+        <property name="show_sql">true</property>  
+  
+        <!-- Drop and re-create the database schema on startup -->  
+        <!--  >property name="hbm2ddl.auto">create</property-->  
+  		<property name="hibernate.connection.isolation">2</property>
+        
+        <mapping class="it.progess.invoicecreator.pojo.TblCounter"></mapping>
+        <mapping class="it.progess.invoicecreator.pojo.TblCounterYear"></mapping>
+        <mapping class="it.progess.invoicecreator.pojo.TblDocument"></mapping>
+        <mapping class="it.progess.invoicecreator.pojo.TblPayment"></mapping>
+        <mapping class="it.progess.invoicecreator.pojo.TblPaymentDeadline"></mapping>  
+  		<mapping class="it.progess.invoicecreator.pojo.TblRole"></mapping> 
+  		<mapping class="it.progess.invoicecreator.pojo.TblStoreMovement"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblTaxrate"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblUnitMeasure"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblUser"></mapping> 	
+  		<mapping class="it.progess.invoicecreator.pojo.TblContact"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblAddress"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblBankContact"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCompany"></mapping> 
+  		<mapping class="it.progess.invoicecreator.pojo.TblBank"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblGroupProduct"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCategoryProduct"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblSubCategoryProduct"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblProduct"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblUnitMeasureProduct"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblListProduct"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblList"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblGroupCustomer"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCategoryCustomer"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCustomer"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblListCustomer"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDestination"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblGroupSupplier"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCategorySupplier"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblListSupplier"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblSupplier"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblTransporter"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblHead"></mapping>	
+  		<mapping class="it.progess.invoicecreator.pojo.TblRow"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblGenerateHeadRow"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblStorage"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblStorageSerialCode"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblSuspended"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDeadline"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblPaid"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblPaidSuspended"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblBrand"></mapping>
+    </session-factory>  
+  
+</hibernate-configuration>  
+

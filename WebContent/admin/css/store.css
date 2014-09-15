@@ -1,0 +1,27 @@
+.store_table{
+	margin-top:-15px;
+}
+.store_details{
+	overflow:hidden;
+}
+.store_details_table{
+	float:right;
+	padding-bottom:5px;
+	width: 50%;
+}
+.report_customer{
+	padding-left:100px;
+}
+
+.report_productcode{
+	padding-left:50px;
+	font-size:15px;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.report_supplier{
+	padding-left:10px;
+	font-size:16px;
+	font-weight:bold;
+	
+}

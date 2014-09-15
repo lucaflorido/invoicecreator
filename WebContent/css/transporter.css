@@ -1,0 +1,86 @@
+.transporters{
+    
+	font-size: 9.5px;
+}
+.transporters .single{
+	width:12%;
+	padding-top:6px;
+}
+
+.transporters .double{
+	width:22%;
+	padding-top:6px;
+}
+.transporters .modify{
+	padding-top:6px;
+}
+
+.transporters .delete{
+	padding-top:6px;
+}
+
+.transporter_main_detail .info .code{
+	width:30%;
+	float:left;
+}
+.transporter_main_detail .info .name{
+	width:70%;
+	float:left;
+}
+.transporter_main_detail .info{
+	height:150px;
+}
+.transporter_address_detail .contact{
+	height:100px;
+}
+.transporter_lists .tabledetail_header{
+	width:90%;
+	
+}
+.tabledetail_content.transporter_lists{
+	width:90%;
+}
+.transporter_lists .tabledetail_header .tabledetail_row {
+	width:30%;
+}
+.transporter_lists .tabledetail_rows{
+	width:90%;
+}
+.transporter_lists .tabledetail_rows .tabledetail_row {
+	width:30%;
+}
+.transporter_lists .tabledetail_rows .modify {
+	width:3%;
+}
+.transporter_lists .tabledetail_rows .delete {
+	width:3%;
+}
+.transporter_lists .tabledetail_header .modify {
+	width:3%;
+}
+.transporter_lists .tabledetail_header .delete {
+	width:3%;
+}
+.transporter_container{
+	overflow:hidden;
+	width:100%;
+	float:left;
+}
+.tabledetail_content.transporter_destinations{
+	overflow:hidden;
+	width: 90%;
+}
+
+.transporter_destinations .tabledetail_header{
+	
+	margin: 0 auto;
+}
+
+
+
+.transporter_single{
+	width:20%;
+}
+.transporter_double{
+	width:35%;
+}

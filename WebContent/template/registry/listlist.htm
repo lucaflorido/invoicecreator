@@ -1,0 +1,113 @@
+<div class="container_menu userlist clearfix">
+	<table class="menutable">
+		<thead>
+			<tr class="title_tr">
+				<td class="title_td">
+					Elenco Listini
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="buttontd">
+					<a  href="#/list/0">
+						<div class="  addbutton admin_grant" >
+							
+								<div class="printlabel">
+									Aggiungi Listino 
+								</div>
+							
+						</div>
+					</a>
+				</td >
+				<td class="buttontd ">
+					<a>
+						<div class=" " >
+							<div class="printlabel">
+								Stampa Elenco
+							</div>
+						</div>
+					</a>
+				</td>
+				<td class="buttontd disabled">
+					<div class=" " >
+						<div class="printlabel">
+							Filtra
+						</div>
+					</div>
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+	<!--div class="toolbar_table">
+		<h3>Elenco Listini</h3>
+		<div class=" buttonmenu addbutton admin_grant" >
+			<a href="#/list/0">
+				<div class="add">
+				</div>
+				<div class="addlabel">
+					Aggiungi Listino 
+				</div>
+			</a>
+		</div>
+		
+		<div class="filter">
+		<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+			
+			
+		</div>
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="username">Username</option>
+				<option value="cognome">Cognome</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+			
+		</div>
+	</div-->
+	<div class="tablecontainer list" >
+		<!--div class="table">
+			<div class="tableheader  lists clearfix">
+				<div class="header_table row_table first username">Codice</div>
+				<div class="header_table row_table cognome">Descrizione</div>
+				<div class="header_table row_table ruolo">Validita</div>
+				<div class="header_table row_table modify">&nbsp;</div>
+				<div class="header_table row_table delete">&nbsp;</div>
+			</div>
+			<div class="tablerows"  ng-repeat="list in lists | filter:query | orderBy:orderProp">
+				<div class="row lists">
+					<div class="row_table first username">&nbsp;{{list.code}}</div>
+					<div class="row_table cognome">&nbsp;{{list.description}} </div>
+					<div class="row_table ruolo">&nbsp;{{list.startdate}}</div>
+					<a href="#/list/{{list.idList}}"><div class="row_table modify"><div class="modifyicon"></div></div></a>
+				    <div class="row_table delete"><div class="deleteicon" id="del{{list.idList}}" ng-click="deleteElement(list.idList)"></div></div>
+				</div>
+			</div>
+		</div-->
+		<table class="GECO_table  clearfix">
+			<thead>
+				<tr class="header_table">
+					<td class=" row_table td_five"><div class="td_div first">&nbsp;</div></td>
+					<td class=" row_table td_twenty"><div class="td_div "><div class="sorter" ng-click="sortFunction('code')"><div class="sorter_label">Codice</div><div class="sortericon code"></div></div></div></td>
+					<td class=" row_table td_twentyfive"><div class="td_div "><div class="sorter" ng-click="sortFunction('description')"><div class="sorter_label">Descrizione</div><div class="sortericon description"></div></div></div></td>
+					<td class=" row_table td_twenty"><div class="td_div "><div class="sorter" ng-click="sortDateFunction('startdate',dateSortFunction)"><div class="sorter_label">Validit&#224;</div><div class="sortericon startdate"></div></div></div></td>
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+					
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr  class="tr_table" ng-repeat="list in lists | filter:query | orderBy:orderArray">
+					<td class="row_table td_five"><div class="td_div first"><a href="#/list/{{list.idList}}"><div class=" modify"><div class="modifyicon"></div></div></div></a></div></td>
+					<td class="row_table td_twenty"><div class="td_div ">&nbsp;{{list.code}}</div></td>
+					<td class="row_table td_twentyfive"><div class="td_div ">&nbsp;{{list.description}}</div> </td>
+					<td class="row_table td_twenty"><div class="td_div ">&nbsp;{{list.startdate}}</div></td>
+					<td class="row_table td_five"><div ><div class="td_div "><div class="printicon" id="print{{list.idList}}" ng-click="printElement(list.idList)"></div></div></div></td>
+					<td class="row_table td_five"><div class="td_div "><div class="deleteicon" id="del{{list.idList}}" ng-click="deleteElement(list.idList)"></div></div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

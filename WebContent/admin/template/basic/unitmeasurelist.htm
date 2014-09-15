@@ -1,0 +1,52 @@
+<div class="container userlist clearfix">
+	<div class="toolbar_table">
+		<h3>Elenco Unit&#224; di Misura</h3>
+		<div class=" buttonmenu addbutton "  >
+			<a ng-click="addUmElement()" ng-if="umsaved == true">
+				<div class="add">
+				</div>
+				<div class="addlabel">
+					Aggiungi Unit&#224; di Misura 
+				</div>
+			</a>
+		</div>
+		<div class="buttonmenu savebutton admin" ng-click="saveUms()">
+			<div class="save buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Salva
+			</div>
+		</div>
+		<div class="filter">
+			<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+		</div>
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="code">Name</option>
+				<option value="description">Description</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+		</div>
+	</div>
+	<div class="tablecontainer unitmeasure" >
+		<div class="table">
+			<div class="tableheader  roles ">
+				<div class="header_table row_table first name">Nome</div>
+				<div class="header_table row_table cognome">Descrizione</div>
+				<div class="header_table row_table cognome">Codice</div>
+				<div class="header_table row_table modify">&nbsp;</div>
+				<div class="header_table row_table delete">&nbsp;</div>
+			</div>
+			<div class="tablerows"  ng-repeat="um in ums | filter:query | orderBy:orderProp">
+				<div class="row roles">
+					<div class="row_table first username"  ><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.name}}</div><div><input ng-if="modifyid == um.idUnitMeasure" ng-model="um.name"  value="{{um.name}}" />  </div></div>
+					<div class="row_table cognome"><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.description}}</div><div><input ng-if="modifyid == um.idUnitMeasure" ng-model="um.description"  value="{{um.description}}" />  </div></div>
+					<div class="row_table cognome"><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.code}}</div><div><input ng-if="modifyid == um.idUnitMeasure" ng-model="um.code"  value="{{um.code}}" />  </div></div>
+					<a ><div class="row_table modify"><div class="modifyicon" ng-click="modifyUmElement(um.idUnitMeasure)" ></div></div></a>
+				    <div class="row_table delete"><div class="deleteicon" id="del{{role.idrole}}" ng-click="deleteUmElement(um.idUnitMeasure)" ></div></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

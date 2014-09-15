@@ -1,0 +1,128 @@
+<div class="container userlist clearfix">
+	<div class="toolbar_table">
+		<h3>Elenco Categorie Prodotti</h3>
+		<div class=" buttonmenu addbutton "  >
+			<a ng-click="addcategoryproductElement()" ng-if="categoryproductsaved == true">
+				<div class="add">
+				</div>
+				<div class="addlabel">
+					Aggiungi Categorie Prodotti 
+				</div>
+			</a>
+		</div>
+		<div class="buttonmenu savebutton admin" ng-click="savecategoryproducts()">
+			<div class="save buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Salva
+			</div>
+		</div>
+		<div class="filter">
+			<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+		</div>
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="username">Username</option>
+				<option value="cognome">Cognome</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+		</div>
+	</div>
+	<div class="tablecontainer categoryproduct" >
+		<table class="GECO_table four_two clearfix">
+			<thead>
+				<tr>
+				<td class="header_table row_table first name">Codice</td>
+				<td class="header_table row_table cognome">Nome</td>
+				<td class="header_table row_table cognome">Descrizione</td>
+				<td class="header_table row_table cognome">Note</td>
+				<td class="header_table row_table half  modify">&nbsp;</td>
+				<td class="header_table row_table half  modify">&nbsp;</td>
+				<td class="header_table row_table half delete">&nbsp;</td>
+				</tr>
+			</thead>
+		</table>
+		<div ng-repeat="categoryproduct in categoryproducts | filter:query | orderBy:orderProp">	
+			<table class="GECO_table four_two clearfix">
+				<tbody>
+					<tr  on-finish-render>
+						<td class="row_table first cognome"><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.code}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.code"  value="{{categoryproduct.code}}" />  </div></td>
+						<td class="row_table username"  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.name}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.name"  value="{{categoryproduct.name}}" />  </div></td>
+						<td class="row_table username"  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.description}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.description"  value="{{categoryproduct.description}}" />  </div></td>
+						<td class="row_table username"  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.note}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.note"  value="{{categoryproduct.note}}" />  </div></td>
+						<td class="row_table half username"  ><a >
+							<div class="  icon detail">
+								<div class="detailicon open" ng-click="detailView(categoryproduct.idCategoryProduct)" id="detail{{categoryproduct.idCategoryProduct}}" ></div>
+							</div>
+						</a></td>
+						<td class="row_table half username"  ><a href="#/categoryproduct"><div class=" modify"><div class="modifyicon" ng-click="modifycategoryproductElement(categoryproduct.idCategoryProduct)" ></div></div></a></td>
+						<td class="row_table half delete"><div class="deleteicon" id="del{{categoryproduct.idCategoryProduct}}" ng-click="deletecategoryproductElement(categoryproduct.idCategoryProduct)" ></div></td>
+						
+					</tr>	
+				</tbody>
+			</table>
+		<div class="detailview"   id="detailview{{categoryproduct.idCategoryProduct}}"  on-finish-render>
+				<div class="add_container" ng-click="addSubCategoryElement(categoryproduct)">
+							<div class="addlabel">
+								Aggiungi Sottocategoria 
+							</div>
+							<div class="add buttonicon">
+							</div>
+							
+						</div>
+				<div class="GECO_right_table">
+				
+				<table class="GECO_table GECO_table_subdetail three_two clearfix">
+					<thead>
+						<tr>
+							<td class="header_table row_table first">Codice</td>
+							<td class="header_table row_table ">Nome</td>
+						</tr>
+						
+					</thead>
+					<tbody>
+						<tr  ng-repeat="subcategory in categoryproduct.subcategories | orderBy:orderYear" >
+							
+							<td class="row_table first">
+								<div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{subcategory.code}}</div>
+										<div><input ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="subcategory.code"  value="{{subcategory.code}}" />  </div>
+							</td>
+							<td class="row_table ">
+								<div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{subcategory.name}}</div>
+										<div><input ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="subcategory.name"  value="{{subcategory.name}}" />  </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>	
+		<!--div class="detailview" id="detailview{{payment.idPayment}}" on-finish-render>
+			<td  > 
+						
+						<div class="tabledetail">
+							<div class="tabledetail_content categoryproduct">
+								<div class="tabledetail_header">
+									<div class="tabledetail_header_element tabledetail_row first">Codice</div>
+									<div class="tabledetail_header_element tabledetail_row">Nome</div>
+								</div>
+								<div class="tabledetail_rows" ng-repeat="subcategory in categoryproduct.subcategories | orderBy:orderYear" >
+									<div class="tabledetail_row first">
+										
+									</div>
+									<div class="tabledetail_row first">
+										<div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{subcategory.name}}</div>
+										<div><input ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="subcategory.name"  value="{{subcategory.name}}" />  </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+		</div-->	
+				
+			</div>	
+				
+				
+			<!--/div>
+		</div-->
+	</div>
+</div>

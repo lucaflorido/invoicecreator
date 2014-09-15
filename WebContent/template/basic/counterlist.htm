@@ -1,0 +1,100 @@
+<div class="container userlist clearfix">
+	<div class="toolbar_table">
+		<h3>Elenco Contatori</h3>
+		<div class=" buttonmenu addbutton "  >
+			<a ng-click="addcounterElement()" ng-if="countersaved == true">
+				<div class="add">
+				</div>
+				<div class="addlabel">
+					Aggiungi Contatore 
+				</div>
+			</a>
+		</div>
+		<div class="buttonmenu savebutton admin" ng-click="savecounters()">
+			<div class="save buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Salva
+			</div>
+		</div>
+		<div class="filter">
+			<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+		</div>
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="username">Username</option>
+				<option value="cognome">Cognome</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+		</div>
+	</div>
+	<div class="tablecontainer counter" >
+		<table class="GECO_table three_two clearfix">
+			<tr>
+				<td class="header_table row_table first name">Codice</td>
+				<td class="header_table row_table cognome">Nome</td>
+				<td class="header_table row_table cognome">Descrizione</td>
+				<td class="header_table row_table icon half">&nbsp;</td>
+				<td class="header_table row_table icon half">&nbsp;</td>
+				<td class="header_table row_table icon half">&nbsp;</td>
+			</tr>
+		</table>
+		<div ng-repeat="counter in counters | filter:query | orderBy:orderProp">	
+			<table class="GECO_table store_table three_two clearfix">	
+				<tbody>
+					<tr >
+						<td class="row_table first cognome">
+							<div ng-if="modifyid != counter.idCounter">&nbsp;{{counter.code}}</div>
+							<div><input ng-if="modifyid == counter.idCounter" ng-model="counter.code"  value="{{counter.code}}" />  </div>
+						</td>
+						<td class="row_table  username"  >
+							<div ng-if="modifyid != counter.idCounter">&nbsp;{{counter.name}}</div>
+							<div><input ng-if="modifyid == counter.idCounter" ng-model="counter.name"  value="{{counter.name}}" />  </div>
+						</td>
+						
+						<td class="row_table cognome">
+							<div ng-if="modifyid != counter.idCounter">&nbsp;{{counter.description}}</div>
+							<div><input ng-if="modifyid == counter.idCounter" ng-model="counter.description"  value="{{counter.description}}" />  </div>
+						</td>
+						<td class="row_table half cognome"><a >
+							<div class="  icon detail">
+								<div class="detailicon open" ng-click="detailView(counter.idCounter)" id="detail{{counter.idCounter}}" ></div>
+							</div>
+						</a></td>
+						<td class="row_table half cognome"><a >
+						<a href="#/counter"><div class="  "><div class="modifyicon" ng-click="modifycounterElement(counter.idCounter)" ></div></div></a>
+						</td>
+						<td class="row_table half cognome"><a >
+							<div class="  "><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletecounterElement(counter.idCounter)" ></div></div>
+						</td>
+						 
+					</tr>
+				</tbody>
+			</table>
+			<div class="detailview" id="detailview{{counter.idCounter}}" on-finish-render>
+				<div class="GECO_right_table">
+				<table class="GECO_table GECO_table_subdetail three_two clearfix">
+					<thead>
+						<tr>
+							<td class="header_table row_table first">Anno</td>
+							<td class="header_table row_table" >Valore</td>
+						</tr>
+						
+					</thead>
+					<tbody>
+						<tr  ng-repeat="yearvalue in counter.yearsvalue | orderBy:orderYear" >
+							<td class="row_table first">{{yearvalue.year}}</td>
+							<td class="row_table">
+								<div ng-if="modifyid != counter.idCounter">&nbsp;{{yearvalue.value}}</div>
+								<div><input ng-if="modifyid == counter.idCounter" ng-model="yearvalue.value"  value="{{yearvalue.value}}" />  </div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>

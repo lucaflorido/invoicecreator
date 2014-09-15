@@ -1,0 +1,21 @@
+
+.dropdown {
+    background: url("/frontend/assets/dropdownarrow.jpg") no-repeat scroll 170px 0px #FFFFFF;
+    border: 1px solid #CCCCCC;
+    height: 26px;
+    overflow: hidden;
+    width: 200px;
+   }
+
+.dropdown select {
+		background:transparent;
+		width: 228px;
+		border: 0;
+		border-radius: 0;
+       -webkit-appearance: none;
+}
+option{
+	border: 6px none;
+    height: 20px;
+}
+	

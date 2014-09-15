@@ -1,0 +1,168 @@
+<div id="maincontainer_productdetail" class="container userlist clearfix" ng-keydown="keyDown($event)" tabindex="0" >
+	<div class="toolbar_detail">
+		<h3  ng-show="isNew == true">Nuovo Prodotto:</h3>
+		<h3  ng-show="isNew == false">Prodotto:</h3>
+		<div class="buttonmenu savebutton admin" ng-click="saveProduct()">
+			<div class="save buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Salva [Alt + Q]
+			</div>
+		</div>
+		<div class="buttonmenu redobutton " ng-click="mainPage()">
+			<div class="redo buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Elenco [Alt + E]
+			</div>
+		</div>
+		<div class="buttonmenu redobutton "  ng-show="isNew == false" ng-click="newProduct()" >
+			<div class="redo buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Nuovo [Alt + N]
+			</div>
+		</div>
+	</div>
+	<div class="details">
+		<div class="generaltable">
+			<div class="column_1_2 user">	
+				<div class="info">
+					<div class="fields">
+						<div class="label name">Codice *</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.code" value="{{product.code}}" capitalize   ng-change="setModified()"  /></div>
+						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+					</div>
+					<div class="fields">
+						<div class="label name">Descrizione *</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.description" value="{{product.description}}" capitalize ng-change="setModified()"  /></div>
+						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+					</div>
+					<div class="fields">
+						<div class="label name">Codice a Barre</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.barcode" value="{{product.barcode}}" ng-change="setModified()"  /></div>
+						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+					</div>
+				</div>
+			</div>
+			<div class="column_2_2 user">
+				<div class="contact">
+					<div class="fields">
+						<div class="label name">Caratteri peso in Codice a Barre</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.weightbarcode" value="{{product.weightbarcode}}" ng-change="setModified()"  /></div>
+					</div>
+					<div class="fields">
+						<div class="label phone">Gestione Lotti</div>
+						<div class="field phone"><input class="inputfield" type="checkbox" ng-model="product.manageserialnumber" value="{{product.manageserialnumber}}" ng-change="setModified()"  /></div>
+					</div>
+					<div class="fields">
+						<div class="label name">Fornitore </div>
+						<div class="field role">
+							<select id="selgroup" class="inputfield combobox" ng-model="currentSupplier"    ng-options="supplier as supplier.suppliername for supplier in suppliers" ng-data-provider="suppliers" create-chosen on-finish-chosen-update ng-change="product.supplier = currentSupplier;setModified()" " ></select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="generaltable">
+			<div class="column_1_2 user">	
+				<div class="info heigher">
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Prezzo Acquisto </div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.purchaseprice" value="{{product.purchaseprice}}" ng-blur="calculatePrices('sellprice')" ng-change="setModified()"   /></div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">%</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.percentage" value="{{product.percentage}}"  ng-blur="calculatePrices('sellprice')" ng-change="setModified()" /></div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Prezzo Vendita</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.sellprice" value="{{product.sellprice}}"  ng-blur="calculatePrices('percentage')" ng-change="setModified()" /></div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Aliquota</div>
+						<div class="field role">
+							<select id="seltaxrate" class="inputfield combobox" ng-model="currentTaxRate"    ng-options="taxrate as taxrate.description for taxrate in taxrates" ng-data-provider="taxrates" create-chosen on-finish-chosen-update ng-change="setModified()"  ></select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="column_2_2 user">
+				<div class="contact heigher">
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Gruppo </div>
+						<div class="field role">
+							<select id="selgroup" class="inputfield combobox" ng-model="currentGroup"    ng-options="group as group.name for group in groups" ng-data-provider="groups" create-chosen on-finish-chosen-update ng-change="setModified()"  ></select>
+						</div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Marca</div>
+						<div class="field role">
+							<select id="selbrand" class="inputfield combobox" ng-model="currentBrand"    ng-options="brand as brand.name for brand in brands" ng-data-provider="brands" create-chosen on-finish-chosen-update ng-change="setModified()"  >
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Categoria</div>
+						<div class="field role">
+							<select id="selcategory" class="inputfield combobox" ng-model="currentCategory"    ng-options="category as category.name for category in categorys" ng-change="changeCategory();setModified()" " ng-data-provider="categorys" create-chosen on-finish-chosen-update ></select>
+						</div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Sottocategoria</div>
+						<div class="field role">
+							<select id="selsubcategory" class="inputfield combobox" ng-model="currentSubCategory"    ng-options="subcategory as subcategory.name for subcategory in subcategories" ng-data-provider="subcategories" create-chosen on-finish-chosen-update ></select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="credentials">
+			<div class="credential">
+				<div class="detailview"  >
+						Caratteri particolari ammessi: @ * § $
+						<div class="add_container" ng-click="addUMElement(product)" >
+							<div class="addlabel">
+								Aggiungi Unit&#224; di Misura [Alt + u]
+							</div>
+							<div class="add buttonicon">
+							</div>
+						</div>
+						<div class="tabledetail">
+							<div class="tabledetail_content product_ums">
+								<div class="tabledetail_header">
+									<div class="tabledetail_header_element tabledetail_row first">Codice</div>
+									<div class="tabledetail_header_element tabledetail_row ">U.M</div>
+									<div class="tabledetail_header_element tabledetail_row ">Preferenziale</div>
+									<div class="tabledetail_header_element tabledetail_row">Conversione</div>
+									<div class="tabledetail_header_element tabledetail_row modify">&nbsp;</div>
+									<div class="tabledetail_header_element tabledetail_row delete">&nbsp;</div>
+								</div>
+								<div class="tabledetail_rows indetail" ng-repeat="ump in product.ums | orderBy:orderYear" >
+									<div class="tabledetail_row first">
+										<div ng-if="umpid != $index">&nbsp;{{ump.code}} </div>
+										<div><input ng-if="umpid == $index"  ng-model="ump.code"  value="{{ump.code}}"  capitalize ng-change="setModified()"  />  </div>
+									</div>
+									<div class="tabledetail_row ">
+										<div ng-if="umpid != $index">&nbsp;{{ump.um.code}}</div>
+										<div><select ng-if="umpid == $index" id="selcounter" class="inputfield" ng-model="currentUMP"    ng-options="um as um.code for um in ums" ng-change="ump.um = currentUMP;setModified();" ></select></div>
+									</div>
+									<div class="tabledetail_row ">
+										<div ng-if="umpid != $index">&nbsp;{{ump.preference}}</div>
+										<div><input ng-if="umpid == $index" type="checkbox" ng-model="ump.preference"  value="{{ump.preference}}" />  </div>
+									</div>
+									<div class="tabledetail_row ">
+										<div ng-if="umpid != $index">&nbsp;{{ump.conversion}}</div>
+										<div><input ng-if="umpid == $index" ng-model="ump.conversion"  value="{{ump.conversion}}" ng-change="setModified()"  />  </div>
+									</div>
+									<a ng-click="changeUMElement($index)" ><div class="tabledetail_row modify"><div class="modifyicon"></div></div></a>
+									<div class="tabledetail_row delete"><div class="deleteicon" id="del{{product.idProduct}}" ng-click="deleteElement(product.idProduct)"></div></div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+		<div>
+	</div>
+</div>

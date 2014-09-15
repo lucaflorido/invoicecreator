@@ -1,0 +1,237 @@
+<div class="container userlist clearfix">
+	<table class="menutable">
+		<thead>
+			<tr class="title_tr">
+				<td class="title_td">
+					Elenco Documenti
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="buttontd">
+					<a  href="#/head/0">
+						<div class="  addbutton admin_grant" >
+							
+								<div class="printlabel">
+									Aggiungi Documento 
+								</div>
+							
+						</div>
+					</a>
+				</td >
+				<td class="buttontd disabled " >
+					<a>
+						<div class=" " >
+							<div class="printlabel"  >
+								Stampa Elenco
+							</div>
+						</div>
+					</a>
+				</td>
+				<td class="buttontd " ng-click="printMassElements()">
+					<a>
+						<div class=" " >
+							<div class="printlabel"  >
+								Stampa Singola
+							</div>
+						</div>
+					</a>
+				</td>
+				<td class="buttontd disabled">
+					<div class=" " >
+						<div class="printlabel">
+							Filtra
+						</div>
+					</div>
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+	<!--div class="toolbar_table">
+		<h3>Elenco Documenti</h3>
+		<div class=" buttonmenu addbutton admin_grant" >
+			<a href="#/head/0">
+				<div class="add">
+				</div>
+				<div class="addlabel">
+					Aggiungi Documento 
+				</div>
+			</a>
+		</div>
+		<div class="printbutton buttonmenu">
+			<div class="print">
+			</div>
+			<div class="printlabel">
+				Stampa Elenco
+			</div>
+		</div>
+		<div class="printbutton buttonmenu" ng-click="printMassElements()">
+			<div class="print">
+			</div>
+			<div class="printlabel">
+				Stampa Singola
+			</div>
+		</div>
+		<div class="printbutton buttonmenu" ng-click="openFilter()">
+			<div class="search">
+			</div>
+			<div class="printlabel">
+				Filtra
+			</div>
+		</div>
+		<div class="filter">
+		<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+			
+			
+		</div>
+		
+		
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="username">Username</option>
+				<option value="cognome">Cognome</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+			
+		</div>
+	</div-->
+	<!--div>
+			<div class="PRODUCT_DIALOG" ng-show="showFilter == true">
+				<div class="PRODUCT_DIALOG_COLUMN">	
+					<div>
+						<div class="PRODUCT_fields">
+							<div class="PRODUCT_label">Da Data </div>
+							<div class="PRODUCT_field role">
+								<input class="PRODUCT_inputfield datepicker" type="text" id="fromDate" ng-model="headfilter.fromDate" value="{{headfilter.fromDate}}"  create-datepicker />
+							</div>
+						</div>
+						
+						<div class="PRODUCT_fields">
+							<div class="PRODUCT_label name">Cliente</div>
+							<div class="PRODUCT_field role">
+								<select id="selgroup" class="inputfield" ng-model="currentCustomer"    ng-options="customer as customer.customername for customer in customers" ng-data-provider="customers" create-chosen on-finish-chosen-update ng-change="headfilter.customer = currentCustomer">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+						<div class="PRODUCT_fields">
+							<div class="PRODUCT_label name">Tipo documento</div>
+							<div class="PRODUCT_field role">
+								<select id="selcategory" class="inputfield" ng-model="currentDocument"    ng-options="document as document.description for document in documents" ng-change="headfilter.doc = currentDocument" ng-data-provider="documents" create-chosen on-finish-chosen-update  > <option value=""></option></select>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<div class="PRODUCT_DIALOG_COLUMN">
+					<div >
+						<div class="PRODUCT_fields">
+							<div class="PRODUCT_label name">A data</div>
+							<div class="PRODUCT_field role">
+								<input class="PRODUCT_inputfield " type="text" id="toDate" ng-model="headfilter.toDate" value="{{headfilter.toDate}}"  create-datepicker />
+							</div>
+						</div>
+						<div class="PRODUCT_fields">
+							<div class="PRODUCT_label name">Fornitore </div>
+							<div class="PRODUCT_field role">
+								<select id="selsupplier" class="inputfield" ng-model="currentSupplier"    ng-options="supplier as supplier.suppliername for supplier in suppliers" ng-data-provider="suppliers" create-chosen on-finish-chosen-update ng-change="headfilter.supplier = currentSupplier" ><option value=""></option></select>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div-->
+	<div class="tablecontainer" >
+		<!--div class="pagination clearfix">
+				<div class="navcontainer ">
+					<ul >
+					<li ng-repeat="page in pageArray"><div ng-if="page !=1 " class="pag" id="pag{{page}}" ng-click="getHeads(page)">{{page}}</div>
+													<div ng-if="page == 1 " id="pag{{page}}"  class="first selected pag" ng-click="getHeads(page)">{{page}}</div></li>
+					</ul>
+					
+					
+				</div>
+				<div class="filter">
+					<button ng-click="getHeadsNumber()" >Filtra</button>
+				</div>
+				
+				<div class="filter">
+					<input class="filter" ng-model="pagesize" value="{{pagesize}}">
+				</div>
+				<div class="label filter">Righe per pagina:</div>
+		</div-->
+		<table class="GECO_table  clearfix">
+			<thead>
+				<tr class="header_table ">
+					<td class=" row_table td_five"><div class="td_div first"><input type="checkbox" ng-click="addRemoveHeads()" class="checkbox_all" /></div></td>
+					<!--td class=" row_table quarter delete">&nbsp;</td-->
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class=" row_table  td_five"><div class="td_div sorter" ng-click="sortFunction('number')"><div class="sorter_label">N.</div><div class="sortericon number"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortDateFunction('date',dateSortFunction)"><div class="sorter_label">Data</div><div class="sortericon date"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('document.code')"><div class="sorter_label">Tipologia</div><div class="sortericon document code"></div></div></td>
+					<!--td ng-show="headfilter.isSupplier == true" class=" row_table double"><div class="sorter" ng-click="sortFunction('supplier.suppliername')"><div class="sorter_label">Fornitore</div><div class="sortericon supplier suppliername"></div></div></td-->
+					<td  class=" row_table td_thirty"><div class="td_div sorter" ng-click="sortFunction('customer.customername')"><div class="sorter_label">Cliente</div><div class="sortericon customer customername"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('amount')"><div class="sorter_label">Imponibile</div><div class="sortericon amount"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('taxamount')"><div class="sorter_label">Imposta</div><div class="sortericon taxamount"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('total')"><div class="sorter_label">Totali</div><div class="sortericon total"></div></div></td>
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+					
+				</tr>
+			</thead>
+			<tfoot>
+				<tr class="tr_table ">
+					<td class="row_table td_five"><div class="td_div first">&nbsp;</div></td>
+					<!--td class="row_table quarter delete">&nbsp;</td-->
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;</div></td>
+					<td  class="row_table td_thirty"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{headamount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{headtaxamount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{headtotal}}</div></td>
+					<td class="row_table td_five"><div class="td_div ">&nbsp;</div></td>
+				</tr>				
+			</tfoot>
+			<tbody>
+				<tr class="tr_table" ng-repeat="head in heads | orderBy:orderArray ">
+					<td class="row_table td_five"><div class="td_div first"><input type="checkbox" ng-click="addRemoveHeadId(head.idHead)" class="checkbox_single" /></div></td>
+					<!--td class="row_table quarter">
+						<a ng-show="headfilter.isOrder == true"   href="#/head/{{head.idHead}}/1">
+							<div class=" modify"  >
+								<div  class="favoriteicon"></div>
+							</div>
+						</a> 
+						<a ng-show="head.incomplete == true && head.document.supplier == true" href="#/head/{{head.idHead}}/2" >
+							<div class=" modify"     >
+								<div  class="incompleteicon"></div>
+							</div>
+						</a> 
+						<a ng-show="head.incomplete == true && head.document.customer == true" href="#/head/{{head.idHead}}/3" >
+							<div class=" modify"     >
+								<div  class="incompleteicon"></div>
+							</div>
+						</a>
+					</td-->
+					<td class="row_table td_five"><div class="td_div "><a href="#/head/{{head.idHead}}"><div class=" modify"><div class="modifyicon"></div></div></a></div></td>
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;{{head.number}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{ head.date }} </div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.document.code}}</div></td>
+					
+					<td  class="row_table double"><div class="td_div ">&nbsp;{{head.customer.customername}}</div></td>
+					
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.amount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.taxamount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.total}}</div></td>
+					<td class="row_table td_five"><div class="td_div "><div class="deleteicon confirm" id="del{{head.idHead}}"  ng-click="confirmDelete(head)"></div></div></td>
+					
+				</tr>
+			</tbody>
+			
+			</table>
+			
+	</div>
+</div>

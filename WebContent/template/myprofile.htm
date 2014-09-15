@@ -1,0 +1,96 @@
+<div class="container userlist clearfix">
+	<div class="toolbar_detail">
+		<h3>Utente:</h3>
+		<div class="buttonmenu savebutton">
+			<div class="save buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Salva
+			</div>
+		</div>
+		<div class="buttonmenu redobutton ">
+			<div class="redo buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Ricarica
+			</div>
+		</div>
+		<div class="buttonmenu changepasswordbutton">
+			<div class="buttonicon changepassword">
+			</div>
+			<div class="buttonlabel">
+				Cambia Password
+			</div>
+		</div>
+	</div>
+	<div class="details">
+		<div class="generaltable">
+			<div class="column_1_2 user">	
+				<div class="info">
+					<div class="fields">
+						<div class="label name">Nome</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="user.name" value="{{user.name}}"/></div>
+						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+					</div>
+					<div class="fields">
+						<div class="label surname">Cognome</div>
+						<div class="field surnname"><input id="ifsurname" class="inputfield" ng-model="user.surname" value="{{user.surname}}" /></div>
+						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
+					</div>
+				</div>
+			</div>
+			<div class="column_2_2 user">
+				<div class="contact">
+					<div class="fields">
+						<div class="label phone">Telefono</div>
+						<div class="field phone"><input class="inputfield" ng-model="user.phone" value="{{user.phone}}" /></div>
+					</div>
+					<div class="fields">
+						<div class="label mobile">Cellulare</div>
+						<div class="field mobile"><input class="inputfield" ng-model="user.mobile" value="{{user.mobile}}" /></div>
+					</div>
+					<div class="fields">
+						<div class="label email">Email</div>
+						<div class="field email"><input class="inputfield" id="ifemail" ng-model="user.email" value="{{user.email}}" /></div>
+						<div class="error" id="val_ifemail" >Campo obbligatorio</div> 
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="generaltable">
+			<div class="column_1_2 user">	
+				<div class="info">
+					<div class="fields left">
+					<div class="label username">Username</div>
+					<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.username" value="{{user.username}}" /></div>
+					<div class="error" id="val_ifusername" >Campo obbligatorio</div> 
+				</div>
+					<div class="fields left">
+					<div class="label username">Ruolo</div>
+					<div class="field username">{{user.role.name}}</div>
+				</div>
+				</div>
+			</div>
+			<div class="column_2_2 user">
+				<div class="contact">
+					<div class="fields">
+						<div class="label phone">Password</div>
+						<div class="field phone"><input class="inputfield"  type="password" id="oldpassword" /></div>
+					</div>
+					<div class="fields">
+						<div class="label mobile">Nuova Password</div>
+						<div class="field mobile"><input class="inputfield" type="password"  id="newpassword"  /></div>
+					</div>
+					<div class="fields">
+						<div class="label email">Conferma Password</div>
+						<div class="field email"><input class="inputfield"  type="password"  id="confirmpassword" /></div>
+					</div>
+				</div>
+			</div>
+			<div class="credential">
+				
+				
+			</div>
+		<div>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<div class="container userlist clearfix">
+	<div class="toolbar_table">
+		<h3>Elenco Listini</h3>
+		<div class=" buttonmenu addbutton admin_grant" >
+			<a href="#/list/0">
+				<div class="add">
+				</div>
+				<div class="addlabel">
+					Aggiungi Listino 
+				</div>
+			</a>
+		</div>
+		
+		<div class="filter">
+		<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+			
+			
+		</div>
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="username">Username</option>
+				<option value="cognome">Cognome</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+			
+		</div>
+	</div>
+	<div class="tablecontainer list" >
+		<!--div class="table">
+			<div class="tableheader  lists clearfix">
+				<div class="header_table row_table first username">Codice</div>
+				<div class="header_table row_table cognome">Descrizione</div>
+				<div class="header_table row_table ruolo">Validita</div>
+				<div class="header_table row_table modify">&nbsp;</div>
+				<div class="header_table row_table delete">&nbsp;</div>
+			</div>
+			<div class="tablerows"  ng-repeat="list in lists | filter:query | orderBy:orderProp">
+				<div class="row lists">
+					<div class="row_table first username">&nbsp;{{list.code}}</div>
+					<div class="row_table cognome">&nbsp;{{list.description}} </div>
+					<div class="row_table ruolo">&nbsp;{{list.startdate}}</div>
+					<a href="#/list/{{list.idList}}"><div class="row_table modify"><div class="modifyicon"></div></div></a>
+				    <div class="row_table delete"><div class="deleteicon" id="del{{list.idList}}" ng-click="deleteElement(list.idList)"></div></div>
+				</div>
+			</div>
+		</div-->
+		<table class="GECO_table four_two_detail clearfix">
+			<thead>
+				<tr>
+					<td class="header_table row_table first threequarter"><div class="sorter" ng-click="sortFunction('code')"><div class="sorter_label">Codice</div><div class="sortericon code"></div></div></td>
+				<td class="header_table row_table double cognome"><div class="sorter" ng-click="sortFunction('description')"><div class="sorter_label">Descrizione</div><div class="sortericon description"></div></div></td>
+				<td class="header_table row_table double"><div class="sorter" ng-click="sortDateFunction('startdate',dateSortFunction)"><div class="sorter_label">Validit&#224;</div><div class="sortericon startdate"></div></div></td>
+				<td class="header_table row_table half">&nbsp;</td>
+				<td class="header_table row_table half">&nbsp;</td>
+				<td class="header_table row_table half">&nbsp;</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="list in lists | filter:query | orderBy:orderArray">
+					<td class="row_table first threequarter">&nbsp;{{list.code}}</td>
+					<td class="row_table cognome double">&nbsp;{{list.description}} </td>
+					<td class="row_table double">&nbsp;{{list.startdate}}</td>
+					<td class="row_table half"><div ><div class="printicon" id="print{{list.idList}}" ng-click="printElement(list.idList)"></div></div></td>
+					<td class="row_table half"><a href="#/list/{{list.idList}}"><div class=" modify"><div class="modifyicon"></div></div></a></td>
+				    <td class="row_table half"><div class="deleteicon" id="del{{list.idList}}" ng-click="deleteElement(list.idList)"></div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

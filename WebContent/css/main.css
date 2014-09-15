@@ -1,0 +1,472 @@
+/*	---------------------------------------------------------------------- */
+/*	
+	Name: HFivePlus
+	Date: February 2013
+	Version: 1.0
+	Author: Daniel Baumgartner
+	Autor URI: icontel.com
+*/
+/*	---------------------------------------------------------------------- */
+
+/*	---------------------------------------------------------------------- */
+/* 	colors
+	
+	Dark Blue: #102F52 ----- rgba(16,47,82,1)
+	Light Blue: #00AED6 ----- rgba(0,174,214,1)
+	Black: #111111 ----- rgba(17,17,17,1)
+	Grey 1: #333333 ----- rgba(51,51,51,1)
+	Grey 2: #666666 ----- rgba(102,102,102,1)
+	Grey 3: #999999 ----- rgba(153,153,153,1)
+	Grey 4: #CCCCCC ----- rgba(204,204,204,1)
+	Grey 5: #F5F5F5 ----- rgba(245,245,245,1) 
+	
+*/
+/*	---------------------------------------------------------------------- */
+
+/*	---------------------------------------------------------------------- */
+/* 	global */
+/*	---------------------------------------------------------------------- */
+
+html, button, input, select, textarea {
+    color: #111111;
+}
+
+html, body {
+	height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+	background: #CCCCCC;
+    font-size: 14px;
+	font-family: 'dnpregular', Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	color: #111111;
+	line-height: 1.6em;
+	word-spacing: 0.1em;
+	font-smooth: always;
+	font-smoothing: antialiased;
+	-webkit-font-smoothing: antialiased;
+}
+
+/*	---------------------------------------------------------------------- */
+/* 	fonts */
+/*	---------------------------------------------------------------------- */
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 { font-weight: bold; padding: 0; }
+
+.footerMenu h2, .footerContact h2, .footerSocial h2, .footerClaim h2 {
+	height: 32px;
+	line-height: 34px;
+	margin: 0 0 18px 0;
+}
+.footerMenu h2 { background: url(../content/icons/footerMenu.gif) no-repeat right center; }
+.footerContact h2 { background: url(../content/icons/footerContact.gif) no-repeat right center; }
+.footerSocial h2 { background: url(../content/icons/footerSocial.gif) no-repeat right center; }
+h3 {
+	font-size: 20px;
+	margin: 0;
+}
+
+
+/* Anchors */
+a, a:visited, a img, a img:visited {
+	color: #00AED6;
+	cursor: pointer;
+	text-decoration: none;
+	font-style: normal;
+	-webkit-transition: ease-out;
+	-webkit-transition-duration: 0.2s;
+	-webkit-transition-timing-function: ease-out;
+	-webkit-transition-delay: initial;
+	-moz-transition: ease-out;
+	-moz-transition-duration: 0.2s;
+	-moz-transition-timing-function: ease-out;
+	-moz-transition-delay: initial;
+	transition: ease-out;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-out;
+	transition-delay: initial;
+}
+a:hover, a:active {
+	text-decoration: none;
+	text-decoration: underline;
+}
+a img { border: none; }
+a img:hover, a img:active {
+	border: none;
+	-webkit-transition: all 0.2s linear;
+	-moz-transition: all 0.2s linear;
+	-o-transition: all 0.2s linear;
+	-ms-transition: all 0.2s linear;
+	transition: all 0.2s linear;
+}
+a:focus {
+	-moz-outline-style: none;
+	outline: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #EEEEEE;
+    margin: 30px 0;
+    padding: 0;
+}
+
+p { margin: 0; }
+
+.main-container ul, .footerMenu ul, .footer-copyright ul {
+	list-style: none;
+	list-style-image: none;
+	margin: 0;
+	padding: 0;
+}
+.footerMenu ul li ul {
+	margin: 0 0 0 15px;
+}
+.main-container li {
+	background: url(../content/icons/ulliDash.jpg) no-repeat left 10px;
+	padding: 0 0 0 15px;
+}
+img {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+input[type=text]:focus,
+input[type=password]:focus {
+  outline: 0 none;
+}
+
+::-moz-selection {
+	background: #111111;
+    color: #FFFFFF;
+}
+::selection {
+    background: #111111;
+    color: #FFFFFF;
+}
+::-webkit-selection {
+	background: #111111;
+	color: #FFFFFF;
+}
+
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #111111;
+    padding: 0.2em 0;
+}
+
+/*	---------------------------------------------------------------------- */
+/* 	layout */
+/*	---------------------------------------------------------------------- */
+
+/*	---------------------------------------------------------------------- */
+/* 	main elements */
+
+
+
+
+.toolbar-container {
+	background: #F5F5F5;
+	width: 60px;
+	right: 0;
+	position: fixed;
+	z-index: 100;
+	-moz-box-shadow: 0 0 10px 4px rgba(153,153,153,0.5);
+	-webkit-box-shadow: 0 0 10px 4px rgba(153,153,153,0.5);
+	box-shadow: 0 0 10px 4px rgba(153,153,153,0.5);
+}
+
+/*	---------------------------------------------------------------------- */
+/* 	header */
+
+/* 	logo */
+.logo-container {
+	background: #00AED6;
+	width: 120px;
+	height: 120px;
+	margin: 0 0 1px 0;
+}
+	.logo-container img { margin: 33px 0 0 29px; }
+
+
+
+/* 	navigation */
+.nav-container {
+	text-align: center;
+}
+.nav-container ul {
+    margin: 0;
+    padding: 0;
+	list-style: none;
+	list-style-image:none
+}
+.nav-container ul li {
+	display: block; 
+	margin: 0 0 1px 0;
+    padding: 0;
+}
+.nav-container ul li a {
+    background: none repeat scroll 0 0 #00AED6;
+    color: #FFFFFF;
+    display: block;
+	position: relative;
+    font-family: 'dnpmedium',Helvetica,Arial,sans-serif;
+    font-size: 20px;
+    height: 94px;
+    text-align: center;
+	text-decoration: none;
+    width: 120px;
+	padding: 26px 0 0 0;
+}
+.nav-container a:hover {
+    background: none repeat scroll 0 0 #029BC2;
+}
+.nav-container ul li.active a {
+	background: #029BC2 url(../content/icons/navactive.png) no-repeat center right;
+}
+.nav-container ul li a .selected {
+	font-size: 14px;
+	margin: 25px 0 0 0;
+}
+
+
+/*	---------------------------------------------------------------------- */
+/* 	content */
+.generatedView-container, .template-container, .service-container, .configTemplate-container, .configService-container {
+	background: #FFF;
+	padding: 0 1% 15px 1%;
+	-moz-box-shadow: 0 0 10px 4px rgba(153,153,153,0.5);
+	-webkit-box-shadow: 0 0 10px 4px rgba(153,153,153,0.5);
+	box-shadow: 0 0 10px 4px rgba(153,153,153,0.5);
+}
+.generatedView-container { min-height: 480px; margin: 29px 2% 30px 2%; }
+.template-container, .service-container, .configTemplate-container, .configService-container { min-height: 230px; }
+.template-container, .service-container {
+	margin: 0px 0 30px 2%;
+	float: left;
+	width: 60%;
+}
+.configTemplate-container, .configService-container {
+	margin: 0 2% 30px 0;
+	float: right;
+	width: 30%;
+}
+
+.generatedView-container .title, .template-container .title, .service-container .title, .configTemplate-container .title, .configService-container .title {
+	background: #102F52;
+	color: #00AED6;
+	font-family: 'dnpmedium',Helvetica,Arial,sans-serif;
+	text-transform: uppercase;
+	padding: 5px 30px;
+	margin: 0 0 15px 0;
+	display: inline-block;
+}
+
+.generatedView-container .code, .template-container .code, .service-container .code, .configTemplate-container .code, .configService-container .code {
+	font-family: 'Inconsolata', sans-serif;
+	font-weight: 400;
+}
+.margindiv{
+	margin-left: 30px;
+}
+
+textarea.template_code, textarea.service_code {
+    width: 100%;
+    border:none 0px;
+    height: auto;
+    min-height: 180px;
+    overflow: auto;
+    font-family: 'Inconsolata', sans-serif;
+	font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6em;
+    word-spacing: 0.1em;
+
+}
+
+
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+}
+
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 100%;
+}
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   Print styles
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #111111 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+/*	---------------------------------------------------------------------- */
+/* @fontface */
+/*	---------------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'dnplight';
+    src: url('../fonts/dnpl.eot');
+    src: url('../fonts/dnpl.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/dnpl.woff') format('woff'),
+         url('../fonts/dnpl.ttf') format('truetype'),
+         url('../fonts/dnpl.svg#dnplight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'dnpmedium';
+    src: url('../fonts/dnpm.eot');
+    src: url('../fonts/dnpm.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/dnpm.woff') format('woff'),
+         url('../fonts/dnpm.ttf') format('truetype'),
+         url('../fonts/dnpm.svg#dnpmedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'dnpregular';
+    src: url('../fonts/dnpr.eot');
+    src: url('../fonts/dnpr.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/dnpr.woff') format('woff'),
+         url('../fonts/dnpr.ttf') format('truetype'),
+         url('../fonts/dnpr.svg#dnpregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

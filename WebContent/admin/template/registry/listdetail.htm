@@ -1,0 +1,131 @@
+<div class="container userlist clearfix">
+	<div class="toolbar_detail">
+		<h3>Listino:</h3>
+		<div class="buttonmenu savebutton admin" ng-click="saveProduct()">
+			<div class="save buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Salva
+			</div>
+		</div>
+		<div class="buttonmenu redobutton ">
+			<div class="redo buttonicon">
+			</div>
+			<div class="buttonlabel">
+				Ricarica
+			</div>
+		</div>
+		
+	</div>
+	<div class="details">
+		<div class="credentials">
+			<div class="credential">
+				<div class="fields left">
+					<div class="label name">Codice *</div>
+					<div class="field name"><input class="inputfield" id="ifname" ng-model="list.code" value="{{list.code}}"  /></div>
+					<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+				</div>
+				<div class="fields right">
+					<div class="label name">Descrizione *</div>
+					<div class="field name"><input class="inputfield" id="ifname" ng-model="list.description" value="{{list.description}}"  /></div>
+					<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+				</div>
+			</div>
+			<div class="credential">
+				<div class="fields left ">
+					<div class="label name">Data Validit&#224; *</div>
+					<div class="field name control-group input-append">
+					<input class="inputfield datepicker" type="text" id="startDate" ng-model="list.startdate" value="{{list.startdate}}"   />
+					</div>
+					<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+				</div>
+				<div class="fields left ">
+					<div class="label name">Incremento</div>
+					<div class="field name control-group input-append">
+					<input  type="text" id="listincrement" ng-model="newList.value" value="{{newList.value}}"   />
+					Percentuale
+					<input  type="checkbox" id="listincrement" ng-model="newList.isPercentage"    />
+					</div>
+					
+				</div>
+			</div>
+		</div>	
+		<div class="credentials">
+			<div class="credential">
+				<div class="detailview"  >
+						<div class="add_container" ng-click="addProdElement(list)">
+							<div class="addlabel">
+								Aggiungi Articolo 
+							</div>
+							<div class="add buttonicon">
+							</div>
+						</div>
+						<div class="tabledetail">
+							<table class="GECO_table four_two clearfix">
+								<thead>
+									<tr>
+										<td class="header_table row_table first">Codice</td>
+										<td class="header_table row_table double">Descrizione</td>
+										<td class="header_table row_table ">U.M</td>
+										<td class="header_table row_table">Prezzo</td>
+										<td class="header_table row_table half">&nbsp;</td>
+										<td class="header_table row_table half">&nbsp;</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="prod in list.listproduct | orderBy:orderYear">
+										<td class="row_table first">
+											<div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.product.code}}</div>
+											<div><select ng-if="prodid == prod.idListProduct" id="selcounter" class="inputfield" ng-model="currentProd"    ng-options="product as product.code for product in products" ng-change="prod.product = currentProd" ></select>  </div>
+										</td>
+										<td class="row_table double ">
+											<div >&nbsp;{{prod.product.description}}</div>
+										</td>
+										<td class="row_table ">
+											<div >&nbsp;{{prod.product.ums[0].um.code}}</div>
+										</td>
+										<td class="row_table ">
+											<div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.price}}</div>
+											<div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.price"  value="{{prod.price}}" />  </div>
+										</td>
+										<td class="row_table half ">
+											<a ng-click="changeProdElement(prod)" ><div class=" modify"><div class="modifyicon"></div></div></a>
+										</td>
+										<td class="row_table half"><div class="deleteicon" id="del{{list.idProduct}}" ng-click="deleteElement(list.idProduct)"></div></td>
+									</tr>
+								</tbody>
+							</table>
+							<!--div class="tabledetail_content list_prod">
+								<div class="tabledetail_header">
+									<div class="tabledetail_header_element tabledetail_row first">Codice</div>
+									<div class="tabledetail_header_element tabledetail_row ">Descrizione</div>
+									<div class="tabledetail_header_element tabledetail_row ">U.M</div>
+									<div class="tabledetail_header_element tabledetail_row">Prezzo</div>
+									<div class="tabledetail_header_element tabledetail_row modify">&nbsp;</div>
+									<div class="tabledetail_header_element tabledetail_row delete">&nbsp;</div>
+								</div>
+								<div class="tabledetail_rows indetail" ng-repeat="prod in list.listproduct | orderBy:orderYear" >
+									<div class="tabledetail_row first">
+										<div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.product.code}}</div>
+										<div><select ng-if="prodid == prod.idListProduct" id="selcounter" class="inputfield" ng-model="currentProd"    ng-options="product as product.code for product in products" ng-change="prod.product = currentProd" ></select>  </div>
+									</div>
+									<div class="tabledetail_row ">
+										<div >&nbsp;{{prod.product.description}}</div>
+									</div>
+									<div class="tabledetail_row ">
+										<div >&nbsp;{{prod.product.ums[0].um.code}}</div>
+									</div>
+									<div class="tabledetail_row first">
+										<div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.price}}</div>
+										<div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.price"  value="{{prod.price}}" />  </div>
+									</div>
+									<a ng-click="changeProdElement(prod)" ><div class="tabledetail_row modify"><div class="modifyicon"></div></div></a>
+									<div class="tabledetail_row delete"><div class="deleteicon" id="del{{list.idProduct}}" ng-click="deleteElement(list.idProduct)"></div></div>
+								</div>
+							</div-->
+						</div>
+					</div>
+			</div>
+		<div>
+	</div>
+</div>
