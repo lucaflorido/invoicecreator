@@ -109,6 +109,14 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 					$scope.currentRole = $scope.roles[i];
 				}
 			}
+			$http.get(GECO_LOGGEDUSER.getSecondDomain()+'rest/registry/companylist').success(function(data){
+				$scope.companies = data;
+				for (var i=0;i<$scope.companies.length;i++){
+				if($scope.user && $scope.user.company !== undefined && $scope.user.company !== null && $scope.companies[i].idCompany == $scope.user.company.idCompany){
+					$scope.currentCompany = $scope.companies[i];
+				}
+			}
+			});
 		});
 	});
 	
@@ -125,6 +133,7 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 			})
 		}
 	} );
+	
 }]);
 
 gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http',function($scope,$routeParams,$http){

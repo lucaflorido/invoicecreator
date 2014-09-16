@@ -3,11 +3,12 @@ var gecoRegistryControllers = angular.module("gecoRegistryControllers",[]);
 /*****
 REGISTRY
 ***/
-gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",function($scope,$http){
+gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",'$routeParams',function($scope,$http,$routeParams){
     $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
 	GECO_validator.startupvalidator();
 	$scope.companysaved = true;
-	$http.get('rest/registry/company').success(function(data){
+	$scope.idCompany = $routeParams.idcompany;
+	$http.get(GECO_LOGGEDUSER.getSecondDomain()+'rest/registry/company/'+$scope.idCompany).success(function(data){
 		$scope.company = data;
 		if ($scope.company == null  ){
 			$scope.company = {idCompany:0};
@@ -15,7 +16,28 @@ gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",function($sco
 	});
 	$scope.saveCompany = function(){
 		$.ajax({
-			url:"rest/registry/company",
+			url:GECO_LOGGEDUSER.getSecondDomain()+"rest/registry/company",
+			type:"PUT",
+			data:"companys="+JSON.stringify($scope.company),
+			success:function(data){
+					alert("elemento salvato con successo");
+					
+			}	
+		})
+		
+	}
+}]);
+gecoRegistryControllers.controller('CompanyListCtrl',["$scope","$http",function($scope,$http){
+    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
+	GECO_validator.startupvalidator();
+	$scope.companysaved = true;
+	$http.get(GECO_LOGGEDUSER.getSecondDomain()+'rest/registry/companylist').success(function(data){
+		$scope.companies = data;
+		
+	});
+	$scope.saveCompany = function(){
+		$.ajax({
+			url:GECO_LOGGEDUSER.getSecondDomain()+"rest/registry/company",
 			type:"PUT",
 			data:"companys="+JSON.stringify($scope.company),
 			success:function(data){

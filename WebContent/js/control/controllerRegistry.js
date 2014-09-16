@@ -30,6 +30,7 @@ gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",function($sco
 		
 	}
 }]);
+
 gecoRegistryControllers.controller('BankListCtrl',["$scope","$http",function($scope,$http){
     $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
 	$http.get('rest/registry/bank').success(function(data){

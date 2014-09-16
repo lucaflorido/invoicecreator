@@ -46,11 +46,11 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class PrinterDao {
-	public String printSingleDocument(ServletContext context,int id){
+	public String printSingleDocument(ServletContext context,int id,User user){
 		String documentType ="";
 		try{
 			//generateAshwinFriends();
-			Company comp = new RegistryDao().getCompany();
+			Company comp = user.getCompany();
 			Head head = new DocumentDao().getSingleHead(id);
 		    documentType = getReportName(head.getDocument());
 			File f = new File(context.getRealPath("report/"+documentType+".jasper"));
@@ -109,7 +109,7 @@ public class PrinterDao {
 		}
 		return "document";
 	}
-	public String printMultipleDocument(ServletContext context,int[] ids){
+	public String printMultipleDocument(ServletContext context,int[] ids,User user){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/document.jasper"));
@@ -119,7 +119,7 @@ public class PrinterDao {
 			Map<String, Object> map = new HashMap<String ,Object>();
 			map.put("title","Fattura");
 			
-			Company comp = new RegistryDao().getCompany();
+			Company comp = user.getCompany();
 		    JasperPrint print = null; 
 		    for(int i=0;i<ids.length;i++){
 		    	Head head = new DocumentDao().getSingleHead(ids[i]);
@@ -169,7 +169,7 @@ public class PrinterDao {
 		    if(f.exists() == false){
 				JasperCompileManager.compileReportToFile(context.getRealPath("report/productlist.jrxml"), context.getRealPath("report/productlist.jasper"));
 			}
-		    Company comp = new RegistryDao().getCompany();
+		    Company comp = user.getCompany();
 		    GECOObject obj = new RegistryDao().getProductList(filter,user);
 		    TreeSet<Product> prods = new TreeSet<Product>();
 		    if (obj.type == GECOParameter.SUCCESS_TYPE){
@@ -195,7 +195,7 @@ public class PrinterDao {
 		
 		return "/InvoiceCreator/report/productlist.pdf";
 	}
-	public String printList(ServletContext context,int id){
+	public String printList(ServletContext context,int id,User user){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/pricelist.jasper"));
@@ -203,7 +203,7 @@ public class PrinterDao {
 		    if(f.exists() == false){
 				JasperCompileManager.compileReportToFile(context.getRealPath("report/pricelist.jrxml"), context.getRealPath("report/pricelist.jasper"));
 			}
-		    Company comp = new RegistryDao().getCompany();
+		    Company comp = user.getCompany();
 			it.progess.invoicecreator.vo.List list  = new RegistryDao().getSingleList(id);
 			Collection<PrintPriceList> headcoll = new ArrayList<PrintPriceList>();
 			Map<String, Object> map = new HashMap<String ,Object>();

@@ -31,6 +31,11 @@
 						<div class="field surnname"><input class="inputfield" id="ifsurname" ng-model="user.surname" value="{{user.surname}}"  /></div>
 						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
 					</div>
+					<div class="fields">
+						<div class="label surname">Azienda *</div>
+						<div class="field surnname"><select ng-options="company as company.companyname for company in companies" ng-model="currentCompany" ng-change="user.company = currentCompany"></select></div>
+						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
+					</div>
 				</div>
 			</div>
 			<div class="column_2_2 user">

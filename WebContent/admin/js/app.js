@@ -128,9 +128,13 @@ function($routeProvider) {
 			templateUrl: 'template/basic/unitmeasurelist.htm',
 			controller: 'UnitmeasureCtrl'
 		}).
-		when('/company', {
+		when('/company/:idcompany', {
 			templateUrl: 'template/registry/companydetail.htm',
 			controller: 'CompanyCtrl'
+		}).
+		when('/companylist', {
+			templateUrl: 'template/registry/companylist.htm',
+			controller: 'CompanyListCtrl'
 		}).
 		when('/bank', {
 			templateUrl: 'template/registry/banklist.htm',

@@ -45,12 +45,12 @@ public class RegistryService {
 	   * @return
 	   */
 	  @GET
-	  @Path("company")
 	  @Produces(MediaType.TEXT_PLAIN)
-	  public String getCompanyList(){
+	  @Path("company/{idcompany}")
+	  public String getCompanyList(@PathParam("idcompany") int id){
 		Gson gson = new Gson();
 		RegistryDao dao = new RegistryDao();
-		return gson.toJson(dao.getCompany());
+		return gson.toJson(dao.getCompany(id));
 	  }
 	  @GET
 	  @Path("companylist")

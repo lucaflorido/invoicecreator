@@ -79,26 +79,28 @@ public class PrintService {
 	@GET
 	@Path("head/{idhead}")
 	@Produces(MediaType.TEXT_HTML)
-	public String singleHead(@PathParam("idhead") int id) {
+	public String singleHead(@PathParam("idhead") int id,@Context HttpServletRequest request) {
 		PrinterDao dao = new PrinterDao();
 		Gson gson = new Gson();
 		//DocumentDao dao = new DocumentDao();
 		//Head head = new Head();
 		//head = dao.getSingleHead(id);
-		return gson.toJson(dao.printSingleDocument(context, id));
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.printSingleDocument(context, id,loggeduser));
 	}
 	@POST
 	@Path("heads")
 	@Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	public String multipleHeads(@FormParam("ids") String ids) {
+	public String multipleHeads(@FormParam("ids") String ids,@Context HttpServletRequest request) {
 		PrinterDao dao = new PrinterDao();
 		Gson gson = new Gson();
 		//DocumentDao dao = new DocumentDao();
 		//Head head = new Head();
 		//head = dao.getSingleHead(id);
 		int[] idsHeads = gson.fromJson(ids, int[].class);
-		return gson.toJson(dao.printMultipleDocument(context, idsHeads));
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.printMultipleDocument(context, idsHeads,loggeduser));
 	}
 	@POST
 	@Path("products")
@@ -118,14 +120,15 @@ public class PrintService {
 	@Path("list/{idlist}")
 	@Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	public String printList(@PathParam("idlist") String ids) {
+	public String printList(@PathParam("idlist") String ids,@Context HttpServletRequest request) {
 		PrinterDao dao = new PrinterDao();
 		Gson gson = new Gson();
 		//DocumentDao dao = new DocumentDao();
 		//Head head = new Head();
 		//head = dao.getSingleHead(id);
 		int id = Integer.parseInt(ids);
-		return gson.toJson(dao.printList(context, id));
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.printList(context, id,loggeduser));
 	}
 	@POST
 	@Path("reportorder")

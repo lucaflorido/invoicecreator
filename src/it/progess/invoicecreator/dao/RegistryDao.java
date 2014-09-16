@@ -91,12 +91,13 @@ public class RegistryDao {
 		}
 		return list;
 	}
-	public Company getCompany(){
+	public Company getCompany(int idcompany){
 		Session session = HibernateUtils.getSession();
 		ArrayList<Company> list = new ArrayList<Company>();
 		Company company = new Company();
 		try{
-			Criteria cr = session.createCriteria(TblCompany.class);
+			Criteria cr = session.createCriteria(TblCompany.class,"company");
+			cr.add(Restrictions.eq("company.idCompany", idcompany));
 			List<TblCompany> companys = cr.list();
 			if (companys.size() > 0){
 				for (Iterator<TblCompany> iterator = companys.iterator(); iterator.hasNext();){
