@@ -2,6 +2,9 @@ package it.progess.invoicecreator.vo;
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblDestination;
 import it.progess.invoicecreator.properties.GECOParameter;
+import it.progess.transport.check.ProgessCheck;
+import it.progess.transport.vo.ProgessError;
+import it.progess.validator.CFPIValidator;
 public class Destination implements Ivo {
 	private int idDestination;
 	private String destinationname;
@@ -112,14 +115,10 @@ public class Destination implements Ivo {
 		}else if (this.address.control().type == GECOParameter.ERROR_TYPE){
 			er = (GECOError)this.address.control();
 		}
-		if (this.taxcode == null || this.taxcode ==""){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice Fiscale Mancante");
-		}else{
-			if (this.taxcode.length() != 16){
-				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Codice Fiscale non conforme");
-			}
+		if (ProgessCheck.basicCheck(CFPIValidator.checkCFPI(this.taxcode, this.serialnumber)) == false){
+			ProgessError pe = (ProgessError)CFPIValidator.checkCFPI(this.taxcode, this.serialnumber);
+			return new GECOError(pe.getErrorName(),pe.getErrorMessage());
 		}
-		
 		if (this.serialnumber == null || this.serialnumber ==""){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Partita Iva mancante");
 		}else{

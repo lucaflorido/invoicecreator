@@ -69,7 +69,7 @@ public class RegistryDao {
 	 * Get List of Company 
 	 */
 	public ArrayList<Company> getCompanyList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Company> list = new ArrayList<Company>();
 		try{
 			Criteria cr = session.createCriteria(TblCompany.class);
@@ -92,7 +92,7 @@ public class RegistryDao {
 		return list;
 	}
 	public Company getCompany(int idcompany){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Company> list = new ArrayList<Company>();
 		Company company = new Company();
 		try{
@@ -120,7 +120,7 @@ public class RegistryDao {
 	 * Save update Companys
 	 * **/
 	public GECOObject saveUpdatesCompany(Company sms){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -151,7 +151,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteCompany(Company sm){
 		TblCompany tblsm = new TblCompany();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -174,7 +174,7 @@ public class RegistryDao {
 	 * Get List of Bank 
 	 */
 	public ArrayList<Bank> getBankList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Bank> list = new ArrayList<Bank>();
 		try{
 			Criteria cr = session.createCriteria(TblBank.class);
@@ -200,7 +200,7 @@ public class RegistryDao {
 	 * Save update Banks
 	 * **/
 	public GECOObject saveUpdatesBank(Bank sm){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -230,7 +230,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteBank(Bank sm){
 		TblBank tblsm = new TblBank();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -253,7 +253,7 @@ public class RegistryDao {
 	 * GET A SINGLE BANK
 	 * **/
 	public Bank getSingleBank(int idbank){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Bank bank = new Bank();
 		try{
 			
@@ -279,7 +279,7 @@ public class RegistryDao {
 	
 
 	public GECOObject getProductList(SelectProductsFilter filter,User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		TreeSet<Product> list = new TreeSet<Product>();
 		GECOObject obj = null;
 		try{
@@ -330,7 +330,7 @@ public class RegistryDao {
 		return cr;
 	}
 	public ArrayList<Product> getProductList(User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Product> list = new ArrayList<Product>();
 		try{
 			Criteria cr = session.createCriteria(TblProduct.class,"product");
@@ -354,7 +354,7 @@ public class RegistryDao {
 		return list;
 	}
 	public ArrayList<Product> getProductFilteredList(SelectProductsFilter filter,User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Product> list = new ArrayList<Product>();
 		try{
 			Criteria cr = session.createCriteria(TblProduct.class,"product");
@@ -420,7 +420,7 @@ public class RegistryDao {
 	}
 	public int getListPagesNumber(int size,User user){
 		int pages = 0;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblProduct.class,"prod");
 			cr.add(Restrictions.eq("prod.company.idCompany",user.getCompany().getIdCompany() ));
@@ -443,7 +443,7 @@ public class RegistryDao {
 	 * Search Products 
 	 */
 	public ArrayList<UnitMeasureProduct> searchProducts(String value,User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<UnitMeasureProduct> list = new ArrayList<UnitMeasureProduct>();
 		try{
 			Criteria cr = session.createCriteria(TblUnitMeasureProduct.class,"um");
@@ -476,7 +476,7 @@ public class RegistryDao {
 		if (sm.control() == null){
 			sm.updateCode();
 			sm.setCompany(user.getCompany());
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			try{
 				tx = session.beginTransaction();
@@ -508,7 +508,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteProduct(Product sm){
 		TblProduct tblsm = new TblProduct();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -531,7 +531,7 @@ public class RegistryDao {
 	 * GET A SINGLE PRODUCT
 	 * **/
 	public Product getSingleProduct(int idproduct){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Product product = new Product();
 		try{
 			
@@ -558,7 +558,7 @@ public class RegistryDao {
 	 * GET A SINGLE PRODUCT
 	 * **/
 	public Product getSingleCodeProduct(String code,int idList,Head head,User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Product product = new Product();
 		try{			
 			Criteria cr = session.createCriteria(TblProduct.class,"product");
@@ -628,7 +628,7 @@ public class RegistryDao {
 		}
 	}
 	private float getProductPriceList(int idProduct,int idList){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		float price = 0;
 		try{			
 			Criteria cr = session.createCriteria(TblListProduct.class,"listproduct");
@@ -674,7 +674,7 @@ public class RegistryDao {
 	 * Get List of List 
 	 */
 	public ArrayList<it.progess.invoicecreator.vo.List> getListList(User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<it.progess.invoicecreator.vo.List> list = new ArrayList<it.progess.invoicecreator.vo.List>();
 		try{
 			Criteria cr = session.createCriteria(TblList.class,"list");
@@ -710,7 +710,7 @@ public class RegistryDao {
 		if (sm.control() == null){
 			sm.setCompany(user.getCompany());
 			Date lastDate = getDate(sm.getIdList());
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			tx = session.beginTransaction();
 			try{
@@ -745,7 +745,7 @@ public class RegistryDao {
 		return new GECOSuccess(id);
 	}
 	public Date getDate(int idList){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblList.class,"list");
 			cr.add(Restrictions.eq("list.idList",idList));
@@ -795,7 +795,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteList(it.progess.invoicecreator.vo.List sm){
 		TblList tblsm = new TblList();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -818,7 +818,7 @@ public class RegistryDao {
 	 * GET A SINGLE BANK
 	 * **/
 	public it.progess.invoicecreator.vo.List getSingleList(int idlist){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		it.progess.invoicecreator.vo.List list = new it.progess.invoicecreator.vo.List();
 		try{
 			
@@ -844,7 +844,7 @@ public class RegistryDao {
 	 * Get List of List for Customer 
 	 */
 	public ArrayList<ListCustomer> getCustomerPriceList(int idCustomer){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<ListCustomer> list = new ArrayList<ListCustomer>();
 		try{
 			Criteria cr = session.createCriteria(TblListCustomer.class,"listcustomer");
@@ -873,7 +873,7 @@ public class RegistryDao {
 	 * Get List of Customer 
 	 */
 	public ArrayList<Customer> getCustomerList(User loggeduser){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
 		try{
 			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
@@ -901,7 +901,7 @@ public class RegistryDao {
 	 * Get List of Customer 
 	 */
 	public ArrayList<Customer> getCustomerList(SelectCustomerList filter,User loggeduser){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
 		try{
 			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
@@ -936,7 +936,7 @@ public class RegistryDao {
 		return list;
 	}
 	public ArrayList<Customer> getCustomerListByGroup(GroupCustomer gc){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
 		try{
 			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
@@ -966,7 +966,7 @@ public class RegistryDao {
 	public GECOObject saveUpdatesCustomer(Customer sm,User user){
 		int id=0;
 		if (sm.control() == null){
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			sm.setCompany(user.getCompany());
 			try{
@@ -1018,7 +1018,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteCustomer(Customer sm){
 		TblCustomer tblsm = new TblCustomer();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -1041,7 +1041,7 @@ public class RegistryDao {
 	 * GET A SINGLE CUSTOMER
 	 * **/
 	public Customer getSingleCustomer(int idcustomer){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Customer customer = new Customer();
 		//customer = getMockCustomer();
 		try{
@@ -1072,7 +1072,7 @@ public class RegistryDao {
 	 * Get List of Destination 
 	 */
 	public ArrayList<Destination> getDestinationList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Destination> list = new ArrayList<Destination>();
 		try{
 			Criteria cr = session.createCriteria(TblDestination.class);
@@ -1099,7 +1099,7 @@ public class RegistryDao {
 	 * Get List of Destination for Customer 
 	 */
 	public ArrayList<Destination> getCustomerDestinationList(int idCustomer){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Destination> list = new ArrayList<Destination>();
 		try{
 			Criteria cr = session.createCriteria(TblDestination.class,"destination");
@@ -1129,7 +1129,7 @@ public class RegistryDao {
 	public GECOObject saveUpdatesDestination(Destination sm){
 		int id=0;
 		if(sm.control()==null){
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			
 			try{
@@ -1159,7 +1159,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteDestination(Destination sm){
 		TblDestination tblsm = new TblDestination();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -1182,7 +1182,7 @@ public class RegistryDao {
 	 * GET A SINGLE CUSTOMER
 	 * **/
 	public Destination getSingleDestination(int iddestination){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Destination destination = new Destination();
 		//destination = getMockDestination();
 		try{
@@ -1213,7 +1213,7 @@ public class RegistryDao {
 	 * Get List of Supplier 
 	 */
 	public ArrayList<Supplier> getSupplierList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Supplier> list = new ArrayList<Supplier>();
 		try{
 			Criteria cr = session.createCriteria(TblSupplier.class);
@@ -1237,7 +1237,7 @@ public class RegistryDao {
 		return list;
 	}
 	public ArrayList<Supplier> getSupplierList(SelectSupplierList filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Supplier> list = new ArrayList<Supplier>();
 		try{
 			Criteria cr = session.createCriteria(TblSupplier.class,"supplier");
@@ -1276,7 +1276,7 @@ public class RegistryDao {
 	public GECOObject saveUpdatesSupplier(Supplier sm){
 		int id=0;
 		if (sm.control() == null){
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			
 			try{
@@ -1306,7 +1306,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteSupplier(Supplier sm){
 		TblSupplier tblsm = new TblSupplier();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -1329,7 +1329,7 @@ public class RegistryDao {
 	 * GET A SINGLE CUSTOMER
 	 * **/
 	public Supplier getSingleSupplier(int idsupplier){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Supplier supplier = new Supplier();
 		//supplier = getMockSupplier();
 		try{
@@ -1362,7 +1362,7 @@ public class RegistryDao {
 	 * Get List of Transporter 
 	 */
 	public ArrayList<Transporter> getTransporterList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Transporter> list = new ArrayList<Transporter>();
 		try{
 			Criteria cr = session.createCriteria(TblTransporter.class);
@@ -1391,7 +1391,7 @@ public class RegistryDao {
 	public GECOObject saveUpdatesTransporter(Transporter sm){
 		int id=0;
 		if (sm.control() == null){
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			
 			try{
@@ -1421,7 +1421,7 @@ public class RegistryDao {
 	 * **/
 	public Boolean deleteTransporter(Transporter sm){
 		TblTransporter tblsm = new TblTransporter();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -1444,7 +1444,7 @@ public class RegistryDao {
 	 * GET A SINGLE CUSTOMER
 	 * **/
 	public Transporter getSingleTransporter(int idtransporter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transporter transporter = new Transporter();
 		//transporter = getMockTransporter();
 		try{

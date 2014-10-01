@@ -5,10 +5,14 @@ import it.progess.invoicecreator.pojo.TblCustomer;
 import it.progess.invoicecreator.pojo.TblDestination;
 import it.progess.invoicecreator.pojo.TblListCustomer;
 import it.progess.invoicecreator.properties.GECOParameter;
+import it.progess.transport.check.ProgessCheck;
+import it.progess.transport.vo.ProgessError;
+import it.progess.validator.CFPIValidator;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 
 
 public class Customer implements Ivo{
@@ -209,12 +213,9 @@ public class Customer implements Ivo{
 		if (this.customername == null || this.customername ==""){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Ragione Sociale mancante");
 		}
-		if (this.taxcode == null || this.taxcode ==""){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice Fiscale Mancante");
-		}else{
-			if (this.taxcode.length() != 16){
-				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Codice Fiscale non conforme");
-			}
+		if (ProgessCheck.basicCheck(CFPIValidator.checkCFPI(this.taxcode, this.serialnumber,true)) == false){
+			ProgessError pe = (ProgessError)CFPIValidator.checkCFPI(this.taxcode, this.serialnumber,true);
+			return new GECOError(pe.getErrorName(),pe.getErrorMessage());
 		}
 		if (this.payment == null){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Pagamento Mancante");
@@ -224,13 +225,7 @@ public class Customer implements Ivo{
 		}else if (this.address.control() != null){
 			er = (GECOError)this.address.control();
 		}
-		if (this.serialnumber == null || this.serialnumber ==""){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Partita Iva mancante");
-		}else{
-			if (this.serialnumber.length() != 11){
-				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Partita Iva non conforme");
-			}
-		}
+		
 		
 		return er;
 	}

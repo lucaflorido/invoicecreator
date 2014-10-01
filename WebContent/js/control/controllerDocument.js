@@ -127,7 +127,7 @@ gecoDocumentControllers.controller('HeadListCtrl',["$scope","$http","$routeParam
 						success:function(data){
 							var deviceAgent = navigator.userAgent;
 							// Set var to iOS device name or null
-							var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad)/);
+							var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad|android|webos|blackberry|iemobile|opera mini)/);
 							if (ios) {
 								// This is the line that matters
 								$scope.openTab(JSON.parse(data));
@@ -135,6 +135,7 @@ gecoDocumentControllers.controller('HeadListCtrl',["$scope","$http","$routeParam
 								// Your code that works for desktop browsers
 								//$scope.openTab(JSON.parse(data));
 								window.open(JSON.parse(data));
+								//$scope.openTab(JSON.parse(data));
 							}
 							//window.open(JSON.parse(data));
 							//window.location.replace(JSON.parse(data));
@@ -261,6 +262,7 @@ gecoDocumentControllers.controller('HeadDetailCtrl',["$scope","$http","$routePar
 				$scope.prodFound = [];
 				$scope.$apply();
 				$( "#dialog" ).dialog( "option", "minWidth", 550 );
+				$( "#dialog" ).dialog("option","position","['center',20]"); 
 				$("#dialog").dialog("open");
 			}	
 		}
@@ -606,6 +608,9 @@ gecoDocumentControllers.controller('HeadDetailCtrl',["$scope","$http","$routePar
 	
 	$scope.saveHeadChecked = function(){
 		$scope.head.payment = $scope.currentPayment;
+		if ($scope.head.withholdingtax === undefined || $scope.head.withholdingtax === null ){
+			$scope.head.withholdingtax = 0;
+		}
 	     if ($scope.isSaving == false){  
 			$scope.isSaving = true;	
 				$.ajax({
@@ -616,8 +621,8 @@ gecoDocumentControllers.controller('HeadDetailCtrl',["$scope","$http","$routePar
 						
 						result = JSON.parse(data);
 						if (result.type == "success"){	
-							$scope.head.idHead = result.success;
-							$scope.idhead = result.success;
+							$scope.head = result.success;
+							$scope.idhead = $scope.head.idHead;
 							$scope.$apply();
 							$rootScope.selectedSection = $scope.selectedSection
 							$rootScope.issaved = true;
@@ -664,13 +669,16 @@ gecoDocumentControllers.controller('HeadDetailCtrl',["$scope","$http","$routePar
 					//result = JSON.parse(data);
 					var deviceAgent = navigator.userAgent;
 							// Set var to iOS device name or null
-							var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad)/);
+							var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad|android|webos|blackberry|iemobile|opera mini)/);
+							if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+ // some code..
+}
 							if (ios) {
 								// This is the line that matters
 								$scope.openTab(JSON.parse(data));
 							} else {
 								// Your code that works for desktop browsers
-								//$scope.openTab(JSON.parse(data));
+								
 								window.open(JSON.parse(data));
 							}
 					//window.open(result);

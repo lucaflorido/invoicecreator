@@ -51,7 +51,7 @@ public class AccountingDao {
 	public GECOObject savePaid(Paid sm){
 		
 		if (sm.control() == null){
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			try{
 				tx = session.beginTransaction();
@@ -82,7 +82,7 @@ public class AccountingDao {
 	}
 	public GECOObject savePaid(Paid sm,Set<Suspended> susp){
 		if (sm.control() == null){
-			Session session = HibernateUtils.getSession();
+			Session session = HibernateUtils.getSessionFactory().openSession();
 			Transaction tx = null;
 			try{
 				tx = session.beginTransaction();
@@ -151,7 +151,7 @@ public class AccountingDao {
 		
 	}
 	public GECOObject getList(AccountingFilter filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		TreeSet<Suspended> list = new TreeSet<Suspended>();
 		
 		try{
@@ -201,7 +201,7 @@ public class AccountingDao {
 		return new GECOSuccess(list);
 	}
 	public TreeSet<Suspended> getListFromCustomer(Customer c){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		TreeSet<Suspended> list = new TreeSet<Suspended>();
 		try{
 			Criteria cr = session.createCriteria(TblSuspended.class,"suspended");
@@ -265,7 +265,7 @@ public class AccountingDao {
 		return new GECOSuccess(list);
 	}
 	private GECOObject getListSuspended(AccountingMovementFilter filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		TreeSet<Suspended> list = new TreeSet<Suspended>();
 		
 		try{
@@ -313,7 +313,7 @@ public class AccountingDao {
 		return new GECOSuccess(list);
 	}
 	private GECOObject getListPaid(AccountingMovementFilter filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		TreeSet<Paid> list = new TreeSet<Paid>();
 		
 		try{
@@ -360,7 +360,7 @@ public class AccountingDao {
 		return new GECOSuccess(list);
 	}
 	public Suspended getSuspendedHead(Head head){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblSuspended.class,"suspended");
 			cr.createAlias("suspended.head", "head");

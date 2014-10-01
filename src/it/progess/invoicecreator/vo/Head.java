@@ -6,6 +6,7 @@ import java.util.Set;
 
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.pojo.Itbl;
+import it.progess.invoicecreator.pojo.TblCustomer;
 import it.progess.invoicecreator.pojo.TblHead;
 import it.progess.invoicecreator.pojo.TblRow;
 import it.progess.invoicecreator.properties.GECOParameter;
@@ -43,6 +44,21 @@ public class Head implements Ivo {
 	private Company company;
 	private float withholdingtax;
 	private TaxRate taxrate;
+	private String userinsert;
+	private String dateinsert;
+	
+	public String getUserinsert() {
+		return userinsert;
+	}
+	public void setUserinsert(String userinsert) {
+		this.userinsert = userinsert;
+	}
+	public String getDateinsert() {
+		return dateinsert;
+	}
+	public void setDateinsert(String dateinsert) {
+		this.dateinsert = dateinsert;
+	}
 	public float getWithholdingtax() {
 		return withholdingtax;
 	}
@@ -240,7 +256,7 @@ public class Head implements Ivo {
 		this.convertFromTableCommon(h);
 		if (h.getCustomer() != null){
 			this.customer = new Customer();
-			this.customer.convertFromTable(h.getCustomer());
+			this.customer.convertFromTable((TblCustomer)h.getCustomer());
 		}
 		checkIncomplete(h.getRows());
 	} 
@@ -319,6 +335,8 @@ public class Head implements Ivo {
 			this.taxrate.convertFromTable(h.getTaxrate());
 		}
 		this.withholdingtax = h.getWithholdingtax();
+		this.userinsert = h.getUsercreate();
+		this.dateinsert = DataUtilConverter.convertStringFromDate(h.getDateinsert());
 	}
 	public void convertFromTableSingle(Itbl obj){
 		this.convertFromTable(obj);
@@ -326,7 +344,7 @@ public class Head implements Ivo {
 		this.convertFromTableCommon(h);
 		if (h.getCustomer() != null){
 			this.customer = new Customer();
-			this.customer.convertFromTableSingle(h.getCustomer());
+			this.customer.convertFromTableSingle((TblCustomer)h.getCustomer());
 		}
 		if (h.getRows() != null){
 			this.rows = new HashSet<Row>();
@@ -344,7 +362,7 @@ public class Head implements Ivo {
 		this.convertFromTableCommon(h);
 		if (h.getCustomer() != null){
 			this.customer = new Customer();
-			this.customer.convertFromTableSingle(h.getCustomer());
+			this.customer.convertFromTableSingle((TblCustomer)h.getCustomer());
 		}
 		if (h.getRows() != null){
 			this.rows = new HashSet<Row>();

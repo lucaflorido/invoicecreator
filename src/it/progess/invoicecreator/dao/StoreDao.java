@@ -30,7 +30,7 @@ import org.hibernate.criterion.Restrictions;
 
 public class StoreDao {
 	public void saveStore(Storage store){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -64,7 +64,7 @@ public class StoreDao {
 		
 	}
 	public Storage getStorageProduct(Product prod){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Storage store = new Storage();
 		try{
 			Criteria cr = session.createCriteria(TblStorage.class,"store");
@@ -84,7 +84,7 @@ public class StoreDao {
 		return store;
 	}
 	public Storage getStorageProductNotEmpty(Product prod){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Storage store = new Storage();
 		try{
 			Criteria cr = session.createCriteria(TblStorage.class,"store");
@@ -106,7 +106,7 @@ public class StoreDao {
 		return store;
 	}
 	public ArrayList<Storage> getList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		
 		ArrayList<Storage> list = new ArrayList<Storage>();
 		try{
@@ -130,7 +130,7 @@ public class StoreDao {
 		return list;
 	}
 	public StorageSerialCode getStorageSerialCode(Storage st,String serialnumber){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		StorageSerialCode store = new StorageSerialCode();
 		try{
 			Criteria cr = session.createCriteria(TblStorageSerialCode.class,"store");
@@ -152,7 +152,7 @@ public class StoreDao {
 		return store;
 	}
 	public ArrayList<Storage> getListStorage(StoreFilter filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		
 		ArrayList<Storage> list = new ArrayList<Storage>();
 		try{
@@ -239,7 +239,7 @@ public class StoreDao {
 	}
 	private double setQuantityProductCode(StoreFilter filter,String code,StorageSerialCode sc,boolean isLoad){
 		double qta=0;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Storage> list = new ArrayList<Storage>();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");

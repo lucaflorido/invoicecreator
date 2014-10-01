@@ -68,8 +68,8 @@ public class RegistryService {
 		  Gson gson = new Gson();
 		  Company smsarray = gson.fromJson(companys,Company.class);
 		  RegistryDao dao = new RegistryDao();
-		  dao.saveUpdatesCompany(smsarray);
-		  return gson.toJson(true);
+		  
+		  return gson.toJson(dao.saveUpdatesCompany(smsarray));
 	  }
 		/***
 		Delete user 

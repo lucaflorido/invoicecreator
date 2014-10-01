@@ -21,6 +21,10 @@ public class TblCompany implements Itbl {
 	private int idCompany;
 	@Column(name="companyname")
 	private String companyname;
+	@Column(name="companycode")
+	private String companycode;
+	@Column(name="companyzone")
+	private String companyzone;
 	@Column(name="companynumber")
 	private String companynumber;
 	@Column(name="taxcode")
@@ -76,11 +80,25 @@ public class TblCompany implements Itbl {
 	public void setBankcontact(TblBankContact bankcontact) {
 		this.bankcontact = bankcontact;
 	}
+	public String getCompanycode() {
+		return companycode;
+	}
+	public void setCompanycode(String companycode) {
+		this.companycode = companycode;
+	}
+	public String getCompanyzone() {
+		return companyzone;
+	}
+	public void setCompanyzone(String companyzone) {
+		this.companyzone = companyzone;
+	}
 	public void convertToTable(Ivo obj){
 		Company co = (Company)obj;
 		this.idCompany = co.getIdCompany();
 		this.companyname = co.getCompanyname();
 		this.companynumber = co.getCompanynumber();
+		this.companycode = co.getCompanycode();
+		this.companyzone = co.getCompanyzone();
 		this.taxcode = co.getTaxcode();
 		if(co.getContact() != null){
 			this.contact = new TblContact();

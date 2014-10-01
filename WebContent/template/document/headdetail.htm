@@ -87,40 +87,6 @@
 			</select>
 		</div>
 	</div-->
-	<div id="dialog"  class="HEAD_dialog_box " ng-show="showSearch == true">
-		<div class="HEAD_dialog_box_content ui-dialog" >
-			<div>
-				<div>
-					<input id="search_field" ng-model="search" value="{{search}}"></input>
-					<button ng-click="searchProd()">Cerca</button>
-					<button ng-click="addNewProduct()">Aggiungi Prodotto</button>
-					<button ng-click="showSearch = false">Chiudi</button>
-				</div>
-			</div>
-		<div class="HEAD_dialog_prod_container">
-			<table class="GECO_table_detail clearfix three_two ">
-								<thead  >
-									<tr>
-										<td class="tabledetail_header_element tabledetail_row row_table threequarter first">Codice</td>
-										<td class="tabledetail_header_element tabledetail_row row_table double">Descrizione</td>
-										<td class="tabledetail_header_element tabledetail_row row_table ">UM</td>
-										<td class="tabledetail_header_element tabledetail_row row_table half ">&nbsp;</td>
-										
-									</tr>
-								</thead>
-								<tbody  >
-									<tr ng-repeat="prod in prodFound | orderBy:orderYear">
-										<td class="row_table threequarter first ">&nbsp;{{prod.code}}</td>
-										<td class="row_table  double">&nbsp;{{prod.product.description}}</td>
-										<td class="row_table  ">&nbsp;{{prod.um.code}}</td>
-										<td class="row_table half  "><div class=" modify" ng-click="insertProduct(prod.code)"><div class="modifyicon"></div></div></td>
-									</tr>
-								</tbody>
-							</table>
-			
-		</div>
-		</div>
-	</div>
 	
 	
 	<div id="accordion" create-accordion>
@@ -206,6 +172,41 @@
 		<h3>Dettaglio</h3>
 		<div>
 			<p>
+			<div id="dialog"  class="HEAD_dialog_box " ng-show="showSearch == true">
+		<div class="HEAD_dialog_box_content ui-dialog" >
+			<div>
+				<div>
+					<input id="search_field" ng-model="search" value="{{search}}"></input>
+					<button ng-click="searchProd()">Cerca</button>
+					<button ng-click="addNewProduct()">Aggiungi Prodotto</button>
+					<button ng-click="showSearch = false">Chiudi</button>
+				</div>
+			</div>
+		<div class="HEAD_dialog_prod_container">
+			<table class="GECO_table clearfix  ">
+								<thead  >
+									<tr class="header_table">
+										<td class="  row_table threequarter "><div class="td_div first">Codice</div></td>
+										<td class="  row_table double"><div class="td_div ">Descrizione</div></td>
+										<td class="  row_table "><div class="td_div ">UM</div></td>
+										<td class="  row_table half "><div class="td_div ">&nbsp;</div></td>
+										
+									</tr>
+								</thead>
+								<tbody  >
+									<tr class="tr_table" ng-repeat="prod in prodFound | orderBy:orderYear">
+										<td class="row_table threequarter  "><div class="td_div first">&nbsp;{{prod.code}}</div></td>
+										<td class="row_table  double"><div class="td_div ">&nbsp;{{prod.product.description}}</div></td>
+										<td class="row_table  "><div class="td_div ">&nbsp;{{prod.um.code}}</div></td>
+										<td class="row_table half  "><div class="td_div "><div class=" modify" ng-click="insertProduct(prod.code)"><div class="modifyicon"></div></div></div></td>
+									</tr>
+								</tbody>
+							</table>
+			
+		</div>
+		</div>
+	</div>
+	
 				<div class="add_container_doc" ng-click="addRowElement();setModified()" >
 							<div class="add buttonicon">
 							</div>
@@ -371,7 +372,7 @@
 										<td class=" td_ten">
 											<div class="td_col ">
 												<div class="label ">Prezzo * </div>
-												<div class="field "><input class="inputfield" id="ifname" ng-model="currentRow.price" value="{{currentRow.price}}"  ng-change="calculateRow();setModified()"  /></div>
+												<div class="field "><input class="inputfield" id="ifname" ng-model="currentRow.price" value="{{currentRow.price}}"  ng-change="calculateRow(currentRow);setModified()"  /></div>
 											</div>
 										</td>
 										<td class=" td_ten">

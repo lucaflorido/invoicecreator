@@ -34,7 +34,7 @@ public class UserDao {
 	 * @return
 	 */
 	public Boolean checkAdmin(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Boolean result = false;
 		try{
 			Criteria cr = session.createCriteria(TblUser.class,"user");
@@ -64,7 +64,7 @@ public class UserDao {
 	}
 	public Boolean createAdminFun(){
 		TblRole role = new RoleDao().createAdminRole();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		Boolean result = false;
 		try{
@@ -99,22 +99,27 @@ public class UserDao {
 		Test.setUsername("test");
 		return Test;*/
 		/**********************TEST********************/
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction t = session.beginTransaction();
 		try{
+			
 			Criteria cr = session.createCriteria(TblUser.class,"user");
 			cr.add(Restrictions.eq("username", username));
 			password = HibernateUtils.md5Java(password);
 		    cr.add(Restrictions.eq("password", password));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List users = cr.list();
+			t.commit();
 			if (users.size() > 0){
 				return (TblUser)users.get(0);
 			}else{
 			    return new TblUser();
 			}
+			
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			e.printStackTrace();
+			t.rollback();
 			throw new ExceptionInInitializerError(e);
 			
 		}finally{
@@ -127,7 +132,7 @@ public class UserDao {
 	 * @return
 	 */
 	public ArrayList<User> getListUser(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<User> list = new ArrayList<User>();
 		try{
 			Criteria cr = session.createCriteria(TblUser.class);
@@ -172,7 +177,7 @@ public class UserDao {
 	public int saveUpdate(User user){
 		TblUser tbluser = new TblUser();
 		int iduser=0;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			if (user.getIduser() <= 0 && user.getPassword() == null ){
@@ -198,7 +203,7 @@ public class UserDao {
 	 * GET A SINGLE USER
 	 * **/
 	public TblUser getSingleUser(int iduser){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblUser.class,"user");
 			cr.add(Restrictions.eq("iduser", iduser));
@@ -224,7 +229,7 @@ public class UserDao {
 	public void deleteUser(User user){
 		TblUser tbluser = new TblUser();
 		int iduser=0;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tbluser.convertToTable(user);
@@ -250,7 +255,7 @@ public class UserDao {
 	public int changePassword(User user){
 		TblUser tbluser = new TblUser();
 		int iduser=0;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			if (this.checkCredentials(user.getUsername(), user.getPassword()).getIduser() == user.getIduser() && user.getNewpassword() != "" && user.getNewpassword() != null ){

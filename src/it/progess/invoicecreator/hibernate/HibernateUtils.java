@@ -40,7 +40,21 @@ public class HibernateUtils {
         }
         return digest;
     }
-	static SessionFactory factory;
+	
+	static {
+	    try {
+	      // Crea la SessionFactory from hibernate.cfg.xml
+	      factory = new Configuration().configure().buildSessionFactory();
+	    } catch (Throwable ex) {
+	      // Make sure you log the exception, as it might be swallowed
+	      System.err.println("Initial SessionFactory creation failed." + ex);
+	      throw new ExceptionInInitializerError(ex);
+	    }
+	  }
+	public static SessionFactory getSessionFactory() {
+	    return factory;
+	 }
+	private static SessionFactory factory;
 	public static Session getSession(){
 		try{
 			if (factory == null){
@@ -50,8 +64,8 @@ public class HibernateUtils {
 			System.err.println("Failed to create sessionFactory "+ex);
 			throw new ExceptionInInitializerError(ex);
 		}
-		factory.getCache().evictCollectionRegions();
-		return factory.openSession();
+		//factory.getCache().evictCollectionRegions();
+		return factory.getCurrentSession();
 	}
 	public static User getUserFromSession (HttpServletRequest request){
 		HttpSession session = request.getSession();  

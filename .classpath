@@ -44,5 +44,7 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jettison-1.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jsr311-api-1.1.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.28-bin.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/progesstransport.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/progessvalidator.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

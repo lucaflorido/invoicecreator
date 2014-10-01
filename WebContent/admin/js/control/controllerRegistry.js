@@ -20,7 +20,15 @@ gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",'$routeParams
 			type:"PUT",
 			data:"companys="+JSON.stringify($scope.company),
 			success:function(data){
-					alert("elemento salvato con successo");
+					result = JSON.parse(data);
+					if (result.type == "success"){	
+						$scope.products = result.success;
+						$scope.$apply();
+						$("#maincontainer_productlist").focus();
+						$scope.confirmSaved();
+					}else{
+						alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+					}
 					
 			}	
 		})

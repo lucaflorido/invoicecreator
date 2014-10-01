@@ -3,15 +3,33 @@ package it.progess.invoicecreator.vo;
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCompany;
 import it.progess.invoicecreator.properties.GECOParameter;
+import it.progess.transport.check.ProgessCheck;
+import it.progess.transport.vo.ProgessError;
+import it.progess.validator.CFPIValidator;
 
 public class Company implements Ivo {
 	private int idCompany;
 	private String companyname;
 	private String companynumber;
+	private String companycode;
+	private String companyzone;
 	private String taxcode;
 	private Contact contact;
 	private Address address;
 	private BankContact bankcontact;
+	
+	public String getCompanycode() {
+		return companycode;
+	}
+	public void setCompanycode(String companycode) {
+		this.companycode = companycode;
+	}
+	public String getCompanyzone() {
+		return companyzone;
+	}
+	public void setCompanyzone(String companyzone) {
+		this.companyzone = companyzone;
+	}
 	public BankContact getBankcontact() {
 		return bankcontact;
 	}
@@ -60,6 +78,8 @@ public class Company implements Ivo {
 		this.companyname = co.getCompanyname();
 		this.companynumber = co.getCompanynumber();
 		this.taxcode = co.getTaxcode();
+		this.companycode = co.getCompanycode();
+		this.companyzone = co.getCompanyzone();
 		if(co.getContact() != null){
 			this.contact = new Contact();
 			this.contact.convertFromTable(co.getContact());
@@ -83,11 +103,15 @@ public class Company implements Ivo {
 		}else if (this.address.control() != null){
 			er = (GECOError)this.address.control();
 		}
-		if (this.taxcode == null || this.taxcode ==""){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice Fiscale Mancante");
+		if (ProgessCheck.basicCheck(CFPIValidator.checkCFPI(this.taxcode, this.companynumber,false,true)) == false){
+			ProgessError pe = (ProgessError)CFPIValidator.checkCFPI(this.taxcode, this.companynumber,false,true);
+			return new GECOError(pe.getErrorName(),pe.getErrorMessage());
+		}
+		if (this.companynumber == null || this.companynumber ==""){
+			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Partita iva Mancante");
 		}else{
-			if (this.taxcode.length() != 16){
-				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Codice Fiscale non conforme");
+			if (this.companynumber.length() != 11){
+				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Partita iva non conforme");
 			}
 		}
 		if (this.bankcontact == null){

@@ -5,23 +5,39 @@
 <hibernate-configuration>  
   
     <session-factory>  
-  
-        <!-- Database connection settings -->  
+  		<property name="connection.datasource">java:comp/env/jdbc/geco</property>
+		
+		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		 
+		<!-- Disabilita cache di secondo livello. -->
+		<property
+		name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<property name="cache.use_query_cache">false</property>
+		<property name="cache.use_minimal_puts">false</property>
+		<property name="max_fetch_depth">3</property>
+		 
+		<!-- cabla il metodo getCurrentSession() al thread. -->
+		<property name="current_session_context_class">thread</property>
+        <!-- Database connection settings >  
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>  
-        <property name="connection.url">jdbc:mysql://127.0.0.1/gecosofttest_2</property>  
+        <property name="connection.url">jdbc:mysql://127.0.0.1/gecosofttest_2?autoReconnect=true</property>  
+        
         <property name="connection.username">root</property>  
         <property name="connection.password">09050303</property>
-        <!--property name="connection.username">lflorido_2</property>  
+        <property name="connection.username">lflorido_2</property>  
         <property name="connection.password">svnf0rl0s</property-->
-        <!--property name="connection.url">jdbc:mysql://91.121.185.14/it.progess.invoicecreatorsofttest</property>
-        <property name="connection.url">jdbc:mysql://localhost/it.progess.invoicecreatorsofttest</property-->  
-        <!-- property name="connection.username">lflorido</property>  
-        <property name="connection.password">svnf0rl0s</property-->  
-  
+       <property name="connection.timeout">3</property>
+		<property name="connection.autoReconnect">true</property>
+		<property name="connection.autoReconnectForPools">true</property>
+		<property name="connection.is-connection-validation-required">false</property>  
         <!-- JDBC connection pool (use the built-in) -->  
-        <property name="connection.pool_size">1</property>  
-  
-        <!-- SQL dialect -->  
+        <!-- property name="connection.pool_size">1</property-->  
+		  <!--property name="c3p0.min_size">5</property>
+		<property name="c3p0.max_size">20</property>
+		<property name="c3p0.timeout">1800</property>
+		<property name="c3p0.max_statements">50</property>
+		<property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+        < SQL dialect -->  
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>  
   
 		<!--  >property name="hibernate.cache.use_second_level_cache"></property>
@@ -33,8 +49,8 @@
         <property name="show_sql">true</property>  
   
         <!-- Drop and re-create the database schema on startup -->  
-        <!--  >property name="hbm2ddl.auto">create</property-->  
-  		<property name="hibernate.connection.isolation">2</property>
+        <!--  >property name="hbm2ddl.auto">create</property>  
+  		<property name="hibernate.connection.isolation">2</property-->
         
         <mapping class="it.progess.invoicecreator.pojo.TblCounter"></mapping>
         <mapping class="it.progess.invoicecreator.pojo.TblCounterYear"></mapping>

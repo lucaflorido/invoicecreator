@@ -21,10 +21,14 @@ import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.Ivo;
 import it.progess.invoicecreator.vo.Row;
-import it.progess.invoicecreator.vo.TaxRate;
+import it.progess.invoicecreator.vo.User;
+
 @Entity
 @Table(name="tblhead")
-public class TblHead implements Itbl {
+public class TblHead extends it.progess.model.pojo.Head implements Itbl {
+	public TblHead(){
+		super();
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="idHead")
 	private int idHead;
@@ -333,8 +337,13 @@ public class TblHead implements Itbl {
 			this.taxrate.convertToTable(h.getTaxrate());
 		}
 		this.withholdingtax = h.getWithholdingtax();
+		if (this.idHead > 0){
+			this.setUsercreate(h.getUserinsert());
+			this.setDateinsert(DataUtilConverter.convertDateFromString(h.getDateinsert()));
+		}
+		
 	}
-	public void convertToTableSingle(Ivo obj){
+	public void convertToTableSingle(Ivo obj,User user){
 		this.convertToTable(obj);
 		Head h = (Head)obj;
 		if (h.getRows() != null){
@@ -345,9 +354,16 @@ public class TblHead implements Itbl {
 				this.rows.add(rowtbl);
 			}
 		}
-	
+		if (this.idHead > 0){
+			super.setDateupdate(new Date());
+			super.setUserupdate(user.getUsername());
+		}else{
+			super.setDateinsert(new Date());
+			super.setUsercreate(user.getUsername());
+		
+		}
 	}
-	public void convertToTableSingleToSave(Ivo obj){
+	public void convertToTableSingleToSave(Ivo obj,User user){
 		this.convertToTable(obj);
 		Head h = (Head)obj;
 		if (h.getRows() != null){
@@ -361,7 +377,14 @@ public class TblHead implements Itbl {
 				this.rows.add(rowtbl);
 			}
 		}
-	
+		if (this.idHead > 0){
+			super.setDateupdate(new Date());
+			super.setUserupdate(user.getUsername());
+		}else{
+			super.setDateinsert(new Date());
+			super.setUsercreate(user.getUsername());
+		
+		}
 	}
 	
 }

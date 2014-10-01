@@ -64,7 +64,7 @@ import org.hibernate.criterion.Restrictions;
 public class DocumentDao {
 	public int getPagesNumber(int size,HeadFilter filter,User user){
 		int pages = 0;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
 			setCriteriaHead(cr, filter,user);
@@ -88,7 +88,7 @@ public class DocumentDao {
 	 * Get List of Head 
 	 */
 	public ArrayList<Head> getHeadList(HeadFilter filter,User user){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Head> list = new ArrayList<Head>();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
@@ -191,9 +191,10 @@ public class DocumentDao {
 			if (this.checkHeadNumber(sm) == true){	
 				if (sm.getNumber() != 0  ){
 					DocumentHelper.totalHeadCalculation(sm);
-					Session session = HibernateUtils.getSession();
+					Session session = HibernateUtils.getSessionFactory().openSession();
 					Transaction tx = null;
 					sm.setCompany(user.getCompany());
+					
 					try{
 						tx = session.beginTransaction();
 						//Store Management
@@ -201,7 +202,7 @@ public class DocumentDao {
 						//Account Management
 						
 						TblHead tblsm = new TblHead();
-						tblsm.convertToTableSingleToSave(sm);
+						tblsm.convertToTableSingleToSave(sm,user);
 						session.saveOrUpdate(tblsm);
 						id=tblsm.getIdHead();
 						sm.setIdHead(id);
@@ -238,7 +239,7 @@ public class DocumentDao {
 	public Boolean deleteHead(Head sm){
 		sm = getSingleHead(sm.getIdHead());
 		TblHead tblsm = new TblHead();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblsm.convertToTable(sm);
@@ -279,7 +280,7 @@ public class DocumentDao {
 		}
 	}
 	private void deleteGeneratedRowExecute(TblGenerateHeadRow tblGenerateRow){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -298,7 +299,7 @@ public class DocumentDao {
 	 * GET A SINGLE CUSTOMER
 	 * **/
 	public Head getSingleHead(int idhead){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Head head = new Head();
 		//head = getMockHead();
 		try{
@@ -352,7 +353,7 @@ public class DocumentDao {
 		return head;
 	}
 	public Row getSingleRow(int idrow){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Row row = new Row();
 		//head = getMockHead();
 		try{
@@ -376,7 +377,7 @@ public class DocumentDao {
 		return row;
 	}
 	public Row getSingleRowWithHead(int idrow){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Row row = new Row();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");
@@ -425,7 +426,7 @@ public class DocumentDao {
 	 * GET FILTERED DOCS FOR GENERATION
 	 */
 	public ArrayList<Head> getHeadRowsGenerateList(GenerateDocsFilter filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Head> list = new ArrayList<Head>();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
@@ -683,7 +684,7 @@ public class DocumentDao {
 		return new GECOError(GECOParameter.ERROR_HIBERNATE,"Errore nella copia dei dati");
 	}
 	private boolean checkHeadNumber(Head head) {
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
 			cr.add(Restrictions.eq("number", head.getNumber()));
@@ -720,7 +721,7 @@ public class DocumentDao {
 	}
 	private boolean checkGeneratedRow(Row row) {
 		boolean nogenerated = false;
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblGenerateHeadRow.class,"generatedheadrow");
 			cr.add(Restrictions.eq("generatedheadrow.rowSource.idRow", row.getIdRow()));
@@ -784,7 +785,7 @@ public class DocumentDao {
 		TblGenerateHeadRow tblGenerateRow = new TblGenerateHeadRow();
 		tblGenerateRow.setHeadGenerate(tblHeadGenerate);
 		tblGenerateRow.setHeadSource(tblHeadSource);
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -807,7 +808,7 @@ public class DocumentDao {
 		TblGenerateHeadRow tblGenerateRow = new TblGenerateHeadRow();
 		tblGenerateRow.setHeadGenerate(tblHeadGenerate);
 		tblGenerateRow.setRowSource(tblRowSource);
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -830,7 +831,7 @@ public class DocumentDao {
 	 * GET FILTERED DOCS FOR GENERATION
 	 */
 	public ArrayList<Head> getHeadRowsNeededList(NeededFilter filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Head> list = new ArrayList<Head>();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
@@ -949,7 +950,7 @@ public class DocumentDao {
 	}
 	private HashSet<Row> getDailyOrdersHistoryRows(GenerateObject filter,Customer c,User user){
 		HashSet<Row> rows = new HashSet<Row>();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Head> list = new ArrayList<Head>();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");
@@ -990,7 +991,7 @@ public class DocumentDao {
 		return rows;
 	}
 	public ArrayList<Head> getDailyOrderHeads(GenerateObject filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Head> list = new ArrayList<Head>();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
@@ -1021,7 +1022,7 @@ public class DocumentDao {
 		return list;
 	}
 	private GECOObject checkOrders(GenerateObject filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		GECOSuccess go = null;
 		ArrayList<Head> list = new ArrayList<Head>();
 		try{
@@ -1137,7 +1138,7 @@ public class DocumentDao {
 		return new GECOSuccess(gros);
 	}
 	private ArrayList<Supplier> getListOfSupplierInDocument(GenerateObject filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Supplier> list = new ArrayList<Supplier>();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");
@@ -1164,7 +1165,7 @@ public class DocumentDao {
 		return list;
 	}
 	private ArrayList<Customer> getListOfCustomerInDocument(GenerateObject filter){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
@@ -1191,7 +1192,7 @@ public class DocumentDao {
 		return list;
 	}
 	private ArrayList<String> getListOfProductInDocument(GenerateObject filter,Supplier s){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<String> list = new ArrayList<String>();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");
@@ -1215,7 +1216,7 @@ public class DocumentDao {
 		return list;
 	}
 	private void getListOfProductInDocument(GenerateObject filter,Customer c,String code,GECOReportOrderProduct g){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<GECOReportOrderCustomerQuantity> list = new ArrayList<GECOReportOrderCustomerQuantity>();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");
@@ -1251,7 +1252,7 @@ public class DocumentDao {
 		
 	}
 	private ArrayList<Double> getListOfPrices(GenerateObject filter,Customer c){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Double> list = new ArrayList<Double>();
 		try{
 			Criteria cr = session.createCriteria(TblRow.class,"row");
@@ -1274,7 +1275,7 @@ public class DocumentDao {
 	public GECOObject removeRow(int idRow){
 		GECOSuccess suc = new GECOSuccess();
 		Row r = getSingleRowWithHead(idRow);
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		if (r.getHead().isGenerateTo() == false){
 			try{
@@ -1298,7 +1299,7 @@ public class DocumentDao {
 			new GECOError(GECOParameter.ERROR_DELETE,"Impossibile eliminare la riga");
 		}
 		try{
-		//	Session session = HibernateUtils.getSession();
+		//	Session session = HibernateUtils.getSessionFactory().openSession();
 			
 		}catch(Exception e){
 			new GECOError(GECOParameter.ERROR_HIBERNATE,"Errore nell'eliminazione dei dati");

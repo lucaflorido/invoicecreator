@@ -2,9 +2,11 @@ package it.progess.invoicecreator.vo;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblSupplier;
-
 import it.progess.invoicecreator.pojo.TblListSupplier;
 import it.progess.invoicecreator.properties.GECOParameter;
+import it.progess.transport.check.ProgessCheck;
+import it.progess.transport.vo.ProgessError;
+import it.progess.validator.CFPIValidator;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -167,19 +169,9 @@ public class Supplier implements Ivo{
 		if (this.payment == null){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Pagamento Mancante");
 		}
-		if (this.taxcode == null || this.taxcode ==""){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice Fiscale Mancante");
-		}else{
-			if (this.taxcode.length() != 16){
-				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Codice Fiscale non conforme");
-			}
-		}
-		if (this.serialnumber == null || this.serialnumber ==""){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Partita Iva mancante");
-		}else{
-			if (this.serialnumber.length() != 11){
-				er = new GECOError(GECOParameter.ERROR_WRONG_SIZE,"Partita Iva non conforme");
-			}
+		if (ProgessCheck.basicCheck(CFPIValidator.checkCFPI(this.taxcode, this.serialnumber)) == false){
+			ProgessError pe = (ProgessError)CFPIValidator.checkCFPI(this.taxcode, this.serialnumber);
+			return new GECOError(pe.getErrorName(),pe.getErrorMessage());
 		}
 		
 		return er;

@@ -13,6 +13,21 @@ public class PrintCompany {
 	public String azienda_telefono;
 	public String azienda_fax;
 	public String azienda_email;
+	public String azienda_codice;
+	public String azienda_provincia;
+	
+	public String getAzienda_codice() {
+		return azienda_codice;
+	}
+	public void setAzienda_codice(String azienda_codice) {
+		this.azienda_codice = azienda_codice;
+	}
+	public String getAzienda_provincia() {
+		return azienda_provincia;
+	}
+	public void setAzienda_provincia(String azienda_provincia) {
+		this.azienda_provincia = azienda_provincia;
+	}
 	public String getAzienda_telefono() {
 		return azienda_telefono;
 	}
@@ -63,13 +78,27 @@ public class PrintCompany {
 	}
 	public void setFromObject(Company comp){
 		if (comp != null){
-			this.azienda_cf = comp.getTaxcode();
-			this.azienda_indirizzo = comp.getAddress().getAddress()+" "+comp.getAddress().getNumber();
-			this.azienda_indirizzo2 = comp.getAddress().getZipcode()+" "+comp.getAddress().getCity()+" ("+comp.getAddress().getZone()+")";
-			this.azienda_nome = comp.getCompanyname();
-			this.azienda_telefono = comp.getContact().getPhone1();
-			this.azienda_fax = comp.getContact().getFax();
-			this.azienda_email = comp.getContact().getEmail1();
+			this.azienda_cf = this.getValue(comp.getTaxcode());
+			this.azienda_indirizzo = this.getValue(comp.getAddress().getAddress()+" "+comp.getAddress().getNumber());
+			this.azienda_indirizzo2 = this.getValue(comp.getAddress().getZipcode()+" "+comp.getAddress().getCity()+" ("+comp.getAddress().getZone()+")");
+			this.azienda_nome =this.getValue(comp.getCompanyname());
+			this.azienda_telefono = this.getValue(comp.getContact().getPhone1());
+			this.azienda_fax = this.getValue(comp.getContact().getFax());
+			this.azienda_email = this.getValue(comp.getContact().getEmail1());
+			this.azienda_codice = this.getValue(comp.getCompanycode());
+			this.azienda_provincia = this.getValue(comp.getCompanyzone());
+			this.azienda_pi = this.getValue(comp.getCompanynumber());
+			
+		}
+	}
+	public String getValue(String value){
+		return getValue(value,"");
+	}
+	public String getValue(String value,String defaultVal){
+		if (value != null){
+			return value;
+		}else{
+			return defaultVal;
 		}
 	}
 }

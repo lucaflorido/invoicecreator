@@ -3,6 +3,8 @@
 	<name>InvoiceCreator</name>
 	<comment></comment>
 	<projects>
+		<project>ProgessTransport</project>
+		<project>ProgessValidator</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

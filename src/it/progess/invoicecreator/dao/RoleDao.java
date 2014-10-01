@@ -23,7 +23,7 @@ public class RoleDao {
 	 * @return
 	 */
 	public ArrayList<Role> getRoleList(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Role> list = new ArrayList<Role>();
 		try{
 			Criteria cr = session.createCriteria(TblRole.class);
@@ -46,7 +46,7 @@ public class RoleDao {
 		return list;
 	}
 	public ArrayList<Role> saveUpdatesRoles(Role[] roles){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Role> list = new ArrayList<Role>();
 		Transaction tx = null;
 		try{
@@ -76,7 +76,7 @@ public class RoleDao {
 	 * **/
 	public ArrayList<Role> deleteRole(Role role){
 		TblRole tblrole = new TblRole();
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tblrole.convertToTable(role);
@@ -99,7 +99,7 @@ public class RoleDao {
 	 *  Create default role
 	 */
 	public TblRole createAdminRole(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		TblRole role = new TblRole();
 		role.setAdmin(true);
@@ -126,7 +126,7 @@ public class RoleDao {
 		return getRoleAdmin();
 	}
 	public TblRole getRoleAdmin(){
-		Session session = HibernateUtils.getSession();
+		Session session = HibernateUtils.getSessionFactory().openSession();
 		TblRole role = new TblRole();
 		try{
 			Criteria cr = session.createCriteria(TblRole.class,"role");

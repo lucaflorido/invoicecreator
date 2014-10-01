@@ -1,6 +1,7 @@
 package it.progess.invoicecreator.print;
 
 
+import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.Row;
@@ -24,6 +25,7 @@ public class PrintSingleHead extends PrintCompany {
 	public String documento_data ;
 	public String documento_pagamento ;
 	public String documento_iban ;
+	public String documento_note ;
 	public String prodotto_um ;
 	public String prodotto_aliquota;
 	public String prodotto_imponibile;
@@ -78,64 +80,81 @@ public class PrintSingleHead extends PrintCompany {
 	public void setProdotto_colli(String prodotto_colli) {
 		this.prodotto_colli = prodotto_colli;
 	}
+	
+	public String getDocumento_note() {
+		return documento_note;
+	}
+	public void setDocumento_note(String documento_note) {
+		this.documento_note = documento_note;
+	}
 	public void setFromObject(Company comp,Head head,Row row){
 		if (comp != null){
 			super.setFromObject(comp);
+			if (comp.getBankcontact() != null ){
+				this.documento_iban = getValue(comp.getBankcontact().getIban());
+			}else{
+				this.documento_iban = "";
+			}
 		}
 		this.setFromObject(head, row);
 	}
 	public void setFromObject(Head head,Row row){
 		if (head.getCustomer() != null ){
-			this.cliente_codice = head.getCustomer().getCustomercode();
-			this.cliente_ragionesociale = head.getCustomer().getCustomername();
-			this.cliente_indirizzo = head.getCustomer().getAddress().getAddress()+" "+head.getCustomer().getAddress().getNumber();
-			this.cliente_indirizzo2 = head.getCustomer().getAddress().getZipcode()+" "+head.getCustomer().getAddress().getCity()+" ("+head.getCustomer().getAddress().getZone()+")";
-			this.cliente_pi = head.getCustomer().getSerialnumber();
-			this.cliente_cf = head.getCustomer().getTaxcode();
+			this.cliente_codice =getValue( head.getCustomer().getCustomercode());
+			this.cliente_ragionesociale = getValue(head.getCustomer().getCustomername());
+			this.cliente_indirizzo = getValue(head.getCustomer().getAddress().getAddress()+" "+head.getCustomer().getAddress().getNumber());
+			this.cliente_indirizzo2 = getValue(head.getCustomer().getAddress().getZipcode()+" "+head.getCustomer().getAddress().getCity()+" ("+head.getCustomer().getAddress().getZone()+")");
+			this.cliente_pi =getValue( head.getCustomer().getSerialnumber());
+			this.cliente_cf = getValue(head.getCustomer().getTaxcode());
 		}else if (head.getSupplier() != null && head.getDocument().getSupplier() == true){
-			this.cliente_codice = head.getSupplier().getSuppliercode();
-			this.cliente_ragionesociale = head.getSupplier().getSuppliername();
-			this.cliente_indirizzo = head.getSupplier().getAddress().getAddress()+" "+head.getSupplier().getAddress().getNumber();
-			this.cliente_indirizzo2 = head.getSupplier().getAddress().getZipcode()+" "+head.getSupplier().getAddress().getCity()+" ("+head.getSupplier().getAddress().getZone()+")";
-			this.cliente_pi = head.getSupplier().getSerialnumber();
-			this.cliente_cf = head.getSupplier().getTaxcode();
+			this.cliente_codice = getValue(head.getSupplier().getSuppliercode());
+			this.cliente_ragionesociale =getValue( head.getSupplier().getSuppliername());
+			this.cliente_indirizzo = getValue(head.getSupplier().getAddress().getAddress()+" "+head.getSupplier().getAddress().getNumber());
+			this.cliente_indirizzo2 = getValue(head.getSupplier().getAddress().getZipcode()+" "+head.getSupplier().getAddress().getCity()+" ("+head.getSupplier().getAddress().getZone()+")");
+			this.cliente_pi =getValue( head.getSupplier().getSerialnumber());
+			this.cliente_cf = getValue(head.getSupplier().getTaxcode());
 		}
-			this.documento_tipo  = head.getDocument().getDescription();
-			this.documento_numero =String.valueOf( head.getNumber()) ;
-			this.documento_data = head.getDate() ;
+			this.documento_tipo  = getValue(head.getDocument().getDescription());
+			this.documento_numero =getValue(String.valueOf( head.getNumber())+"/" + head.getDate().substring(6) );
+			this.documento_data =getValue( head.getDate() );
 			if (head.getPayment() != null)
-			this.documento_pagamento = head.getPayment().getDescription() ;
+				this.documento_pagamento = head.getPayment().getDescription() ;
 			else{
 				this.documento_pagamento = "";
 			}
-			this.tot_imp4 = String.valueOf( head.getAmount4());
-			this.tot_iva4 = String.valueOf( head.getTaxamount4());
-			this.tot_tot4 = String.valueOf( head.getTotal4());
-			this.tot_imp20 = String.valueOf( head.getAmount20());
-			this.tot_iva20 = String.valueOf( head.getTaxamount20());
-			this.tot_tot20 = String.valueOf( head.getTotal20());
-			this.tot_imp10 = String.valueOf( head.getAmount10());
-			this.tot_iva10 = String.valueOf( head.getTaxamount10());
-			this.tot_tot10 = String.valueOf( head.getTotal10());
-			this.imp = String.valueOf( head.getAmount());
-			this.iva = String.valueOf( head.getTaxamount());
-			this.tot = String.valueOf( head.getTotal());
-			this.ritenuta = String.valueOf( head.getWithholdingtax());
+			if (head.getNote() != null){
+				this.documento_note = head.getNote();
+			}else{
+				this.documento_note = "";
+			}
+			this.tot_imp4 = getValue(String.valueOf( head.getAmount4()));
+			this.tot_iva4 = getValue(String.valueOf( head.getTaxamount4()));
+			this.tot_tot4 = getValue(String.valueOf( head.getTotal4()));
+			this.tot_imp20 = getValue(String.valueOf( head.getAmount20()));
+			this.tot_iva20 = getValue(String.valueOf( head.getTaxamount20()));
+			this.tot_tot20 =getValue( String.valueOf( head.getTotal20()));
+			this.tot_imp10 = getValue(String.valueOf( head.getAmount10()));
+			this.tot_iva10 = getValue(String.valueOf( head.getTaxamount10()));
+			this.tot_tot10 = getValue(String.valueOf( head.getTotal10()));
+			this.imp = getValue(String.valueOf( head.getAmount()));
+			this.iva = getValue(String.valueOf( head.getTaxamount()));
+			this.tot = getValue(String.valueOf( head.getTotal()));
+			this.ritenuta =getValue( String.valueOf( head.getWithholdingtax()));
 			if (head.getTaxrate() != null)
-			this.percritenuta = String.valueOf( head.getTaxrate().getValue());
+			this.percritenuta = getValue(String.valueOf( head.getTaxrate().getValue()));
 		
 		if (row != null){
-			this.prodotto_codice = row.getProductcode();
-			this.prodotto_desc = row.getProductdescription();
-			this.prodotto_quantita = String.valueOf(row.getQuantity());
-			this.prodotto_prezzo = String.valueOf(row.getPrice());
-			this.prodotto_um = String.valueOf(row.getProductum());
-			this.prodotto_aliquota = String.valueOf(row.getProduct().getTaxrate().getValue());
-			this.prodotto_iva = String.valueOf(row.getTaxamount());
-			this.prodotto_imponibile = String.valueOf(row.getAmount());
-			this.prodotto_totale = String.valueOf(row.getTotal());
-			this.prodotto_causale = row.getType();
-			this.prodotto_colli = String.valueOf(row.getNecks());
+			this.prodotto_codice = getValue(row.getProductcode());
+			this.prodotto_desc = getValue(row.getProductdescription());
+			this.prodotto_quantita = getValue(String.valueOf(row.getQuantity()));
+			this.prodotto_prezzo =getValue( String.valueOf(row.getPrice()));
+			this.prodotto_um = getValue(String.valueOf(row.getProductum()));
+			this.prodotto_aliquota =getValue( String.valueOf(row.getProduct().getTaxrate().getValue()));
+			this.prodotto_iva = getValue(String.valueOf(row.getTaxamount()));
+			this.prodotto_imponibile = getValue(String.valueOf(row.getAmount()));
+			this.prodotto_totale = getValue(String.valueOf(row.getTotal()));
+			this.prodotto_causale =getValue( row.getType());
+			this.prodotto_colli = getValue(String.valueOf(row.getNecks()));
 		}
 	}
 	public String getCliente_codice() {

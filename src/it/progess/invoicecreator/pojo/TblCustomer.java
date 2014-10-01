@@ -21,12 +21,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 @Entity
 @Table(name="tblcustomer")
-public class TblCustomer implements Itbl{
+public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="idCustomer")
 	private int idCustomer;
-	@Column(name="customername")
-	private String customername;
+	/*@Column(name="customername")
+	private String customername;*/
 	@Column(name="customercode")
 	private String customercode;
 	@Column(name="active")
@@ -65,7 +65,9 @@ public class TblCustomer implements Itbl{
 	@ManyToOne
 	@JoinColumn(name = "idTaxRate")
 	private TblTaxrate taxrate;
-	
+	public TblCustomer(){
+		super();
+	}
 	public TblTaxrate getTaxrate() {
 		return taxrate;
 	}
@@ -96,12 +98,12 @@ public class TblCustomer implements Itbl{
 	public void setIdCustomer(int idCustomer) {
 		this.idCustomer = idCustomer;
 	}
-	public String getCustomername() {
+	/*public String getCustomername() {
 		return customername;
 	}
 	public void setCustomername(String customername) {
 		this.customername = customername;
-	}
+	}*/
 	public String getCustomercode() {
 		return customercode;
 	}
@@ -189,7 +191,7 @@ public class TblCustomer implements Itbl{
 			this.contact.convertToTable(c.getContact());
 		}
 		this.customercode = c.getCustomercode();
-		this.customername = c.getCustomername();
+		this.setCustomername(c.getCustomername());
 		if (c.getGroup() != null){
 			this.group = new TblGroupCustomer();
 			this.group.convertToTable(c.getGroup());

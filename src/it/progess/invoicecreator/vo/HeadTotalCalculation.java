@@ -129,7 +129,7 @@ public class HeadTotalCalculation {
 		}else{
 			head.setWithholdingtax(0);
 		}
-		this.total = this.total4 + this.total10+ this.total20+head.getWithholdingtax();
+		this.total = this.total4 + this.total10+ this.total20-head.getWithholdingtax();
 		head.setAmount(amount);
 		head.setTaxamount(taxamount);
 		head.setTotal(total);
