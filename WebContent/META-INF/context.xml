@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/InvoiceCreator" >
+	<Resource name="jdbc/geco" 
+	  global="jdbc/geco"
+	  auth="Container"
+	  type="javax.sql.DataSource" 
+	  username="root"
+	  password="09050303"
+	  driverClassName="com.mysql.jdbc.Driver"
+	  url="jdbc:mysql://127.0.0.1/gecosofttest_2?autoReconnect=true"
+	  maxActive="50"
+	  maxIdle="4"
+	  validationQuery="Select 1" 
+	 />
+	 <Resource name="jdbc/invoicecreator" 
+	  global="jdbc/invoicecreator"
+	  auth="Container"
+	  type="javax.sql.DataSource" 
+	  username="lflorido_2"
+	  password="svnf0rl0s"
+	  driverClassName="com.mysql.jdbc.Driver"
+	  url="jdbc:mysql://127.0.0.1/gecosofttest_2?autoReconnect=true"
+	  maxActive="50"
+	  maxIdle="4"
+	  validationQuery="Select 1" 
+	 />
+</Context>
