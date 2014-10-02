@@ -3,11 +3,15 @@ package it.progess.invoicecreator.pojo;
 import it.progess.invoicecreator.vo.Contact;
 import it.progess.invoicecreator.vo.Ivo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -34,6 +38,24 @@ public class TblContact implements Itbl  {
 	private String reference;
 	@Column(name="fax")
 	private String fax;
+	@OneToOne
+	@JoinColumn(name="idUser")
+	private TblUser user;
+	@OneToOne(mappedBy="contact")
+	private TblCustomer customer;
+	
+	public TblUser getUser() {
+		return user;
+	}
+	public void setUser(TblUser user) {
+		this.user = user;
+	}
+	public TblCustomer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(TblCustomer customer) {
+		this.customer = customer;
+	}
 	public int getIdcontact() {
 		return idcontact;
 	}
@@ -106,4 +128,5 @@ public class TblContact implements Itbl  {
 		this.phone2 = co.getPhone2();
 		this.reference = co.getReference();
 	}
+	
 }

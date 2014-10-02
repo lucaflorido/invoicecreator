@@ -127,34 +127,34 @@ public class PrintSingleHead extends PrintCompany {
 			}else{
 				this.documento_note = "";
 			}
-			this.tot_imp4 = getValue(String.valueOf( head.getAmount4()));
-			this.tot_iva4 = getValue(String.valueOf( head.getTaxamount4()));
-			this.tot_tot4 = getValue(String.valueOf( head.getTotal4()));
-			this.tot_imp20 = getValue(String.valueOf( head.getAmount20()));
-			this.tot_iva20 = getValue(String.valueOf( head.getTaxamount20()));
-			this.tot_tot20 =getValue( String.valueOf( head.getTotal20()));
-			this.tot_imp10 = getValue(String.valueOf( head.getAmount10()));
-			this.tot_iva10 = getValue(String.valueOf( head.getTaxamount10()));
-			this.tot_tot10 = getValue(String.valueOf( head.getTotal10()));
-			this.imp = getValue(String.valueOf( head.getAmount()));
-			this.iva = getValue(String.valueOf( head.getTaxamount()));
-			this.tot = getValue(String.valueOf( head.getTotal()));
-			this.ritenuta =getValue( String.valueOf( head.getWithholdingtax()));
+			this.tot_imp4 = getValue(forceTwoDecimal(String.valueOf( head.getAmount4())));
+			this.tot_iva4 = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount4())));
+			this.tot_tot4 = getValue(forceTwoDecimal(String.valueOf( head.getTotal4())));
+			this.tot_imp20 = getValue(forceTwoDecimal(String.valueOf( head.getAmount20())));
+			this.tot_iva20 = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount20())));
+			this.tot_tot20 =getValue(forceTwoDecimal( String.valueOf( head.getTotal20())));
+			this.tot_imp10 = getValue(forceTwoDecimal(String.valueOf( head.getAmount10())));
+			this.tot_iva10 = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount10())));
+			this.tot_tot10 = getValue(forceTwoDecimal(String.valueOf( head.getTotal10())));
+			this.imp = getValue(forceTwoDecimal(String.valueOf( head.getAmount())));
+			this.iva = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount())));
+			this.tot = getValue(forceTwoDecimal(String.valueOf( head.getTotal())));
+			this.ritenuta =getValue( forceTwoDecimal(String.valueOf( head.getWithholdingtax())));
 			if (head.getTaxrate() != null)
-			this.percritenuta = getValue(String.valueOf( head.getTaxrate().getValue()));
+			this.percritenuta = getValue(removeDecimal(String.valueOf( head.getTaxrate().getValue())));
 		
 		if (row != null){
 			this.prodotto_codice = getValue(row.getProductcode());
 			this.prodotto_desc = getValue(row.getProductdescription());
-			this.prodotto_quantita = getValue(String.valueOf(row.getQuantity()));
-			this.prodotto_prezzo =getValue( String.valueOf(row.getPrice()));
+			this.prodotto_quantita = getValue(forceTwoDecimal(String.valueOf(row.getQuantity())));
+			this.prodotto_prezzo =getValue( forceTwoDecimal(String.valueOf(row.getPrice())));
 			this.prodotto_um = getValue(String.valueOf(row.getProductum()));
-			this.prodotto_aliquota =getValue( String.valueOf(row.getProduct().getTaxrate().getValue()));
-			this.prodotto_iva = getValue(String.valueOf(row.getTaxamount()));
-			this.prodotto_imponibile = getValue(String.valueOf(row.getAmount()));
-			this.prodotto_totale = getValue(String.valueOf(row.getTotal()));
+			this.prodotto_aliquota =getValue( removeDecimal(String.valueOf(row.getProduct().getTaxrate().getValue())));
+			this.prodotto_iva = getValue(forceTwoDecimal(String.valueOf(row.getTaxamount())));
+			this.prodotto_imponibile = getValue(forceTwoDecimal(String.valueOf(row.getAmount())));
+			this.prodotto_totale = getValue(forceTwoDecimal(String.valueOf(row.getTotal())));
 			this.prodotto_causale =getValue( row.getType());
-			this.prodotto_colli = getValue(String.valueOf(row.getNecks()));
+			this.prodotto_colli = getValue(removeDecimal(String.valueOf(row.getNecks())));
 		}
 	}
 	public String getCliente_codice() {
@@ -357,6 +357,21 @@ public class PrintSingleHead extends PrintCompany {
 	public void setTot(String tot) {
 		this.tot = tot;
 	}
-	
-	
+	private String removeDecimal(String value){
+		return value.split("\\.")[0];
+	}
+	private String forceTwoDecimal(String value){
+		String[] numberArray = value.split("\\."); 
+		if (numberArray.length == 1){
+			return numberArray[0]+",00";
+		}else if (numberArray.length == 2){
+			if (numberArray[1].length() == 1){
+				return numberArray[0]+","+numberArray[1]+"0";
+			}else{
+				return numberArray[0]+","+numberArray[1];
+			}
+		}else{
+			return value;
+		}
+	}
 }

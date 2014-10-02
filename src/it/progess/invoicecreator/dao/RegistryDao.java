@@ -994,8 +994,6 @@ public class RegistryDao {
 	public GECOObject saveUpdatesCustomer(Customer sm,Session session){
 		int id=0;
 		if (sm.control() == null){
-			
-			
 			try{
 				if (sm.getCustomername() != "" && sm.getCustomername() != null ){
 						TblCustomer tblsm = new TblCustomer();

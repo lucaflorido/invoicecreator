@@ -4,6 +4,10 @@ import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.TblRole;
 import it.progess.invoicecreator.pojo.TblUser;
 import it.progess.invoicecreator.vo.User;
+import it.progess.transport.config.ProgessParameters;
+import it.progess.transport.vo.ProgessError;
+import it.progess.transport.vo.ProgessObject;
+import it.progess.transport.vo.ProgessSuccess;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -12,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.SystemException;
 
 import org.hibernate.Criteria;
@@ -22,6 +28,8 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+
+import com.google.gson.Gson;
 
 public class UserDao {
 	
@@ -91,14 +99,15 @@ public class UserDao {
 	 * Check if exists the credentials are correct
 	 * @return
 	 */
-	public TblUser checkCredentials(String username,String password){
-		/**********************TEST********************
-		TblUser Test = new TblUser();
-		Test.setIduser(1);
-		Test.setName("test");
-		Test.setUsername("test");
-		return Test;*/
-		/**********************TEST********************/
+	public ProgessObject checkCredentials(String username,String password,HttpSession session){
+		ProgessObject obj = checkCredentials(username,password);
+		if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS)){
+			session.setAttribute("user",new Gson().toJson(((ProgessSuccess)obj).getSuccess()));
+		}
+		return obj;
+	}
+	public ProgessObject checkCredentials(String username,String password){
+		
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction t = session.beginTransaction();
 		try{
@@ -111,11 +120,13 @@ public class UserDao {
 			List users = cr.list();
 			t.commit();
 			if (users.size() > 0){
-				return (TblUser)users.get(0);
+				TblUser tu = (TblUser)users.get(0);
+				User u = new User();
+				u.convertFromTable(tu);
+				return new ProgessSuccess(u);
 			}else{
-			    return new TblUser();
+			    return new ProgessError("CRWR", "Username o Password errati");
 			}
-			
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			e.printStackTrace();
@@ -174,7 +185,7 @@ public class UserDao {
 	/**
 	 * SAVE THE USER
 	 * **/
-	public int saveUpdate(User user){
+	public int saveUpdate(User user,HttpSession sessionhttp,HttpServletRequest request){
 		TblUser tbluser = new TblUser();
 		int iduser=0;
 		Session session = HibernateUtils.getSessionFactory().openSession();
@@ -188,6 +199,7 @@ public class UserDao {
 			session.saveOrUpdate(tbluser);
 			iduser = tbluser.getIduser();
 			tx.commit();
+			
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
@@ -196,6 +208,9 @@ public class UserDao {
 			throw new ExceptionInInitializerError(e);
 		}finally{
 			session.close();
+		}
+		if (HibernateUtils.getUserFromSession(request).getIduser() == iduser){
+			sessionhttp.setAttribute("user",new Gson().toJson(getSingleUser(iduser)));
 		}
 		return iduser;
 	}
@@ -258,13 +273,18 @@ public class UserDao {
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
-			if (this.checkCredentials(user.getUsername(), user.getPassword()).getIduser() == user.getIduser() && user.getNewpassword() != "" && user.getNewpassword() != null ){
-				user.setPassword(HibernateUtils.md5Java(user.getNewpassword()));  
-			    tbluser.convertToTable(user);
-			    tx = session.beginTransaction();
-			    session.saveOrUpdate(tbluser);
-			    iduser = tbluser.getIduser();
-			    tx.commit();
+			ProgessObject obj = this.checkCredentials(user.getUsername(), user.getPassword());
+				if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS)){
+					ProgessSuccess ps = (ProgessSuccess)obj;
+					User checkeduser = (User)ps.getSuccess();	
+					if (checkeduser.getIduser() == user.getIduser() && user.getNewpassword() != "" && user.getNewpassword() != null ){
+					user.setPassword(HibernateUtils.md5Java(user.getNewpassword()));  
+				    tbluser.convertToTable(user);
+				    tx = session.beginTransaction();
+				    session.saveOrUpdate(tbluser);
+				    iduser = tbluser.getIduser();
+				    tx.commit();
+				}
 			}
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");

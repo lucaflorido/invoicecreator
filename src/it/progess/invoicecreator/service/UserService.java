@@ -4,6 +4,8 @@ import it.progess.invoicecreator.dao.UserDao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.TblUser;
 import it.progess.invoicecreator.vo.User;
+import it.progess.transport.config.ProgessParameters;
+import it.progess.transport.vo.ProgessObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -82,15 +84,7 @@ public class UserService {
 		  Gson gson = new Gson();
 		  User user = gson.fromJson(loginobj,User.class);
 		  UserDao userdao = new UserDao();
-		  TblUser tbluser = userdao.checkCredentials(user.getUsername(), user.getPassword()); 
-		  Boolean test =false;
-		  if (tbluser.getIduser() > 0){
-			  test = true;
-		  }
-		  if (test == true){
-			  session.setAttribute("user", gson.toJson(tbluser));
-		  }
-		  return gson.toJson(test.toString());
+		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session));
 	  }
 	  /***
 		Save new User 
@@ -98,11 +92,12 @@ public class UserService {
 	  @PUT
 	  @Produces(MediaType.TEXT_PLAIN)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveUser(@FormParam("loginobj") String loginobj){
+	  public String saveUser(@FormParam("loginobj") String loginobj,@Context HttpServletRequest request){
 		  Gson gson = new Gson();
 		  User user = gson.fromJson(loginobj,User.class);
 		  UserDao userdao = new UserDao();
-		  int iduser = userdao.saveUpdate(user);
+		  HttpSession session = request.getSession();  
+		  int iduser = userdao.saveUpdate(user,session,request);
 		  TblUser tbluser = userdao.getSingleUser(iduser);
 		  user.convertFromTable(tbluser);
 		  return gson.toJson(user);

@@ -15,6 +15,14 @@ public class Contact implements Ivo {
 	private String email2;
 	private String reference;
 	private String fax;
+	private Customer customer;
+	
+	public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 	public int getIdcontact() {
 		return idcontact;
 	}
@@ -87,6 +95,14 @@ public class Contact implements Ivo {
 		this.phone1 = co.getPhone1();
 		this.phone2 = co.getPhone2();
 		this.reference = co.getReference();
+	}
+	public void convertFromTableUser(Itbl obj){
+		this.convertFromTable(obj);
+		TblContact co = (TblContact)obj;
+		if (co.getCustomer() != null){
+			this.customer = new Customer();
+			this.customer.convertFromTable(co.getCustomer());
+		}
 	}
 	public GECOError control(){
 		GECOError er = null;

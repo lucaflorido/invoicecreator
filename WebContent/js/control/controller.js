@@ -2,7 +2,7 @@ var gecoControllers = angular.module("gecoControllers",[]);
 /**
 	LOGIN CONTROLLER
 */
-gecoControllers.controller('LoginCtrl',["$scope","$http",function($scope,$http){
+gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location",function($scope,$http,$rootScope,$location){
 	$(".header").css("display","none");
 	$http.get('rest/user/startup').success(function(data){
 	});
@@ -14,13 +14,20 @@ gecoControllers.controller('LoginCtrl',["$scope","$http",function($scope,$http){
 			data:"loginobj="+JSON.stringify($scope.login),
 			success:function(data){
 				var result = $.parseJSON(data);
-				if (result == true || result == "true"){
-					$(".myprofilelabel").html($scope.login.username);
-					
-					$(".header").css("display","");
-					$(window.location).attr('href', '#/welcome');
+				if (result.type == 'success'){
+					result = result.success;
+					if (result.username !== null && result.username != ""){
+						$(".myprofilelabel").html(result.username);
+						$rootScope.user = result;
+						$rootScope.path = result.path;
+						$(".header").css("display","");
+						$location.path('/welcome');
+						$scope.$apply();
+					}else{
+						
+					}
 				}else{
-					alert("Username o Password errati")
+					$scope.errorMessage(result.errorMessage);
 				}
 			}	
 		})
@@ -60,7 +67,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http",function($scope,$http){
 	
 	
 }]);
-gecoControllers.controller('WelcomeCtrl',['$scope',function($scope){
+gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope',function($scope,$rootScope){
 	GECO_LOGGEDUSER.checkloginuser();
 	
 }]);
@@ -130,7 +137,7 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http',function($scope,$routeParams,$http){
 	GECO_LOGGEDUSER.checkloginuser();
 	$scope.myuserId= $routeParams.myuserId ;
-	
+	$scope.isuser = true;
 	$http.get('rest/role/').success(function(data){
 		$scope.roles= data;
 		$http.get('rest/user/'+$scope.myuserId).success(function(data){
@@ -143,18 +150,18 @@ gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http',fun
 		});
 	});
 	
-	$(".savebutton").click(function(e){
+	$scope.saveuser = function(){
 		$scope.user.role = $scope.currentRole;
 		$.ajax({
 			url:"rest/user/",
 			type:"PUT",
 			data:"loginobj="+JSON.stringify($scope.user),
 			success:function(data){
-				alert("success");
+				$scope.confirmSaved();
 			}	
 		})
-	} );
-	$(".changepasswordbutton").click(function(e){
+	};
+	$scope.changepassword = function(){
 		$scope.user.password = $("#oldpassword").val();
 		$scope.user.newpassword = $("#newpassword").val();
 		$.ajax({
@@ -162,11 +169,14 @@ gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http',fun
 			type:"PUT",
 			data:"userobj="+JSON.stringify($scope.user),
 			success:function(data){
-				alert("success");
+				$scope.confirmSaved();
 			}	
 		})
 		
-	} );
+	};
+	$scope.changeView = function(){
+		$scope.isuser = !$scope.isuser;
+	}
 }]);
 /*****
 ROLE
@@ -224,58 +234,3 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 }]);
 
 
-
-/*****
-TAXRATE
-**
-gecoControllers.controller('TaxrateCtrl',["$scope","$http",function($scope,$http){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
-	$scope.taxratesaved = true;
-	$http.get('rest/basic/taxrate').success(function(data){
-		$scope.taxrates= data;
-	});
-	$scope.modifyid = 0;
-	$scope.modifyTaxrateElement = function(id){
-		$scope.modifyid = id;
-	}
-	$scope.addTaxrateElement = function(id){
-		$scope.taxratesaved = false;
-		$scope.taxrates.push({idtaxrate:0});
-	}
-	$scope.deleteTaxrateElement = function(id){
-		for(var i=0;i<$scope.taxrates.length;i++){
-			if (id == $scope.taxrates[i].idtaxrate){
-				$scope.deleteTaxrate = $scope.taxrates[i];
-				$.ajax({
-						url:"rest/basic/taxrate/",
-						type:"DELETE",
-						data:"taxrateobj="+JSON.stringify($scope.deleteTaxrate),
-						success:function(data){
-								$http.get('rest/basic/taxrate').success(function(data){
-										$scope.taxrates= data;
-								});
-								
-						}	
-					})
-			}	
-		}
-	}
-	$scope.saveTaxrates = function(){
-		$.ajax({
-			url:"rest/basic/taxrate",
-			type:"PUT",
-			data:"taxrates="+JSON.stringify($scope.taxrates),
-			success:function(data){
-					$http.get('rest/basic/taxrate').success(function(data){
-										$scope.taxrates= data;
-										$scope.taxratesaved = true;
-										$scope.modifyid = 0;
-								});
-					
-			}	
-		})
-		
-	}
-	
-	
-}]);*/

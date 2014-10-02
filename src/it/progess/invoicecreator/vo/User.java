@@ -16,6 +16,28 @@ public class User {
 	//private  role;
 	private Boolean active;
 	private Company company;
+	private String path;
+	private Ivo entity;
+	private Contact contact;
+	
+	public Contact getContact() {
+		return contact;
+	}
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public Ivo getEntity() {
+		return entity;
+	}
+	public void setEntity(Ivo entity) {
+		this.entity = entity;
+	}
 	public Company getCompany() {
 		return company;
 	}
@@ -110,6 +132,22 @@ public class User {
 		if (tbluser.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(tbluser.getCompany());
+		}
+		if (tbluser.getContact() != null){
+			this.contact = new Contact();
+			this.contact.convertFromTableUser(tbluser.getContact());
+			
+		}
+		this.setPath();
+	}
+	public void setPath(){
+		if (this.getContact() != null){
+			if (this.getContact().getCustomer() != null){
+				this.entity = this.getContact().getCustomer();
+				this.path = "customer";
+			}
+		}else{
+			this.path = "";
 		}
 	}
 }

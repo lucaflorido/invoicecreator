@@ -297,6 +297,8 @@ gecoApp.run(function($rootScope) {
 		});
 		}
 	});
+	$rootScope.user = {};
+	$rootScope.path = "";
 	$rootScope.pagesize = 100;
 	$rootScope.showIncrement = false;
 	$rootScope.showFilter = false;

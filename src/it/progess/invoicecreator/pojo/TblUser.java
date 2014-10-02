@@ -11,12 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-
-
-
-
 
 @Entity
 @Table(name="tbluser")
@@ -46,6 +42,14 @@ public class TblUser {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="idCompany")
 	private TblCompany company;
+	@OneToOne(mappedBy="user")
+	private TblContact contact;
+	public TblContact getContact() {
+		return contact;
+	}
+	public void setContact(TblContact contact) {
+		this.contact = contact;
+	}
 	public TblCompany getCompany() {
 		return company;
 	}

@@ -5,7 +5,7 @@
 <hibernate-configuration>  
   
     <session-factory>  
-  		<property name="connection.datasource">java:comp/env/jdbc/geco</property>
+  		<property name="connection.datasource">java:comp/env/jdbc/invoicecreator</property>
 		
 		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		 
