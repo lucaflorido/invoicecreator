@@ -112,6 +112,7 @@ public class Customer implements Ivo{
 	public void setSerialnumber(String serialnumber) {
 		this.serialnumber = serialnumber;
 	}
+	
 	public GroupCustomer getGroup() {
 		return group;
 	}
@@ -161,7 +162,7 @@ public class Customer implements Ivo{
 		}
 		this.customercode = c.getCustomercode();
 		this.customername = c.getCustomername();
-		
+	
 		if (c.getGroup() != null){
 			this.group = new GroupCustomer();
 			this.group.convertFromTable(c.getGroup());
@@ -207,9 +208,10 @@ public class Customer implements Ivo{
 	}
 	public GECOError control(){
 		GECOError er = null;
+		/*
 		if (this.customercode == null || this.customercode ==""){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice mancante");
-		}
+		}*/
 		if (this.customername == null || this.customername ==""){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Ragione Sociale mancante");
 		}
@@ -217,9 +219,10 @@ public class Customer implements Ivo{
 			ProgessError pe = (ProgessError)CFPIValidator.checkCFPI(this.taxcode, this.serialnumber,true);
 			return new GECOError(pe.getErrorName(),pe.getErrorMessage());
 		}
+		/*
 		if (this.payment == null){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Pagamento Mancante");
-		}
+		}*/
 		if (this.address == null){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Indirizzo Mancante");
 		}else if (this.address.control() != null){

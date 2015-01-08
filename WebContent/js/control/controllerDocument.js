@@ -1,5 +1,5 @@
 var gecoDocumentControllers = angular.module("gecoDocumentControllers",[]);
-gecoDocumentControllers.controller('HeadListCtrl',["$scope","$http","$routeParams","$rootScope",function($scope,$http,$routeParams,$rootScope){
+gecoDocumentControllers.controller('HeadListCtrl',["$scope","$http","$routeParams","$rootScope","ModalFactory",function($scope,$http,$routeParams,$rootScope,ModalFactory){
     $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
 	$scope.pagesize = 10;
 	$scope.pageArray = [];
@@ -52,6 +52,25 @@ gecoDocumentControllers.controller('HeadListCtrl',["$scope","$http","$routeParam
 	$http.get('rest/basic/document').success(function(data){
 		$scope.documents= data;
 	});
+	$scope.sendDocumentByEmail = function(head){
+		ModalFactory.sendDocument($rootScope.user,head,$scope.sendByEmail);
+	}
+	$scope.sendByEmail = function(user,head,mailconfig){
+		$.ajax({
+				url:"rest/email/document/",
+				type:"POST",
+				data:"head="+JSON.stringify(head)+"&user="+JSON.stringify(user)+"&mailconfig="+JSON.stringify(mailconfig),
+				success:function(data){
+					result = JSON.parse(data);
+					if (result.type == "success"){	
+						
+						alert("ok");
+					}else{
+						alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+					}	
+				}
+				})
+	}
 	$scope.getHeads = function(page){
 			$(".pag").removeClass("selected");
 			$("#pag"+page).addClass("selected");
@@ -490,20 +509,30 @@ gecoDocumentControllers.controller('HeadDetailCtrl',["$scope","$http","$routePar
 					success:function(data){
 					data = JSON.parse(data);
 					if (data.idProduct != 0){
-					$scope.currentRow.product = data;
-					$scope.currentRow.productcode = code;
-					$scope.currentRow.productdescription = data.description;
-					$scope.currentRow.price = data.listprice;
-					$scope.currentRow.productum = data.umselected.code;
-					$scope.currentRow.taxrate = data.taxrate;
-					$scope.currentRow.um = data.umselected;
-					if ($scope.currentRow.quantity == 0 || $scope.currentRow.quantity == "" ){
-						$scope.currentRow.quantity  = 1;
-					}
-					if($scope.currentRow.product.storage)
-						$scope.currentRow.product.stockqta = Math.round($scope.currentRow.product.storage.stock/$scope.currentRow.product.conversionrate *100) /100;
-						$scope.$apply();
-						$("#qta").focus();
+						$scope.currentRow.product = data;
+						$scope.currentRow.productcode = code;
+						$scope.currentRow.productdescription = data.description;
+						$scope.currentRow.price = data.listprice;
+						$scope.currentRow.taxrate = data.taxrate;
+						if($scope.currentRow.product.storage){
+							$scope.currentRow.product.stockqta = Math.round($scope.currentRow.product.storage.stock/$scope.currentRow.product.conversionrate *100) /100;
+						}
+						if (data.umselected !== undefined && data.umselected != null){
+							$scope.currentRow.productum = data.umselected.code;
+							$scope.currentRow.um = data.umselected;
+							if ($scope.currentRow.quantity == 0 || $scope.currentRow.quantity == "" ){
+								$scope.currentRow.quantity  = 1;
+							}
+							$scope.$apply();
+							$("#qta").focus();
+						}else{
+							$scope.currentRow.quantity  = 1;
+							$scope.$apply();
+							$("#price").focus();
+							$scope.calculateRow($scope.currentRow);
+						}
+						
+						
 					}else{
 						$scope.search=code;
 						$scope.prodFound = [];
@@ -641,11 +670,11 @@ gecoDocumentControllers.controller('HeadDetailCtrl',["$scope","$http","$routePar
 	}
 	$rootScope.saveFuntion = $scope.saveHeadChecked;
 	$scope.calculateNumber = function(){
-		if ($scope.head.date != null && $scope.head.document != null ){
+		if ($scope.head.date != null && $scope.head.document != null && ($scope.head.idHead === null || $scope.head.idHead === undefined || $scope.head.idHead === 0) ){
 			$rootScope.setModified();
 			var year = $scope.head.date.split("/");
 			year = year[2];
-			if ($scope.head.document.counter != null && $scope.head.document.counter.yearsvalue != null ){
+			if ($scope.head.document.counter != null && $scope.head.document.counter.yearsvalue != null   ){
 				var yearsvalue = $scope.head.document.counter.yearsvalue;
 				for (var i=0; i< yearsvalue.length;i++){
 					if (year == yearsvalue[i].year){

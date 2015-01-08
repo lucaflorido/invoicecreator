@@ -115,7 +115,7 @@ public class PrintSingleHead extends PrintCompany {
 			this.cliente_cf = getValue(head.getSupplier().getTaxcode());
 		}
 			this.documento_tipo  = getValue(head.getDocument().getDescription());
-			this.documento_numero =getValue(String.valueOf( head.getNumber())+"/" + head.getDate().substring(6) );
+			this.documento_numero =getValue(forceFormatNumber(String.valueOf( head.getNumber()))+"/" + head.getDate().substring(6) );
 			this.documento_data =getValue( head.getDate() );
 			if (head.getPayment() != null)
 				this.documento_pagamento = head.getPayment().getDescription() ;
@@ -146,9 +146,17 @@ public class PrintSingleHead extends PrintCompany {
 		if (row != null){
 			this.prodotto_codice = getValue(row.getProductcode());
 			this.prodotto_desc = getValue(row.getProductdescription());
-			this.prodotto_quantita = getValue(forceTwoDecimal(String.valueOf(row.getQuantity())));
+			if (row.getProductum() != null ){
+				this.prodotto_quantita = getValue(forceTwoDecimal(String.valueOf(row.getQuantity())));
+			}else{
+				this.prodotto_quantita = "";
+			}
 			this.prodotto_prezzo =getValue( forceTwoDecimal(String.valueOf(row.getPrice())));
-			this.prodotto_um = getValue(String.valueOf(row.getProductum()));
+			if (row.getProductum() != null ){
+				this.prodotto_um = getValue(String.valueOf(row.getProductum()));
+			}else{
+				this.prodotto_um = "";
+			}
 			this.prodotto_aliquota =getValue( removeDecimal(String.valueOf(row.getProduct().getTaxrate().getValue())));
 			this.prodotto_iva = getValue(forceTwoDecimal(String.valueOf(row.getTaxamount())));
 			this.prodotto_imponibile = getValue(forceTwoDecimal(String.valueOf(row.getAmount())));
@@ -373,5 +381,10 @@ public class PrintSingleHead extends PrintCompany {
 		}else{
 			return value;
 		}
+	}
+	private String forceFormatNumber(String number){
+		if (number.length() == 1)
+			return "0"+number;
+		return number;
 	}
 }

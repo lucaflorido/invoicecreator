@@ -2,7 +2,7 @@ var gecoControllers = angular.module("gecoControllers",[]);
 /**
 	LOGIN CONTROLLER
 */
-gecoControllers.controller('LoginCtrl',["$scope","$http",function($scope,$http){
+gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location",function($scope,$http,$rootScope,$location){
 	$(".header").css("display","none");
 	$http.get(GECO_LOGGEDUSER.getSecondDomain()+'rest/user/startup').success(function(data){
 	});
@@ -14,13 +14,20 @@ gecoControllers.controller('LoginCtrl',["$scope","$http",function($scope,$http){
 			data:"loginobj="+JSON.stringify($scope.login),
 			success:function(data){
 				var result = $.parseJSON(data);
-				if (result == true || result == "true"){
-					$(".myprofilelabel").html($scope.login.username);
-					
-					$(".header").css("display","");
-					$(window.location).attr('href', '#/welcome');
+				if (result.type == 'success'){
+					result = result.success;
+					if (result.username !== null && result.username != ""){
+						$(".myprofilelabel").html(result.username);
+						$rootScope.user = result;
+						$rootScope.path = result.path;
+						$(".header").css("display","");
+						$location.path('/welcome');
+						$scope.$apply();
+					}else{
+						
+					}
 				}else{
-					alert("Username o Password errati")
+					$scope.errorMessage(result.errorMessage);
 				}
 			}	
 		})

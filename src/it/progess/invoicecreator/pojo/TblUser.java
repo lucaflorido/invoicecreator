@@ -134,4 +134,11 @@ public class TblUser {
 			this.company.convertToTable(user.getCompany());
 		}
 	}
+	public void convertToTableSave(User user){
+		convertToTable(user);
+		if (user.getCompany() != null){
+			this.company = new TblCompany();
+			this.company.convertToTableSave(user.getCompany());
+		}
+	}
 }

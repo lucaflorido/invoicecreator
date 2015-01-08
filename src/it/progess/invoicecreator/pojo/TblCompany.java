@@ -1,16 +1,28 @@
 package it.progess.invoicecreator.pojo;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Ivo;
+
+
+
+import it.progess.invoicecreator.vo.ListCustomer;
+import it.progess.invoicecreator.vo.MailConfig;
+import it.progess.invoicecreator.vo.MailConfigCompany;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -38,6 +50,14 @@ public class TblCompany implements Itbl {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="idBankContact")
 	private TblBankContact bankcontact;
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "company",cascade = CascadeType.ALL)
+	private Set<TblMailConfigCompany> mailconfig;
+	public Set<TblMailConfigCompany> getMailconfig() {
+		return mailconfig;
+	}
+	public void setMailconfig(Set<TblMailConfigCompany> mailconfig) {
+		this.mailconfig = mailconfig;
+	}
 	public int getIdCompany() {
 		return idCompany;
 	}
@@ -111,6 +131,32 @@ public class TblCompany implements Itbl {
 		if(co.getBankcontact() != null){
 			this.bankcontact = new TblBankContact();
 			this.bankcontact.convertToTable(co.getBankcontact());
+		}
+		if(co.getMailconfig() != null){
+			this.mailconfig = new HashSet<TblMailConfigCompany>();
+			for (Iterator<MailConfigCompany> iterator = co.getMailconfig().iterator(); iterator.hasNext();){
+				MailConfigCompany mailconf = iterator.next();
+				TblMailConfigCompany listp = new TblMailConfigCompany();
+				listp.convertToTable(mailconf);
+				
+				this.mailconfig.add(listp);
+			}
+		}
+		
+	}
+	
+	public void convertToTableSave(Ivo obj){
+		
+		convertToTable(obj);
+		if(this.mailconfig != null){
+			
+			for (Iterator<TblMailConfigCompany> iterator = this.mailconfig.iterator(); iterator.hasNext();){
+			
+				TblMailConfigCompany listp = iterator.next();;
+				
+				listp.setCompany(this);
+				
+			}
 		}
 		
 	}

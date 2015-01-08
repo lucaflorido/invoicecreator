@@ -40,6 +40,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 
 public class BasicDao {
@@ -390,6 +391,31 @@ public class BasicDao {
 		}
 		return new GECOSuccess();
 	}
+	public Counter getCounter(int idCounter){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Counter> list = new ArrayList<Counter>();
+		Counter counter = null;
+		try{
+			Criteria cr = session.createCriteria(TblCounter.class,"counter");
+			cr.add(Restrictions.eq("counter.idCounter",idCounter));
+			List<TblCounter> counters = cr.list();
+			if (counters.size() > 0){
+				for (Iterator<TblCounter> iterator = counters.iterator(); iterator.hasNext();){
+					TblCounter tblcounter = iterator.next();
+					counter = new Counter();
+					counter.convertFromTable(tblcounter);
+					
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return counter;
+	}
 	/***
 	 * Save update Counters
 	 * **/
@@ -537,6 +563,7 @@ public class BasicDao {
 		ArrayList<Document> list = new ArrayList<Document>();
 		try{
 			Criteria cr = session.createCriteria(TblDocument.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblDocument> documents = cr.list();
 			if (documents.size() > 0){
 				for (Iterator<TblDocument> iterator = documents.iterator(); iterator.hasNext();){
@@ -561,6 +588,7 @@ public class BasicDao {
 		try{
 			Criteria cr = session.createCriteria(TblDocument.class,"document");
 			cr.add(Restrictions.eq("document.company.idCompany", user.getCompany().getIdCompany()));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblDocument> documents = cr.list();
 			if (documents.size() > 0){
 				for (Iterator<TblDocument> iterator = documents.iterator(); iterator.hasNext();){

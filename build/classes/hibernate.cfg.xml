@@ -5,8 +5,9 @@
 <hibernate-configuration>  
   
     <session-factory>  
-  		<property name="connection.datasource">java:comp/env/jdbc/invoicecreator</property>
-		
+  		<!--  property name="connection.datasource">java:/comp/env/jdbc/test</property>
+  		<property name="connection.datasource">java:comp/env/jdbc/geco</property-->
+  		<property name="connection.datasource">java:comp/env/jdbc/progessDB</property>
 		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		 
 		<!-- Disabilita cache di secondo livello. -->
@@ -20,12 +21,17 @@
 		<property name="current_session_context_class">thread</property>
         <!-- Database connection settings >  
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>  
-        <property name="connection.url">jdbc:mysql://127.0.0.1/gecosofttest_2?autoReconnect=true</property>  
+        <property name="connection.url">jdbc:mysql://127.0.0.1/progesstest?autoReconnect=true</property>  
         
         <property name="connection.username">root</property>  
         <property name="connection.password">09050303</property>
         <property name="connection.username">lflorido_2</property>  
         <property name="connection.password">svnf0rl0s</property-->
+       	<!--property name="connection.url">jdbc:mysql://127.0.0.1/progesstest?autoReconnect=true</property>  
+        
+        <property name="connection.username">lflorido3</property>  
+        <property name="connection.password">svnf0rl0s</property-->
+        
        <property name="connection.timeout">3</property>
 		<property name="connection.autoReconnect">true</property>
 		<property name="connection.autoReconnectForPools">true</property>
@@ -94,6 +100,8 @@
   		<mapping class="it.progess.invoicecreator.pojo.TblPaid"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblPaidSuspended"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblBrand"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblMailConfig"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblMailConfigCompany"></mapping>
     </session-factory>  
   
 </hibernate-configuration>  

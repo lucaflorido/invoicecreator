@@ -1,5 +1,6 @@
 package it.progess.invoicecreator.vo;
 
+
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblTaxrate;
 import it.progess.invoicecreator.properties.GECOParameter;
@@ -40,8 +41,8 @@ public class TaxRate implements Ivo {
 		if (this.getDescription() == null || this.getDescription() == "" ){
 			ge = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Descrizione Mancante");
 		}
-		if (this.getValue() == 0  ){
-			ge = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Valore Mancante");
+		if (this.getValue() < 0  ){
+			ge = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Valore non conforme");
 		}
 		return ge;
 	}

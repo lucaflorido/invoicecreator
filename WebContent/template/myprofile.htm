@@ -10,8 +10,8 @@
 		<tbody>
 			<tr>
 				<td class="buttontd" ng-click="saveuser()">
-					<a  >
-						<div class="  addbutton admin_grant" >
+					<a>
+						<div class="  addbutton " >
 							
 								<div class="printlabel">
 									Salva
@@ -21,7 +21,7 @@
 					</a>
 				</td >
 				<td class="buttontd disabled">
-					<div class=" " >
+					<div  >
 						<div class="printlabel">
 							Ricarica
 						</div>
@@ -38,7 +38,7 @@
 			<tr>
 				<td class="buttontd" ng-if="isuser == false" ng-click="changeView()">
 					<a  >
-						<div class="  addbutton admin_grant"  >
+						<div class="addbutton"  >
 							
 								<div class="printlabel">
 									Utente
@@ -49,7 +49,7 @@
 				</td >
 				<td class="buttontd disabled" ng-if="isuser == true">
 					<a  >
-						<div class="  addbutton admin_grant"  >
+						<div class="addbutton "  >
 							
 								<div class="printlabel">
 									Utente
@@ -59,18 +59,22 @@
 					</a>
 				</td >
 				<td class="buttontd " ng-if="isuser == true" ng-click="changeView()">
-					<div class=" " >
+					<a  >
+					<div class=" addbutton" >
 						<div class="printlabel">
 							Azienda
 						</div>
 					</div>
+					</a>
 				</td>
 				<td class="buttontd disabled" ng-if="isuser == false" >
-					<div class=" " >
+					<a  >
+					<div class=" addbutton" >
 						<div class="printlabel">
 							Azienda
 						</div>
 					</div>
+					</a>
 				</td>
 				
 			</tr>
@@ -280,6 +284,115 @@
 						</div>
 					</div>
 					
+				</div>
+			</p>
+		</div>
+		<h3>Configurazione Email</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					
+					<div class="DETAIL_COLUMN_1_2">
+						<div class="fields">
+							<div class="buttonbar" ng-click="addMilConfig()"  >
+							<div class="loginbutton">
+								<div class="loginlabel">
+									Aggiungi Email
+								</div>
+							</div>
+							</div>
+						</div>
+						<!--div class="fields">
+							<div class="label username">SMTP Server</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.mailconfig.host" value="{{user.company.mailconfig.host}}" /></div>
+						</div>
+						<div class="fields">
+							<div class="label username">Richiesta Autorizzazione</div>
+							<div class="field username"><input class="inputfield" type="checkbox" id="ifusername" ng-model="user.company.mailconfig.auth" value="{{user.company.mailconfig.auth}}" /></div>
+						</div-->
+					</div>
+					<div class="DETAIL_COLUMN_2_2">
+						<!--div class="fields">
+							<div class="label username">Porta Server</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.mailconfig.port" value="{{user.company.mailconfig.port}}" /></div>
+						</div>
+						<div class="fields">
+							<div class="label username">tls</div>
+							<div class="field username"><input class="inputfield" type="checkbox" id="ifusername" ng-model="user.company.mailconfig.starttls" value="{{user.company.mailconfig.starttls}}" /></div>
+						</div>
+						
+						<div class="fields">
+							<div class="buttonbar" ng-click="testemail()"  >
+							<div class="loginbutton">
+								<div class="loginlabel">
+									Test Email
+								</div>
+							</div>
+							</div>
+						</div-->
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<td>
+									Email
+								</td>
+								<td>
+									SMTP
+								</td>
+								<td>
+									Porta
+								</td>
+								<td>
+									Autenticazione
+								</td>
+								<td>
+									TLS
+								</td>
+								<td>
+									PEC
+								</td>
+								<td>
+									
+								</td>
+								<td>
+									
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="mail in user.company.mailconfig">
+								<td>
+									<input type="text" ng-model="mail.mailconfig.email" value="{{mail.mailconfig.email}}"></input>
+								</td>
+								<td>
+									<input type="text" ng-model="mail.mailconfig.host" value="{{mail.mailconfig.host}}"></input>
+								</td>
+								<td>
+									<input type="text" ng-model="mail.mailconfig.port" value="{{mail.mailconfig.port}}"></input>
+								</td>
+								<td>
+									<input type="checkbox" ng-model="mail.mailconfig.auth" value="{{mail.mailconfig.auth}}"></input>
+								</td>
+								<td>
+									<input type="checkbox" ng-model="mail.mailconfig.starttls" value="{{mail.mailconfig.starttls}}"></input>
+								</td>
+								<td>
+									<input type="checkbox" ng-model="mail.mailconfig.pec" value="{{mail.mailconfig.pec}}"></input>
+								</td>
+								<td>
+									<div class="loginbutton" ng-click="testemail(mail.mailconfig)">
+										<div class="loginlabel">
+											Test Email
+										</div>
+									</div>
+								</td>
+								<td>
+									
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</p>
 		</div>

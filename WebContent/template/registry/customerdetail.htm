@@ -58,13 +58,13 @@
 						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.serialnumber" value="{{customer.serialnumber}}" capitalize /></div>
 						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
 					</div>
-										<div class="fields code">
+					<!--div class="fields code">
 						<div class="label ">Attivo</div>
 						<div class="field "><input class="inputfield" type="checkbox" id="ifname" ng-model="customer.active" value="{{customer.active}}"  /></div>
 						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
+					</div-->
 					<div class="category_group">
-						<div class="fields code">
+						<!--div class="fields code">
 							<div class="label ">Gruppo </div>
 							<div class="field">
 								<select id="selgroup" class="inputfield" ng-model="currentGroup"    ng-options="group as group.name for group in groups" ></select>
@@ -75,25 +75,24 @@
 							<div class="field ">
 								<select id="selcategory" class="inputfield" ng-model="currentCategory"    ng-options="category as category.name for category in categorys" ng-change="changeCategory()" ></select>
 							</div>
-						</div>
+						</div-->
 						<div class="fields code">
 							<div class="label ">Pagamento</div>
 							<div class="field ">
 								<select id="selpayment" class="inputfield" ng-model="currentPayment"    ng-options="payment as payment.code for payment in payments" ng-change="customer.payment = currentPayment" ></select>
 							</div>
+							
 						</div>
-					</div>	
-					<div class="category_group">
 						<div class="fields code">
-							<div class="label ">Ritenuta d'acconto </div>
-							<div class="field">
-								<select id="selgroup" class="inputfield" ng-model="currentTaxRate"    ng-options="taxrate as taxrate.description for taxrate in taxrates" >
-									<option value=""></option>
-								</select>
+								<div class="label ">Ritenuta d'acconto </div>
+								<div class="field">
+									<select id="selgroup" class="inputfield" ng-model="currentTaxRate"    ng-options="taxrate as taxrate.description for taxrate in taxrates" >
+										<option value=""></option>
+									</select>
+								</div>
 							</div>
-						</div>
-						
 					</div>	
+					
 				</div>
 				
 			</div>
@@ -106,10 +105,13 @@
 <p>
 <div class="customer_address_detail">	
 				<div class="contact">
-					<div class="fields address">
+					<div class="fields seventy">
 						<div class="label">Indirizzo</div>
 						<div class="field address"><input class="inputfield" ng-model="customer.address.address" value="{{customer.address.address}}" capitalize/></div>
-						<div class="field number"><input class="inputfield" ng-model="customer.address.number" value="{{customer.address.number}}" capitalize /></div>
+					</div>
+					<div class="fields twenty">
+						<div class="label ">Civico</div>
+						<div class="field number">  <input class="inputfield" ng-model="customer.address.number" value="{{customer.address.number}}" capitalize /></div>
 					</div>
 					<div class="fields seventy">
 						<div class="label mobile">Citt&#224;</div>
@@ -173,7 +175,7 @@
 </p>
 
 </div>
-<h3>Listini</h3>
+<!--h3>Listini</h3>
 <div>
 <p>
 <div class="credential">
@@ -212,6 +214,73 @@
 			</div>
 </p>
 </div>
+
+<h3>Crea Utente</h3>
+<div>
+<p>
+	<div class="details">
+		<div class="generaltable">
+			<div class="column_1_2 user">	
+				<div class="info">
+					<div class="fields">
+						<div class="label name">Nome *</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="user.name" value="{{user.name}}"  /></div>
+						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+					</div>
+					<div class="fields">
+						<div class="label surname">Cognome *</div>
+						<div class="field surnname"><input class="inputfield" id="ifsurname" ng-model="user.surname" value="{{user.surname}}"  /></div>
+						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
+					</div>
+					<div class="fields">
+						<div class="label surname">Azienda *</div>
+						<div class="field surnname"><select ng-options="company as company.companyname for company in companies" ng-model="currentCompany" ng-change="user.company = currentCompany"></select></div>
+						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
+					</div>
+				</div>
+			</div>
+			<div class="column_2_2 user">
+				<div class="contact">
+					<div class="fields">
+						<div class="label phone">Telefono</div>
+						<div class="field phone"><input class="inputfield" ng-model="user.phone" value="{{user.phone}}" /></div>
+					</div>
+					<div class="fields">
+						<div class="label mobile">Cellulare</div>
+						<div class="field mobile"><input class="inputfield" ng-model="user.mobile" value="{{user.mobile}}" /></div>
+					</div>
+					<div class="fields">
+						<div class="label email">Email *</div>
+						<div class="field email"><input id="ifemail" class="inputfield" ng-model="user.email" value="{{user.email}}" /></div>
+						<div class="error" id="val_ifemail" >Campo obbligatorio</div>
+						<div class="errormail" id="valmail_ifemail" >Email non valida</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="credentials">
+			<div class="credential">
+				<div class="fields left">
+					<div class="label username">Username *</div>
+					<div class="field username"  >
+						<input ng-if="user.iduser == 0 " id="ifinput" class="inputfield" ng-model="user.username"  />
+						<div ng-if="user.iduser != 0"  >{{user.username}}</div>
+						
+					</div>
+					<div  ng-if="user.iduser == 0 " class="error" id="val_ifinput" >Campo obbligatorio</div> 
+				</div>
+				<div class="fields right">
+					<div class="label role">Ruolo *</div>
+					<div class="field role">
+						<select id="selrole" class="inputfield" ng-model="currentRole"    ng-options="role as role.name for role in roles" ></select>
+					</div>
+					<div class="error" id="val_selrole" >Campo obbligatorio</div> 		
+				</div>
+			</div>
+		</div>
+	</div>
+</p>
+</div-->
 </div>
 	<!--div class="details">
 		<div class="generaltable">

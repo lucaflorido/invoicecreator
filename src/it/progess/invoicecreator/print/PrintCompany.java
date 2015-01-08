@@ -15,7 +15,15 @@ public class PrintCompany {
 	public String azienda_email;
 	public String azienda_codice;
 	public String azienda_provincia;
+	public String azienda_cellulare;
 	
+	
+	public String getAzienda_cellulare() {
+		return azienda_cellulare;
+	}
+	public void setAzienda_cellulare(String azienda_cellulare) {
+		this.azienda_cellulare = azienda_cellulare;
+	}
 	public String getAzienda_codice() {
 		return azienda_codice;
 	}
@@ -82,7 +90,8 @@ public class PrintCompany {
 			this.azienda_indirizzo = this.getValue(comp.getAddress().getAddress()+" "+comp.getAddress().getNumber());
 			this.azienda_indirizzo2 = this.getValue(comp.getAddress().getZipcode()+" "+comp.getAddress().getCity()+" ("+comp.getAddress().getZone()+")");
 			this.azienda_nome =this.getValue(comp.getCompanyname());
-			this.azienda_telefono = this.getValue(comp.getContact().getPhone1());
+			this.azienda_telefono = setupPhones(comp.getContact().getPhone1(), comp.getContact().getPhone2());
+			this.azienda_cellulare = setupPhones(comp.getContact().getMobile1(), comp.getContact().getMobile2());
 			this.azienda_fax = this.getValue(comp.getContact().getFax());
 			this.azienda_email = this.getValue(comp.getContact().getEmail1());
 			this.azienda_codice = this.getValue(comp.getCompanycode());
@@ -99,6 +108,24 @@ public class PrintCompany {
 			return value;
 		}else{
 			return defaultVal;
+		}
+	}
+	public String setupPhones(String phone1,String phone2){
+		if ((phone1 == null || phone1.equals("")) && (phone2 == null || phone2.equals(""))){
+			return "";
+		}else{
+			if (phone1 != null && phone1.equals("") == false){
+				if (phone2 != null && phone2.equals("") == false){
+					return phone1 +" - "+phone2;
+				}else{
+					return phone1;
+				}
+			}else if (phone2 != null && phone2.equals("") == false){
+				return phone2;
+			}else{
+				return "";
+			}
+
 		}
 	}
 }

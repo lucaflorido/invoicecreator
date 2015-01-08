@@ -1,7 +1,12 @@
 package it.progess.invoicecreator.vo;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCompany;
+import it.progess.invoicecreator.pojo.TblMailConfigCompany;
 import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.transport.check.ProgessCheck;
 import it.progess.transport.vo.ProgessError;
@@ -17,7 +22,7 @@ public class Company implements Ivo {
 	private Contact contact;
 	private Address address;
 	private BankContact bankcontact;
-	
+	private Set<MailConfigCompany> mailconfig;
 	public String getCompanycode() {
 		return companycode;
 	}
@@ -72,6 +77,12 @@ public class Company implements Ivo {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+	public Set<MailConfigCompany> getMailconfig() {
+		return mailconfig;
+	}
+	public void setMailconfig(Set<MailConfigCompany> mailconfig) {
+		this.mailconfig = mailconfig;
+	}
 	public void convertFromTable(Itbl obj){
 		TblCompany co = (TblCompany)obj;
 		this.idCompany = co.getIdCompany();
@@ -91,6 +102,15 @@ public class Company implements Ivo {
 		if(co.getBankcontact() != null){
 			this.bankcontact = new BankContact();
 			this.bankcontact.convertFromTable(co.getBankcontact());
+		}
+		if(co.getMailconfig() != null){
+			this.mailconfig = new HashSet<MailConfigCompany>();
+			for (Iterator<TblMailConfigCompany> iterator = co.getMailconfig().iterator(); iterator.hasNext();){
+				TblMailConfigCompany mailconf = iterator.next();
+				MailConfigCompany listp = new MailConfigCompany();
+				listp.convertFromTable(mailconf);
+				this.mailconfig.add(listp);
+			}
 		}
 	}
 	public GECOError control(){

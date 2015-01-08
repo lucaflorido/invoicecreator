@@ -36,6 +36,14 @@ public class Product implements Ivo,Comparable<Product>{
 	private double percentage;
 	private Set<ProductDatePrice> pricehistory;
 	private Company company;
+	private boolean isProduct;
+	
+	public boolean isProduct() {
+		return isProduct;
+	}
+	public void setProduct(boolean isProduct) {
+		this.isProduct = isProduct;
+	}
 	public Company getCompany() {
 		return company;
 	}
@@ -194,6 +202,7 @@ public class Product implements Ivo,Comparable<Product>{
 		this.purchaseprice = pd.getPurchaseprice();
 		this.sellprice = pd.getSellprice();
 		this.weightbarcode = pd.getWeightbarcode();
+		this.isProduct = pd.isProduct();
 		if (pd.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(pd.getCompany());
@@ -246,6 +255,7 @@ public class Product implements Ivo,Comparable<Product>{
 		this.purchaseprice = pd.getPurchaseprice();
 		this.sellprice = pd.getSellprice();
 		this.weightbarcode = pd.getWeightbarcode();
+		this.isProduct = pd.isProduct();
 		if(pd.getGroup()!= null){
 			this.group = new GroupProduct();
 			this.group.convertFromTable(pd.getGroup());
@@ -262,7 +272,7 @@ public class Product implements Ivo,Comparable<Product>{
 			this.subcategory = new SubCategoryProduct();
 			this.subcategory.convertFromTable(pd.getSubcategory());
 		}
-		if (pd.getUms() != null){
+		if (pd.getUms() != null && this.isProduct == true){
 			this.ums = new HashSet<UnitMeasureProduct>();
 			for (Iterator<TblUnitMeasureProduct> iterator = pd.getUms().iterator(); iterator.hasNext();){
 				TblUnitMeasureProduct ump = iterator.next();
@@ -270,14 +280,17 @@ public class Product implements Ivo,Comparable<Product>{
 				umpt.convertFromTable(ump);
 				this.ums.add(umpt);
 			}
+		}else{
+			this.ums = null;
 		}
 	}
 	public GECOError control(){
 		GECOError er = null;
 		clean();
+		/*
 		if (this.supplier != null && this.supplier.getIdSupplier() == 0){
 			this.supplier = null;
-		}
+		}*/
 		if (this.code == "" || this.code == null){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice Manacante");
 		}
@@ -290,73 +303,76 @@ public class Product implements Ivo,Comparable<Product>{
 		if (this.sellprice  == 0){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Prezzo di Vendita mancante");
 		}
+		/*
 		if (this.group  == null || this.group.getIdGroupProduct() == 0){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Gruppo mancante");
 		}
 		if (this.category  == null || this.category.getIdCategoryProduct() == 0){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Categoria mancante");
-		}
+		}*/
 		if (this.taxrate  == null || this.taxrate.getIdtaxrate() == 0){
 			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Aliquota mancante");
 		}
-		if (this.ums  == null || this.ums.size() == 0){
-			er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Unità di misura non definite");
-		}else{
-			boolean hasConv = true;
-			boolean hasPreference = false;
-			boolean hasBasicConv = false;
-			boolean hasUm = true;
-			boolean hasCode = true;
-			boolean hasNoDuplicate = true;
-			Map<String, String> codes = new HashMap<String, String>();
-			for (Iterator<UnitMeasureProduct> it = ums.iterator();it.hasNext();){
-				UnitMeasureProduct um = it.next();
-				if (um.getConversion() == 0){
-					hasConv = false;
+		if (isProduct == true){
+			if (this.ums  == null || this.ums.size() == 0){
+				er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Unità di misura non definite");
+			}else{
+				boolean hasConv = true;
+				boolean hasPreference = false;
+				boolean hasBasicConv = false;
+				boolean hasUm = true;
+				boolean hasCode = true;
+				boolean hasNoDuplicate = true;
+				Map<String, String> codes = new HashMap<String, String>();
+				for (Iterator<UnitMeasureProduct> it = ums.iterator();it.hasNext();){
+					UnitMeasureProduct um = it.next();
+					if (um.getConversion() == 0){
+						hasConv = false;
+					}
+					if (um.isPreference() == true){
+						hasPreference = true;
+					}
+					if (um.getConversion() == 1){
+						hasBasicConv = true;
+					}
+					if (um.getUm() == null || um.getUm().getIdUnitMeasure() ==0){
+						hasUm = false;
+					}
+					if (um.getCode() == null || um.getCode() ==  "" ){
+						hasCode = false;
+					}
+					if (codes.containsKey(um.getCode()) == true){
+						hasNoDuplicate = false;
+					}else{
+						codes.put(um.getCode(), um.getCode());
+					}
 				}
-				if (um.isPreference() == true){
-					hasPreference = true;
-				}
-				if (um.getConversion() == 1){
-					hasBasicConv = true;
-				}
-				if (um.getUm() == null || um.getUm().getIdUnitMeasure() ==0){
-					hasUm = false;
-				}
-				if (um.getCode() == null || um.getCode() ==  "" ){
-					hasCode = false;
-				}
-				if (codes.containsKey(um.getCode()) == true){
-					hasNoDuplicate = false;
-				}else{
-					codes.put(um.getCode(), um.getCode());
-				}
-			}
-			if (hasConv == false){
-				er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Fattore di conversione mancante");
-			}
-			if (hasPreference == false){
-				er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Unità di misura preferenziale mancante");
-			}
-			if (hasBasicConv == false){
-				er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Fattore di conversione di base mancante");
-			}
-			if (hasUm == false){
-				er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Unità di misura mancante");
-			}
-			if (hasCode == false){
-				if (hasPreference == true && hasBasicConv == true && ums.size() == 1){
-					
-				}else{
-					er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice mancante");
-				}
-			}
-			if (hasNoDuplicate == false){
-				er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice duplicato");
-			}
 			
+				if (hasConv == false){
+					er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Fattore di conversione mancante");
+				}
+				if (hasPreference == false){
+					er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Unità di misura preferenziale mancante");
+				}
+				if (hasBasicConv == false){
+					er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Fattore di conversione di base mancante");
+				}
+				if (hasUm == false){
+					er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Unità di misura mancante");
+				}
+				if (hasCode == false){
+					if (hasPreference == true && hasBasicConv == true && ums.size() == 1){
+						
+					}else{
+						er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice mancante");
+					}
+				}
+				if (hasNoDuplicate == false){
+					er = new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice duplicato");
+				}
+				
+			}
 		}
-		
 		return er;
 	}
 	public void updateCode(){

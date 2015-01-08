@@ -63,7 +63,15 @@ public class TblProduct implements Itbl{
 	@ManyToOne
 	@JoinColumn(name = "idCompany")
 	private TblCompany company;
+	@Column(name="isProduct")
+	private boolean isProduct;
 	
+	public boolean isProduct() {
+		return isProduct;
+	}
+	public void setProduct(boolean isProduct) {
+		this.isProduct = isProduct;
+	}
 	public TblCompany getCompany() {
 		return company;
 	}
@@ -171,6 +179,7 @@ public class TblProduct implements Itbl{
 		this.purchaseprice = pd.getPurchaseprice();
 		this.sellprice = pd.getSellprice();
 		this.weightbarcode = pd.getWeightbarcode();
+		this.isProduct = pd.isProduct();
 		if(pd.getGroup()!= null){
 			this.group = new TblGroupProduct();
 			this.group.convertToTable(pd.getGroup());
@@ -199,14 +208,16 @@ public class TblProduct implements Itbl{
 			this.company = new TblCompany();
 			this.company.convertToTable(pd.getCompany());
 		}
-		if (pd.getUms() != null){
+		if (pd.getUms() != null ){
 			this.ums = new HashSet<TblUnitMeasureProduct>();
 			for (Iterator<UnitMeasureProduct> iterator = pd.getUms().iterator(); iterator.hasNext();){
 				UnitMeasureProduct ump = iterator.next();
 				TblUnitMeasureProduct umpt = new TblUnitMeasureProduct();
-				umpt.convertToTableForSaving(ump,this);
+				umpt.convertToTableForSaving(ump,this,this.isProduct);
 				this.ums.add(umpt);
 			}
+		}else{
+			this.ums = null;
 		}
 	}
 }

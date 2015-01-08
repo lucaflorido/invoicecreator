@@ -365,6 +365,13 @@
 		height:24px;
 		background: url('../assets/Remove/Remove_24x24.png');
 	}
+	.mailicon{
+	    margin:1px auto;
+		width:24px;
+		height:24px;
+		background: url('../assets/Mail/Mail_24x24.png');
+		cursor:pointer;
+	}
 	.favoriteicon{
 	    margin:1px auto;
 		width:16px;

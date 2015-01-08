@@ -1,5 +1,6 @@
 package it.progess.invoicecreator.dao;
 
+
 import it.progess.invoicecreator.exception.GecoException;
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
@@ -14,6 +15,7 @@ import it.progess.invoicecreator.util.accounting.AccountingHelper;
 import it.progess.invoicecreator.util.document.DocumentHelper;
 import it.progess.invoicecreator.util.store.StoreManager;
 import it.progess.invoicecreator.vo.Counter;
+import it.progess.invoicecreator.vo.CounterYear;
 import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.Document;
 import it.progess.invoicecreator.vo.GECOError;
@@ -41,6 +43,7 @@ import it.progess.invoicecreator.vo.filter.HeadFilter;
 import it.progess.invoicecreator.vo.filter.NeededFilter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -156,6 +159,7 @@ public class DocumentDao {
 			cr.add(Restrictions.between("head.date", DataUtilConverter.convertDateFromString(filter.fromDate), DataUtilConverter.convertDateFromString(filter.toDate)));
 		}
 		cr.add(Restrictions.eq("head.disable",false));
+		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 	}
 	/***
 	 * Save update Heads
@@ -163,7 +167,9 @@ public class DocumentDao {
 	public GECOObject saveUpdatesHead(Head sm,User user) throws GecoException{
 		if (sm.control() == null){
 			
-			sm.calculateNumber();
+			boolean found = false;
+			found = sm.calculateNumber();
+			setUpCounter(sm, found);
 		}else{
 			return sm.control();
 		}
@@ -171,15 +177,35 @@ public class DocumentDao {
 	}
 	public GECOObject saveUpdatesHead(Head sm,int index,User user) throws GecoException{
 		if (sm.control() == null){
-			sm.calculateNumber(index);
+			boolean found = false;
+			found = sm.calculateNumber(index);
+			setUpCounter(sm, found);
 		}else{
 			return sm.control();
 		}
 		return saveHead(sm,user);
 	}
+	private void setUpCounter(Head sm,boolean found){
+		if (found == false){
+			Counter c = sm.getDocument().getCounter();
+			CounterYear cy = new CounterYear();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(DataUtilConverter.convertDateFromString(sm.getDate()));
+			int year = cal.get(Calendar.YEAR);
+			cy.setYear(year);
+			cy.setValue(sm.getNumber()+1);
+			c.getYearsvalue().add(cy);
+			Counter[] sc = {c};
+			new BasicDao().saveUpdatesCounter(sc);
+			c = new BasicDao().getCounter(c.getIdCounter());
+			sm.getDocument().setCounter(c);
+		}
+	}
 	public GECOObject saveUpdatesHead(Head sm,int index,boolean forceSerialNumber,User user) throws GecoException{
 		if (sm.control(forceSerialNumber) == null){
-			sm.calculateNumber(index);
+			boolean found = false;
+			found = sm.calculateNumber(index);
+			setUpCounter(sm, found);
 		}else{
 			return sm.control();
 		}
@@ -686,19 +712,27 @@ public class DocumentDao {
 	private boolean checkHeadNumber(Head head) {
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
+			Calendar cal = Calendar.getInstance();
+		    cal.setTime(DataUtilConverter.convertDateFromString(head.getDate()));
+		    int year = cal.get(Calendar.YEAR);
 			Criteria cr = session.createCriteria(TblHead.class,"head");
 			cr.add(Restrictions.eq("number", head.getNumber()));
 			cr.add(Restrictions.eq("head.document.idDocument", head.getDocument().getIdDocument()));
+			cr.add(Restrictions.between("head.date", toStartOfYear(year), toEndOfYear(year)));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List heads = cr.list();
 			if (heads.size() == 0){
 				return true;
 				
 			}else if (heads.size() == 1){
-				if (((TblHead)heads.get(0)).getIdHead() == head.getIdHead()){
-					return true;
+				if ( ((TblHead)heads.get(0)).getDate().getYear() == DataUtilConverter.convertDateFromString(head.getDate()).getYear() ){
+					if (((TblHead)heads.get(0)).getIdHead() == head.getIdHead()){
+						return true;
+					}else{
+						return false;
+					}
 				}else{
-					return false;
+					return true;
 				}
 			}else{
 				for (int i = 0;i < heads.size();i++ ){
@@ -718,6 +752,26 @@ public class DocumentDao {
 			session.close();
 		}
 		return true;
+	}
+	private Date toStartOfYear(int year) {
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.set(Calendar.YEAR, year);
+	    calendar.set(Calendar.DAY_OF_YEAR, 1);
+	    calendar.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    return calendar.getTime();
+	}
+
+	private Date toEndOfYear(int year) {
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.set(Calendar.YEAR, year);
+	    calendar.set(Calendar.MONTH, 11);
+	    calendar.set(Calendar.DAY_OF_MONTH, 31);
+	    calendar.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar.set(Calendar.MINUTE,59);
+	    calendar.set(Calendar.SECOND,59);
+	    return calendar.getTime();
 	}
 	private boolean checkGeneratedRow(Row row) {
 		boolean nogenerated = false;

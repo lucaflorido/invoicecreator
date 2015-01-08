@@ -93,13 +93,14 @@ public class PrintService {
 	@Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
 	public String multipleHeads(@FormParam("ids") String ids,@Context HttpServletRequest request) {
+		User loggeduser = HibernateUtils.getUserFromSession(request);
 		PrinterDao dao = new PrinterDao();
 		Gson gson = new Gson();
 		//DocumentDao dao = new DocumentDao();
 		//Head head = new Head();
 		//head = dao.getSingleHead(id);
 		int[] idsHeads = gson.fromJson(ids, int[].class);
-		User loggeduser = HibernateUtils.getUserFromSession(request);
+		
 		return gson.toJson(dao.printMultipleDocument(context, idsHeads,loggeduser));
 	}
 	@POST

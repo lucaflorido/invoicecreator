@@ -78,15 +78,20 @@ public class TblUnitMeasureProduct implements Itbl {
 			this.um.convertToTable(um.getUm());
 		}
 	}
-	public void convertToTableForSaving(Ivo obj,Itbl itbl){
+	public void convertToTableForSaving(Ivo obj,Itbl itbl,boolean isProduct){
 		UnitMeasureProduct um = (UnitMeasureProduct)obj;
-		this.conversion = um.getConversion();
-		this.idUnitMeasureProduct = um.getIdUnitMeasureProduct();
-		this.preference = um.isPreference();
 		this.code = um.getCode();
-		if (um.getUm() != null){
-			this.um = new TblUnitMeasure();
-			this.um.convertToTable(um.getUm());
+		if (isProduct == true){
+			this.conversion = um.getConversion();
+			this.idUnitMeasureProduct = um.getIdUnitMeasureProduct();
+			this.preference = um.isPreference();
+			
+			if (um.getUm() != null ){
+				this.um = new TblUnitMeasure();
+				this.um.convertToTable(um.getUm());
+			}
+		}else{
+			this.um = null;
 		}
 		this.product = (TblProduct)itbl;
 	}

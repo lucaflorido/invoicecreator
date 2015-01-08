@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+
+
+
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCustomer;
@@ -376,28 +379,33 @@ public class Head implements Ivo {
 			}
 		}
 	}
-	public void calculateNumber(){
+	public boolean calculateNumber(){
+		boolean found = false;
 	    if (date.length() > 0){
 	    	String[] dateArray = this.date.split("/");
+	    	
 	    	if (dateArray.length > 2){
 		    	int year = Integer.parseInt(dateArray[2]);
 				for (Iterator<CounterYear> iterator = this.document.getCounter().getYearsvalue().iterator();iterator.hasNext();){
 					CounterYear cy = iterator.next();
 					if (cy.getYear() == year){
+						found = true;
 						if (this.number >= cy.getValue()){
 							cy.setValue(this.number + 1);
 						}else if(this.number < cy.getValue() && this.number == 0 && this.idHead == 0){
-							this.number = cy.getValue();
-							//cy.setValue(this.number + 1);
+							//this.number = cy.getValue();
 						}
 						
 					}
 				}
+				
 	    	}
 	    }
+	    return found;
 		
 	}
-	public void calculateNumber(int index){
+	public boolean calculateNumber(int index){
+		boolean found = false;
 	    if (date.length() > 0){
 	    	String[] dateArray = this.date.split("/");
 	    	if (dateArray.length > 2){
@@ -405,6 +413,7 @@ public class Head implements Ivo {
 				for (Iterator<CounterYear> iterator = this.document.getCounter().getYearsvalue().iterator();iterator.hasNext();){
 					CounterYear cy = iterator.next();
 					if (cy.getYear() == year){
+						found = true;
 						if (this.number >= cy.getValue()){
 							cy.setValue(this.number +1);
 						}else if(this.number < cy.getValue() && this.number == 0 && this.idHead == 0){
@@ -416,6 +425,7 @@ public class Head implements Ivo {
 				}
 	    	}
 	    }
+	    return found;
 		
 	}
 	private GECOError genericControl(){
@@ -519,5 +529,8 @@ public class Head implements Ivo {
 				}
 			}
 		}
+	}
+	public String getName(){
+		return this.document.getCode()+"_"+String.valueOf(this.number)+"_"+this.customer.getCustomercode();
 	}
 }

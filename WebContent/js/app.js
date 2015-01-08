@@ -1,4 +1,4 @@
-var gecoApp = angular.module("gecoApp",["ngRoute","gecoControllers","gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
+var gecoApp = angular.module("gecoApp",["ngRoute","gecoControllers","gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers",'ui.bootstrap','modules.common.shared',"email.module"])
 .directive('onFinishRender', function ($timeout) {
     return {
         restrict: 'A',
@@ -154,6 +154,7 @@ function($routeProvider) {
 			templateUrl: 'template/registry/productlist.htm',
 			controller: 'ProductListCtrl'
 		}).
+		
 		when('/product/:idproduct', {
 			templateUrl: 'template/registry/productdetail.htm',
 			controller: 'ProductDetailCtrl'
@@ -280,10 +281,10 @@ gecoApp.factory('ScopeFactory', function ($http, $q) {
 	    "factory":scopefactory
 	}
 });
-gecoApp.run(function($rootScope) {
+gecoApp.run(function($rootScope,ModalFactory) {
 	$rootScope.$on('$routeChangeStart', function(next, current) { 
 		$(document).unbind("keydown");
-		if ($rootScope.issaved == false){
+		/*if ($rootScope.issaved == false){
 			$.confirm({
 			text: "ATTENZIONE ci sono dati non salvati...Salvare ora?",
 			confirm: 
@@ -295,7 +296,7 @@ gecoApp.run(function($rootScope) {
 			confirmButton: "Si",
 			cancelButton: "No"
 		});
-		}
+		}*/
 	});
 	$rootScope.user = {};
 	$rootScope.path = "";
@@ -345,35 +346,10 @@ gecoApp.run(function($rootScope) {
 	}
 	$rootScope.confirmSaved = function(){
 
-		$.confirm({
-			text: "Elemento Salvato con successo",
-			confirm: function(button) {
-			
-			}
-				
-			,
-			cancel: function(button) {
-				// do something
-			},
-			showCancelButton:false,
-			confirmButton: "Ok",
-			
-		});
+		ModalFactory.confirm();
 	}
 	$rootScope.errorMessage = function(message){
-		$.confirm({
-			text: message,
-			confirm: function(button) {
-			
-			}
-			,
-			cancel: function(button) {
-				// do something
-			},
-			showCancelButton:false,
-			confirmButton: "Ok",
-			
-		});
+		ModalFactory.error(message);
 	}
 	$rootScope.saveFuntion = function(){
 	

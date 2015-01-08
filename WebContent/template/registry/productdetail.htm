@@ -3,10 +3,13 @@
 		<thead>
 			<tr class="title_tr">
 				<td ng-show="isNew == true" class="title_td">
-					NUOVO PRODOTTO:
+					NUOVO PRODOTTO o SERVIZIO:
 				</td>
-				<td ng-show="isNew == false" class="title_td">
+				<td ng-show="isNew == false && product.isProduct == 'true'" class="title_td">
 					PRODOTTO: {{product.code}} {{product.description}}
+				</td>
+				<td ng-show="isNew == false && product.isProduct == 'false'" class="title_td">
+					SERVIZIO: {{product.code}} {{product.description}}
 				</td>
 			</tr>
 		</thead>
@@ -56,7 +59,7 @@
 			<p>
 				<div class="generaltable">
 			<div class="column_1_2 user">	
-				<div class="info">
+				<div class="info heigher">
 					<div class="fields">
 						<div class="label name">Codice *</div>
 						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.code" value="{{product.code}}" capitalize   ng-change="setModified()"  /></div>
@@ -67,16 +70,29 @@
 						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.description" value="{{product.description}}" capitalize ng-change="setModified()"  /></div>
 						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
 					</div>
-					<div class="fields">
+					<!--div class="fields">
 						<div class="label name">Codice a Barre</div>
 						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.barcode" value="{{product.barcode}}" ng-change="setModified()"  /></div>
 						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
+					</div-->
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Aliquota</div>
+						<div class="field role">
+							<select id="seltaxrate" class="inputfield combobox" ng-model="currentTaxRate"    ng-options="taxrate as taxrate.description for taxrate in taxrates" ng-data-provider="taxrates" create-chosen on-finish-chosen-update ng-change="setModified()"  ></select>
+						</div>
+					</div>
+					<div class="fields" ng-show="idproduct == 0 ">
+							<input type="radio" ng-model="product.isProduct" value="true">  Prodotto <br/>
+							<input type="radio" ng-model="product.isProduct" value="false">  Servizio <br/>
+						<!--div class="label name">Selezionare per inserire un prodotto, Non selezionare per inserire un servizio</div>
+						<div class="field name"><input type="checkbox" class="inputfield" id="ifname" ng-model="product.isProduct" value="{{product.isProduct}}"  /></div-->
+					
 					</div>
 				</div>
 			</div>
 			<div class="column_2_2 user">
-				<div class="contact">
-					<div class="fields">
+				<div class="contact heigher">
+					<!--div class="fields">
 						<div class="label name">Caratteri peso in Codice a Barre</div>
 						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.weightbarcode" value="{{product.weightbarcode}}" ng-change="setModified()"  /></div>
 					</div>
@@ -89,13 +105,26 @@
 						<div class="field role">
 							<select id="selgroup" class="inputfield combobox" ng-model="currentSupplier"    ng-options="supplier as supplier.suppliername for supplier in suppliers" ng-data-provider="suppliers" create-chosen on-finish-chosen-update ng-change="product.supplier = currentSupplier;setModified()" " ></select>
 						</div>
+					</div-->
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Prezzo Acquisto </div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.purchaseprice" value="{{product.purchaseprice}}" ng-blur="calculatePrices('sellprice')" ng-change="setModified()"   /></div>
 					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">%</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.percentage" value="{{product.percentage}}"  ng-blur="calculatePrices('sellprice')" ng-change="setModified()" /></div>
+					</div>
+					<div class="PRODUCT_fields_details">
+						<div class="label name">Prezzo Vendita</div>
+						<div class="field name"><input class="inputfield" id="ifname" ng-model="product.sellprice" value="{{product.sellprice}}"  ng-blur="calculatePrices('percentage')" ng-change="setModified()" /></div>
+					</div>
+					
 				</div>
 			</div>
 		</div>
 			</p>
 		</div>
-		<h3>Prezzi e Categorie</h3>
+		<!--h3>Prezzi e Categorie</h3>
 		<div>
 			<p>
 				<div class="generaltable">
@@ -153,9 +182,9 @@
 			</div>
 		</div>
 			</p>
-		</div>
-		<h3>Unit&#224; di Misura</h3>
-		<div>
+		</div-->
+		<h3 ng-show="product.isProduct == 'true' || product.isProduct == true ">Unit&#224; di Misura</h3>
+		<div ng-show="product.isProduct == 'true' || product.isProduct == true ">
 			<p>
 				<div class="credentials">
 			<div class="credential">

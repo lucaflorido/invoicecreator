@@ -130,7 +130,7 @@ gecoRegistryControllers.controller('ProductListCtrl',["$scope","$rootScope","$ht
 	$scope.updateProd = {};
 	$http.get('rest/basic/categoryproduct').success(function(data){
 		$scope.categorys= data;
-		for (var i=0;i<$scope.categorys.length;i++){
+		/*for (var i=0;i<$scope.categorys.length;i++){
 			if ($scope.currentCategory.idCategoryProduct == $scope.categorys[i].idCategoryProduct){
 				$scope.currentCategory = $scope.categorys[i];
 				$scope.subcategories = $scope.currentCategory.subcategories		
@@ -144,32 +144,32 @@ gecoRegistryControllers.controller('ProductListCtrl',["$scope","$rootScope","$ht
 					$scope.currentSubCategory = null;
 				}
 			}
-		}
+		}*/
 	});
 	
 	$http.get('rest/basic/brand').success(function(data){
 		$scope.brands= data;
-		for (var i=0;i<$scope.brands.length;i++){
+		/*for (var i=0;i<$scope.brands.length;i++){
 			if ($scope.currentBrand.idBrand == $scope.brands[i].idBrand){
 				$scope.currentBrand = $scope.brands[i];
 			}
-		}
+		}*/
 	});
 	$http.get('rest/registry/supplier').success(function(data){
 		$scope.suppliers= data;
-		for (var i=0;i<$scope.suppliers.length;i++){
+		/*for (var i=0;i<$scope.suppliers.length;i++){
 			if ($scope.currentSupplier.idSupplier == $scope.suppliers[i].idSupplier){
 				$scope.currentSupplier = $scope.suppliers[i];
 			}
-		}
+		}*/
 	});	
 	$http.get('rest/basic/groupproduct').success(function(data){
 		$scope.groups= data;
-		for (var i=0;i<$scope.groups.length;i++){
+		/*for (var i=0;i<$scope.groups.length;i++){
 			if ($scope.currentGroup.idGroupProduct == $scope.groups[i].idGroupProduct){
 				$scope.currentGroup = $scope.groups[i];
 			}
-		}
+		}*/
 	});
 	
 	$scope.getProducts = function(page){
@@ -322,11 +322,6 @@ gecoRegistryControllers.controller('ProductDetailCtrl',["$scope","$http","$route
 	
 	$http.get('rest/basic/unitmeasure').success(function(data){
 		$scope.ums= data;
-		
-			
-			
-			
-				
 					$http.get('rest/registry/product/'+$scope.idproduct).success(function(data){
 						$scope.product= data;
 						if ($rootScope.newProductToAdd != null)
@@ -414,26 +409,12 @@ gecoRegistryControllers.controller('ProductDetailCtrl',["$scope","$http","$route
 		$scope.umpid = product.ums.length-1 ;
 	}
 	$scope.changeUMElement = function(ump){
-	    
-		/*if (ump.um != null){
-			for(var i=0;i<$scope.ums.length;i++){
-				if (ump.um.idUnitMeasure == $scope.ums[i].idUnitMeasure){
-					$scope.currentUMP = $scope.ums[i];
-				}
-			}
-		}*/
-		$scope.umpid = ump; //ump.idUnitMeasureProduct
+	    $scope.umpid = ump; //ump.idUnitMeasureProduct
 	}
 	
 	$scope.saveProduct = function(){
-		$scope.product.group = $scope.currentGroup;
 		$scope.product.taxrate = $scope.currentTaxRate;
-		$scope.product.category = $scope.currentCategory;
-		$scope.product.brand = $scope.currentBrand;
-		$scope.product.subcategory = $scope.currentSubCategory;
-		$scope.product.supplier = $scope.currentSupplier;
-	//if (GECO_validator.requiredFields()== true && GECO_validator.emailFields()==true){
-			$.ajax({
+		$.ajax({
 				url:"rest/registry/product",
 				type:"PUT",
 				data:"products="+JSON.stringify($scope.product),
@@ -722,15 +703,18 @@ gecoRegistryControllers.controller('CustomerDetailCtrl',["$scope","$http","$rout
 	});
 	$http.get('rest/registry/customer/'+$scope.idcustomer).success(function(data){
 				$scope.customer= data;
-				for (var i=0;i<$scope.groups.length;i++){
-					if ($scope.customer.group != null){
-						if ($scope.customer.group.idGroupCustomer == $scope.groups[i].idGroupCustomer){
-							$scope.currentGroup = $scope.groups[i]; 
+				if ($scope.groups !== null && $scope.groups !== undefined){
+					for (var i=0;i<$scope.groups.length;i++){
+						if ($scope.customer.group != null){
+							if ($scope.customer.group.idGroupCustomer == $scope.groups[i].idGroupCustomer){
+								$scope.currentGroup = $scope.groups[i]; 
+							}
+						}else{
+							$scope.customer.group = {}
 						}
-					}else{
-						$scope.customer.group = {}
 					}
 				}
+				if ($scope.categorys !== null && $scope.categorys !== undefined){
 				for (var ig=0;ig<$scope.categorys.length;ig++){
 					if ($scope.customer.category != null){
 						if ($scope.customer.category.idCategoryCustomer == $scope.categorys[ig].idCategoryCustomer){
@@ -739,6 +723,7 @@ gecoRegistryControllers.controller('CustomerDetailCtrl',["$scope","$http","$rout
 					}else{
 						$scope.customer.category = {};
 					}
+				}
 				}
 				if ($scope.payments != null && $scope.customer.payment != null){
 					for(var i=0;i<$scope.payments.length;i++ ){

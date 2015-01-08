@@ -297,4 +297,49 @@ public class PrinterDao {
 		
 		return "/InvoiceCreator/report/reportOrder.pdf";
 	}
+	public String getSingleDocumentPath(ServletContext context,int id,User user){
+		String documentType ="";
+		String filename = "";
+		try{
+			//generateAshwinFriends();
+			Company comp = user.getCompany();
+			Head head = new DocumentDao().getSingleHead(id);
+		    documentType = getReportName(head.getDocument());
+			File f = new File(context.getRealPath("report/"+documentType+".jasper"));
+			if(f.exists() == false){
+				JasperCompileManager.compileReportToFile(context.getRealPath("report/"+documentType+".jrxml"), context.getRealPath("report/"+documentType+".jasper"));
+			}
+		    
+			Collection<PrintSingleHead> headcoll = new ArrayList<PrintSingleHead>();
+			Map<String, Object> map = new HashMap<String ,Object>();
+			map.put("title","Fattura");
+			double totqta = 0;
+			double totnecks = 0;
+			for (Iterator<Row> it = head.getRows().iterator();it.hasNext();){
+				Row r = it.next();
+				PrintSingleHead ph = new PrintSingleHead();
+				ph.setFromObject(comp,head, r);
+				headcoll.add(ph);
+				totqta = totqta + r.getQuantity();
+				totnecks = totnecks + r.getNecks();
+			}
+			if (head.getDocument().isOrder() && head.getDocument().getSupplier()){
+				for (Iterator<PrintSingleHead> itp = headcoll.iterator();itp.hasNext();){
+					PrintSingleHead p = itp.next();
+					p.setTot_colli(String.valueOf(totnecks));
+					p.setTot_qta(String.valueOf(totqta));
+				}
+			}
+			JRDataSource datasource = new JRBeanCollectionDataSource(headcoll);
+			JasperPrint print = JasperFillManager.fillReport(context.getRealPath("report/"+documentType+".jasper"),map,datasource );
+			filename = head.getName();
+			FileOutputStream fileOutputStream = new FileOutputStream(context.getRealPath("report/"+filename+".pdf"));
+			JasperExportManager.exportReportToPdfStream(print, fileOutputStream);
+		}catch(Exception ex){
+			ex.printStackTrace();
+			throw new ExceptionInInitializerError(ex);
+		}
+		
+		return context.getRealPath("report/"+filename+".pdf");
+	}
 }

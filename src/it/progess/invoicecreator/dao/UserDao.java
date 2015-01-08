@@ -194,7 +194,7 @@ public class UserDao {
 			if (user.getIduser() <= 0 && user.getPassword() == null ){
 				user.setPassword(HibernateUtils.md5Java(user.getUsername()));  
 			}
-			tbluser.convertToTable(user);
+			tbluser.convertToTableSave(user);
 			tx = session.beginTransaction();
 			session.saveOrUpdate(tbluser);
 			iduser = tbluser.getIduser();
@@ -210,7 +210,7 @@ public class UserDao {
 			session.close();
 		}
 		if (HibernateUtils.getUserFromSession(request).getIduser() == iduser){
-			sessionhttp.setAttribute("user",new Gson().toJson(getSingleUser(iduser)));
+			sessionhttp.setAttribute("user",new Gson().toJson(getSingleUserVO(iduser)));
 		}
 		return iduser;
 	}
@@ -237,6 +237,12 @@ public class UserDao {
 		}finally{
 			session.close();
 		}
+	}
+	public User getSingleUserVO(int iduser){
+		TblUser tbluser = getSingleUser(iduser);
+		User user = new User();
+		user.convertFromTable(tbluser);
+		return user;
 	}
 	/***
 	 * DELETE A SINGLE USER

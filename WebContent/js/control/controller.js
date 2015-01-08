@@ -134,7 +134,7 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 	} );
 }]);
 
-gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http',function($scope,$routeParams,$http){
+gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http','ModalFactory',function($scope,$routeParams,$http,ModalFactory){
 	GECO_LOGGEDUSER.checkloginuser();
 	$scope.myuserId= $routeParams.myuserId ;
 	$scope.isuser = true;
@@ -177,6 +177,35 @@ gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http',fun
 	$scope.changeView = function(){
 		$scope.isuser = !$scope.isuser;
 	}
+	$scope.addMilConfig = function(){
+		if ($scope.user.company.mailconfig == undefined || $scope.user.company.mailconfig == null ){
+			$scope.user.company.mailconfig = [];
+		}
+		$scope.user.company.mailconfig.push({});
+	}
+	$scope.testemail = function(mailconfig){
+		ModalFactory.sendMail($scope.user,mailconfig,$scope.emailService);
+		
+		
+	}
+	$scope.emailService = function(user,mailconfig){
+		$.ajax({
+			url:"rest/email/test/",
+			type:"POST",
+			data:"user="+JSON.stringify(user)+"&mailconfig="+JSON.stringify(mailconfig),
+			success:function(data){
+				
+				var results = JSON.parse(data);
+				if (results.type == "success"){	
+						$scope.products = results.success;
+						$scope.$apply();
+						$scope.errorMessage("Verificare ricezione email");
+					}else{
+						$scope.errorMessage("Errore: "+results.errorName+" Messaggio:"+results.errorMessage);
+					}	
+			}	
+		});
+	};
 }]);
 /*****
 ROLE
