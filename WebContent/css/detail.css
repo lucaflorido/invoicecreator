@@ -1,0 +1,28 @@
+.DETAIL_CONTAINER{
+	overflow:hidden;
+	width:100%;
+}
+.DETAIL_COLUMN_1_2{
+	float:left;
+	width:48%;
+}
+.DETAIL_COLUMN_2_2{
+	float:right;
+	width:48%;
+}
+.DETAIL_SINGLE_COLUMN{
+	float:left;
+	width:96%;
+}
+.DETAIL_COLUMN_1to2_3{
+	float:left;
+	width:68%;
+}
+.DETAIL_COLUMN_3_3{
+	float:right;
+	width:28%;
+}
+.DETAIL_SUBMENU{
+	margin-top:20px;
+	width:50%;
+}

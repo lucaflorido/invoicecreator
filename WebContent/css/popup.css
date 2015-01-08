@@ -1,0 +1,21 @@
+.POPUP_CLOSE_CONTAINER{
+	padding:10px;
+	overflow:hidden;
+	width:100%;
+}
+.POPUP_CLOSE_BUTTON{
+	float:right;
+}
+.POPUP_BUTTONBAR_CONTAINER{
+	padding:10px;
+	overflow:hidden;
+	width:100%;
+}
+.POPUP_BUTTONBAR_BUTTON{
+	float:right;
+}
+.POPUP_MESSAGE{
+	text-align:center;
+	font-size:16px;
+	padding:20px;
+}
