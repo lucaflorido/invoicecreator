@@ -31,7 +31,7 @@
 	  username="lflorido3"
 	  password="svnf0rl0s"
 	  driverClassName="com.mysql.jdbc.Driver"
-	  url="jdbc:mysql://127.0.0.1/progesstest?autoReconnect=true"
+	  url="jdbc:mysql://5.249.157.46/progesstest?autoReconnect=true"
 	  maxActive="50"
 	  maxIdle="4"
 	  validationQuery="Select 1" 
