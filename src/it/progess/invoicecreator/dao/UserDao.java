@@ -147,6 +147,7 @@ public class UserDao {
 		ArrayList<User> list = new ArrayList<User>();
 		try{
 			Criteria cr = session.createCriteria(TblUser.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List users = cr.list();
 			if (users.size() > 0){
 				for (Iterator iterator = users.iterator(); iterator.hasNext();){
