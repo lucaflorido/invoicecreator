@@ -271,6 +271,7 @@ function($routeProvider) {
 			templateUrl: 'template/accounting/accountinglist.htm',
 			controller: 'AccountingListCtrl'
 		}).
+		
 		otherwise({
 			redirectTo: '/login'
 }		);

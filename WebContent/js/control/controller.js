@@ -36,16 +36,6 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 		$scope.loginfunction();
 	});*/
 	
-	$scope.loginout = function(){
-		$.ajax({
-			url:"rest/user/logout/",
-			type:"GET",
-			success:function(data){
-					$(".header").css("display","none");
-					$(window.location).attr('href', '#/login');
-			}	
-		})
-	}
 	$("#logoutbutton").click(function(e){
 		$scope.loginout();
 	})
@@ -67,8 +57,19 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 	
 	
 }]);
-gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope',function($scope,$rootScope){
+gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope','$location',function($scope,$rootScope,$location){
 	GECO_LOGGEDUSER.checkloginuser();
+	$scope.logout = function(){
+		$.ajax({
+			url:"rest/user/logout/",
+			type:"GET",
+			success:function(data){
+					$(".header").css("display","none");
+					$location.path('/login');
+			}	
+		})
+	}
+
 	
 }]);
 gecoControllers.controller('UserListCtrl',["$scope","$http",function($scope,$http){
@@ -259,6 +260,16 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 		
 	}
 	
+	
+}]);
+
+
+/*****
+LOGOUT
+***/
+gecoControllers.controller('LogOutCtrl',["$scope","$http",function($scope,$http){
+    
+	// scope per il logout
 	
 }]);
 
