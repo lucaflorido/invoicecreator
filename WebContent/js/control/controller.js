@@ -70,6 +70,8 @@ gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope','$location',func
 		})
 	}
 
+}]);
+gecoControllers.controller('ParametersCtrl',['$scope','$rootScope','$location',function($scope,$rootScope,$location){
 	
 }]);
 gecoControllers.controller('UserListCtrl',["$scope","$http",function($scope,$http){

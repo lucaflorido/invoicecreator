@@ -271,7 +271,10 @@ function($routeProvider) {
 			templateUrl: 'template/accounting/accountinglist.htm',
 			controller: 'AccountingListCtrl'
 		}).
-		
+		when('/parameters', {
+			templateUrl: 'template/parameters.htm',
+			controller: 'ParametersCtrl'
+		}).
 		otherwise({
 			redirectTo: '/login'
 }		);
