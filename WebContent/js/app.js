@@ -272,8 +272,24 @@ function($routeProvider) {
 			controller: 'AccountingListCtrl'
 		}).
 		when('/parameters', {
-			templateUrl: 'template/parameters.htm',
+			templateUrl: 'template/parameters/parameters.htm',
 			controller: 'ParametersCtrl'
+		}).
+		when('/rates', {
+			templateUrl: 'template/parameters/rates.htm',
+			controller: 'TaxrateCtrl'	
+		}).
+		when('/storemovement', {
+			templateUrl: 'template/parameters/storemovement.htm',
+			controller: 'ParametersCtrl'	
+		}).
+		when('/customers', {
+			templateUrl: 'template/parameters/customers.htm',
+			controller: 'ParametersCtrl'
+		}).
+		when('/documents', {
+			templateUrl: 'template/parameters/documents.htm',
+			controller: 'ParametersCtrl'	
 		}).
 		otherwise({
 			redirectTo: '/login'
