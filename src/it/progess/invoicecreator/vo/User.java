@@ -146,6 +146,10 @@ public class User {
 				this.entity = this.getContact().getCustomer();
 				this.path = "customer";
 			}
+			if (this.getContact().getTransporter() != null){
+				this.entity = this.getContact().getTransporter();
+				this.path = "transporter";
+			}
 		}else{
 			this.path = "";
 		}

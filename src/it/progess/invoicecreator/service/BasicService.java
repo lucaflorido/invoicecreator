@@ -38,16 +38,17 @@ public class BasicService {
 	@GET
 	@Path("taxrate")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getTaxrateList(){
+	public String getTaxrateList(@Context HttpServletRequest request){
 		Gson gson = new Gson();
 		BasicDao taxratedao = new BasicDao();
-		return gson.toJson(taxratedao.getTaxRateList());
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(taxratedao.getTaxRateList(loggeduser));
 	}
 	@PUT
 	@Path("taxrate")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	public String saveUser(@FormParam("taxrates") String taxrates){
+	public String saveTaxrates(@FormParam("taxrates") String taxrates){
 	  Gson gson = new Gson();
 	  TaxRate[] taxratesarray = gson.fromJson(taxrates,TaxRate[].class);
 	  BasicDao taxratedao = new BasicDao();

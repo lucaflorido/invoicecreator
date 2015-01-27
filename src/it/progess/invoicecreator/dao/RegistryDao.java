@@ -1386,6 +1386,20 @@ public class RegistryDao {
 	/***
 	 * Save update Transporters
 	 * **/
+	public GECOObject createUserTransporter(Transporter sm,User loggeduser){
+		User user = new User();
+		user.setActive(true);
+		user.setName(sm.getTransportername());
+		user.setSurname(sm.getTransportersurname());
+		user.setEmail(sm.getContact().getEmail1());
+		user.setUsername(sm.getTransportersurname());
+		user.setPassword(sm.getTransportersurname());
+		user.setCompany(loggeduser.getCompany());
+		user.setContact(sm.getContact());
+		UserDao usdao = new UserDao();
+		usdao.saveUpdate(user);
+		return new GECOSuccess();
+	}
 	public GECOObject saveUpdatesTransporter(Transporter sm){
 		int id=0;
 		if (sm.control() == null){

@@ -51,12 +51,14 @@ public class BasicDao {
 	 * Get the list of taxrates
 	 * @return
 	 */
-	public ArrayList<TaxRate> getTaxRateList(){
+	public ArrayList<TaxRate> getTaxRateList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<TaxRate> list = new ArrayList<TaxRate>();
 		try{
 			session.clear();
-			Criteria cr = session.createCriteria(TblTaxrate.class);
+			Criteria cr = session.createCriteria(TblTaxrate.class,"taxrate");
+			checkORCompany("taxrate",user,cr);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblTaxrate> taxrates = cr.list();
 			if (taxrates.size() > 0){
 				for (Iterator<TblTaxrate> iterator = taxrates.iterator(); iterator.hasNext();){
@@ -76,6 +78,13 @@ public class BasicDao {
 			session.close();
 		}
 		return list;
+	}
+	private void checkORCompany(String obj,User user,Criteria cr){
+		if (user.getCompany() != null){
+			cr.add(Restrictions.disjunction().add(Restrictions.eq(obj+".company.idCompany", user.getCompany().getIdCompany()))
+					.add(Restrictions.isNull(obj+".company.idCompany")));
+		}
+			
 	}
 	/***
 	 * SAVE UPDATE taxrates

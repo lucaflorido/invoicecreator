@@ -588,6 +588,17 @@ public class RegistryService {
 		  RegistryDao dao = new RegistryDao();
 		  return gson.toJson(dao.saveUpdatesTransporter(sms));
 	  }
+	  @PUT
+	  @Path("transporter/user")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String createUserTransporter(@Context HttpServletRequest request,@FormParam("transporters") String transporter){
+		  Gson gson = new Gson();
+		  Transporter sms = gson.fromJson(transporter,Transporter.class);
+		  RegistryDao dao = new RegistryDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.createUserTransporter(sms,loggeduser));
+	  }
 		/***
 		Delete user 
 	   */
