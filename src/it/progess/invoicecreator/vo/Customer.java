@@ -33,7 +33,21 @@ public class Customer implements Ivo{
 	private Payment payment;
 	private Company company;
 	private TaxRate taxrate;
+	private String nameUser;
+	private String surnameUser;
 	
+	public String getNameUser() {
+		return nameUser;
+	}
+	public void setNameUser(String nameUser) {
+		this.nameUser = nameUser;
+	}
+	public String getSurnameUser() {
+		return surnameUser;
+	}
+	public void setSurnameUser(String surnameUser) {
+		this.surnameUser = surnameUser;
+	}
 	public TaxRate getTaxrate() {
 		return taxrate;
 	}

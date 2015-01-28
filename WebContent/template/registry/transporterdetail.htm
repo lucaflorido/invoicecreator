@@ -8,6 +8,7 @@
 				Salva
 			</div>
 		</div>
+		
 		<div class="buttonmenu redobutton ">
 			<div class="redo buttonicon">
 			</div>
@@ -85,7 +86,19 @@
 				</div>
 			</div>
 		</div>
-		<div class="credentials" ng-if="selectedSection == listsections[0]">
+		<div class="credentials" >
+			<div class="credential">
+				<div class="fields one_on_three_left">
+					<div class="label phone">Ruolo</div>
+					<div class="field phone"><select id="selrole" class="inputfield" ng-model="currentRole"    ng-options="role as role.name for role in roles" ></select></div>
+				</div>
+				<div class="fields one_on_three_left">
+					<button ng-click="userTransporter()">Crea Utente</button>		
+				</div>
+				
+			</div>
+		</div>
+		<div class="credentials" >
 			<div class="credential">
 				<div class="fields one_on_three_left">
 					<div class="label phone">Telefono 1</div>
@@ -125,39 +138,7 @@
 					</div>
 			</div>
 		</div>
-		<div class="credentials" ng-if="selectedSection == listsections[1]">
-			<div class="credential">
-				<div class="detailview"  >
-						<div class="add_container" ng-click="addListElement(transporter)">
-							<div class="addlabel">
-								Aggiungi Listino 
-							</div>
-							<div class="add buttonicon">
-							</div>
-						</div>
-						<div class="tabledetail">
-							<div class="tabledetail_content transporter_lists">
-								<div class="tabledetail_header">
-									<div class="tabledetail_header_element tabledetail_row first">Codice</div>
-									<div class="tabledetail_header_element tabledetail_row ">Descrizione</div>
-									<div class="tabledetail_header_element tabledetail_row ">Data Validità</div>
-									<div class="tabledetail_header_element tabledetail_row modify">&nbsp;</div>
-									<div class="tabledetail_header_element tabledetail_row delete">&nbsp;</div>
-								</div>
-								<div class="tabledetail_rows indetail" ng-repeat="list in transporter.lists | orderBy:orderYear" >
-									<div class="tabledetail_row first">
-										<div ng-if="listid != list.idListTransporter ">&nbsp;{{list.list.code}}</div>
-										<div><select ng-if="listid == list.idListTransporter" id="selcounter" class="inputfield" ng-model="currentList"    ng-options="list as getListName(list)  for list in lists" ng-change="list.list = currentList" ></select></div>
-									</div>
-									
-									<a ng-click="changeListElement(list)" ><div class="tabledetail_row modify"><div class="modifyicon"></div></div></a>
-									<div class="tabledetail_row delete"><div class="deleteicon" id="del{{transporter.idTransporter}}" ng-click="deleteElement(transporter.idTransporter)"></div></div>
-								</div>
-							</div>
-						</div>
-					</div>
-			</div>
-		</div>	
+	
 		<!--div class="column_2_2 user" ng-if="selectedSection == listsections[0]">
 				<div class="contact">
 					<div class="fields">

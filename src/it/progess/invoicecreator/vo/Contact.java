@@ -17,7 +17,14 @@ public class Contact implements Ivo {
 	private String fax;
 	private Customer customer;
 	private Transporter transporter;
+	private User user;
 	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public Transporter getTransporter() {
 		return transporter;
 	}

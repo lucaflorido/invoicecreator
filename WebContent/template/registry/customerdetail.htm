@@ -172,9 +172,32 @@
 					</div>
 			</div>
 		</div>
+		
 </p>
-
 </div>
+<h3>Utente</h3>
+<div>
+<p>
+<div class="credentials" >
+			<div class="credential">
+				<div class="fields one_on_three_left">
+					<div class="label phone">Ruolo</div>
+					<div class="field phone"><select id="selrole" class="inputfield" ng-model="currentRole"    ng-options="role as role.name for role in roles" ></select></div>
+				</div>
+				<div class="fields right">
+						<div class="label email">Nome</div>
+						<div class="field email"><input  class="inputfield" ng-model="customer.nameUser" value="{{customer.nameUser}}" /></div>
+					</div>
+					<div class="fields right">
+						<div class="label email">Cognome</div>
+						<div class="field email"><input  class="inputfield" ng-model="customer.surnameUser" value="{{customer.surnameUser}}" /></div>
+					</div>
+				<div class="fields one_on_three_left">
+					<button ng-click="userCustomer()">Crea Utente</button>		
+				</div>
+				
+			</div>
+		</div>
 <!--h3>Listini</h3>
 <div>
 <p>

@@ -33,6 +33,7 @@ import it.progess.invoicecreator.vo.ListCustomer;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.ProductDatePrice;
+import it.progess.invoicecreator.vo.Role;
 import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.Transporter;
 import it.progess.invoicecreator.vo.UnitMeasure;
@@ -991,6 +992,20 @@ public class RegistryDao {
 		}
 		return new GECOSuccess(id);
 	}
+	public GECOObject createUserCustomer(Customer sm,User loggeduser,Role r){
+		User user = new User();
+		user.setActive(true);
+		user.setName(sm.getNameUser());
+		user.setSurname(sm.getSurnameUser());
+		user.setEmail(sm.getContact().getEmail1());
+		user.setUsername(sm.getSurnameUser());
+		user.setCompany(loggeduser.getCompany());
+		user.setContact(sm.getContact());
+		user.setRole(r);
+		UserDao usdao = new UserDao();
+		usdao.saveUpdate(user);
+		return new GECOSuccess();
+	}
 	public GECOObject saveUpdatesCustomer(Customer sm,Session session){
 		int id=0;
 		if (sm.control() == null){
@@ -1386,16 +1401,16 @@ public class RegistryDao {
 	/***
 	 * Save update Transporters
 	 * **/
-	public GECOObject createUserTransporter(Transporter sm,User loggeduser){
+	public GECOObject createUserTransporter(Transporter sm,User loggeduser,Role r){
 		User user = new User();
 		user.setActive(true);
 		user.setName(sm.getTransportername());
 		user.setSurname(sm.getTransportersurname());
 		user.setEmail(sm.getContact().getEmail1());
 		user.setUsername(sm.getTransportersurname());
-		user.setPassword(sm.getTransportersurname());
 		user.setCompany(loggeduser.getCompany());
 		user.setContact(sm.getContact());
+		user.setRole(r);
 		UserDao usdao = new UserDao();
 		usdao.saveUpdate(user);
 		return new GECOSuccess();

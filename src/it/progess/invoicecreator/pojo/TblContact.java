@@ -135,6 +135,10 @@ public class TblContact implements Itbl  {
 		this.phone1 = co.getPhone1();
 		this.phone2 = co.getPhone2();
 		this.reference = co.getReference();
+		if (co.getUser() != null){
+			this.user = new TblUser();
+			this.user.convertToTableSave(co.getUser());
+		}
 	}
 	
 }
