@@ -281,7 +281,7 @@ function($routeProvider) {
 		}).
 		when('/storemovement', {
 			templateUrl: 'template/parameters/storemovement.htm',
-			controller: 'ParametersCtrl'	
+			controller: 'StoreMovementCtrl'	
 		}).
 		when('/customers', {
 			templateUrl: 'template/parameters/customers.htm',
