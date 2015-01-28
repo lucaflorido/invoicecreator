@@ -2,6 +2,7 @@ package it.progess.invoicecreator.vo;
 
 
 import it.progess.invoicecreator.pojo.Itbl;
+import it.progess.invoicecreator.pojo.TblCompany;
 import it.progess.invoicecreator.pojo.TblTaxrate;
 import it.progess.invoicecreator.properties.GECOParameter;
 
@@ -11,6 +12,14 @@ public class TaxRate implements Ivo {
 	private int idtaxrate;
 	private String description;
 	private double value;
+	private Company company;
+	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public int getIdtaxrate() {
 		return idtaxrate;
 	}
@@ -34,6 +43,10 @@ public class TaxRate implements Ivo {
 		this.setIdtaxrate(taxrate.getIdtaxrate());
 		this.setDescription(taxrate.getDescription());
 		this.setValue(taxrate.getValue());
+		if (taxrate.getCompany() != null){
+			this.company = new Company();
+			this.company.convertFromTable(taxrate.getCompany());
+		}
 	}
 	public GECOError control(){
 		GECOError ge = null;

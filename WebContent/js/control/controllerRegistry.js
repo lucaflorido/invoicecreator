@@ -786,7 +786,28 @@ gecoRegistryControllers.controller('CustomerDetailCtrl',["$scope","$http","$rout
 			})
 		//}
 	} ;
-	
+	$scope.userCustomer = function(){
+		$.ajax({
+					url:"rest/registry/customer/user",
+					type:"PUT",
+					data:"customers="+JSON.stringify($scope.customer)+"&role="+JSON.stringify($scope.currentRole),
+					success:function(data){
+						result = JSON.parse(data);
+						if (result.type == "success"){	
+							$scope.customer.idCustomer = result.success;
+							$scope.idcustomer = result.success;
+							$scope.confirmSaved();
+							$scope.$apply();
+						}else{
+							alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+						}
+					}	
+				})
+			//}
+		} ;
+		$http.get('rest/role/').success(function(data){
+			$scope.roles= data;
+		});
 }]);
 
 
@@ -1127,9 +1148,7 @@ gecoRegistryControllers.controller('TransporterDetailCtrl',["$scope","$http","$r
 		$scope.listid = list.idListTransporter
 	}
 	$scope.saveTransporter = function(){
-		
-	//if (GECO_validator.requiredFields()== true && GECO_validator.emailFields()==true){
-			$.ajax({
+	$.ajax({
 				url:"rest/registry/transporter",
 				type:"PUT",
 				data:"transporters="+JSON.stringify($scope.transporter),
@@ -1147,5 +1166,26 @@ gecoRegistryControllers.controller('TransporterDetailCtrl',["$scope","$http","$r
 			})
 		//}
 	} ;
-	
+	$scope.userTransporter = function(){
+	$.ajax({
+				url:"rest/registry/transporter/user",
+				type:"PUT",
+				data:"transporters="+JSON.stringify($scope.transporter)+"&role="+JSON.stringify($scope.currentRole),
+				success:function(data){
+					result = JSON.parse(data);
+					if (result.type == "success"){	
+						$scope.transporter.idTransporter = result.success;
+						$scope.idtransporter = result.success;
+						alert("success");
+						$scope.$apply();
+					}else{
+						alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+					}
+				}	
+			})
+		//}
+	} ;
+	$http.get('rest/role/').success(function(data){
+		$scope.roles= data;
+	});
 }]);

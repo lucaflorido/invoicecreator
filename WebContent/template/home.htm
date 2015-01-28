@@ -17,6 +17,12 @@
 				<li class="munu_li"><a  href="#/head/0">Nuovo Ordine</a></li>
 				<li class="munu_li"><a  href="#/headlist/1/1">I Miei Ordini</a></li>
 			    
+			</ul>	
+			<ul ng-if="path == 'transporter'"  class="menu " id="menu">
+				<li class="munu_li"><a  href="#/head/0">Nuovo Ordine</a></li>
+				<li class="munu_li"><a  href="#/headlist/1/1">I Miei Ordini</a></li>
+				<li class="munu_li"><a href="#/customer" >Clienti</a></li>
+				<li class="munu_li"><a  ng-click="logout()">Logout</a></li>
 			</ul>			
 		</div>
 	</div>

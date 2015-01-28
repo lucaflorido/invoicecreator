@@ -32,9 +32,9 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 			}	
 		})
 	};
-	$(".loginbutton").click(function(e){
+	/*$(".loginbutton").click(function(e){
 		$scope.loginfunction();
-	});
+	});*/
 	
 	$("#logoutbutton").click(function(e){
 		$scope.loginout();

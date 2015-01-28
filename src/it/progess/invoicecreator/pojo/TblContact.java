@@ -43,7 +43,15 @@ public class TblContact implements Itbl  {
 	private TblUser user;
 	@OneToOne(mappedBy="contact")
 	private TblCustomer customer;
+	@OneToOne(mappedBy="contact")
+	private TblTransporter transporter;
 	
+	public TblTransporter getTransporter() {
+		return transporter;
+	}
+	public void setTransporter(TblTransporter transporter) {
+		this.transporter = transporter;
+	}
 	public TblUser getUser() {
 		return user;
 	}
@@ -127,6 +135,10 @@ public class TblContact implements Itbl  {
 		this.phone1 = co.getPhone1();
 		this.phone2 = co.getPhone2();
 		this.reference = co.getReference();
+		if (co.getUser() != null){
+			this.user = new TblUser();
+			this.user.convertToTableSave(co.getUser());
+		}
 	}
 	
 }

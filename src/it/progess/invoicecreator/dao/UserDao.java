@@ -186,6 +186,33 @@ public class UserDao {
 	/**
 	 * SAVE THE USER
 	 * **/
+	public int saveUpdate(User user){
+		TblUser tbluser = new TblUser();
+		int iduser=0;
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			if (user.getIduser() <= 0 && user.getPassword() == null ){
+				user.setPassword(HibernateUtils.md5Java(user.getUsername()));  
+			}
+			tbluser.convertToTableSave(user);
+			tx = session.beginTransaction();
+			session.saveOrUpdate(tbluser);
+			iduser = tbluser.getIduser();
+			tx.commit();
+			
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		
+		return iduser;
+	}
 	public int saveUpdate(User user,HttpSession sessionhttp,HttpServletRequest request){
 		TblUser tbluser = new TblUser();
 		int iduser=0;

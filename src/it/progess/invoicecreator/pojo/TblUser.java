@@ -42,7 +42,7 @@ public class TblUser {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="idCompany")
 	private TblCompany company;
-	@OneToOne(mappedBy="user")
+	@OneToOne(mappedBy="user",cascade = CascadeType.ALL)
 	private TblContact contact;
 	public TblContact getContact() {
 		return contact;
@@ -139,6 +139,11 @@ public class TblUser {
 		if (user.getCompany() != null){
 			this.company = new TblCompany();
 			this.company.convertToTableSave(user.getCompany());
+		}
+		if (user.getContact() != null){
+			this.contact = new TblContact();
+			this.contact.convertToTable(user.getContact());
+			this.contact.setUser(this);
 		}
 	}
 }

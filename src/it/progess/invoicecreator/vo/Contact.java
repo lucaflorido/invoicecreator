@@ -16,7 +16,21 @@ public class Contact implements Ivo {
 	private String reference;
 	private String fax;
 	private Customer customer;
+	private Transporter transporter;
+	private User user;
 	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Transporter getTransporter() {
+		return transporter;
+	}
+	public void setTransporter(Transporter transporter) {
+		this.transporter = transporter;
+	}
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -102,6 +116,10 @@ public class Contact implements Ivo {
 		if (co.getCustomer() != null){
 			this.customer = new Customer();
 			this.customer.convertFromTable(co.getCustomer());
+		}
+		if (co.getTransporter() != null){
+			this.transporter = new Transporter();
+			this.transporter.convertFromTable(co.getTransporter());
 		}
 	}
 	public GECOError control(){

@@ -11,6 +11,7 @@ import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.List;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
+import it.progess.invoicecreator.vo.Role;
 import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.Transporter;
 import it.progess.invoicecreator.vo.User;
@@ -384,6 +385,18 @@ public class RegistryService {
 		return gson.toJson(customer);
 	  }
 	  @PUT
+	  @Path("customer/user")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String createUserCustomer(@Context HttpServletRequest request,@FormParam("customers") String customer,@FormParam("role") String role){
+		  Gson gson = new Gson();
+		  Customer sms = gson.fromJson(customer,Customer.class);
+		  Role r = gson.fromJson(role,Role.class);
+		  RegistryDao dao = new RegistryDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.createUserCustomer(sms,loggeduser,r));
+	  }
+	  @PUT
 	  @Path("customer")
 	  @Produces(MediaType.TEXT_PLAIN)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
@@ -587,6 +600,18 @@ public class RegistryService {
 		  Transporter sms = gson.fromJson(transporter,Transporter.class);
 		  RegistryDao dao = new RegistryDao();
 		  return gson.toJson(dao.saveUpdatesTransporter(sms));
+	  }
+	  @PUT
+	  @Path("transporter/user")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String createUserTransporter(@Context HttpServletRequest request,@FormParam("transporters") String transporter,@FormParam("role") String role){
+		  Gson gson = new Gson();
+		  Transporter sms = gson.fromJson(transporter,Transporter.class);
+		  Role r = gson.fromJson(role,Role.class);
+		  RegistryDao dao = new RegistryDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.createUserTransporter(sms,loggeduser,r));
 	  }
 		/***
 		Delete user 
