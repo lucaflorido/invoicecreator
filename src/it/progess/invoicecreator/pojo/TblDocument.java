@@ -50,7 +50,14 @@ public class TblDocument implements Itbl{
 	@ManyToOne
 	@JoinColumn(name = "idCompany")
 	private TblCompany company;
-	
+	@Column(name="expireday")
+	private int expireday;
+	public int getExpireday() {
+		return expireday;
+	}
+	public void setExpireday(int expireday) {
+		this.expireday = expireday;
+	}
 	public TblCompany getCompany() {
 		return company;
 	}
@@ -148,6 +155,7 @@ public class TblDocument implements Itbl{
 		this.order = dc.isOrder();
 		this.invoice = dc.isInvoice();
 		this.transport = dc.isTransport();
+		this.expireday = dc.getExpireday();
 		if (dc.getStoremovement() != null){
 			this.storemovement = new TblStoreMovement();
 			this.storemovement.convertToTable(dc.getStoremovement());

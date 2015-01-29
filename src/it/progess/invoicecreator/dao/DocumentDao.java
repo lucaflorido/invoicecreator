@@ -1419,4 +1419,63 @@ public class DocumentDao {
 		}
 		return new GECOSuccess(true);
 	}
+	public void checkExpiredDoxuments(User user){
+		if (user.getCompany() == null){
+			return;
+		}
+		ArrayList<Head> heads = getHeadExpired(user);
+		for (int i =0;i<heads.size();i++){
+			Date date = DataUtilConverter.convertDateFromString(heads.get(i).getDate());
+			int days = heads.get(i).getDocument().getExpireday();
+			Calendar c = new GregorianCalendar();
+			c.setTime(date);
+			c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.add(Calendar.DAY_OF_MONTH, days);
+			Calendar today = new GregorianCalendar();
+			today.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+			today.set(Calendar.MINUTE, 0);
+			today.set(Calendar.SECOND, 0);
+			if (c.compareTo(today) < 0 ){
+				heads.get(i).setDisable(true);
+			}
+			try{
+				saveHead(heads.get(i), user);
+			}catch(GecoException e){
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	/*****
+	 * Get List of Head 
+	 */
+	private ArrayList<Head> getHeadExpired(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Head> list = new ArrayList<Head>();
+		try{
+			Criteria cr = session.createCriteria(TblHead.class,"head");
+			cr.add(Restrictions.eq("head.company.idCompany", user.getCompany().getIdCompany()));
+			cr.createAlias("head.document", "document");
+			cr.add(Restrictions.gt("document.expireday", 0));
+			cr.add(Restrictions.eq("head.disable", false));
+			List<TblHead> heads = cr.list();
+			if (heads.size() > 0){
+				for (Iterator<TblHead> iterator = heads.iterator(); iterator.hasNext();){
+					TblHead tblhead = iterator.next();
+					Head head = new Head();
+					head.convertFromTable(tblhead);
+					list.add(head);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
 }
