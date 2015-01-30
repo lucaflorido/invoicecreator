@@ -1,0 +1,113 @@
+<div class="container userlist clearfix">
+	<table class="menutable">
+		<thead>
+			<tr class="title_tr">
+				<td class="title_td">
+					Elenco Documenti
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="buttontd">
+					<a  href="#/head/0">
+						<div class="  addbutton admin_grant" >
+							
+								<div class="printlabel">
+									Aggiungi Documento 
+								</div>
+							
+						</div>
+					</a>
+				</td >
+				<td class="buttontd disabled " >
+					<a>
+						<div class=" " >
+							<div class="printlabel"  >
+								Stampa Elenco
+							</div>
+						</div>
+					</a>
+				</td>
+				<td class="buttontd " ng-click="printMassElements()">
+					<a>
+						<div class=" " >
+							<div class="printlabel"  >
+								Stampa Singola
+							</div>
+						</div>
+					</a>
+				</td>
+				<td class="buttontd disabled">
+					<div class=" " >
+						<div class="printlabel">
+							Filtra
+						</div>
+					</div>
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+	
+	<div class="tablecontainer" >
+		
+		<table class="GECO_table  clearfix">
+			<thead>
+				<tr class="header_table ">
+					<td class=" row_table td_five"><div class="td_div first"><input type="checkbox" ng-click="addRemoveHeads()" class="checkbox_all" /></div></td>
+					<!--td class=" row_table quarter delete">&nbsp;</td-->
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class=" row_table  td_five"><div class="td_div sorter" ng-click="sortFunction('number')"><div class="sorter_label">N.</div><div class="sortericon number"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortDateFunction('date',dateSortFunction)"><div class="sorter_label">Data</div><div class="sortericon date"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('document.code')"><div class="sorter_label">Tipologia</div><div class="sortericon document code"></div></div></td>
+					<!--td ng-show="headfilter.isSupplier == true" class=" row_table double"><div class="sorter" ng-click="sortFunction('supplier.suppliername')"><div class="sorter_label">Fornitore</div><div class="sortericon supplier suppliername"></div></div></td-->
+					<td  class=" row_table td_thirty"><div class="td_div sorter" ng-click="sortFunction('customer.customername')"><div class="sorter_label">Cliente</div><div class="sortericon customer customername"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('amount')"><div class="sorter_label">Imponibile</div><div class="sortericon amount"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('taxamount')"><div class="sorter_label">Imposta</div><div class="sortericon taxamount"></div></div></td>
+					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('total')"><div class="sorter_label">Totali</div><div class="sortericon total"></div></div></td>
+					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+					
+				</tr>
+			</thead>
+			<tfoot>
+				<tr class="tr_table ">
+					<td class="row_table td_five"><div class="td_div first">&nbsp;</div></td>
+					<!--td class="row_table quarter delete">&nbsp;</td-->
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;</div></td>
+					<td  class="row_table td_thirty"><div class="td_div ">&nbsp;</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{headamount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{headtaxamount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{headtotal}}</div></td>
+					<td class="row_table td_five"><div class="td_div ">&nbsp;</div></td>
+				</tr>				
+			</tfoot>
+			<tbody>
+				<tr class="tr_table" ng-repeat="head in heads | orderBy:orderArray ">
+					<td class="row_table td_five"><div class="td_div first"><input type="checkbox" ng-click="addRemoveHeadId(head.idHead)" class="checkbox_single" /></div></td>
+					
+					<td class="row_table td_five"><div class="td_div "><a href="#/head/{{head.idHead}}"><div class=" modify"><div class="modifyicon"></div></div></a></div></td>
+					<td class="row_table td_five"><div class="td_div "><a ><div class=" modify" ng-click="sendDocumentByEmail(head)"><div class="mailicon"></div></div></a></div></td>
+					<td class="row_table  td_five"><div class="td_div ">&nbsp;{{head.number}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{ head.date }} </div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.document.code}}</div></td>
+					
+					<td  class="row_table double"><div class="td_div ">&nbsp;{{head.customer.customername}}</div></td>
+					
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.amount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.taxamount}}</div></td>
+					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{head.total}}</div></td>
+					<td class="row_table td_five"><div class="td_div "><div class="deleteicon confirm" id="del{{head.idHead}}"  ng-click="confirmDelete(head)"></div></div></td>
+					
+				</tr>
+			</tbody>
+			
+			</table>
+			
+	</div>
+</div>

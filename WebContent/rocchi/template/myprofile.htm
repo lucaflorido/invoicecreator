@@ -1,0 +1,401 @@
+<div class="container userlist clearfix">
+		<table class="menutable">
+		<thead>
+			<tr class="title_tr">
+				<td class="title_td">
+					UTENTE: {{user.name}} {{user.surname}}
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="buttontd" ng-click="saveuser()">
+					<a>
+						<div class="  addbutton " >
+							
+								<div class="printlabel">
+									Salva
+								</div>
+							
+						</div>
+					</a>
+				</td >
+				<td class="buttontd disabled">
+					<div  >
+						<div class="printlabel">
+							Ricarica
+						</div>
+					</div>
+				</td>
+				
+				
+			</tr>
+		</tbody>
+	</table>
+	<table class="DETAIL_SUBMENU" >
+		
+		<tbody>
+			<tr>
+				<td class="buttontd" ng-if="isuser == false" ng-click="changeView()">
+					<a  >
+						<div class="addbutton"  >
+							
+								<div class="printlabel">
+									Utente
+								</div>
+							
+						</div>
+					</a>
+				</td >
+				<td class="buttontd disabled" ng-if="isuser == true">
+					<a  >
+						<div class="addbutton "  >
+							
+								<div class="printlabel">
+									Utente
+								</div>
+							
+						</div>
+					</a>
+				</td >
+				<td class="buttontd " ng-if="isuser == true" ng-click="changeView()">
+					<a  >
+					<div class=" addbutton" >
+						<div class="printlabel">
+							Azienda
+						</div>
+					</div>
+					</a>
+				</td>
+				<td class="buttontd disabled" ng-if="isuser == false" >
+					<a  >
+					<div class=" addbutton" >
+						<div class="printlabel">
+							Azienda
+						</div>
+					</div>
+					</a>
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+	<div id="accordion" create-accordion ng-show="isuser == true">
+		<h3>Anagrafica</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					<div class="DETAIL_COLUMN_1_2 info">
+						<div class="fields">
+							<div class="label name">Nome</div>
+							<div class="field name"><input class="inputfield" id="ifname" ng-model="user.name" value="{{user.name}}"/></div>
+							
+						</div>
+						<div class="fields">
+							<div class="label surname">Cognome</div>
+							<div class="field surnname"><input id="ifsurname" class="inputfield" ng-model="user.surname" value="{{user.surname}}" /></div>
+							
+						</div>
+					</div>	
+					<div class="DETAIL_COLUMN_2_2">
+						<div class="fields">
+							<div class="label phone">Telefono</div>
+							<div class="field phone"><input class="inputfield" ng-model="user.phone" value="{{user.phone}}" /></div>
+						</div>
+						<div class="fields">
+							<div class="label mobile">Cellulare</div>
+							<div class="field mobile"><input class="inputfield" ng-model="user.mobile" value="{{user.mobile}}" /></div>
+						</div>
+						<div class="fields">
+							<div class="label email">Email</div>
+							<div class="field email"><input class="inputfield" id="ifemail" ng-model="user.email" value="{{user.email}}" /></div>
+							
+						</div>
+					</div>	
+				</div>
+			</p>
+		</div>
+		<h3>Credenziali</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					<div class="DETAIL_COLUMN_1_2">
+						<div class="fields">
+							<div class="label username">Username</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.username" value="{{user.username}}" /></div>
+							
+						</div>
+						<div class="fields left">
+							<div class="label username">Ruolo</div>
+							<div class="field username">{{user.role.name}}</div>
+						</div>
+					</div>
+					<div class="DETAIL_COLUMN_2_2">
+						<div class="fields">
+							<div class="label phone">Password</div>
+							<div class="field phone"><input class="inputfield"  type="password" id="oldpassword" /></div>
+						</div>
+						<div class="fields">
+							<div class="label mobile">Nuova Password</div>
+							<div class="field mobile"><input class="inputfield" type="password"  id="newpassword"  /></div>
+						</div>
+						<div class="fields">
+							<div class="label email">Conferma Password</div>
+							<div class="field email"><input class="inputfield"  type="password"  id="confirmpassword" /></div>
+						</div>
+						<div class="fields">
+							<div class="buttonbar" ng-click="changepassword()" >
+							<div class="loginbutton">
+								<div class="loginlabel">
+									Cambia Password
+								</div>
+							</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</p>
+		</div>
+	</div>
+	<div id="accordion_company" class="accordion" create-accordion ng-show="isuser == false">
+		<h3>Dati Anagrafici</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					<div class="DETAIL_COLUMN_1_2">
+						<div class="fields">
+							<div class="label username">Ragione Sociale</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.companyname" value="{{user.company.companyname}}" /></div>
+							
+						</div>
+						<div class="fields">
+							<div class="label username">Partita Iva</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.companynumber" value="{{user.company.companynumber}}" /></div>
+							
+						</div>
+						<div class="fields">
+							<div class="label username">Codice Fiscale</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.taxcode" value="{{user.company.taxcode}}" /></div>
+							
+						</div>
+					</div>
+					<div class="DETAIL_COLUMN_2_2">
+						<div class="fields">
+							<div class="label username">Codice Camera di Commercio</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.companycode" value="{{user.company.companycode}}" /></div>
+							
+						</div>
+						<div class="fields">
+							<div class="label username">Provincia Camera di Commercio</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.companyzone" value="{{user.company.companyzone}}" /></div>
+						</div>
+						
+					</div>
+				</div>
+			</p>
+		</div>
+		<h3>Contatti</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					<div class="DETAIL_COLUMN_1_2">
+						<div class="fields">
+							<div class="label username">Telefono 1</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.phone1" value="{{user.company.contact.phone1}}" /></div>
+						</div>
+						<div class="fields left">
+							<div class="label username">Cellulare 1</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.mobile1" value="{{user.company.contact.mobile1}}" /></div>
+						</div>
+						<div class="fields left">
+							<div class="label username">Email 1</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.email1" value="{{user.company.contact.email1}}" /></div>
+						</div>
+						<div class="fields left">
+							<div class="label username">Riferimento</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.reference" value="{{user.company.contact.reference}}" /></div>
+						</div>
+					</div>
+					<div class="DETAIL_COLUMN_2_2">
+						<div class="fields">
+							<div class="label username">Telefono 2</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.phone2" value="{{user.company.contact.phone2}}" /></div>
+						</div>
+						<div class="fields left">
+							<div class="label username">Cellulare 2</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.mobile2" value="{{user.company.contact.mobile2}}" /></div>
+						</div>
+						<div class="fields left">
+							<div class="label username">Email 2</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.email2" value="{{user.company.contact.email2}}" /></div>
+						</div>
+						<div class="fields left">
+							<div class="label username">Fax</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.contact.fax" value="{{user.company.contact.fax}}" /></div>
+						</div>
+					</div>
+				</div>
+			</p>
+		</div>
+		<h3>Indirizzo</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					<div class="DETAIL_SINGLE_COLUMN">
+						<div class="fields address">
+							<div class="label username">Via</div>
+							<div class="field address"><input class="inputfield" id="ifusername" ng-model="user.company.address.address" value="{{user.company.address.address}}" /></div>
+							<div class="field number"><input class="inputfield" id="ifusername" ng-model="user.company.address.number" value="{{user.company.address.number}}" /></div>
+						</div>
+					</div>
+					<div class="DETAIL_SINGLE_COLUMN">
+						<div class="fields seventy">
+							<div class="label username">Citt&#224;</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.address.city" value="{{user.company.address.city}}" /></div>
+						</div>
+						<div class="fields tenth">
+							<div class="label username">Provincia</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.address.zone" value="{{user.company.address.zone}}" /></div>
+						</div>
+						<div class="fields fifteen_right">
+							<div class="label username">CAP</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.address.zipcode" value="{{user.company.address.zipcode}}" /></div>
+						</div>
+					</div>
+					
+				</div>
+			</p>
+		</div>
+		<h3>Dati Bancari</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					<div class="DETAIL_COLUMN_1to2_3">
+						<div class="fields address">
+							<div class="label username">IBAN</div>
+							<div class="field "><input class="inputfield" id="ifusername" ng-model="user.company.bankcontact.iban" value="{{user.company.bankcontact.iban}}" maxlength="27" /></div>
+						</div>
+					</div>
+					<div class="DETAIL_COLUMN_3_3">
+						<div class="fields address">
+							<div class="label username">BICSWIFT</div>
+							<div class="field "><input class="inputfield" id="ifusername" ng-model="user.company.bankcontact.bicswift" value="{{user.company.bankcontact.bicswift}}" /></div>
+						</div>
+					</div>
+					
+				</div>
+			</p>
+		</div>
+		<h3>Configurazione Email</h3>
+		<div>
+			<p>
+				<div class="DETAIL_CONTAINER">	
+					
+					<div class="DETAIL_COLUMN_1_2">
+						<div class="fields">
+							<div class="buttonbar" ng-click="addMilConfig()"  >
+							<div class="loginbutton">
+								<div class="loginlabel">
+									Aggiungi Email
+								</div>
+							</div>
+							</div>
+						</div>
+						<!--div class="fields">
+							<div class="label username">SMTP Server</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.mailconfig.host" value="{{user.company.mailconfig.host}}" /></div>
+						</div>
+						<div class="fields">
+							<div class="label username">Richiesta Autorizzazione</div>
+							<div class="field username"><input class="inputfield" type="checkbox" id="ifusername" ng-model="user.company.mailconfig.auth" value="{{user.company.mailconfig.auth}}" /></div>
+						</div-->
+					</div>
+					<div class="DETAIL_COLUMN_2_2">
+						<!--div class="fields">
+							<div class="label username">Porta Server</div>
+							<div class="field username"><input class="inputfield" id="ifusername" ng-model="user.company.mailconfig.port" value="{{user.company.mailconfig.port}}" /></div>
+						</div>
+						<div class="fields">
+							<div class="label username">tls</div>
+							<div class="field username"><input class="inputfield" type="checkbox" id="ifusername" ng-model="user.company.mailconfig.starttls" value="{{user.company.mailconfig.starttls}}" /></div>
+						</div>
+						
+						<div class="fields">
+							<div class="buttonbar" ng-click="testemail()"  >
+							<div class="loginbutton">
+								<div class="loginlabel">
+									Test Email
+								</div>
+							</div>
+							</div>
+						</div-->
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<td>
+									Email
+								</td>
+								<td>
+									SMTP
+								</td>
+								<td>
+									Porta
+								</td>
+								<td>
+									Autenticazione
+								</td>
+								<td>
+									TLS
+								</td>
+								<td>
+									PEC
+								</td>
+								<td>
+									
+								</td>
+								<td>
+									
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="mail in user.company.mailconfig">
+								<td>
+									<input type="text" ng-model="mail.mailconfig.email" value="{{mail.mailconfig.email}}"></input>
+								</td>
+								<td>
+									<input type="text" ng-model="mail.mailconfig.host" value="{{mail.mailconfig.host}}"></input>
+								</td>
+								<td>
+									<input type="text" ng-model="mail.mailconfig.port" value="{{mail.mailconfig.port}}"></input>
+								</td>
+								<td>
+									<input type="checkbox" ng-model="mail.mailconfig.auth" value="{{mail.mailconfig.auth}}"></input>
+								</td>
+								<td>
+									<input type="checkbox" ng-model="mail.mailconfig.starttls" value="{{mail.mailconfig.starttls}}"></input>
+								</td>
+								<td>
+									<input type="checkbox" ng-model="mail.mailconfig.pec" value="{{mail.mailconfig.pec}}"></input>
+								</td>
+								<td>
+									<div class="loginbutton" ng-click="testemail(mail.mailconfig)">
+										<div class="loginlabel">
+											Test Email
+										</div>
+									</div>
+								</td>
+								<td>
+									
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</p>
+		</div>
+</div>
+	
+</div>

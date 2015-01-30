@@ -4,12 +4,12 @@ var gecoControllers = angular.module("gecoControllers",[]);
 */
 gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location",function($scope,$http,$rootScope,$location){
 	$(".header").css("display","none");
-	$http.get('rest/user/startup').success(function(data){
+	$http.get('/InvoiceCreator/rest/user/startup').success(function(data){
 	});
 	$scope.login = {username:"",password:""};
 	$scope.loginfunction = function(){
 		$.ajax({
-			url:"rest/user/",
+			url:"/InvoiceCreator/rest/user/",
 			type:"POST",
 			data:"loginobj="+JSON.stringify($scope.login),
 			success:function(data){
@@ -20,7 +20,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 						$(".myprofilelabel").html(result.username);
 						$rootScope.user = result;
 						$rootScope.path = result.path;
-						$(".header").css("display","");
+						$rootScope.viewheader = true;
 						$location.path('/welcome');
 						$scope.$apply();
 					}else{
@@ -269,9 +269,19 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 /*****
 LOGOUT
 ***/
-gecoControllers.controller('LogOutCtrl',["$scope","$http",function($scope,$http){
-    
-	// scope per il logout
+gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$location",function($scope,$rootScope,$http,$location){
+    $rootScope.viewheader = false;
+	$scope.logout = function(){
+		$.ajax({
+			url:"/InvoiceCreator/rest/user/logout/",
+			type:"GET",
+			success:function(data){
+					$rootScope.viewheader = false;
+					$location.path('/login');
+					
+			}	
+		})
+	}
 	
 }]);
 
