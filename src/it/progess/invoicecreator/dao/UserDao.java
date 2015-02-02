@@ -123,6 +123,7 @@ public class UserDao {
 				TblUser tu = (TblUser)users.get(0);
 				User u = new User();
 				u.convertFromTable(tu);
+				new DocumentDao().checkExpiredDoxuments(u);
 				return new ProgessSuccess(u);
 			}else{
 			    return new ProgessError("CRWR", "Username o Password errati");
