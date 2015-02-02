@@ -291,17 +291,31 @@ function($routeProvider) {
 			templateUrl: 'template/parameters/customergroup.htm',
 			controller: 'CustomerGroupListCtrl'
 		}).
-         when('/docpayment', {
-			templateUrl: 'template/parameters/docpayment.htm',
+         when('/supplierscategory', {
+			templateUrl: 'template/parameters/suppliercategory.htm',
+			controller: 'SupplierCategoryListCtrl'
+		}).
+	    when('/suppliersgroup', {
+            templateUrl: 'template/parameters/suppliergroup.htm',
+			controller: 'SupplierGroupListCtrl'	
+		}).
+
+			when('/payments', {
+			templateUrl: 'template/parameters/paymentlist.htm',
 			controller: 'PaymentCtrl'
 		}).
-		
-		when('/documents', {
-			templateUrl: 'template/parameters/documents.htm',
-			controller: 'ParametersCtrl'	
-				
+
+			when('/documents', {
+			templateUrl: 'template/parameters/documentlist.htm',
+			controller: 'DocumentCtrl'
 		}).
-		otherwise({
+			when('/counters', {
+			templateUrl: 'template/parameters/counterlist.htm',
+			controller: 'CounterCtrl'
+		}).
+
+	
+	   otherwise({
 			redirectTo: '/login'
 }		);
 }]);

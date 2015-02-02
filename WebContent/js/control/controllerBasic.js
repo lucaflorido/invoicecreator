@@ -144,6 +144,7 @@ gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,
 	$http.get('rest/basic/counter').success(function(data){
 		$scope.counters= data;
 	});
+	
 	$scope.modifyid = 0;
 	$scope.modifycounterElement = function(id){
 		if ($scope.modifyid != id){
@@ -152,6 +153,15 @@ gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,
 		}else{
 			$scope.modifyid = 0;
 			$scope.detailViewClose(id);
+		}
+	}
+	$scope.getCompany = function(counter){
+		if (counter.company != null){
+			for (var i=0;i<$scope.companies.length;i++){
+				if (counter.company.idCompany == $scope.companies[i].idCompany){
+					$scope.currentCompany = $scope.companies[i];
+				}
+			}
 		}
 	}
 	$scope.addcounterElement = function(id){

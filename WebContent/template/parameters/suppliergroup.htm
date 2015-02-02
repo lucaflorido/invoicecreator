@@ -1,0 +1,65 @@
+<div class="container_menu userlist clearfix">
+<table class="menutable">
+		<thead>
+			<tr class="title_tr">
+				<td class="title_td">
+					Elenco Fornitori Gruppi
+				</td>
+			</tr>
+  </table>
+		<table class="menutable"><tr>
+	<td class="buttontd"  >
+	<a ng-click="addsuppliergroupElement()" ng-if="suppliergroupsaved == true">
+	<div class="addlabel"> Aggiungi Gruppo
+		</div>
+		</a>
+	</td>
+	<td class="buttontd" >
+	<a ng-click="savesuppliergroups()">
+	<div class="addlabel">  Salva 
+		</div>
+		</a>
+	</td>
+	</tr>
+	</table>
+	
+	
+	
+	<div class="toolbar_table">
+		
+		<div class="filter">
+			<input class="filter" ng-model="query">
+			<div class="label filter">Cerca:</div>
+		</div>
+		<div class="sort">
+		    <select class="sort" ng-model="orderProp">
+				<option value="username">Username</option>
+				<option value="cognome">Cognome</option>
+			</select>
+			<div class="label sort">Ordina:</div> 
+		</div>
+	</div>
+	<div class="tablecontainer suppliergroup" >
+		
+		<table class="GECO_table four_two clearfix">
+			<thead>
+				<tr>
+				<td class="header_table row_table first name">Codice</td>
+				<td class="header_table row_table cognome">Nome</td>
+				<td class="header_table row_table cognome">Descrizione</td>
+				<td class="header_table row_table half  modify">&nbsp;</td>
+				<td class="header_table row_table half delete">&nbsp;</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr bgcolor="#FFFFFF" ng-repeat="suppliergroup in suppliergroups | filter:query | orderBy:orderProp">
+					<td class="row_table first username"  ><div ng-if="modifyid != suppliergroup.idGroupSupplier">&nbsp;{{suppliergroup.code}}</div><div><input class="input_field"   ng-if="modifyid == suppliergroup.idGroupSupplier" ng-model="suppliergroup.code"  value="{{suppliergroup.code}}" />  </div></td>
+					<td class="row_table  username"  ><div ng-if="modifyid != suppliergroup.idGroupSupplier">&nbsp;{{suppliergroup.name}}</div><div><input class="input_field"   ng-if="modifyid == suppliergroup.idGroupSupplier" ng-model="suppliergroup.name"  value="{{suppliergroup.name}}" />  </div></td>
+					<td class="row_table  username"  ><div ng-if="modifyid != suppliergroup.idGroupSupplier">&nbsp;{{suppliergroup.description}}</div><div><input class="input_field"   ng-if="modifyid == suppliergroup.idGroupSupplier" ng-model="suppliergroup.description"  value="{{suppliergroup.description}}" />  </div></td>
+					<td class="row_table  half usernote"  ><a href="#/suppliersgroup"><div class=" modify"><div class="modifyicon" ng-click="modifysuppliergroupElement(suppliergroup.idGroupSupplier)" ></div></div></a></td>
+				    <td class="row_table half"><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletesuppliergroupElement(suppliergroup.idGroupSupplier)" ></div></td>
+				</tr>	
+			</tbody>
+		</table>
+	</div>
+</div>
