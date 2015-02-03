@@ -273,7 +273,7 @@ function($routeProvider) {
 		}).
 		when('/parameters', {
 			templateUrl: 'template/parameters/parameters.htm',
-			controller: 'ParametersCtrl'
+			controller: 'TaxrateCtrl'
 		}).
 		when('/rates', {
 			templateUrl: 'template/parameters/rates.htm',
