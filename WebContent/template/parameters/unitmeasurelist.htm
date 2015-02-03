@@ -1,0 +1,71 @@
+<div class="container_menu userlist clearfix">
+<table class="menutable">
+		<thead>
+			<tr class="title_tr">
+				<td class="title_td">
+					Elenco  Unit&#224; di Misura				</td>
+			</tr>
+  </table>	
+   <table class="menutable"><tr>
+	<td class="buttontd"  >
+	 <a ng-click="addUmElement()" ng-if="umsaved == true">
+	<div class="addlabel">  Aggiungi Unit&#224; di Misura		</div>
+		</a>	</td>
+	<td class="buttontd" >
+	<a ng-click="saveUms()">
+	<div class="addlabel">  Salva		</div>
+		</a>	</td>
+	</tr>
+  </table>
+  
+  <div class="toolbar_table">
+   
+    <div class="filter">
+      <input name="Input" class="filter" ng-model="query" />
+      <div class="label filter">Cerca:</div>
+    </div>
+    <div class="sort">
+      <select name="select" class="sort" ng-model="orderProp">
+        <option value="code">Name</option>
+        <option value="description">Description</option>
+      </select>
+      <div class="label sort">Ordina:</div>
+    </div>
+  </div>
+  <table class="GECO_table four_two clearfix">
+			<thead>
+				<tr><td class="header_table row_table first name">Nome</td>
+				<td class="header_table row_table cognome">Descrizione</td>
+				<td class="header_table row_table cognome">Codice</td>
+				<td class="header_table row_table half  modify">&nbsp;</td>
+				<td class="header_table row_table half delete">&nbsp;</td>
+  
+  </tr></thead>
+  
+  <tbody>
+  <tr bgcolor="#FFFFFF" ng-repeat="um in ums | filter:query | orderBy:orderProp">
+  <td class="row_table first username"  > <div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.name}}</div>
+            <div>
+              <input name="Input2"  value="{{um.name}}" ng-if="modifyid == um.idUnitMeasure" ng-model="um.name" />
+            </div>
+          </div></td>
+   <td class="row_table first username"  > <div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.description}}</div>
+            <div>
+              <input name="Input2"  value="{{um.description}}" ng-if="modifyid == um.idUnitMeasure" ng-model="um.description" />
+            </div>
+          </div></td>
+	 <td class="row_table first username"  > <div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.code}}</div>
+            <div>
+              <input name="Input2"  value="{{um.code}}" ng-if="modifyid == um.idUnitMeasure" ng-model="um.code" />
+            </div>
+          </div></td>
+		  
+		  <td class="row_table  half"  ><a href="#/unitproduct"><div class=" modify"><div class="modifyicon" ng-click="modifyUmElement(um.idUnitMeasure)" ></div></div></a></td>
+	     <td class="row_table half"><div class="deleteicon" id="del{{role.idrole}}" ng-click="deleteUmElement(um.idUnitMeasure)" ></div></td>
+		  	  
+  </table>
+
+           
+         
+  </div>
+</div>

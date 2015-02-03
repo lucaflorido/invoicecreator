@@ -327,6 +327,11 @@ function($routeProvider) {
 			when('/categoriesproduct', {
 			templateUrl: 'template/parameters/categoryproductlist.htm',
 			controller: 'CategoryProductCtrl'
+		}).
+			when('/unitproduct', {
+			templateUrl: 'template/parameters/unitmeasurelist.htm',
+			controller: 'UnitmeasureCtrl'
+			
         }).
 	
 	   otherwise({
