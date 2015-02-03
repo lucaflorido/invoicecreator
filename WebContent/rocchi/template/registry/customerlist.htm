@@ -1,162 +1,17 @@
-<div class="container_menu userlist clearfix">
-	<table class="menutable">
-		<thead>
-			<tr class="title_tr">
-				<td class="title_td">
-					ELENCO CLIENTI
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="buttontd">
-					<a  href="#/customer/0">
-						<div class="  addbutton admin_grant" >
-							
-								<div class="printlabel">
-									Aggiungi Cliente 
-								</div>
-							
-						</div>
-					</a>
-				</td >
-				<td class="buttontd disabled">
-					<div class=" " ng-click="printElements()">
-						<div class="printlabel">
-							Stampa Elenco
-						</div>
-					</div>
-				</td>
-				<td class="buttontd disabled">
-					<div class=" " ng-click="openFilter()">
-						<div class="printlabel">
-							Filtra
-						</div>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<!--div class="toolbar_table">
-		<h3>Elenco Clienti</h3>
-		<div class=" buttonmenu addbutton admin_grant" >
-			<a href="#/customer/0">
-				
-				<div class="printlabel">
-					Aggiungi Cliente 
-				</div>
-			</a>
-		</div>
-		<div class="printbutton buttonmenu" ng-click="printElements()">
-			
-			<div class="printlabel">
-				Stampa Elenco
-			</div>
-		</div>
-		<div class="printbutton buttonmenu" ng-click="openFilter()">
-			
-			<div class="printlabel">
-				Filtra
-			</div>
-		</div>
-		
-	<div>
-			<div class="PRODUCT_DIALOG" ng-show="showFilter == true">
-				<div class="PRODUCT_DIALOG_COLUMN">	
-					<div>
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label">Gruppo </div>
-							<div class="PRODUCT_field role">
-								<select id="selgroupfilter" class="inputfield"  ng-model="currentCustomerGroup"    ng-options="group as group.name for group in groups" ng-data-provider="groups" create-chosen on-finish-chosen-update ng-change="filterCustomer.group = currentCustomerGroup">
-									<option value=""></option>
-								</select>
-							</div>
-						</div>
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Categoria</div>
-							<div class="PRODUCT_field role">
-								<select id="selcategory" class="inputfield" ng-model="currentCategory"    ng-options="category as category.name for category in categorys" ng-change="changeCategory()" ng-data-provider="categorys" create-chosen on-finish-chosen-update ng-change="filterCustomer.category = currentCategory" > <option value=""></option></select>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-				<div class="PRODUCT_DIALOG_COLUMN">
-					<div >
-						
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Ricerca </div>
-							<div class="PRODUCT_field role">
-								<input class="PRODUCT_inputfield" ng-model="filterCustomer.searchstring" value={{filterCustomer.searchstring}}></input>
-							</div>
-						</div>
-						
-					</div>
-						
-					</div>
-				</div>
-		</div>
-		
+<div class="row">
+	<div class="large-3 medium-3 small-3 columns">
+		ELENCO CLIENTI
 	</div>
-	
-		
-				
-		
-		
-	</div-->
-	<!--div class="pagination clearfix">
-				<div class="navcontainer ">
-					<ul >
-					</ul>
-					
-					
-				</div>
-				<div class="filter">
-					<button ng-click="getCustomers()" >Filtra</button>
-				</div>
-				
-				<div class="filter">
-					<input class="filter" ng-model="pagesize" value="{{pagesize}}">
-				</div>
-				<div class="label filter">Righe per pagina:</div>
-		</div-->
-	<div class="tablecontainer" >
-		<table class="GECO_table  clearfix">
-			<thead>
-				<tr class="header_table">
-					<td class=" row_table half td_five"><div class="td_div first">&nbsp;<div></td>
-					
-					<td class=" row_table threequarter td_ten"  ><div class="sorter td_div" ng-click="sortFunction('customercode')"><div class="sorter_label">Codice</div><div class="sortericon customercode"></div></div></div>
-					
-					<td class=" row_table double td_twenty"  ><div class="sorter td_div" ng-click="sortFunction('customername')"><div class="sorter_label">Ragione Sociale</div><div class="sortericon customername"></div></div></td>
-					
-					<td class=" row_table double td_thirty" ><div class="sorter td_div" ng-click="sortFunction('address.address')"><div class="sorter_label">Indirizzo</div><div class="sortericon address address"></div></div></td>
-					
-					<td class=" row_table single td_ten"  ><div class="td_div">Telefono</div></td>
-					
-					<td class=" row_table single td_ten"   ><div class="td_div">Cellulare</div></td>
-					
-					<td class=" row_table single td_ten "   ><div class="td_div">Fax</div></td>
-					
-					
-					<td class=" row_table  last td_five"><div class="td_div">&nbsp;</div></td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr class="tr_table" ng-repeat="customer in customers | filter:query | orderBy:orderArray">
-					<td class="row_table half td_five"><div class="td_div first"><a href="#/customer/{{customer.idCustomer}}"><div class=" modify "><div class="modifyicon"></div></div></a></div></td>
-					<td class="row_table  td_ten"   ><div class="td_div">&nbsp;{{customer.customercode}}</div></td>
-					<td class="row_table td_twenty"  ><div class="td_div">&nbsp;{{customer.customername}} </div></td>
-					<td class="row_table  td_thirty" ><div class="td_div">&nbsp;{{customer.address.address}}</div></td>
-					<td class="row_table td_ten" ><div class="td_div">&nbsp;{{customer.contact.phone1}}</div></td>
-					<td class="row_table td_ten" ><div class="td_div">&nbsp;{{customer.contact.mobile1}}</div></td>
-					
-					<td class="row_table td_ten" ><div class="td_div">&nbsp;{{customer.contact.fax}}</div></td>
-				    <td class="row_table td_five"><div class="td_div"><div class="deleteicon" id="del{{customer.idCustomer}}" ng-click="deleteElement(customer.idCustomer)"></div></div></td>
-				
-				</tr>
-			</tbody>
-		</table>
-		
+	<div class="large-9 medium-9 small-9 columns">
+		<ul class="button-group">
+		  	<li><a href="#" class="button">Button 1</a></li>
+		 	<li><a href="#" class="button">Button 2</a></li>
+		  	<li><a href="#" class="button">Button 3</a></li>
+		</ul>
+	</div>
+</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12">
+		<table> <thead> <tr> <th width="200">Table Header</th> <th>Table Header</th> <th width="150">Table Header</th> <th width="150">Table Header</th> </tr> </thead> <tbody> <tr> <td>Content Goes Here</td> <td>This is longer content Donec id elit non mi porta gravida at eget metus.</td> <td>Content Goes Here</td> <td>Content Goes Here</td> </tr> <tr> <td>Content Goes Here</td> <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td> <td>Content Goes Here</td> <td>Content Goes Here</td> </tr> <tr> <td>Content Goes Here</td> <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td> <td>Content Goes Here</td> <td>Content Goes Here</td> </tr> </tbody> </table>
 	</div>
 </div>

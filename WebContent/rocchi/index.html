@@ -27,7 +27,7 @@
   <body ng-app="gecoApp" >
     
     
-    <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" ng-show="viewheader = true"> 
+    <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" ng-show="viewheader == true"> 
 		<ul class="title-area"> 
 			<li class="name"> 
 				<h1><a href="#">Rocchi srl</a></h1> </li> <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
@@ -38,7 +38,7 @@
 			<ul class="left"> 
 				<li class="has-dropdown"><a href="#">Anagrafica</a>
 					<ul class="dropdown"> 
-						<li><a href="#">Aggiornamento Clienti</a></li> 
+						<li><a href="#/customer">Aggiornamento Clienti</a></li> 
 						<li><a href="#">Aggiorna codici pagamento clienti</a></li> 
 					</ul> 
 				</li> 

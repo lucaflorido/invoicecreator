@@ -7,3 +7,126 @@ body {
   margin: 100px 0;
   padding: 40px 20px 0 20px;
 }
+
+h1{
+	color: #fff;
+	font-size: 30px;
+	text-align: center;
+	padding-top: 75px;
+	text-transform: uppercase;
+}
+
+.hero {
+	background-image: url(../assets/hero.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+
+}
+
+.img1 {
+	background-image: url(../assets/botti.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+
+}
+.img2 {
+	background-image: url(../assets/botilia.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+
+}
+.img3 {
+	background-image: url(../assets/serie.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+
+}
+.img4 {
+	background-image: url(../assets/bicchiere.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+
+}
+
+.height-90{
+	height: 90px;
+	text-align: 90px;
+
+}
+
+.height-100{
+	height: 126.5px;
+	text-align: 126.5px;
+
+}
+.height-120 {
+	height: 10px;
+	text-align: 130px;
+
+}
+
+.height-200{
+	height: 195px;
+	text-align: 195px;
+
+
+}
+.height-250{
+	height: 250px;
+	text-align: 250px;
+
+
+}
+.height-300{
+	height: 300px;
+	text-align: 300px;
+
+}
+.height-400{
+	height: 400px;
+	text-align: 400px;
+
+}
+.height-500{
+	height: 500px;
+	text-align: 500px;
+
+}
+.height-600{
+	height: 600px;
+	text-align: 600px;
+
+}
+.height-700{
+	height: 700px;
+	text-align: 700px;
+
+}
+
+
+
+@media only screen and (max-width: 900px){
+	.height-250 {
+		height: 200px;
+
+	}
+}
+
+@media only screen and (max-width: 768px){
+	.height-250{
+		height: 169px;
+	}
+}
+@media only screen and (max-width: 642px){
+	.height-250 {
+		height: 230px;
+
+	}
+	
+}
+
+@media only screen and (max-width: 642px){
+		}
+
+
+}

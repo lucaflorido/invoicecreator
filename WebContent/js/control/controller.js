@@ -59,6 +59,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 }]);
 gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope','$location',function($scope,$rootScope,$location){
 	GECO_LOGGEDUSER.checkloginuser();
+	$scope.location = $location;
 	$scope.logout = function(){
 		$.ajax({
 			url:"rest/user/logout/",
