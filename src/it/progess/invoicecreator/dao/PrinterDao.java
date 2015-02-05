@@ -23,6 +23,8 @@ import it.progess.invoicecreator.vo.filter.product.SelectProductsFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,6 +39,8 @@ import javax.servlet.ServletContext;
 
 
 
+
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -46,6 +50,11 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class PrinterDao {
+	private SecureRandom random = new SecureRandom();
+
+	  public String nextSessionId() {
+	    return new BigInteger(130, random).toString(16);
+	  }
 	public String printSingleDocument(ServletContext context,int id,User user){
 		String documentType ="";
 		try{
@@ -57,7 +66,10 @@ public class PrinterDao {
 			if(f.exists() == false){
 				JasperCompileManager.compileReportToFile(context.getRealPath("report/"+documentType+".jrxml"), context.getRealPath("report/"+documentType+".jasper"));
 			}
-		    
+			File pdf = new File(context.getRealPath("report/"+documentType+".pdf"));
+			if(pdf.exists() == true){
+				pdf.delete();
+			}
 			Collection<PrintSingleHead> headcoll = new ArrayList<PrintSingleHead>();
 			Map<String, Object> map = new HashMap<String ,Object>();
 			map.put("title","Fattura");

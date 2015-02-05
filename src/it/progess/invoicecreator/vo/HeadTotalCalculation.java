@@ -148,7 +148,7 @@ public class HeadTotalCalculation {
 	}
 	private void setTaxesAmount(TaxRate t,Row r){
 		if (r.getType().endsWith("V")){
-			if (r.getTaxrate().getValue() < 10){
+			if (r.getTaxrate().getValue() < 10 && r.getTaxrate().getValue() > 0 ){
 				this.taxamount4 = this.taxamount4 + r.getTaxamount();
 				this.amount4 = this.amount4 + r.getAmount();
 				this.total4 = this.total4 + r.getTotal();

@@ -140,8 +140,11 @@ public class PrintSingleHead extends PrintCompany {
 			this.iva = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount())));
 			this.tot = getValue(forceTwoDecimal(String.valueOf( head.getTotal())));
 			this.ritenuta =getValue( forceTwoDecimal(String.valueOf( head.getWithholdingtax())));
-			if (head.getTaxrate() != null)
-			this.percritenuta = getValue(removeDecimal(String.valueOf( head.getTaxrate().getValue())));
+			if (head.getTaxrate() != null){
+				this.percritenuta = getValue(removeDecimal(String.valueOf( head.getTaxrate().getValue())));
+			}else{
+				this.percritenuta = "";
+			}
 		
 		if (row != null){
 			this.prodotto_codice = getValue(row.getProductcode());
