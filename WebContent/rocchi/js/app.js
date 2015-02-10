@@ -1,4 +1,30 @@
-var gecoApp = angular.module("gecoApp",["ngRoute","gecoControllers","gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
+angular.module("rocchi.customer",[]);
+var gecoApp = angular.module("gecoApp",
+["ngRoute",
+"gecoControllers",
+"mm.foundation",
+"rocchi.customer",
+'modules.common.shared',
+"gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
+.provider('AppConfig', function ()
+		{
+			var main_domain = "/InvoiceCreator"
+		    this.$get = function ($window)
+		    {
+		    	return {
+
+		            ServiceUrls: {
+		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
+		                DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
+		                SaveCustomer:main_domain+ "/rest/registry/customer/",
+		                CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
+		                CustomerCategory:main_domain+ "/rest/basic/categorycustomer"
+		                
+		                
+		            }
+		        };
+		    };
+		})
 .directive('onFinishRender', function ($timeout) {
     return {
         restrict: 'A',
@@ -169,11 +195,11 @@ function($routeProvider) {
 		}).
 		when('/customer', {
 			templateUrl: 'template/registry/customerlist.htm',
-			controller: 'CustomerListCtrl'
+			controller: 'RocchiCustomerListCtrl'
 		}).
 		when('/customer/:idcustomer', {
 			templateUrl: 'template/registry/customerdetail.htm',
-			controller: 'CustomerDetailCtrl'
+			controller: 'RocchiCustomerDetailCtrl'
 		}).
 		when('/destination', {
 			templateUrl: 'template/registry/destinationlist.htm',
@@ -229,11 +255,11 @@ function($routeProvider) {
 		}).
 		when('/customercategory', {
 			templateUrl: 'template/basic/customercategorylist.htm',
-			controller: 'CustomerCategoryCtrl'
+			controller: 'RocchiCustomerCategoryListCtrl'
 		}).
 		when('/customergroup', {
 			templateUrl: 'template/basic/customergrouplist.htm',
-			controller: 'CustomerGroupListCtrl'
+			controller: 'RocchiCustomerGroupListCtrl'
 		}).
 		when('/suppliercategory', {
 			templateUrl: 'template/basic/suppliercategorylist.htm',
@@ -283,19 +309,10 @@ function($routeProvider) {
 			templateUrl: 'template/parameters/storemovement.htm',
 			controller: 'StoreMovementCtrl'	
 		}).
-		when('/customercategory', {
-			templateUrl: 'template/parameters/customercategory.htm',
-			controller: 'CustomerCategoryListCtrl'
-		}).
-	    when('/customergroup', {
-			templateUrl: 'template/parameters/customergroup.htm',
-			controller: 'CustomerGroupListCtrl'
-		}).
-         when('/docpayment', {
+		when('/docpayment', {
 			templateUrl: 'template/parameters/docpayment.htm',
 			controller: 'PaymentCtrl'
 		}).
-		
 		when('/documents', {
 			templateUrl: 'template/parameters/documents.htm',
 			controller: 'ParametersCtrl'	

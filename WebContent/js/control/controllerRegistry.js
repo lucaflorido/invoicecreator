@@ -647,10 +647,7 @@ gecoRegistryControllers.controller('CustomerListCtrl',["$scope","$http","$rootSc
 		})
 	}
 	$scope.getCustomers();
-	/*$http.get('rest/registry/customer').success(function(data){
-				$scope.customers= data;
-			});
-		*/
+	
 	$scope.deleteElement = function(id){
 		for(var i=0;i<$scope.customers.length;i++){
 			if (id == $scope.customers[i].idCustomer){

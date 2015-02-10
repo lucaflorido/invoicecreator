@@ -1,493 +1,125 @@
-<div class="container userlist clearfix">
-	<table class="menutable">
-		<thead>
-			<tr class="title_tr">
-				<td class="title_td">
-					CLIENTE: {{customer.customername}}
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="buttontd">
-					<a  >
-						<div class="  addbutton admin_grant" ng-click="saveCustomer()">
-							
-								<div class="printlabel">
-									Salva
-								</div>
-							
-						</div>
-					</a>
-				</td >
-				<td class="buttontd disabled">
-					<div class=" " ng-click="printElements()">
-						<div class="printlabel">
-							Ricarica
-						</div>
-					</div>
-				</td>
-				
-			</tr>
-		</tbody>
-	</table>
-	<div id="accordion" create-accordion>
-		<h3>Anagrafica</h3>
-		<div>
-		<p>
-		<div class="generaltable">
-			<div class="customer_main_detail">	
-				<div class="info">
-					<div class="fields code">
-						<div class="label ">Codice *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.customercode" value="{{customer.customercode}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields name">
-						<div class="label ">Ragione Sociale *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.customername" value="{{customer.customername}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields code">
-						<div class="label ">Codice Fiscale *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.taxcode" value="{{customer.taxcode}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields code">
-						<div class="label ">Partita Iva *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.serialnumber" value="{{customer.serialnumber}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<!--div class="fields code">
-						<div class="label ">Attivo</div>
-						<div class="field "><input class="inputfield" type="checkbox" id="ifname" ng-model="customer.active" value="{{customer.active}}"  /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div-->
-					<div class="category_group">
-						<!--div class="fields code">
-							<div class="label ">Gruppo </div>
-							<div class="field">
-								<select id="selgroup" class="inputfield" ng-model="currentGroup"    ng-options="group as group.name for group in groups" ></select>
-							</div>
-						</div>
-						<div class="fields code">
-							<div class="label ">Categoria</div>
-							<div class="field ">
-								<select id="selcategory" class="inputfield" ng-model="currentCategory"    ng-options="category as category.name for category in categorys" ng-change="changeCategory()" ></select>
-							</div>
-						</div-->
-						<div class="fields code">
-							<div class="label ">Pagamento</div>
-							<div class="field ">
-								<select id="selpayment" class="inputfield" ng-model="currentPayment"    ng-options="payment as payment.code for payment in payments" ng-change="customer.payment = currentPayment" ></select>
-							</div>
-							
-						</div>
-						<div class="fields code">
-								<div class="label ">Ritenuta d'acconto </div>
-								<div class="field">
-									<select id="selgroup" class="inputfield" ng-model="currentTaxRate"    ng-options="taxrate as taxrate.description for taxrate in taxrates" >
-										<option value=""></option>
-									</select>
-								</div>
-							</div>
-					</div>	
-					
-				</div>
-				
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>{{customer.customername}}</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="saveCustomer()" class="button">Salva</a></li>
+		</ul>
+	</div>
+</div>
+<form>
+	<fieldset>
+		<legend>Anagrafica</legend>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Codice<input type="text"
+					 ng-model="customer.customercode"
+					value="{{customer.customercode}}" capitalize />
+				</label>
 			</div>
-			
+			<div class="large-8 columns">
+				<label>Ragione Sociale <input type="text"
+					 ng-model="customer.customername"
+					value="{{customer.customername}}" />
+				</label>
+			</div>
 		</div>
-</p>
-</div>
-<h3>Indirizzo</h3>
-<div>
-<p>
-<div class="customer_address_detail">	
-				<div class="contact">
-					<div class="fields seventy">
-						<div class="label">Indirizzo</div>
-						<div class="field address"><input class="inputfield" ng-model="customer.address.address" value="{{customer.address.address}}" capitalize/></div>
-					</div>
-					<div class="fields twenty">
-						<div class="label ">Civico</div>
-						<div class="field number">  <input class="inputfield" ng-model="customer.address.number" value="{{customer.address.number}}" capitalize /></div>
-					</div>
-					<div class="fields seventy">
-						<div class="label mobile">Citt&#224;</div>
-						<div class="field mobile"><input class="inputfield" ng-model="customer.address.city" value="{{customer.address.city}}" capitalize/></div>
-					</div>
-					<div class="fields tenth">
-						<div class="label email">Provincia</div>
-						<div class="field number"><input id="ifemail" class="inputfield" ng-model="customer.address.zone" value="{{customer.address.zone}}" capitalize /></div>
-					</div>
-					<div class="fields fifteen_right">
-						<div class="label email">CAP</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.address.zipcode" value="{{customer.address.zipcode}}" capitalize/></div>
-					</div>
-				</div>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Codice Fiscale <input type="text"
+					 ng-model="customer.taxcode"
+					value="{{customer.taxcode}}" capitalize />
+				</label>
 			</div>
-</p>
-</div>
-<h3>Contatti</h3>
-<div>
-<p>
-<div class="credentials" >
-			<div class="credential">
-				<div class="fields one_on_three_left">
-					<div class="label phone">Telefono 1</div>
-					<div class="field phone"><input class="inputfield" ng-model="customer.contact.phone1" value="{{customer.contact.phone1}}" capitalize /></div>
-				</div>
-				<div class="fields one_on_three_left">
-					<div class="label phone">Telefono 2</div>
-					<div class="field phone"><input class="inputfield" ng-model="customer.contact.phone2" value="{{customer.contact.phone2}}" capitalize /></div>
-				</div>
-				<div class="fields one_on_three_right">
-						<div class="label email">Fax</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.fax" value="{{customer.contact.fax}}" capitalize /></div>
-					</div>
+			<div class="large-4 columns">
+				<label>Partita Iva <input type="text"
+					 ng-model="customer.serialnumber"
+					value="{{customer.serialnumber}}" />
+				</label>
 			</div>
-			<div class="credential">
-				<div class="fields one_on_three_left">
-						<div class="label mobile">Cellulare 1</div>
-						<div class="field mobile"><input class="inputfield" ng-model="customer.contact.mobile1" value="{{customer.contact.mobile1}}" capitalize /></div>
-					</div>
-				<div class="fields one_on_three_left">
-						<div class="label mobile">Cellulare 2</div>
-						<div class="field mobile"><input class="inputfield" ng-model="customer.contact.mobile2" value="{{customer.contact.mobile2}}" capitalize /></div>
-					</div>
-				<div class="fields one_on_three_right">
-					<div class="label email">Contatto</div>
-					<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.reference" value="{{customer.contact.reference}}" capitalize /></div>
-				</div>
-			</div>
-			<div class="credential">
-				<div class="fields">
-						<div class="label email">Email 1</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.email1" value="{{customer.contact.email1}}" /></div>
-					</div>
-				<div class="fields right">
-						<div class="label email">Email 2</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.email2" value="{{customer.contact.email2}}" /></div>
-					</div>
+			<div class="large-4 columns">
+				<label>Attivo <input type="checkbox"  ng-model="customer.active" value="{{customer.active}}"/>
+				</label>
 			</div>
 		</div>
 		
-</p>
-</div>
-<h3>Utente</h3>
-<div>
-<p>
-<div class="credentials" >
-			<div class="credential">
-				<div class="fields one_on_three_left">
-					<div class="label phone">Ruolo</div>
-					<div class="field phone"><select id="selrole" class="inputfield" ng-model="currentRole"    ng-options="role as role.name for role in roles" ></select></div>
-				</div>
-				<div class="fields right">
-						<div class="label email">Nome</div>
-						<div class="field email"><input  class="inputfield" ng-model="customer.nameUser" value="{{customer.nameUser}}" /></div>
-					</div>
-					<div class="fields right">
-						<div class="label email">Cognome</div>
-						<div class="field email"><input  class="inputfield" ng-model="customer.surnameUser" value="{{customer.surnameUser}}" /></div>
-					</div>
-				<div class="fields one_on_three_left">
-					<button ng-click="userCustomer()">Crea Utente</button>		
-				</div>
-				
+	</fieldset>
+	<fieldset>
+		<legend>Contatti</legend>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Telefono <input type="text"
+					 ng-model="customer.contact.phone1" value="{{customer.contact.phone1}}" capitalize />
+				</label>
+			</div>
+			<div class="large-6 columns">
+				<label>Telefono Aggiuntivo <input type="text"
+					ng-model="customer.contact.phone2" value="{{customer.contact.phone2}}" />
+				</label>
 			</div>
 		</div>
-<!--h3>Listini</h3>
-<div>
-<p>
-<div class="credential">
-				<div class="detailview"  >
-						<div class="add_container" ng-click="addListElement(customer)">
-							<div class="addlabel">
-								Aggiungi Listino 
-							</div>
-							<div class="add buttonicon">
-							</div>
-						</div>
-						<table class="GECO_table  clearfix">
-							<thead>
-								<tr class="header_table">
-									<td class="row_table td_five"><div class="td_div first">&nbsp;</div></td>
-									<td class="row_table td_five"><div class="td_div ">Codice</div></td>
-									<td class="row_table td_five"><div class="td_div ">Descrizione</div></td>
-									<td class="row_table td_five"><div class="td_div ">Data Validità</div></td>
-									<td class="row_table td_five"><div class="td_div ">&nbsp;</div></td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="tr_table" ng-repeat="list in customer.lists | orderBy:orderYear">
-									<td class="row_table td_five"><div class="td_div first"><a ng-click="changeListElement(list)" ><div class=" modify"><div class="modifyicon"></div></div></a></div></td>
-									<td class="row_table td_five"><div class="td_div "><div ng-if="listid != list.idListCustomer ">&nbsp;{{list.list.code}}</div>
-										<div><select ng-if="listid == list.idListCustomer" id="selcounter" class="inputfield" ng-model="currentList"    ng-options="list as getListName(list)  for list in lists" ng-change="list.list = currentList" ></select></div>
-								</div></td>
-									<td class="row_table td_five"><div class="td_div ">&nbsp;{{list.list.description}}</div></td>
-									<td class="row_table td_five"><div class="td_div ">&nbsp;{{list.list.startdate}}</div></td>
-									<td class="row_table td_five"><div class="td_div "><div class="deleteicon" id="del{{customer.idCustomer}}" ng-click="deleteElement(customer.idCustomer)"></div></div></td>
-								</tr>
-							</tbody>
-						</table>
-						
-					</div>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Cellulare <input type="text"
+					 ng-model="customer.contact.mobile1" value="{{customer.contact.mobile1}}" capitalize />
+				</label>
 			</div>
-</p>
-</div>
-
-<h3>Crea Utente</h3>
-<div>
-<p>
-	<div class="details">
-		<div class="generaltable">
-			<div class="column_1_2 user">	
-				<div class="info">
-					<div class="fields">
-						<div class="label name">Nome *</div>
-						<div class="field name"><input class="inputfield" id="ifname" ng-model="user.name" value="{{user.name}}"  /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields">
-						<div class="label surname">Cognome *</div>
-						<div class="field surnname"><input class="inputfield" id="ifsurname" ng-model="user.surname" value="{{user.surname}}"  /></div>
-						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields">
-						<div class="label surname">Azienda *</div>
-						<div class="field surnname"><select ng-options="company as company.companyname for company in companies" ng-model="currentCompany" ng-change="user.company = currentCompany"></select></div>
-						<div class="error" id="val_ifsurname" >Campo obbligatorio</div> 
-					</div>
-				</div>
-			</div>
-			<div class="column_2_2 user">
-				<div class="contact">
-					<div class="fields">
-						<div class="label phone">Telefono</div>
-						<div class="field phone"><input class="inputfield" ng-model="user.phone" value="{{user.phone}}" /></div>
-					</div>
-					<div class="fields">
-						<div class="label mobile">Cellulare</div>
-						<div class="field mobile"><input class="inputfield" ng-model="user.mobile" value="{{user.mobile}}" /></div>
-					</div>
-					<div class="fields">
-						<div class="label email">Email *</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="user.email" value="{{user.email}}" /></div>
-						<div class="error" id="val_ifemail" >Campo obbligatorio</div>
-						<div class="errormail" id="valmail_ifemail" >Email non valida</div>						
-					</div>
-				</div>
+			<div class="large-6 columns">
+				<label>Cellulare Aggiuntivo <input type="text"
+					ng-model="customer.contact.mobile2" value="{{customer.contact.mobile2}}" />
+				</label>
 			</div>
 		</div>
-		<div class="credentials">
-			<div class="credential">
-				<div class="fields left">
-					<div class="label username">Username *</div>
-					<div class="field username"  >
-						<input ng-if="user.iduser == 0 " id="ifinput" class="inputfield" ng-model="user.username"  />
-						<div ng-if="user.iduser != 0"  >{{user.username}}</div>
-						
-					</div>
-					<div  ng-if="user.iduser == 0 " class="error" id="val_ifinput" >Campo obbligatorio</div> 
-				</div>
-				<div class="fields right">
-					<div class="label role">Ruolo *</div>
-					<div class="field role">
-						<select id="selrole" class="inputfield" ng-model="currentRole"    ng-options="role as role.name for role in roles" ></select>
-					</div>
-					<div class="error" id="val_selrole" >Campo obbligatorio</div> 		
-				</div>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Email <input type="text"
+					 ng-model="customer.contact.email1" value="{{customer.contact.email1}}" capitalize />
+				</label>
+			</div>
+			<div class="large-6 columns">
+				<label>Email Aggiuntiva <input type="text"
+					ng-model="customer.contact.email2" value="{{customer.contact.email2}}" />
+				</label>
 			</div>
 		</div>
-	</div>
-</p>
-</div-->
-</div>
-	<!--div class="details">
-		<div class="generaltable">
-			<div class="customer_main_detail">	
-				<div class="info">
-					<div class="fields code">
-						<div class="label ">Codice *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.customercode" value="{{customer.customercode}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields name">
-						<div class="label ">Ragione Sociale *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.customername" value="{{customer.customername}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields code">
-						<div class="label ">Codice Fiscale *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.taxcode" value="{{customer.taxcode}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="fields code">
-						<div class="label ">Partita Iva *</div>
-						<div class="field "><input class="inputfield" id="ifname" ng-model="customer.serialnumber" value="{{customer.serialnumber}}" capitalize /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-										<div class="fields code">
-						<div class="label ">Attivo</div>
-						<div class="field "><input class="inputfield" type="checkbox" id="ifname" ng-model="customer.active" value="{{customer.active}}"  /></div>
-						<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-					</div>
-					<div class="category_group">
-						<div class="fields code">
-							<div class="label ">Gruppo </div>
-							<div class="field">
-								<select id="selgroup" class="inputfield" ng-model="currentGroup"    ng-options="group as group.name for group in groups" ></select>
-							</div>
-						</div>
-						<div class="fields code">
-							<div class="label ">Categoria</div>
-							<div class="field ">
-								<select id="selcategory" class="inputfield" ng-model="currentCategory"    ng-options="category as category.name for category in categorys" ng-change="changeCategory()" ></select>
-							</div>
-						</div>
-						<div class="fields code">
-							<div class="label ">Pagamento</div>
-							<div class="field ">
-								<select id="selpayment" class="inputfield" ng-model="currentPayment"    ng-options="payment as payment.code for payment in payments" ng-change="customer.payment = currentPayment" ></select>
-							</div>
-						</div>
-					</div>	
-					
-				</div>
-				
+	</fieldset>
+	<fieldset>
+		<legend>Indirizzo</legend>
+		<div class="row">
+			<div class="large-8 columns">
+				<label>Via <input type="text"
+					 ng-model="customer.address.address" value="{{customer.address.address}}"  capitalize />
+				</label>
 			</div>
-			
-		</div>
-		<div class="generaltable" ng-if="selectedSection == listsections[0]">
-			<div class="customer_address_detail">	
-				<div class="contact">
-					<div class="fields address">
-						<div class="label">Indirizzo</div>
-						<div class="field address"><input class="inputfield" ng-model="customer.address.address" value="{{customer.address.address}}" capitalize/></div>
-						<div class="field number"><input class="inputfield" ng-model="customer.address.number" value="{{customer.address.number}}" capitalize /></div>
-					</div>
-					<div class="fields seventy">
-						<div class="label mobile">Città</div>
-						<div class="field mobile"><input class="inputfield" ng-model="customer.address.city" value="{{customer.address.city}}" capitalize/></div>
-					</div>
-					<div class="fields tenth">
-						<div class="label email">Provincia</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.address.zone" value="{{customer.address.zone}}" capitalize /></div>
-					</div>
-					<div class="fields fifteen_right">
-						<div class="label email">CAP</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.address.zipcode" value="{{customer.address.zipcode}}" capitalize/></div>
-					</div>
-				</div>
+			<div class="large-4 columns">
+				<label>Civico <input type="text"
+					ng-model="customer.address.number" value="{{customer.address.number}}"  />
+				</label>
 			</div>
 		</div>
-		<div class="generaltable" ng-if="selectedSection == listsections[0]">
-		<div class="credentials" >
-			<div class="credential">
-				<div class="fields one_on_three_left">
-					<div class="label phone">Telefono 1</div>
-					<div class="field phone"><input class="inputfield" ng-model="customer.contact.phone1" value="{{customer.contact.phone1}}" capitalize /></div>
-				</div>
-				<div class="fields one_on_three_left">
-					<div class="label phone">Telefono 2</div>
-					<div class="field phone"><input class="inputfield" ng-model="customer.contact.phone2" value="{{customer.contact.phone2}}" capitalize /></div>
-				</div>
-				<div class="fields one_on_three_right">
-						<div class="label email">Fax</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.fax" value="{{customer.contact.fax}}" capitalize /></div>
-					</div>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Città <input type="text"
+					ng-model="customer.address.city" value="{{customer.address.city}}"  capitalize />
+				</label>
 			</div>
-			<div class="credential">
-				<div class="fields one_on_three_left">
-						<div class="label mobile">Cellulare 1</div>
-						<div class="field mobile"><input class="inputfield" ng-model="customer.contact.mobile1" value="{{customer.contact.mobile1}}" capitalize /></div>
-					</div>
-				<div class="fields one_on_three_left">
-						<div class="label mobile">Cellulare 2</div>
-						<div class="field mobile"><input class="inputfield" ng-model="customer.contact.mobile2" value="{{customer.contact.mobile2}}" capitalize /></div>
-					</div>
-				<div class="fields one_on_three_right">
-					<div class="label email">Contatto</div>
-					<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.reference" value="{{customer.contact.reference}}" capitalize /></div>
-				</div>
+			<div class="large-4 columns">
+				<label>CAP <input type="text"
+					ng-model="customer.address.zipcode" value="{{customer.address.zipcode}}"  />
+				</label>
 			</div>
-			<div class="credential">
-				<div class="fields">
-						<div class="label email">Email 1</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.email1" value="{{customer.contact.email1}}" /></div>
-					</div>
-				<div class="fields right">
-						<div class="label email">Email 2</div>
-						<div class="field email"><input id="ifemail" class="inputfield" ng-model="customer.contact.email2" value="{{customer.contact.email2}}" /></div>
-					</div>
+			<div class="large-2 columns">
+				<label>Provincia <input type="text"
+					ng-model="customer.address.zone" value="{{customer.address.zone}}"  />
+				</label>
 			</div>
 		</div>
-		</div>
-		<div class="credentials" ng-if="selectedSection == listsections[1]">
-			<div class="credential">
-				<div class="detailview"  >
-						<div class="add_container" ng-click="addListElement(customer)">
-							<div class="addlabel">
-								Aggiungi Listino 
-							</div>
-							<div class="add buttonicon">
-							</div>
-						</div>
-						<div class="tabledetail">
-							<div class="tabledetail_content customer_lists">
-								<div class="tabledetail_header">
-									<div class="tabledetail_header_element tabledetail_row first">Codice</div>
-									<div class="tabledetail_header_element tabledetail_row ">Descrizione</div>
-									<div class="tabledetail_header_element tabledetail_row ">Data Validità</div>
-									<div class="tabledetail_header_element tabledetail_row modify">&nbsp;</div>
-									<div class="tabledetail_header_element tabledetail_row delete">&nbsp;</div>
-								</div>
-								<div class="tabledetail_rows indetail" ng-repeat="list in customer.lists | orderBy:orderYear" >
-									<div class="tabledetail_row first">
-										<div ng-if="listid != list.idListCustomer ">&nbsp;{{list.list.code}}</div>
-										<div><select ng-if="listid == list.idListCustomer" id="selcounter" class="inputfield" ng-model="currentList"    ng-options="list as getListName(list)  for list in lists" ng-change="list.list = currentList" ></select></div>
-									</div>
-									<div class="tabledetail_row ">
-										<div >&nbsp;{{list.list.description}}</div>
-									</div>
-									<div class="tabledetail_row ">
-										<div >&nbsp;{{list.list.startdate}}</div>
-									</div>
-									<a ng-click="changeListElement(list)" ><div class="tabledetail_row modify"><div class="modifyicon"></div></div></a>
-									<div class="tabledetail_row delete"><div class="deleteicon" id="del{{customer.idCustomer}}" ng-click="deleteElement(customer.idCustomer)"></div></div>
-								</div>
-							</div>
-						</div>
-					</div>
-			</div>
-		</div>	
-		<div class="customer_destination" ng-if="selectedSection == listsections[2]">
-			<div class="credential">
-				<div class="detailview"  >
-						<div class="tabledetail">
-							<div class="tabledetail_content customer_destinations">
-								<div class="tabledetail_header">
-									<div class="tabledetail_header_element tabledetail_row first customer_single">Codice</div>
-									<div class="tabledetail_header_element tabledetail_row customer_double">Ragione Sociale</div>
-									<div class="tabledetail_header_element tabledetail_row customer_double">Indirizzo</div>
-								</div>
-								<div class="tabledetail_rows indetail" ng-repeat="destination in customer.destinations | orderBy:orderYear" >
-									<div class="tabledetail_row first customer_single">
-										<div >&nbsp;{{destination.destinationcode}}</div>
-									</div>
-									<div class="tabledetail_row customer_double">
-										<div >&nbsp;{{destination.destinationname}}</div>
-									</div>
-									<div class="tabledetail_row customer_double">
-										<div >&nbsp;{{destination.address.address}} {{destination.address.number}} {{destination.address.zipcode}}</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-			</div>
-		</div>
-	</div-->
-</div>
+		
+	</fieldset>
+</form>

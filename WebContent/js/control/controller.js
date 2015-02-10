@@ -3,7 +3,7 @@ var gecoControllers = angular.module("gecoControllers",[]);
 	LOGIN CONTROLLER
 */
 gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location",function($scope,$http,$rootScope,$location){
-	$(".header").css("display","none");
+	$rootScope.viewheader = false;
 	$http.get('/InvoiceCreator/rest/user/startup').success(function(data){
 	});
 	$scope.login = {username:"",password:""};
@@ -283,7 +283,22 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 			}	
 		})
 	}
-	
+	$.ajax({
+		url:"/InvoiceCreator/rest/user/loggedinuser/",
+		type:"GET",
+		success:function(data){
+			var result = $.parseJSON(data);
+			if (result.username != "" && result.username != null){
+				//checkrole(result);
+				
+				$rootScope.viewheader = true;
+			}else{
+				
+				$location.path('/login');
+				
+			}
+		}	
+	})
 }]);
 
 

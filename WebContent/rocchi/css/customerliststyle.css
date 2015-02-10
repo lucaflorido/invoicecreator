@@ -1,0 +1,48 @@
+body {
+	font-family:"Open Sans Condensed", sans-serif;
+}
+
+h3 {
+	font-size: 25px;
+	color: #00adef;
+	margin-left: 27%;
+	margin-top: 13px;
+	
+}
+.matita{
+	background-image: url("../img/matita.png");
+	height: 17px;
+width: 20px;
+background-repeat: no-repeat;
+}
+.clienti {
+	background-color: #fff;
+
+}
+.button {
+	background-color: #00adef;
+
+}
+.button-group {
+margin-top: 5px;
+}
+table {
+
+margin-left: 7%;
+}
+
+@media only screen and (max-width: 548px){
+
+.button-group {
+margin-top: 16px;
+margin-left: 33px;
+}
+
+.button {
+	background-color: #00adef;
+	margin-top: -18px;
+
+}
+
+
+}

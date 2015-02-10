@@ -1,17 +1,51 @@
 <div class="row">
-	<div class="large-3 medium-3 small-3 columns">
-		ELENCO CLIENTI
+	<div class="large-4 medium-4 small-4 columns">
+		<h3>ELENCO CLIENTI</h3>
 	</div>
-	<div class="large-9 medium-9 small-9 columns">
+	<div class="large-8 medium-8 small-8 columns">
 		<ul class="button-group">
-		  	<li><a href="#" class="button">Button 1</a></li>
-		 	<li><a href="#" class="button">Button 2</a></li>
-		  	<li><a href="#" class="button">Button 3</a></li>
+		  	<li><a href="#/customer/0" class="button">Aggiungi Cliente</a></li>
+		 	<li><a href="#" class="button">Stampa elenco </a></li>
+		  	
 		</ul>
 	</div>
 </div>
 <div class="row">
 	<div class="large-12 medium-12 small-12">
-		<table> <thead> <tr> <th width="200">Table Header</th> <th>Table Header</th> <th width="150">Table Header</th> <th width="150">Table Header</th> </tr> </thead> <tbody> <tr> <td>Content Goes Here</td> <td>This is longer content Donec id elit non mi porta gravida at eget metus.</td> <td>Content Goes Here</td> <td>Content Goes Here</td> </tr> <tr> <td>Content Goes Here</td> <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td> <td>Content Goes Here</td> <td>Content Goes Here</td> </tr> <tr> <td>Content Goes Here</td> <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td> <td>Content Goes Here</td> <td>Content Goes Here</td> </tr> </tbody> </table>
+		<table> 
+			<thead> 
+				<tr> 
+					<th class="td_five"><div class="td_div first">&nbsp;<div></th>
+					
+					<th class=" td_ten"  ><div class="sorter td_div" ng-click="sortFunction('customercode')"><div class="sorter_label">Codice</div><div class="sortericon customercode"></div></div></div></th>
+					
+					<th class=" td_twenty"  ><div class="sorter td_div" ng-click="sortFunction('customername')"><div class="sorter_label">Ragione Sociale</div><div class="sortericon customername"></div></div></th>
+					
+					<th class=" td_thirty" ><div class="sorter td_div" ng-click="sortFunction('address.address')"><div class="sorter_label">Indirizzo</div><div class="sortericon address address"></div></div></th>
+					
+					<th class="  td_ten"  ><div class="td_div">Telefono</div></th>
+					
+					<th class=" td_ten"   ><div class="td_div">Cellulare</div></th>
+					
+					<th class="  td_ten "   ><div class="td_div">Fax</div></th>
+					
+					
+					<th class="  td_five"><div class="td_div">&nbsp;</div></th>
+				</tr> 
+			</thead> 
+			<tbody> 
+				<tr  ng-repeat="customer in customers | filter:query | orderBy:orderArray">
+					<td class="  td_five"><div class="matita" ng-click= "location.path('/customer/'+customer.idCustomer)"></div></td>
+					<td class="  td_ten"   ><div class="td_div">&nbsp;{{customer.customercode}}</div></td>
+					<td class=" td_twenty"  ><div class="td_div">&nbsp;{{customer.customername}} </div></td>
+					<td class="  td_thirty" ><div class="td_div">&nbsp;{{customer.address.address}}</div></td>
+					<td class=" td_ten" ><div class="td_div">&nbsp;{{customer.contact.phone1}}</div></td>
+					<td class=" td_ten" ><div class="td_div">&nbsp;{{customer.contact.mobile1}}</div></td>
+					
+					<td class=" td_ten" ><div class="td_div">&nbsp;{{customer.contact.fax}}</div></td>
+				    <td class=" td_five"><div class="td_div"><div class="deleteicon" id="del{{customer.idCustomer}}" ng-click="deleteElement(customer.idCustomer)"></div></div></td>
+				
+				</tr>
+			</tbody>
 	</div>
 </div>
