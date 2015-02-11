@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.customer")
-.controller('RocchiCustomerCategoryListCtrl',["$scope","$http","AlertsFactory",function($scope,$http,AlertsFactory){
+.controller('RocchiCustomerCategoryListCtrl',["$scope","$http","AlertsFactory","AppConfig",function($scope,$http,AlertsFactory,AppConfig){
     $scope.msg = AlertsFactory;
     $scope.msg.initialize();
 	$scope.customercategorysaved = true;

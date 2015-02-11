@@ -17,25 +17,25 @@
 <div class="row">
 	<div class="large-12 medium-12 small-12">
 	
-		<table >
+		<table st-table="customercategorysToDisplay" class="table table-striped" st-safe-src="customercategorys" >
 			<thead>
 				<tr>
-					<td class="  first name">Codice</td>
-					<td class="  cognome">Nome</td>
-					<td class="  cognome">Descrizione</td>
-					<td class="  cognome">Note</td>
-					<td class="  half">&nbsp;</td>
-					<td class="  half">&nbsp;</td>
+					<th >&nbsp;</th>
+					<th st-sort="code"  st-sort-default="anything" st-skip-natural="true" >Codice</th>
+					<th  st-sort="name"  st-skip-natural="true">Nome</th>
+					<th >Descrizione</th>
+					<th >Note</th>
+					<th >&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="customercategory in customercategorys ">
-					<td class=" first username"  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.code}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.code"  value="{{customercategory.code}}" />  </div></td>
-					<td class="  username"  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.name}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.name"  value="{{customercategory.name}}" />  </div></td>
-					<td class="  username"  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.description}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.description"  value="{{customercategory.description}}" />  </div></td>
-					<td class="  usernote"  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.note}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.note"  value="{{customercategory.note}}" />  </div></td>
-					<td class=" half "><div class="modifyicon" ng-click="modifycustomercategoryElement(customercategory.idCategoryCustomer)" ></div></td>
-				    <td class=" half "><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletecustomercategoryElement(customercategory.idCategoryCustomer)" ></div></td>
+				<tr ng-repeat="customercategory in customercategorysToDisplay ">
+					<td ><div class="matita" ng-click="modifycustomercategoryElement(customercategory.idCategoryCustomer)" ></div></td>
+					<td   ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.code}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.code"  value="{{customercategory.code}}" />  </div></td>
+					<td   ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.name}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.name"  value="{{customercategory.name}}" />  </div></td>
+					<td  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.description}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.description"  value="{{customercategory.description}}" />  </div></td>
+					<td  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.note}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.note"  value="{{customercategory.note}}" />  </div></td>
+					<td ><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletecustomercategoryElement(customercategory.idCategoryCustomer)" ></div></td>
 				</tr>
 			</tbody>
 		</table>

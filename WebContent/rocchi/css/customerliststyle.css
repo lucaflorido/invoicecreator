@@ -2,33 +2,81 @@ body {
 	font-family:"Open Sans Condensed", sans-serif;
 }
 
+.height-200{
+	height: 200px;
+}
+
+.panel_1 {
+ background-color: white;
+ border: 2px solid black;
+
+}
+h1{
+	font-size: 10px;
+}
+
+.height-50{
+	height: 50px;
+}
+
+.width-150{
+	width: 50px;
+}
+
+.panel {
+	background-color: grey;
+	margin-left: -30px;
+}
+
+.panel-1 {
+	background-color: white;
+	margin-bottom: 10px;
+	margin-top: 2px;
+	margin-left: 10px;
+}
+
 h3 {
 	font-size: 25px;
 	color: #00adef;
-	margin-left: 27%;
+	margin-left: -4%;
 	margin-top: 13px;
 	
 }
+
 .matita{
 	background-image: url("../img/matita.png");
 	height: 17px;
 width: 20px;
 background-repeat: no-repeat;
+position: absolute;
+margin-top: -9px
 }
+
+.x{
+background-image: url("../img/x.png");
+height: 17px;
+width: 20px;
+background-repeat: no-repeat;
+position: absolute;
+margin-top: -9px
+}
+
 .clienti {
 	background-color: #fff;
 
 }
+
 .button {
 	background-color: #00adef;
 
 }
 .button-group {
 margin-top: 5px;
+margin-left: 2px;
 }
-table {
 
-margin-left: 7%;
+table {
+margin-left: 0%;
 }
 
 @media only screen and (max-width: 548px){
@@ -41,8 +89,9 @@ margin-left: 33px;
 .button {
 	background-color: #00adef;
 	margin-top: -18px;
-
 }
 
-
+.hidden_cell{
+	display: none;
 }
+

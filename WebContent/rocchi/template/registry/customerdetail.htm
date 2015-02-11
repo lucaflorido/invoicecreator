@@ -12,7 +12,8 @@
 		  	<li><a ng-click="saveCustomer()" class="button">Salva</a></li>
 		</ul>
 	</div>
-</div>
+	</div>
+<div class="row">
 <form>
 	<fieldset>
 		<legend>Anagrafica</legend>
@@ -48,7 +49,25 @@
 				</label>
 			</div>
 		</div>
-		
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Gruppo 
+					<select ng-model="currentGroup" ng-options="group.name for  group in groups" >
+					    <option value=""></option>
+					    
+					</select>
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Categoria 
+					<select ng-model="currentCategory" ng-options="category.name for  category in categorys" >
+					    <option value=""></option>
+					    
+					</select>
+				</label>
+			</div>
+			
+		</div>
 	</fieldset>
 	<fieldset>
 		<legend>Contatti</legend>
@@ -123,3 +142,5 @@
 		
 	</fieldset>
 </form>
+</div>
+

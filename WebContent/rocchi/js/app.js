@@ -3,6 +3,7 @@ var gecoApp = angular.module("gecoApp",
 ["ngRoute",
 "gecoControllers",
 "mm.foundation",
+"smart-table",
 "rocchi.customer",
 'modules.common.shared',
 "gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
