@@ -17,7 +17,13 @@ public class HeadTotalCalculation {
 	private float taxamount;
 	private float total;
 	private float withholdingtax;
-	
+	private float total0;
+	public float getTotal0() {
+		return total0;
+	}
+	public void setTotal0(float total0) {
+		this.total0 = total0;
+	}
 	public float getWithholdingtax() {
 		return withholdingtax;
 	}
@@ -110,7 +116,7 @@ public class HeadTotalCalculation {
 		}
 		this.amount = this.amount4 + this.amount10+ this.amount20;
 		this.taxamount = this.taxamount4 + this.taxamount10+ this.taxamount20;
-		this.total = this.total4 + this.total10+ this.total20;
+		this.total = this.total4 + this.total10+ this.total20+this.total0;
 		this.rows = null;
 	}
 	public void calculation(Head head){
@@ -129,7 +135,7 @@ public class HeadTotalCalculation {
 		}else{
 			head.setWithholdingtax(0);
 		}
-		this.total = this.total4 + this.total10+ this.total20-head.getWithholdingtax();
+		this.total = this.total4 + this.total10+ this.total20+this.total0-head.getWithholdingtax();
 		head.setAmount(amount);
 		head.setTaxamount(taxamount);
 		head.setTotal(total);
@@ -162,6 +168,9 @@ public class HeadTotalCalculation {
 				this.taxamount20 = this.taxamount20 + r.getTaxamount();
 				this.amount20 = this.amount20 + r.getAmount();
 				this.total20 = this.total20 + r.getTotal();
+			}
+			if (r.getTaxrate().getValue() == 0){
+				this.total0 = this.total0+r.getTotal();
 			}
 		}
 	}
