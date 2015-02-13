@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="document_tax" language="groovy" pageWidth="350" pageHeight="80" columnWidth="350" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="1a5bc1d5-3f94-45c2-9ec2-9df6e926fad2">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="codice" class="java.lang.String"/>
+	<field name="imponibile" class="java.lang.String"/>
+	<field name="totale" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement x="144" y="1" width="127" height="13" uuid="e982a818-5698-4ee2-840d-3e6d869f1e3b"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Aliquota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="144" height="13" uuid="39ba804b-9998-443d-bc7b-c71d0fed779d"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Imponibile]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="1" width="79" height="13" uuid="dd171f8c-428a-4691-b4c6-af6dc908e925"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="144" y="0" width="117" height="15" uuid="c45b3cfe-db65-42a8-b9a1-d5c123c96ad1"/>
+				<textElement textAlignment="Right">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="134" height="15" uuid="7fbf3e4e-5d62-4556-b1cb-59d3692fa194"/>
+				<textElement textAlignment="Right">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imponibile}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="271" y="0" width="69" height="15" uuid="0db60fd7-b481-420d-9f36-3ee6845ade07"/>
+				<textElement textAlignment="Right">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totale}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

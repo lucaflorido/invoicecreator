@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="document_taxrates" language="groovy" pageWidth="150" pageHeight="80" columnWidth="150" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="854e1c6a-752d-473f-82a2-eb1f86192486">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="codice" class="java.lang.String"/>
+	<field name="imponibile" class="java.lang.String"/>
+	<field name="totale" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="11" splitType="Stretch">
+			<staticText>
+				<reportElement x="41" y="0" width="40" height="11" uuid="cfe22190-cddf-480b-91d7-2a0ae58f4285"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[codice]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="41" y="1" width="40" height="12" uuid="045f2f4c-a5f1-4e2f-a940-57d57d01d5b1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codice}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

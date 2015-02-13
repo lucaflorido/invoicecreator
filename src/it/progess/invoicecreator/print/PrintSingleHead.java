@@ -1,7 +1,10 @@
 package it.progess.invoicecreator.print;
 
 
-import it.progess.invoicecreator.hibernate.DataUtilConverter;
+import java.util.TreeSet;
+
+
+
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.Row;
@@ -49,7 +52,13 @@ public class PrintSingleHead extends PrintCompany {
 	public String tot_qta;
 	public String ritenuta;
 	public String percritenuta;
-	
+	public TreeSet<TaxRateCollection> aliquote;
+	public TreeSet<TaxRateCollection> getAliquote() {
+		return aliquote;
+	}
+	public void setAliquote(TreeSet<TaxRateCollection> aliquote) {
+		this.aliquote = aliquote;
+	}
 	public String getRitenuta() {
 		return ritenuta;
 	}
@@ -99,6 +108,7 @@ public class PrintSingleHead extends PrintCompany {
 		this.setFromObject(head, row);
 	}
 	public void setFromObject(Head head,Row row){
+		
 		if (head.getCustomer() != null ){
 			this.cliente_codice =getValue( head.getCustomer().getCustomercode());
 			this.cliente_ragionesociale = getValue(head.getCustomer().getCustomername());
@@ -140,8 +150,11 @@ public class PrintSingleHead extends PrintCompany {
 			this.iva = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount())));
 			this.tot = getValue(forceTwoDecimal(String.valueOf( head.getTotal())));
 			this.ritenuta =getValue( forceTwoDecimal(String.valueOf( head.getWithholdingtax())));
-			if (head.getTaxrate() != null)
-			this.percritenuta = getValue(removeDecimal(String.valueOf( head.getTaxrate().getValue())));
+			if (head.getTaxrate() != null){
+				this.percritenuta = getValue(removeDecimal(String.valueOf( head.getTaxrate().getValue())));
+			}else{
+				this.percritenuta = "";
+			}
 		
 		if (row != null){
 			this.prodotto_codice = getValue(row.getProductcode());

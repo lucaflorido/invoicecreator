@@ -1,7 +1,7 @@
 var gecoDocumentControllers = angular.module("gecoDocumentControllers",[]);
 gecoDocumentControllers.controller('HeadListCtrl',["$scope","$http","$routeParams","$rootScope","ModalFactory",function($scope,$http,$routeParams,$rootScope,ModalFactory){
     $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
-	$scope.pagesize = 10;
+	$scope.pagesize = 1000;
 	$scope.pageArray = [];
 	$scope.headamount = 0;
 	$scope.headtaxamount = 0;

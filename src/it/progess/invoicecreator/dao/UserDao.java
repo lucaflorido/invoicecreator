@@ -228,7 +228,8 @@ public class UserDao {
 			session.saveOrUpdate(tbluser);
 			iduser = tbluser.getIduser();
 			tx.commit();
-			
+			session.flush();
+			session.refresh(tbluser);
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();

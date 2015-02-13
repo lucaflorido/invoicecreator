@@ -17,7 +17,20 @@ public class HeadTotalCalculation {
 	private float taxamount;
 	private float total;
 	private float withholdingtax;
-	
+	private float total0;
+	private float amount0;
+	public float getAmount0() {
+		return amount0;
+	}
+	public void setAmount0(float amount0) {
+		this.amount0 = amount0;
+	}
+	public float getTotal0() {
+		return total0;
+	}
+	public void setTotal0(float total0) {
+		this.total0 = total0;
+	}
 	public float getWithholdingtax() {
 		return withholdingtax;
 	}
@@ -108,9 +121,9 @@ public class HeadTotalCalculation {
 			Row row = itr.next();
 			this.setTaxesAmount(row.getTaxrate(), row);
 		}
-		this.amount = this.amount4 + this.amount10+ this.amount20;
+		this.amount = this.amount4 + this.amount10+ this.amount20+this.amount0;
 		this.taxamount = this.taxamount4 + this.taxamount10+ this.taxamount20;
-		this.total = this.total4 + this.total10+ this.total20;
+		this.total = this.total4 + this.total10+ this.total20+this.total0;
 		this.rows = null;
 	}
 	public void calculation(Head head){
@@ -120,7 +133,7 @@ public class HeadTotalCalculation {
 			this.setTaxesAmount(row.getTaxrate(), row);
 		}
 		
-		this.amount = this.amount4 + this.amount10+ this.amount20;
+		this.amount = this.amount4 + this.amount10+ this.amount20+this.amount0;
 		this.taxamount = this.taxamount4 + this.taxamount10+ this.taxamount20;
 		if (head.getTaxrate() != null){
 			float tax = Float.parseFloat(String.valueOf(head.getTaxrate().getValue()));
@@ -129,7 +142,7 @@ public class HeadTotalCalculation {
 		}else{
 			head.setWithholdingtax(0);
 		}
-		this.total = this.total4 + this.total10+ this.total20-head.getWithholdingtax();
+		this.total = this.total4 + this.total10+ this.total20+this.total0-head.getWithholdingtax();
 		head.setAmount(amount);
 		head.setTaxamount(taxamount);
 		head.setTotal(total);
@@ -148,7 +161,7 @@ public class HeadTotalCalculation {
 	}
 	private void setTaxesAmount(TaxRate t,Row r){
 		if (r.getType().endsWith("V")){
-			if (r.getTaxrate().getValue() < 10){
+			if (r.getTaxrate().getValue() < 10 && r.getTaxrate().getValue() > 0 ){
 				this.taxamount4 = this.taxamount4 + r.getTaxamount();
 				this.amount4 = this.amount4 + r.getAmount();
 				this.total4 = this.total4 + r.getTotal();
@@ -162,6 +175,10 @@ public class HeadTotalCalculation {
 				this.taxamount20 = this.taxamount20 + r.getTaxamount();
 				this.amount20 = this.amount20 + r.getAmount();
 				this.total20 = this.total20 + r.getTotal();
+			}
+			if (r.getTaxrate().getValue() == 0){
+				this.amount0 = this.amount0+r.getTotal();
+				this.total0 = this.total0+r.getTotal();
 			}
 		}
 	}
