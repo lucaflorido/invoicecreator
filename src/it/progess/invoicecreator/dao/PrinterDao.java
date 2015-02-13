@@ -6,6 +6,7 @@ import it.progess.invoicecreator.print.PrintProductList;
 import it.progess.invoicecreator.print.PrintReportOrder;
 import it.progess.invoicecreator.print.PrintReportOrderSubreport;
 import it.progess.invoicecreator.print.PrintSingleHead;
+import it.progess.invoicecreator.print.TaxRateCollection;
 import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Document;
@@ -41,6 +42,7 @@ import javax.servlet.ServletContext;
 
 
 
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -56,7 +58,9 @@ public class PrinterDao {
 	    return new BigInteger(130, random).toString(16);
 	  }
 	public String printSingleDocument(ServletContext context,int id,User user){
-		String documentType ="";
+		int [] ids = {id};
+		return this.printMultipleDocument(context, ids, user);
+		/*String documentType ="";
 		try{
 			//generateAshwinFriends();
 			Company comp = user.getCompany();
@@ -75,6 +79,8 @@ public class PrinterDao {
 			map.put("title","Fattura");
 			double totqta = 0;
 			double totnecks = 0;
+			Map<String,TaxRateCollection> taxratesmap = new HashMap<String, TaxRateCollection>(); 
+			TreeSet<TaxRateCollection> trct = new TreeSet<TaxRateCollection>();
 			for (Iterator<Row> it = head.getRows().iterator();it.hasNext();){
 				Row r = it.next();
 				PrintSingleHead ph = new PrintSingleHead();
@@ -82,12 +88,27 @@ public class PrinterDao {
 				headcoll.add(ph);
 				totqta = totqta + r.getQuantity();
 				totnecks = totnecks + r.getNecks();
+				if (taxratesmap.containsKey(r.getTaxrate().getDescription())){
+					TaxRateCollection trc = taxratesmap.get(r.getTaxrate().getDescription());
+					trc.tot = trc.tot + r.getTaxamount();
+					trc.impo = r.getAmount();
+					trc.setValues();
+				}else{
+					TaxRateCollection trcNew = new TaxRateCollection(r.getTaxrate().getDescription(),r.getAmount(),r.getTaxamount());
+					taxratesmap.put(r.getTaxrate().getDescription(), trcNew);
+					trcNew.setValues();
+					trct.add(trcNew);
+				}
+				ph.setAliquote(trct);
 			}
+			
 			if (head.getDocument().isOrder() && head.getDocument().getSupplier()){
 				for (Iterator<PrintSingleHead> itp = headcoll.iterator();itp.hasNext();){
 					PrintSingleHead p = itp.next();
 					p.setTot_colli(String.valueOf(totnecks));
 					p.setTot_qta(String.valueOf(totqta));
+					
+					
 				}
 			}
 			JRDataSource datasource = new JRBeanCollectionDataSource(headcoll);
@@ -99,7 +120,7 @@ public class PrinterDao {
 			throw new ExceptionInInitializerError(ex);
 		}
 		
-		return "/InvoiceCreator/report/"+documentType+".pdf";
+		return "/InvoiceCreator/report/"+documentType+".pdf";*/
 	}
 	private String getReportName(Document d){
 		if (d.getCustomer() == true){
@@ -137,11 +158,25 @@ public class PrinterDao {
 		    	Head head = new DocumentDao().getSingleHead(ids[i]);
 				JasperCompileManager.compileReportToFile(context.getRealPath("report/"+getReportName(head.getDocument())+".jrxml"), context.getRealPath("report/"+getReportName(head.getDocument())+""+ids[i]+".jasper"));
 				Collection<PrintSingleHead> headcoll = new ArrayList<PrintSingleHead>();
-				
+				Map<String,TaxRateCollection> taxratesmap = new HashMap<String, TaxRateCollection>(); 
+				TreeSet<TaxRateCollection> trct = new TreeSet<TaxRateCollection>();
 				for (Iterator<Row> it = head.getRows().iterator();it.hasNext();){
+					Row r = it.next();
 					PrintSingleHead ph = new PrintSingleHead();
-					ph.setFromObject(comp,head, it.next());
+					ph.setFromObject(comp,head, r);
 					headcoll.add(ph);
+					if (taxratesmap.containsKey(r.getTaxrate().getDescription())){
+						TaxRateCollection trc = taxratesmap.get(r.getTaxrate().getDescription());
+						trc.tot = trc.tot + r.getTaxamount();
+						trc.impo = trc.impo+ r.getAmount();
+						trc.setValues();
+					}else{
+						TaxRateCollection trcNew = new TaxRateCollection(r.getTaxrate().getDescription(),r.getAmount(),r.getTaxamount());
+						taxratesmap.put(r.getTaxrate().getDescription(), trcNew);
+						trcNew.setValues();
+						trct.add(trcNew);
+					}
+					ph.setAliquote(trct);
 				}
 				JRDataSource datasource = new JRBeanCollectionDataSource(headcoll);
 				if (i == 0){

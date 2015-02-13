@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ea2e4e17-4651-429f-b0f0-5522f72621e5">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1"/>
+	<field name="azienda_nome" class="java.lang.String"/>
+	<field name="azienda_indirizzo" class="java.lang.String"/>
+	<field name="azienda_indirizzo2" class="java.lang.String"/>
+	<field name="azienda_pi" class="java.lang.String"/>
+	<field name="azienda_cf" class="java.lang.String"/>
+	<field name="documento_tipo" class="java.lang.String"/>
+	<field name="documento_numero" class="java.lang.String"/>
+	<field name="documento_data" class="java.lang.String"/>
+	<field name="totale" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="fornitore" class="java.lang.String"/>
+	<field name="vettore" class="java.lang.String"/>
+	<field name="iva" class="java.lang.String"/>
+	<field name="imponibile" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="107" splitType="Stretch">
+			<textField>
+				<reportElement x="12" y="0" width="224" height="20" uuid="f233a9f5-4e73-4dd2-a61f-6c018119ba55"/>
+				<textFieldExpression><![CDATA[$F{azienda_nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="20" width="224" height="20" uuid="fcc02458-d8fe-4171-9adb-b8041cd6979c"/>
+				<textFieldExpression><![CDATA[$F{azienda_indirizzo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="40" width="224" height="20" uuid="d0502d7b-1562-4e4e-9d5b-0ed73ea4f4da"/>
+				<textFieldExpression><![CDATA[$F{azienda_indirizzo2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="60" width="224" height="20" uuid="1d6b77e5-513c-4f34-8e6b-f0779ad5889b"/>
+				<textFieldExpression><![CDATA[$F{azienda_pi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="80" width="224" height="20" uuid="a0dcb83a-c439-403e-a4d3-e60b165eeeb9"/>
+				<textFieldExpression><![CDATA[$F{azienda_cf}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="33" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="68" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="62" width="802" height="2" uuid="caff08c1-5c54-45b3-8c33-4b405fa970cc"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="34" width="802" height="1" uuid="cff1b1af-f5ae-405a-a44c-0c51847699d5"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="42" width="55" height="20" uuid="36cb16f7-c74c-468a-bab3-06e7971d1d9c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="55" y="42" width="42" height="20" uuid="99139ebf-2cce-4c3b-b941-1b8a1a908aa3"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Numero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="97" y="42" width="64" height="20" uuid="7d0c4e33-99b0-4c87-a762-9dc7f775385d"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="42" width="156" height="20" uuid="0d6f492c-07bf-4e06-8ae9-7a975f47bbc6"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="42" width="152" height="20" uuid="cb6b04ff-bd0a-446c-a5e0-2719fc1f8951"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Fornitore]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="42" width="138" height="20" uuid="bb12a81a-2335-4b02-8d07-3751f1b4d00d"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Vettore]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="608" y="42" width="63" height="20" uuid="5b02a4a8-19d3-487c-9821-b1ea721a80d1"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Imponibile]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="671" y="42" width="52" height="20" uuid="e21f6592-3762-4e78-8015-0604319747fd"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Iva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="723" y="42" width="68" height="20" uuid="f685ec12-0fed-46ae-99ad-474bc341d0fa"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Totale]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="20" uuid="be026164-4aa3-4f1b-8989-3f5ab2a6fc7f"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELENCO DOCUMENTI]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="3" width="55" height="20" uuid="9f6b04d4-348f-4124-8275-4689f4c120c3"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{documento_tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="3" width="42" height="20" uuid="4991ba3c-47de-40dc-9c18-fcf157cf4b14"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{documento_numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="97" y="3" width="64" height="20" uuid="6e6854f7-4e88-455c-9826-271b8bba26a7"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{documento_data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="172" y="3" width="146" height="20" uuid="f49e76db-a629-4bc4-83e2-d95e000507db"/>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="329" y="3" width="141" height="20" uuid="27e2a930-b7bf-4198-a3be-f448d04ba484"/>
+				<textFieldExpression><![CDATA[$F{fornitore}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="481" y="3" width="127" height="20" uuid="3f234cdb-d61d-4c72-9818-37c6b83f07d4"/>
+				<textFieldExpression><![CDATA[$F{vettore}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="608" y="3" width="63" height="20" uuid="5e664a9a-7d96-41b1-8ec4-94a2a1c2afe5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{imponibile}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="671" y="3" width="52" height="20" uuid="f0005919-a7b7-4b87-ad97-6d15a6e51a2b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="722" y="3" width="68" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1a33f502-db1d-44ad-8ed7-ae1419b5ca06"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totale}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="23" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="33" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="25" splitType="Stretch"/>
+	</summary>
+</jasperReport>

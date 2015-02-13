@@ -108,30 +108,7 @@ public class PrintSingleHead extends PrintCompany {
 		this.setFromObject(head, row);
 	}
 	public void setFromObject(Head head,Row row){
-		this.aliquote = new TreeSet<TaxRateCollection>();
-		TaxRateCollection a1 = new TaxRateCollection();
-		a1.setCodice("a1");
-		a1.setImponibile("impo"+a1.getCodice());
-		a1.setTotale("tot"+a1.getCodice());
-		this.aliquote.add(a1);
 		
-		TaxRateCollection a2 = new TaxRateCollection();
-		a2.setCodice("a2");
-		a2.setImponibile("impo"+a2.getCodice());
-		a2.setTotale("tot"+a2.getCodice());
-		this.aliquote.add(a2);
-		
-		TaxRateCollection a3 = new TaxRateCollection();
-		a3.setCodice("a3");
-		a3.setImponibile("impo"+a3.getCodice());
-		a3.setTotale("tot"+a3.getCodice());
-		this.aliquote.add(a3);
-		
-		TaxRateCollection a4 = new TaxRateCollection();
-		a4.setCodice("a4");
-		a4.setImponibile("impo"+a4.getCodice());
-		a4.setTotale("tot"+a4.getCodice());
-		this.aliquote.add(a4);
 		if (head.getCustomer() != null ){
 			this.cliente_codice =getValue( head.getCustomer().getCustomercode());
 			this.cliente_ragionesociale = getValue(head.getCustomer().getCustomername());
