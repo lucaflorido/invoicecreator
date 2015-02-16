@@ -2,6 +2,8 @@ angular.module("rocchi.customer",[]);
 angular.module("rocchi.product",[]);
 angular.module("rocchi.list",[]);
 angular.module("rocchi.transporter",[]);
+angular.module("rocchi.documents",[]);
+angular.module("rocchi.parameters",[])
 var gecoApp = angular.module("gecoApp",
 ["ngRoute",
 "gecoControllers",
@@ -10,6 +12,8 @@ var gecoApp = angular.module("gecoApp",
 "rocchi.customer",
 "rocchi.product",
 "rocchi.transporter",
+"rocchi.documents",
+"rocchi.parameters",
 "rocchi.list",
 'modules.common.shared',
 "gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
@@ -19,8 +23,7 @@ var gecoApp = angular.module("gecoApp",
 		    this.$get = function ($window)
 		    {
 		    	return {
-
-		            ServiceUrls: {
+	            ServiceUrls: {
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
 		                DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
 		                SaveCustomer:main_domain+ "/rest/registry/customer/",
@@ -30,8 +33,11 @@ var gecoApp = angular.module("gecoApp",
 		                ProductGroup:main_domain+ "/rest/basic/groupproduct/",
 		                ProductCategory:main_domain+ "/rest/basic/categoryproduct/",
 		                List:main_domain+ "/rest/registry/list/",
-		                Transporter:main_domain+ "/rest/registry/transporter/"
-		                
+		                Transporter:main_domain+ "/rest/registry/transporter/",
+	                    DocumentList:main_domain+"/rest/head/head/",
+		                DocumentDetails:main_domain+"",
+		                UniteMeasure:main_domain+"/rest/basic/unitmeasure/",
+		                TaxRate:main_domain+"/rest/basic/taxrate/"
 		            }
 		        };
 		    };
@@ -145,7 +151,7 @@ function($routeProvider) {
 		}).
 		when('/taxrate', {
 			templateUrl: 'template/basic/taxratelist.htm',
-			controller: 'TaxrateCtrl'
+			controller: 'RocchiTaxrateCtrl'
 		}).
 		when('/counter', {
 			templateUrl: 'template/basic/counterlist.htm',
@@ -157,7 +163,7 @@ function($routeProvider) {
 		}).
 		when('/payment', {
 			templateUrl: 'template/basic/paymentlist.htm',
-			controller: 'PaymentCtrl'
+			controller: 'RocchiPaymentCtrl'
 		}).
 		when('/document', {
 			templateUrl: 'template/basic/documentlist.htm',
@@ -173,7 +179,7 @@ function($routeProvider) {
 		}).
 		when('/unitmeasure', {
 			templateUrl: 'template/basic/unitmeasurelist.htm',
-			controller: 'UnitmeasureCtrl'
+			controller: 'RocchiUnitmeasureCtrl'
 		}).
 		when('/company', {
 			templateUrl: 'template/registry/companydetail.htm',
@@ -238,7 +244,7 @@ function($routeProvider) {
 		}).
 		when('/headlist/:section/:type', {
 			templateUrl: 'template/document/headlist.htm',
-			controller: 'HeadListCtrl'
+			controller: 'RocchiHeadListCtrl'
 		}).
 		when('/generatedocs', {
 			templateUrl: 'template/document/generatedocs.htm',
@@ -258,11 +264,11 @@ function($routeProvider) {
 		}).
 		when('/head/:idhead', {
 			templateUrl: 'template/document/headdetail.htm',
-			controller: 'HeadDetailCtrl'
+			controller: 'RocchiHeadDetailCtrl'
 		}).
 		when('/head/:idhead/:rows', {
 			templateUrl: 'template/document/headdetail.htm',
-			controller: 'HeadDetailCtrl'
+			controller: 'RocchiHeadDetailCtrl'
 		}).
 		when('/customercategory', {
 			templateUrl: 'template/basic/customercategorylist.htm',

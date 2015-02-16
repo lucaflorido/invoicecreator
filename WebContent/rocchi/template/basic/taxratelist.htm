@@ -1,43 +1,39 @@
-<div class="container userlist clearfix">
-	<div class="toolbar_table">
-		<h3>Elenco Aliquote</h3>
-		<div class=" buttonmenu addbutton "  >
-			<a ng-click="addTaxrateElement()" ng-if="taxratesaved == true">
-				<div class="add">
-				</div>
-				<div class="addlabel">
-					Aggiungi Aliquota 
-				</div>
-			</a>
-		</div>
-		<div class="buttonmenu savebutton admin" ng-click="saveTaxrates()">
-			<div class="save buttonicon">
-			</div>
-			<div class="buttonlabel">
-				Salva
-			</div>
-		</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
-	<div class="tablecontainer taxrate" >
-		
-		<table class="GECO_table two_two clearfix">
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>ALIQUOTE</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="addTaxrateElement()" ng-if="taxratesaved == true" class="button">Aggiungi</a></li>
+		  	<li><a ng-click="saveTaxrates()" class="button">Salva</a></li>
+		</ul>
+	</div>
+</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12">
+	
+		<table st-table="taxratesToDisplay" class="table table-striped" st-safe-src="taxrates" >
 			<thead>
 				<tr>
-					<td class="header_table row_table first name">Descrizione</td>
-					<td class="header_table row_table cognome">Valore</td>
-					<td class="header_table row_table half">&nbsp;</td>
-					<td class="header_table row_table half">&nbsp;</td>
+					<th >&nbsp;</th>
+					<th st-sort="description"  st-sort-default="anything" st-skip-natural="true" >Descrizione</th>
+					<th  st-sort="value"  st-skip-natural="true">Valore</th>
+					<th >&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="taxrate in taxrates | filter:query | orderBy:orderProp">
-					<td class="row_table first username"  ><div ng-if="modifyid != taxrate.idtaxrate">&nbsp;{{taxrate.description}}</div><div><input  class="input_field" ng-if="modifyid == taxrate.idtaxrate" ng-model="taxrate.description"  value="{{taxrate.description}}" />  </div></td>
-					<td class="row_table cognome"><div ng-if="modifyid != taxrate.idtaxrate">&nbsp;{{taxrate.value}}</div><div><input class="input_field" ng-if="modifyid == taxrate.idtaxrate" ng-model="taxrate.value"  value="{{taxrate.value}}" />  </div></td>
-					<td class="row_table half cognome"><a href="#/taxrate"><div class=" modify"><div class="modifyicon" ng-click="modifyTaxrateElement(taxrate.idtaxrate)" ></div></div></a></td>
-				    <td class="row_table half delete"><div class="deleteicon" id="del{{role.idrole}}" ng-click="deleteTaxrateElement(taxrate.idtaxrate)" ></div></td>
+				<tr ng-repeat="taxrate in taxratesToDisplay ">
+					<td ><div class="matita" ng-click="modifyTaxrateElement(taxrate.idtaxrate)" ></div></td>
+					<td   ><div ng-if="modifyid != taxrate.idtaxrate">&nbsp;{{taxrate.description}}</div><div><input class="input_field"  ng-if="modifyid == taxrate.idtaxrate" ng-model="taxrate.description"  value="{{taxrate.description}}" />  </div></td>
+					<td   ><div ng-if="modifyid != taxrate.idtaxrate">&nbsp;{{taxrate.value}}</div><div><input class="input_field"  ng-if="modifyid == taxrate.idtaxrate" ng-model="taxrate.value"  value="{{taxrate.value}}" />  </div></td>
+					<td ><div class="deleteicon" id="del{{role.idrole}}" ng-click="deleteTaxrateElement(taxrate.idtaxrate)" ></div></td>
 				</tr>
 			</tbody>
 		</table>
-		
 	</div>
 </div>
