@@ -1,10 +1,16 @@
 angular.module("rocchi.customer",[]);
+angular.module("rocchi.product",[]);
+angular.module("rocchi.list",[]);
+angular.module("rocchi.transporter",[]);
 var gecoApp = angular.module("gecoApp",
 ["ngRoute",
 "gecoControllers",
 "mm.foundation",
 "smart-table",
 "rocchi.customer",
+"rocchi.product",
+"rocchi.transporter",
+"rocchi.list",
 'modules.common.shared',
 "gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
 .provider('AppConfig', function ()
@@ -19,8 +25,12 @@ var gecoApp = angular.module("gecoApp",
 		                DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
 		                SaveCustomer:main_domain+ "/rest/registry/customer/",
 		                CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
-		                CustomerCategory:main_domain+ "/rest/basic/categorycustomer"
-		                
+		                CustomerCategory:main_domain+ "/rest/basic/categorycustomer",
+		                Product:main_domain+ "/rest/registry/product/",
+		                ProductGroup:main_domain+ "/rest/basic/groupproduct/",
+		                ProductCategory:main_domain+ "/rest/basic/categoryproduct/",
+		                List:main_domain+ "/rest/registry/list/",
+		                Transporter:main_domain+ "/rest/registry/transporter/"
 		                
 		            }
 		        };
@@ -155,11 +165,11 @@ function($routeProvider) {
 		}).
 		when('/groupproduct', {
 			templateUrl: 'template/basic/groupproductlist.htm',
-			controller: 'GroupProductCtrl'
+			controller: 'RocchiGroupProductCtrl'
 		}).
 		when('/categoryproduct', {
 			templateUrl: 'template/basic/categoryproductlist.htm',
-			controller: 'CategoryProductCtrl'
+			controller: 'RocchiCategoryProductCtrl'
 		}).
 		when('/unitmeasure', {
 			templateUrl: 'template/basic/unitmeasurelist.htm',
@@ -179,20 +189,20 @@ function($routeProvider) {
 		}).
 		when('/product', {
 			templateUrl: 'template/registry/productlist.htm',
-			controller: 'ProductListCtrl'
+			controller: 'RocchiProductListCtrl'
 		}).
 		
 		when('/product/:idproduct', {
 			templateUrl: 'template/registry/productdetail.htm',
-			controller: 'ProductDetailCtrl'
+			controller: 'RocchiProductDetailCtrl'
 		}).
 		when('/list', {
 			templateUrl: 'template/registry/listlist.htm',
-			controller: 'ListListCtrl'
+			controller: 'RocchiListListCtrl'
 		}).
 		when('/list/:idlist', {
 			templateUrl: 'template/registry/listdetail.htm',
-			controller: 'ListDetailCtrl'
+			controller: 'RocchiListDetailCtrl'
 		}).
 		when('/customer', {
 			templateUrl: 'template/registry/customerlist.htm',
@@ -220,11 +230,11 @@ function($routeProvider) {
 		}).
 		when('/transporter', {
 			templateUrl: 'template/registry/transporterlist.htm',
-			controller: 'TransporterListCtrl'
+			controller: 'RocchiTransporterListCtrl'
 		}).
 		when('/transporter/:idtransporter', {
 			templateUrl: 'template/registry/transporterdetail.htm',
-			controller: 'TransporterDetailCtrl'
+			controller: 'RocchiTransporterDetailCtrl'
 		}).
 		when('/headlist/:section/:type', {
 			templateUrl: 'template/document/headlist.htm',

@@ -1,234 +1,61 @@
-<div id=" maincontainer_productlist" class="container_menu userlist clearfix"  >
-	<table class="menutable">
-		<thead>
-			<tr class="title_tr">
-				<td class="title_td">
-					Elenco Prodotti
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="buttontd">
-					<a  href="#/product/0">
-						<div class="  addbutton admin_grant" >
-							
-								<div class="printlabel">
-									Aggiungi Prodotto
-								</div>
-							
-						</div>
-					</a>
-				</td >
-				<td class="buttontd ">
-					<a>
-						<div class=" " ng-click="printElements()">
-							<div class="printlabel">
-								Stampa Elenco
-							</div>
-						</div>
-					</a>
-				</td>
-				<td class="buttontd disabled">
-					<div class=" " ng-click="openFilter()">
-						<div class="printlabel">
-							Filtra
-						</div>
-					</div>
-				</td>
-				<td class="buttontd disabled">
-					<div class=" " ng-click="openFilter()">
-						<div class="printlabel">
-							Incrementa Prezzi
-						</div>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<!--div class="toolbar_table">
-		<h3>Elenco Prodotti</h3>
-		<div class=" buttonmenu addbutton admin_grant" >
-			<a href="#/product/0">
-				<div class="add">
-				</div>
-				<div class="addlabel">
-					Aggiungi Prodotto [Alt+N]
-				</div>
-			</a>
-		</div>
-		<div class="printbutton buttonmenu" ng-click="printElements()">
-			<div class="print">
-			</div>
-			<div class="printlabel">
-				Stampa Elenco [Alt+P]
-			</div>
-		</div>
-		<div class="printbutton buttonmenu" ng-click="openIncrement()">
-			<div class="settings">
-			</div>
-			<div class="printlabel">
-				Incrementa Prezzi
-			</div>
-		</div>
-		<div class="printbutton buttonmenu" ng-click="openFilter()">
-			<div class="search">
-			</div>
-			<div class="printlabel">
-				Filtra
-			</div>
-		</div>
-		<div class="filter">
-		<input class="filter" ng-model="query">
-			<div class="label filter">Cerca:</div>
-			
-			
-		</div>
-		<div class="sort">
-		    <select class="sort" ng-model="orderProp">
-				<option value="code">codice</option>
-				<option value="description">descrizione</option>
-				<option value="supplier.suppliername">fornitore</option>
-			</select>
-			<div class="label sort">Ordina:</div> 
-			
-		</div>
-	</div>
-		<div>
-			<div class="PRODUCT_DIALOG" ng-show="showFilter == true">
-				<div class="PRODUCT_DIALOG_COLUMN">	
-					<div>
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label">Gruppo </div>
-							<div class="PRODUCT_field role">
-								<select id="selgroupfilter" class="inputfield"  ng-model="currentGroup"    ng-options="group as group.name for group in groups" ng-data-provider="groups" create-chosen on-finish-chosen-update ng-change="filter.group = currentGroup">
-									<option value=""></option>
-								</select>
-							</div>
-						</div>
-						
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Marca</div>
-							<div class="PRODUCT_field role">
-								<select id="selgroup" class="inputfield" ng-model="currentBrand"    ng-options="brand as brand.name for brand in brands" ng-data-provider="brands" create-chosen on-finish-chosen-update ng-change="filter.brand = currentBrand">
-									<option value=""></option>
-								</select>
-							</div>
-						</div>
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Categoria</div>
-							<div class="PRODUCT_field role">
-								<select id="selcategory" class="inputfield" ng-model="currentCategory"    ng-options="category as category.name for category in categorys" ng-change="changeCategory()" ng-data-provider="categorys" create-chosen on-finish-chosen-update ng-change="filter.category = currentCategory" > <option value=""></option></select>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-				<div class="PRODUCT_DIALOG_COLUMN">
-					<div >
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Sottocategoria</div>
-							<div class="PRODUCT_field role">
-								<select id="selsubcategory" class="inputfield" ng-model="currentSubCategory"    ng-options="subcategory as subcategory.name for subcategory in subcategories" ng-data-provider="subcategories" create-chosen on-finish-chosen-update ng-change="filter.subcategory = currentSubCategory" ><option value=""></option></select>
-							</div>
-						</div>
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Fornitore </div>
-							<div class="PRODUCT_field role">
-								<select id="selsupplier" class="inputfield" ng-model="currentSupplier"    ng-options="supplier as supplier.suppliername for supplier in suppliers" ng-data-provider="suppliers" create-chosen on-finish-chosen-update ng-change="filter.supplier = currentSupplier" ><option value=""></option></select>
-							</div>
-						</div>
-						<div class="PRODUCT_fields">
-							<div class="PRODUCT_label name">Ricerca </div>
-							<div class="PRODUCT_field role">
-								<input class="PRODUCT_inputfield" ng-model="filter.searchstring" value={{filter.searchstring}}></input>
-							</div>
-						</div>
-						
-					</div>
-						
-					</div>
-				</div>
-		</div>
-		<div id="dialog"  class="" ng-show="showIncrement == true" >
-			<div class="PRODUCT_DIALOG">
-				<div class="PRODUCT_DIALOG_COLUMN">
-					<div class="PRODUCT_fields left ">
-						<div class="PRODUCT_label name">Incremento</div>
-						<div class="PRODUCT_field name control-group input-append">
-							<input  type="text" id="listincrement" ng-model="filter.increment" value="{{filter.increment}}"   />
-							Percentuale
-							<input  type="checkbox" id="listincrement" ng-model="filter.isPercentage" value="{{filter.isPercentage}}"   />
-						</div>
-					</div>
-					
-				</div>
-				<div class="PRODUCT_DIALOG_COLUMN">
-
-					<div class="PRODUCT_field code ">
-								<div class="filterbutton half" ng-click="incrementPrices()">
-									<div class="filterlabel">
-										Calcola
-									</div>
-								</div>
-								
-							</div>	
-							
-					
-				</div>
-			</div>
-		</div>
-	</div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Enoteca Rocchi</title>
 	
-		
-				
-		
-		
+	<link rel="stylesheet" href="css/foundation.css" />
+	 <link rel="stylesheet"  href="css/customerliststyle.css">
+ 
+</head>
+<body> 
+
+<div class="row">
+	<div class="large-3 medium-3 small-3 columns">
+		<h3>ELENCO PRODOTTI</h3>
 	</div>
-	<div class="pagination clearfix">
-				<div class="navcontainer ">
-					<ul >
-					<li ng-repeat="page in pageArray"><div ng-if="page !=1 " class="pag" id="pag{{page}}" ng-click="getProducts(page)">{{page}}</div>
-													<div ng-if="page == 1 " id="pag{{page}}"  class="first selected pag" ng-click="getProducts(page)">{{page}}</div></li>
-					</ul>
-					
-					
-				</div>
-				<div class="filter">
-					<button ng-click="getProductsNumber()" >Filtra</button>
-				</div>
-				
-				<div class="filter">
-					<input class="filter" ng-model="pagesize" value="{{pagesize}}">
-				</div>
-				<div class="label filter">Righe per pagina:</div>
-		</div-->
-	<div class="tablecontainer" >
-		<table class="GECO_table  clearfix">
+	<div class="large-9 medium-9 small-9 columns">
+		<ul class="button-group">
+			<li><div class="button">Aggiungi Prodotto</div></li>
+			<li><div class="button">Stampa Elenco </div></li>
+			<li><div class="button">Filtra </div></li>
+			<li><div class="button">Incrementa Prezzi </div></li>
+		</ul>
+	</div>
+	</div>
+	<div class="row">
+	<div  >
+		<table >
 			<thead>
-				<tr class="header_table">
-					<td class=" row_table half td_five"><div class="td_div first">&nbsp;</div></td>
-					<td class=" row_table  td_twenty"><div class="td_div "><div class="sorter" ng-click="sortFunction('code')"><div class="sorter_label">Codice</div><div class="sortericon code"></div></div></div></td>
-					<td class=" row_table td_thirty"><div class="td_div "><div class="sorter" ng-click="sortFunction('description')"><div class="sorter_label">Descrizione</div><div class="sortericon description"></div></div></div></td>
-					<td class=" row_table td_ten"><div class="td_div "><div class="sorter" ng-click="sortFunction('umselected.code')"><div class="sorter_label">U.M.</div><div class="sortericon umselected.code"></div></div></div></td>
-					<td class=" row_table td_ten"><div class="td_div "><div class="sorter" ng-click="sortFunction('sellprice')"><div class="sorter_label">Prezzo</div><div class="sortericon sellprice"></div></div></div></td>
-					<td class=" row_table td_ten"><div class="td_div "><div class="sorter" ng-click="sortFunction('category.name')"><div class="sorter_label">Categoria</div><div class="sortericon category name"></div></div></div></td>
-					<td class=" row_table td_ten"><div class="td_div "><div class="sorter" ng-click="sortFunction('group.name')"><div class="sorter_label">Gruppo</div><div class="sortericon group name"></div></div></div></td>
-					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
+				<tr >
+					<th ><div class="td_div first">&nbsp;</div></th>
+					<th ><div class="td_div ">Codice</td>
+					<th ><div class="td_div ">Descrizione</td>
+					<th class=" hidden_cell">U.M.</td>
+					<th class="  hidden_cell">Prezzo</td>
+					<th class=" hidden_cell">Categoria</td>
+					<th class="  hidden_cell">Gruppo</td>
+					<th ><div class="td_div ">&nbsp;</div></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="tr_table" ng-repeat="product in products | filter:query | orderBy:orderArray">
-					<td class="row_table td_five "><div class="td_div first"><a href="#/product/{{product.idProduct}}"><div class="modify"><div class="modifyicon"></div></div></a></div></td>
-					<td class="row_table  td_twenty"><div class="td_div ">&nbsp;{{product.code}}</div></td>
-					<td class="row_table cognome td_thirty"><div class="td_div ">&nbsp;{{product.description}} </div></td>
-					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{product.umselected.code}}</div></td>
-					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{product.sellprice}}</div></td>
-					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{product.category.name}}</div></td>
-					<td class="row_table td_ten"><div class="td_div ">&nbsp;{{product.group.name}}</div></td>
-					<td class="row_table td_five"><div class="td_div "><div class="deleteicon" id="del{{product.idProduct}}" ng-click="deleteElement(product.idProduct)"></div></div></td>
+				<tr  ng-repeat="product in products ">
+					<td ><a  class="matita" ng-click= "location.path('/product/'+product.idProduct)"></a></td>
+					<td >{{product.code}}</td>
+					<td >{{product.description}} </td>
+					<td class=>{{product.umselected.code}}</td>
+					<td class="  hidden_cell">{{product.sellprice}}</td>
+					<td class=" hidden_cell">{{product.category.name}}</td>
+					<td class=" hidden_cell">{{product.group.name}}</td>
+					<td ><a class="x" ng-click="deleteElement(customer.idCustomer)"></a></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+
+
 </div>
+</div>
+</div>
+</body>
+</html>
