@@ -48,6 +48,12 @@ public class TaxRate implements Ivo {
 			this.company.convertFromTable(taxrate.getCompany());
 		}
 	}
+	public GECOError control(User user){
+		if (this.idtaxrate == 0){
+			this.company = user.getCompany();
+		}
+		return control();
+	}
 	public GECOError control(){
 		GECOError ge = null;
 		

@@ -11,6 +11,7 @@ import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.List;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
+import it.progess.invoicecreator.vo.Promoter;
 import it.progess.invoicecreator.vo.Role;
 import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.Transporter;
@@ -627,6 +628,58 @@ public class RegistryService {
 			  Transporter sm = gson.fromJson(transporterobj,Transporter.class);
 			  RegistryDao dao = new RegistryDao();
 			  dao.deleteTransporter(sm);
+			  return gson.toJson(true);
+		  }catch(Exception e){
+			  return gson.toJson("");
+		  }
+	  }
+	  
+	  
+	  @GET
+	  @Path("promoter")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getPromoterList(@Context HttpServletRequest request){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getPromoterList(loggeduser));
+	  }
+	  @GET
+	  @Path("promoter/{idpromoter}")
+	  @Produces(MediaType.TEXT_HTML)
+	  public String singlePromoter(@PathParam("idpromoter") int id) {
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		Promoter promoter = new Promoter();
+		promoter = dao.getSinglePromoter(id);
+		return gson.toJson(promoter);
+	  }
+	  
+	  @PUT
+	  @Path("promoter")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String savePromoter(@Context HttpServletRequest request,@FormParam("promoters") String promoter){
+		  Gson gson = new Gson();
+		  Promoter sms = gson.fromJson(promoter,Promoter.class);
+		  RegistryDao dao = new RegistryDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.saveUpdatesPromoter(sms,loggeduser));
+	  }
+		/***
+		Delete user 
+	   */
+
+	  @DELETE
+	  @Path("promoter")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String deletePromoter(@FormParam("promoterobj") String promoterobj){
+		  Gson gson = new Gson();
+		  try{
+			  Promoter sm = gson.fromJson(promoterobj,Promoter.class);
+			  RegistryDao dao = new RegistryDao();
+			  dao.deletePromoter(sm);
 			  return gson.toJson(true);
 		  }catch(Exception e){
 			  return gson.toJson("");

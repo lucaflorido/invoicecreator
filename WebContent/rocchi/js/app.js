@@ -3,7 +3,8 @@ angular.module("rocchi.product",[]);
 angular.module("rocchi.list",[]);
 angular.module("rocchi.transporter",[]);
 angular.module("rocchi.documents",[]);
-angular.module("rocchi.parameters",[])
+angular.module("rocchi.parameters",[]);
+angular.module("rocchi.promoter",[]);
 var gecoApp = angular.module("gecoApp",
 ["ngRoute",
 "gecoControllers",
@@ -14,6 +15,7 @@ var gecoApp = angular.module("gecoApp",
 "rocchi.transporter",
 "rocchi.documents",
 "rocchi.parameters",
+"rocchi.promoter",
 "rocchi.list",
 'modules.common.shared',
 "gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
@@ -37,11 +39,20 @@ var gecoApp = angular.module("gecoApp",
 	                    DocumentList:main_domain+"/rest/head/head/",
 		                DocumentDetails:main_domain+"",
 		                UniteMeasure:main_domain+"/rest/basic/unitmeasure/",
+		                Promoter:main_domain+"/rest/registry/promoter/",
+		                Role:main_domain+"/rest/role/",
 		                TaxRate:main_domain+"/rest/basic/taxrate/"
 		            }
 		        };
 		    };
 		})
+.directive('fDatepicker', function(){
+      return {
+         link: function(scope, element) {
+            $(element).fdatepicker({format:"dd/mm/yyyy"})
+         }
+      }
+	})
 .directive('onFinishRender', function ($timeout) {
     return {
         restrict: 'A',
@@ -334,6 +345,14 @@ function($routeProvider) {
 			templateUrl: 'template/parameters/documents.htm',
 			controller: 'ParametersCtrl'	
 				
+		}).
+		when('/promoter', {
+			templateUrl: 'template/registry/promoterlist.htm',
+			controller: 'RocchiPromoterListCtrl'
+		}).
+		when('/promoter/:idpromoter', {
+			templateUrl: 'template/registry/promoterdetail.htm',
+			controller: 'RocchiPromoterDetailCtrl'
 		}).
 		otherwise({
 			redirectTo: '/login'

@@ -48,11 +48,12 @@ public class BasicService {
 	@Path("taxrate")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	public String saveTaxrates(@FormParam("taxrates") String taxrates){
+	public String saveTaxrates(@FormParam("taxrates") String taxrates,@Context HttpServletRequest request){
 	  Gson gson = new Gson();
 	  TaxRate[] taxratesarray = gson.fromJson(taxrates,TaxRate[].class);
 	  BasicDao taxratedao = new BasicDao();
-	  return gson.toJson(taxratedao.saveUpdatesTaxrate(taxratesarray));
+	  User loggeduser = HibernateUtils.getUserFromSession(request);
+	  return gson.toJson(taxratedao.saveUpdatesTaxrate(taxratesarray,loggeduser));
 	}
 	/***
 	Delete user 
@@ -403,20 +404,22 @@ public class BasicService {
 	  @GET
 	  @Path("categorycustomer")
  	  @Produces(MediaType.TEXT_PLAIN)
-	  public String getCategoryCustomerList(){
+	  public String getCategoryCustomerList(@Context HttpServletRequest request){
 		Gson gson = new Gson();
 		BasicDao dao = new BasicDao();
-		return gson.toJson(dao.getCategoryCustomerList());
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getCategoryCustomerList(loggeduser));
 	  }
 	  @PUT
 	  @Path("categorycustomer")
 	  @Produces(MediaType.TEXT_PLAIN)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveCategoryCustomer(@FormParam("categorycustomers") String categorycustomers){
+	  public String saveCategoryCustomer(@FormParam("categorycustomers") String categorycustomers,@Context HttpServletRequest request){
 		  Gson gson = new Gson();
 		  CategoryCustomer[] smsarray = gson.fromJson(categorycustomers,CategoryCustomer[].class);
 		  BasicDao dao = new BasicDao();
-		  return gson.toJson(dao.saveUpdatesCategoryCustomer(smsarray));
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.saveUpdatesCategoryCustomer(smsarray,loggeduser));
 	  }
 		/***
 		Delete user 
@@ -448,20 +451,22 @@ public class BasicService {
 	  @GET
 	  @Path("groupcustomer")
  	  @Produces(MediaType.TEXT_PLAIN)
-	  public String getGroupCustomerList(){
+	  public String getGroupCustomerList(@Context HttpServletRequest request){
 		Gson gson = new Gson();
 		BasicDao dao = new BasicDao();
-		return gson.toJson(dao.getGroupCustomerList());
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getGroupCustomerList(loggeduser));
 	  }
 	  @PUT
 	  @Path("groupcustomer")
 	  @Produces(MediaType.TEXT_PLAIN)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveGroupCustomer(@FormParam("groupcustomers") String groupcustomers){
+	  public String saveGroupCustomer(@FormParam("groupcustomers") String groupcustomers,@Context HttpServletRequest request){
 		  Gson gson = new Gson();
 		  GroupCustomer[] smsarray = gson.fromJson(groupcustomers,GroupCustomer[].class);
 		  BasicDao dao = new BasicDao();
-		  return gson.toJson(dao.saveUpdatesGroupCustomer(smsarray));
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.saveUpdatesGroupCustomer(smsarray,loggeduser));
 	  }
 		/***
 		Delete user 

@@ -4,6 +4,7 @@ import it.progess.invoicecreator.vo.Destination;
 import it.progess.invoicecreator.vo.Ivo;
 import it.progess.invoicecreator.vo.ListCustomer;
 
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -65,6 +66,24 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	@ManyToOne
 	@JoinColumn(name = "idTaxRate")
 	private TblTaxrate taxrate;
+	@Column(name="commission")
+	private Double commission;
+	@ManyToOne
+	@JoinColumn(name = "idPromoter")
+	private TblPromoter promoter;
+	
+	public TblPromoter getPromoter() {
+		return promoter;
+	}
+	public void setPromoter(TblPromoter promoter) {
+		this.promoter = promoter;
+	}
+	public Double getCommission() {
+		return commission;
+	}
+	public void setCommission(Double commission) {
+		this.commission = commission;
+	}
 	public TblCustomer(){
 		super();
 	}
@@ -200,6 +219,10 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 			this.payment = new TblPayment();
 			this.payment.convertToTable(c.getPayment());
 		}
+		if (c.getPromoter() !=null){
+			this.promoter = new TblPromoter();
+			this.promoter.convertToTable(c.getPromoter());
+		}
 		this.idCustomer = c.getIdCustomer();
 		this.serialnumber = c.getSerialnumber();
 		this.taxcode = c.getTaxcode();
@@ -212,6 +235,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 			this.taxrate.convertToTable(c.getTaxrate());
 			
 		}
+		this.commission = c.getCommission();
 	}
 	public void convertToTableSingle(Ivo obj){
 		Customer c = (Customer)obj;

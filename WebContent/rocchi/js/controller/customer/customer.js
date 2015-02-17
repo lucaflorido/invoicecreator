@@ -164,6 +164,10 @@ angular
 									.success(function(data) {
 										$scope.groups = data;
 									});
+							$http.get(AppConfig.ServiceUrls.Promoter)
+							.success(function(data) {
+								$scope.promoters = data;
+							});
 							$http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer)
 									.success(
 											function(data) {
@@ -191,27 +195,20 @@ angular
 															$scope.customer.category = {};
 														}
 													}
-												}/*
-													 * if ($scope.payments !=
-													 * null &&
-													 * $scope.customer.payment !=
-													 * null){ for(var i=0;i<$scope.payments.length;i++ ){
-													 * if
-													 * ($scope.customer.payment.idPayment ==
-													 * $scope.payments[i].idPayment){
-													 * $scope.currentPayment =
-													 * $scope.payments[i]; } } }
-													 * $http.get('rest/basic/taxrate').success(function(data){
-													 * $scope.taxrates= data;
-													 * for (var itx=0;itx<$scope.taxrates.length;itx++){
-													 * if($scope.customer.taxrate){
-													 * if
-													 * ($scope.customer.taxrate.idtaxrate ==
-													 * $scope.taxrates[itx].idtaxrate){
-													 * $scope.currentTaxRate =
-													 * $scope.taxrates[itx]; } } }
-													 * });
-													 */
+												}
+												if ($scope.promoters !== null
+														&& $scope.promoters !== undefined) {
+													for (var ip = 0; ip < $scope.promoters.length; ip++) {
+														if ($scope.customer.promoter != null) {
+															if ($scope.customer.promoter.idPromoter == $scope.promoters[ip].idPromoter) {
+																$scope.currentPromoter = $scope.promoters[ip];
+															}
+														} else {
+															$scope.customer.promoter = {};
+														}
+													}
+												}
+											
 											});
 							$scope.getListName = function(list) {
 								return list.code + ' ' + list.description + ' '
@@ -237,6 +234,7 @@ angular
 								$scope.customer.group = $scope.currentGroup;
 								$scope.customer.category = $scope.currentCategory;
 								$scope.customer.taxrate = $scope.currentTaxRate;
+								$scope.customer.promoter = $scope.currentPromoter;
 								$scope.msg.initialize();
 								$
 										.ajax({
@@ -250,8 +248,7 @@ angular
 												if (result.type == "success") {
 													$scope.customer.idCustomer = result.success;
 													$scope.idcustomer = result.success;
-													$scope.msg
-															.successMessage("CLIENTE SALVATO CON SUCCESSO");
+													$scope.msg.successMessage("CLIENTE SALVATO CON SUCCESSO");
 													$scope.$apply();
 												} else {
 													$scope.msg

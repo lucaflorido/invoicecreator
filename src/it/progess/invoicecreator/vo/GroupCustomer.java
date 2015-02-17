@@ -9,6 +9,14 @@ public class GroupCustomer implements Ivo{
 	private String code;
 	private String name;
 	private String description;
+	private Company company;
+	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public int getIdGroupCustomer() {
 		return idGroupCustomer;
 	}
@@ -39,6 +47,16 @@ public class GroupCustomer implements Ivo{
 		this.description = gc.getDescription();
 		this.idGroupCustomer = gc.getIdGroupCustomer();
 		this.name = gc.getName();
+		if (gc.getCompany() != null){
+			this.company = new Company();
+			this.company.convertFromTable(gc.getCompany());
+		}
+	}
+	public GECOObject control(User user){
+		if (this.idGroupCustomer == 0){
+			this.company = user.getCompany();
+		}
+		return control();
 	}
 	public GECOObject control(){
 		if (this.code == null || this.code.equals("") == true){

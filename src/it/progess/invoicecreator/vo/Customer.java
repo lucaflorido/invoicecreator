@@ -35,7 +35,21 @@ public class Customer implements Ivo{
 	private TaxRate taxrate;
 	private String nameUser;
 	private String surnameUser;
+	private Double commission;
+	private Promoter promoter;
 	
+	public Promoter getPromoter() {
+		return promoter;
+	}
+	public void setPromoter(Promoter promoter) {
+		this.promoter = promoter;
+	}
+	public Double getCommission() {
+		return commission;
+	}
+	public void setCommission(Double commission) {
+		this.commission = commission;
+	}
 	public String getNameUser() {
 		return nameUser;
 	}
@@ -193,10 +207,15 @@ public class Customer implements Ivo{
 			this.taxrate = new TaxRate();
 			this.taxrate.convertFromTable(c.getTaxrate());
 		}
+		if (c.getPromoter() !=null){
+			this.promoter = new Promoter();
+			this.promoter.convertFromTable(c.getPromoter());
+		}
 		this.idCustomer = c.getIdCustomer();
 		this.serialnumber = c.getSerialnumber();
 		this.taxcode = c.getTaxcode();
 		this.lists = new HashSet<ListCustomer>();
+		this.commission = c.getCommission();
 	}
 	public void convertFromTableSingle(Itbl obj){
 		TblCustomer c = (TblCustomer)obj;

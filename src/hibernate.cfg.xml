@@ -90,6 +90,7 @@
   		<mapping class="it.progess.invoicecreator.pojo.TblListSupplier"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblSupplier"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblTransporter"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblPromoter"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblHead"></mapping>	
   		<mapping class="it.progess.invoicecreator.pojo.TblRow"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblGenerateHeadRow"></mapping>

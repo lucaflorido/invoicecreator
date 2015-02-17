@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +24,15 @@ public class TblCategoryCustomer implements Itbl {
 	private String name;
 	@Column(name="description")
 	private String description;
+	@ManyToOne
+	@JoinColumn(name = "idCompany")
+	private TblCompany company;
+	public TblCompany getCompany() {
+		return company;
+	}
+	public void setCompany(TblCompany company) {
+		this.company = company;
+	}
 	public int getIdCategoryCustomer() {
 		return idCategoryCustomer;
 	}
@@ -52,5 +63,9 @@ public class TblCategoryCustomer implements Itbl {
 		this.description = cc.getDescription();
 		this.idCategoryCustomer = cc.getIdCategoryCustomer();
 		this.name = cc.getName();
+		if (cc.getCompany() != null){
+			this.company = new TblCompany();
+			this.company.convertToTable(cc.getCompany());
+		}
 	}
 }

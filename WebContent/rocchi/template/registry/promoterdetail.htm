@@ -1,0 +1,84 @@
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>{{promoter.promotername}}</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="savePromoter()" class="button">Salva</a></li>
+		</ul>
+	</div>
+	</div>
+<div class="row">
+<form>
+	<fieldset>
+		<legend>Anagrafica</legend>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Codice<input type="text"
+					 ng-model="promoter.code"
+					value="{{promoter.code}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Nome <input type="text"
+					 ng-model="promoter.name"
+					value="{{promoter.name}}" />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Cognome <input type="text"
+					 ng-model="promoter.surname"
+					value="{{promoter.surname}}" />
+				</label>
+			</div>
+		</div>
+		
+	</fieldset>
+	<fieldset>
+		<legend>Contatti</legend>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Telefono <input type="text"
+					 ng-model="promoter.contact.phone1" value="{{promoter.contact.phone1}}" capitalize />
+				</label>
+			</div>
+			<div class="large-6 columns">
+				<label>Telefono Aggiuntivo <input type="text"
+					ng-model="promoter.contact.phone2" value="{{promoter.contact.phone2}}" />
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Cellulare <input type="text"
+					 ng-model="promoter.contact.mobile1" value="{{promoter.contact.mobile1}}" capitalize />
+				</label>
+			</div>
+			<div class="large-6 columns">
+				<label>Cellulare Aggiuntivo <input type="text"
+					ng-model="promoter.contact.mobile2" value="{{promoter.contact.mobile2}}" />
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Email <input type="text"
+					 ng-model="promoter.contact.email1" value="{{promoter.contact.email1}}" capitalize />
+				</label>
+			</div>
+			<div class="large-6 columns">
+				<label>Email Aggiuntiva <input type="text"
+					ng-model="promoter.contact.email2" value="{{promoter.contact.email2}}" />
+				</label>
+			</div>
+		</div>
+	</fieldset>
+	
+</form>
+</div>
+

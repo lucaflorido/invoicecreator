@@ -2,6 +2,7 @@ package it.progess.invoicecreator.vo;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCategoryCustomer;
+import it.progess.invoicecreator.pojo.TblCompany;
 import it.progess.invoicecreator.properties.GECOParameter;
 
 
@@ -10,6 +11,14 @@ public class CategoryCustomer implements Ivo {
 	private String code;
 	private String name;
 	private String description;
+	private Company company;
+	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public int getIdCategoryCustomer() {
 		return idCategoryCustomer;
 	}
@@ -40,6 +49,16 @@ public class CategoryCustomer implements Ivo {
 		this.description = cc.getDescription();
 		this.idCategoryCustomer = cc.getIdCategoryCustomer();
 		this.name = cc.getName();
+		if (cc.getCompany() != null){
+			this.company = new Company();
+			this.company.convertFromTable(cc.getCompany());
+		}
+	}
+	public GECOObject control(User user){
+		if (this.idCategoryCustomer == 0){
+			this.company = user.getCompany();
+		}
+		return control();
 	}
 	public GECOObject control(){
 		if (this.code == null || this.code.equals("") == true){

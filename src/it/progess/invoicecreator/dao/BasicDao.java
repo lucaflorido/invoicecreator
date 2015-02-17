@@ -91,14 +91,14 @@ public class BasicDao {
 	 * @param taxrates
 	 * @return
 	 */
-	public GECOObject saveUpdatesTaxrate(TaxRate[] taxrates){
+	public GECOObject saveUpdatesTaxrate(TaxRate[] taxrates,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< taxrates.length;i++){
 				TaxRate taxrate = taxrates[i];
-				if (taxrate.control() == null){
+				if (taxrate.control(user) == null){
 					TblTaxrate tbltaxrate = new TblTaxrate();
 					tbltaxrate.convertToTable(taxrate);
 					session.saveOrUpdate(tbltaxrate);
@@ -121,6 +121,7 @@ public class BasicDao {
 		}
 		return new GECOSuccess();
 	}
+	
 	/***
 	 * DELETE A SINGLE TAXRATE
 	 * **/
@@ -153,6 +154,7 @@ public class BasicDao {
 		ArrayList<UnitMeasure> list = new ArrayList<UnitMeasure>();
 		try{
 			Criteria cr = session.createCriteria(TblUnitMeasure.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblUnitMeasure> unitmeasures = cr.list();
 			if (unitmeasures.size() > 0){
 				for (Iterator<TblUnitMeasure> iterator = unitmeasures.iterator(); iterator.hasNext();){
@@ -238,6 +240,7 @@ public class BasicDao {
 		ArrayList<StoreMovement> list = new ArrayList<StoreMovement>();
 		try{
 			Criteria cr = session.createCriteria(TblStoreMovement.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblStoreMovement> storemovements = cr.list();
 			if (storemovements.size() > 0){
 				for (Iterator<TblStoreMovement> iterator = storemovements.iterator(); iterator.hasNext();){
@@ -324,6 +327,7 @@ public class BasicDao {
 		ArrayList<Counter> list = new ArrayList<Counter>();
 		try{
 			Criteria cr = session.createCriteria(TblCounter.class,"counter");
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCounter> counters = cr.list();
 			if (counters.size() > 0){
 				for (Iterator<TblCounter> iterator = counters.iterator(); iterator.hasNext();){
@@ -348,6 +352,7 @@ public class BasicDao {
 		try{
 			Criteria cr = session.createCriteria(TblCounter.class,"counter");
 			cr.add(Restrictions.eq("counter.company.idCompany", user.getCompany().getIdCompany()));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCounter> counters = cr.list();
 			if (counters.size() > 0){
 				for (Iterator<TblCounter> iterator = counters.iterator(); iterator.hasNext();){
@@ -407,6 +412,7 @@ public class BasicDao {
 		try{
 			Criteria cr = session.createCriteria(TblCounter.class,"counter");
 			cr.add(Restrictions.eq("counter.idCounter",idCounter));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCounter> counters = cr.list();
 			if (counters.size() > 0){
 				for (Iterator<TblCounter> iterator = counters.iterator(); iterator.hasNext();){
@@ -683,6 +689,7 @@ public class BasicDao {
 		ArrayList<GroupProduct> list = new ArrayList<GroupProduct>();
 		try{
 			Criteria cr = session.createCriteria(TblGroupProduct.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblGroupProduct> groupproducts = cr.list();
 			if (groupproducts.size() > 0){
 				for (Iterator<TblGroupProduct> iterator = groupproducts.iterator(); iterator.hasNext();){
@@ -775,6 +782,7 @@ public class BasicDao {
 		ArrayList<CategoryProduct> list = new ArrayList<CategoryProduct>();
 		try{
 			Criteria cr = session.createCriteria(TblCategoryProduct.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCategoryProduct> categoryproducts = cr.list();
 			if (categoryproducts.size() > 0){
 				for (Iterator<TblCategoryProduct> iterator = categoryproducts.iterator(); iterator.hasNext();){
@@ -853,11 +861,13 @@ public class BasicDao {
 	/*****
 	 * Get List of CategoryProduct 
 	 */
-	public ArrayList<CategoryCustomer> getCategoryCustomerList(){
+	public ArrayList<CategoryCustomer> getCategoryCustomerList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<CategoryCustomer> list = new ArrayList<CategoryCustomer>();
 		try{
-			Criteria cr = session.createCriteria(TblCategoryCustomer.class);
+			Criteria cr = session.createCriteria(TblCategoryCustomer.class,"category");
+			checkORCompany("category",user,cr);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCategoryCustomer> categorycustomers = cr.list();
 			if (categorycustomers.size() > 0){
 				for (Iterator<TblCategoryCustomer> iterator = categorycustomers.iterator(); iterator.hasNext();){
@@ -879,14 +889,14 @@ public class BasicDao {
 	/***
 	 * Save update CategoryCustomers
 	 * **/
-	public GECOObject saveUpdatesCategoryCustomer(CategoryCustomer[] sms){
+	public GECOObject saveUpdatesCategoryCustomer(CategoryCustomer[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< sms.length;i++){
 				CategoryCustomer sm = sms[i];
-				if (sm.control() == null ){
+				if (sm.control(user) == null ){
 					TblCategoryCustomer tblsm = new TblCategoryCustomer();
 					tblsm.convertToTable(sm);
 					session.saveOrUpdate(tblsm);
@@ -936,11 +946,13 @@ public class BasicDao {
 	/*****
 	 * Get List of CategoryProduct 
 	 */
-	public ArrayList<GroupCustomer> getGroupCustomerList(){
+	public ArrayList<GroupCustomer> getGroupCustomerList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<GroupCustomer> list = new ArrayList<GroupCustomer>();
 		try{
-			Criteria cr = session.createCriteria(TblGroupCustomer.class);
+			Criteria cr = session.createCriteria(TblGroupCustomer.class,"group");
+			checkORCompany("group",user,cr);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblGroupCustomer> groupcustomers = cr.list();
 			if (groupcustomers.size() > 0){
 				for (Iterator<TblGroupCustomer> iterator = groupcustomers.iterator(); iterator.hasNext();){
@@ -962,14 +974,14 @@ public class BasicDao {
 	/***
 	 * Save update GroupCustomers
 	 * **/
-	public GECOObject saveUpdatesGroupCustomer(GroupCustomer[] sms){
+	public GECOObject saveUpdatesGroupCustomer(GroupCustomer[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< sms.length;i++){
 				GroupCustomer sm = sms[i];
-				if (sm.control() == null ){
+				if (sm.control(user) == null ){
 					TblGroupCustomer tblsm = new TblGroupCustomer();
 					tblsm.convertToTable(sm);
 					session.saveOrUpdate(tblsm);
@@ -1026,6 +1038,7 @@ public class BasicDao {
 		ArrayList<CategorySupplier> list = new ArrayList<CategorySupplier>();
 		try{
 			Criteria cr = session.createCriteria(TblCategorySupplier.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCategorySupplier> categorysuppliers = cr.list();
 			if (categorysuppliers.size() > 0){
 				for (Iterator<TblCategorySupplier> iterator = categorysuppliers.iterator(); iterator.hasNext();){
@@ -1109,6 +1122,7 @@ public class BasicDao {
 		ArrayList<GroupSupplier> list = new ArrayList<GroupSupplier>();
 		try{
 			Criteria cr = session.createCriteria(TblGroupSupplier.class);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblGroupSupplier> groupsuppliers = cr.list();
 			if (groupsuppliers.size() > 0){
 				for (Iterator<TblGroupSupplier> iterator = groupsuppliers.iterator(); iterator.hasNext();){

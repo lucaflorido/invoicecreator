@@ -11,6 +11,7 @@ import it.progess.invoicecreator.pojo.TblList;
 import it.progess.invoicecreator.pojo.TblListCustomer;
 import it.progess.invoicecreator.pojo.TblListProduct;
 import it.progess.invoicecreator.pojo.TblProduct;
+import it.progess.invoicecreator.pojo.TblPromoter;
 import it.progess.invoicecreator.pojo.TblRow;
 import it.progess.invoicecreator.pojo.TblSupplier;
 import it.progess.invoicecreator.pojo.TblTransporter;
@@ -33,6 +34,7 @@ import it.progess.invoicecreator.vo.ListCustomer;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.ProductDatePrice;
+import it.progess.invoicecreator.vo.Promoter;
 import it.progess.invoicecreator.vo.Role;
 import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.Transporter;
@@ -1493,5 +1495,124 @@ public class RegistryDao {
 		}
 		
 		return transporter;
+	}
+	/*********************
+	 * *
+	 * */
+	public ArrayList<Promoter> getPromoterList(User loggeduser){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Promoter> list = new ArrayList<Promoter>();
+		try{
+			Criteria cr = session.createCriteria(TblPromoter.class,"promoter");
+			cr.add(Restrictions.eq("promoter.company.idCompany", loggeduser.getCompany().getIdCompany()));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblPromoter> promoters = cr.list();
+			if (promoters.size() > 0){
+				for (Iterator<TblPromoter> iterator = promoters.iterator(); iterator.hasNext();){
+					TblPromoter tblpromoter = iterator.next();
+					Promoter promoter = new Promoter();
+					//customer = getMockCustomer();
+					promoter.convertFromTable(tblpromoter);
+					list.add(promoter);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public GECOObject saveUpdatesPromoter(Promoter sm,User user){
+		int id=0;
+		if (sm.control() == null){
+			Session session = HibernateUtils.getSessionFactory().openSession();
+			Transaction tx = null;
+			sm.setCompany(user.getCompany());
+			try{
+				tx = session.beginTransaction();
+				if (sm.control() == null){
+						TblPromoter tblsm = new TblPromoter();
+						tblsm.convertToTable(sm);
+						session.saveOrUpdate(tblsm);
+						id=tblsm.getIdPromoter();
+				}
+				tx.commit();
+			}catch(HibernateException e){
+				System.err.println("ERROR IN LIST!!!!!!");
+				if (tx!= null) tx.rollback();
+				e.printStackTrace();
+				return new GECOError(GECOParameter.ERROR_HIBERNATE, "Errore nel salvataggio dei dati");
+			}finally{
+				session.close();
+			}
+		}else{
+			return sm.control();
+		}
+		return new GECOSuccess(id);
+	}
+	public GECOObject createUserPromoter(Promoter sm,User loggeduser,Role r){
+		User user = new User();
+		user.setActive(true);
+		user.setName(sm.getName());
+		user.setSurname(sm.getSurname());
+		user.setEmail(sm.getContact().getEmail1());
+		user.setUsername(sm.getSurname());
+		user.setCompany(loggeduser.getCompany());
+		user.setContact(sm.getContact());
+		user.setRole(r);
+		UserDao usdao = new UserDao();
+		usdao.saveUpdate(user);
+		return new GECOSuccess();
+	} 
+	public Boolean deletePromoter(Promoter sm){
+		TblPromoter tblsm = new TblPromoter();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return true;
+		
+	}
+	
+	public Promoter getSinglePromoter(int idpromoter){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Promoter promoter = new Promoter();
+		//customer = getMockCustomer();
+		try{
+			
+			Criteria cr = session.createCriteria(TblPromoter.class,"promoter");
+			cr.add(Restrictions.eq("promoter.idPromoter", idpromoter));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List promoters = cr.list();
+			if (promoters.size() > 0){
+				
+				promoter.convertFromTable((TblPromoter)promoters.get(0));
+				
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
+		
+		return promoter;
 	}
 }

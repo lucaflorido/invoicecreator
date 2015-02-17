@@ -1,124 +1,64 @@
-<div class="container userlist clearfix">
-	<table class="menutable">
-		<thead>
-			<tr class="title_tr">
-				<td  class="title_td">
-					LISTINO: {{list.code}} {{list.description}}
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="buttontd">
-					<a>
-						<div class="  addbutton admin_grant"  ng-click="saveProduct()">
-							<div class="printlabel">
-								Salva
-							</div>
-						</div>
-					</a>
-				</td >
-				<td class="buttontd disabled">
-					<a>
-						<div class="  addbutton admin_grant"  >
-							<div class="printlabel">
-								Ricarica
-							</div>
-						</div>
-					</a>
-				</td >
-				
-			</tr>
-		</tbody>
-	</table>
-	<div id="accordion" create-accordion>
-		<h3>Anagrafica</h3>
-		<div>
-			<p>
-				<div class="credentials">
-					<div class="credential">
-						<div class="fields left">
-							<div class="label name">Codice *</div>
-							<div class="field name"><input class="inputfield" id="ifname" ng-model="list.code" value="{{list.code}}"  /></div>
-							<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-						</div>
-						<div class="fields right">
-							<div class="label name">Descrizione *</div>
-							<div class="field name"><input class="inputfield" id="ifname" ng-model="list.description" value="{{list.description}}"  /></div>
-							<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-						</div>
-					</div>
-					<div class="credential">
-						<div class="fields left ">
-							<div class="label name">Data Validit&#224; *</div>
-							<div class="field name control-group input-append">
-							<input class="inputfield datepicker" type="text" id="startDate" ng-model="list.startdate" value="{{list.startdate}}"   />
-							</div>
-							<div class="error" id="val_ifname" >Campo obbligatorio</div> 
-						</div>
-						<div class="fields left ">
-							<div class="label name">Incremento</div>
-							<div class="field name control-group input-append">
-							<input  type="text" id="listincrement" ng-model="newList.value" value="{{newList.value}}"   />
-							Percentuale
-							<input  type="checkbox" id="listincrement" ng-model="newList.isPercentage"    />
-							</div>
-							
-						</div>
-					</div>
-				</div>
-			</p>
-		</div>
-		
-		<h3>Articoli</h3>
-		<div>
-			<p>
-				<div class="credentials">
-			<div class="credential">
-				<div class="detailview"  >
-						<div class="add_container" ng-click="addProdElement(list)">
-							<div class="addlabel">
-								Aggiungi Articolo 
-							</div>
-							<div class="add buttonicon">
-							</div>
-						</div>
-						<table class="GECO_table  clearfix">
-							<thead>
-								<tr class="header_table">
-									<td class="row_table td_five"><div class="td_div first">&nbsp;</div></td>
-									<td class="row_table td_five"><div class="td_div ">Codice</div></td>
-									<td class="row_table td_five"><div class="td_div ">Descrizione</div></td>
-									<td class="row_table td_five"><div class="td_div ">U.M.</div></td>
-									<td class="row_table td_five"><div class="td_div ">Prezzo</div></td>
-									<td class="row_table td_five"><div class="td_div ">&nbsp;</div></td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="tr_table" ng-repeat="prod in list.listproduct | orderBy:orderYear">
-									<td class="row_table td_five"><div class="td_div first"><a ng-click="changeProdElement(prod)" ><div class=" modify"><div class="modifyicon"></div></div></a></div></td>
-									<td class="row_table td_five"><div class="td_div ">	<div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.product.code}}</div>
-											<div><select ng-if="prodid == prod.idListProduct" id="selcounter" class="inputfield" ng-model="currentProd"    ng-options="product as product.code for product in products" ng-change="prod.product = currentProd" ></select>  </div>
-										</div></td>
-									<td class="row_table td_five"><div class="td_div "><div >&nbsp;{{prod.product.description}}</div></div></td>
-									<td class="row_table td_five"><div class="td_div "><div >&nbsp;{{prod.product.ums[0].um.code}}</div></div></td>
-									<td class="row_table td_five"><div class="td_div "><div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.price}}</div>
-											<div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.price"  value="{{prod.price}}" />  </div></div></td>
-									<td class="row_table td_five"><div class="td_div "><div class="deleteicon" id="del{{list.idProduct}}" ng-click="deleteElement(list.idProduct)"></div></div></td>
-								</tr>
-							</tbody>
-						</table>
-						
-					</div>
-			</div>
-		<div>
-			</p>
-		</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
-	
-	
-	
-	
-	
-	
 </div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>{{list.name}}</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="saveProduct()" class="button">Salva</a></li>
+		</ul>
+	</div>
+</div>
+<div class="row">
+<form>
+	<fieldset>
+		
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Codice<input type="text"
+					 ng-model="list.code"
+					value="{{list.code}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Name<input type="text"
+					 ng-model="list.name"
+					value="{{list.name}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Validità<input type="text"
+					 ng-model="list.startdate"
+					value="{{list.startdate}}" capitalize f-datepicker />
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-12 columns">
+				<label>Descrizione <input type="text"
+					 ng-model="list.description"
+					value="{{list.description}}" />
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Incremento<input type="text"
+					 ng-model="list.increment"
+					value="{{list.increment}}" capitalize />
+				</label>
+			</div>
+			<div class="large-8 columns">
+				<label>Percentuale<input type="text"
+					 ng-model="list.isPercentage"
+					value="{{list.isPercentage}}" capitalize />
+				</label>
+			</div>
+		</div>
+	</fieldset>
+</form>
+</div>		

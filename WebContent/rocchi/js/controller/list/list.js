@@ -38,12 +38,13 @@ angular.module("rocchi.list")
 		var date = list.startdate.split("/");
 		return date[2]+date[1]+date[0];
 	};
-}]);
-gecoRegistryControllers.controller('RocchiListDetailCtrl',["$scope","$http","$routeParams","ScopeFactory","AppConfig",function($scope,$http,$routeParams,ScopeFactory,AppConfig){
+}])
+.controller('RocchiListDetailCtrl',["$scope","$http","$routeParams","ScopeFactory","AppConfig","AlertsFactory",function($scope,$http,$routeParams,ScopeFactory,AppConfig,AlertsFactory){
     
 	GECO_validator.startupvalidator();
-	$scope.newList = {isPercentage:false};
-	$(".datepicker").datepicker({ dateFormat: "dd/mm/yy" });
+	$scope.newList = {isPercentage:true};
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
 	$scope.idlist= $routeParams.idlist;
 	$http.get(AppConfig.ServiceUrls.Product).success(function(data){
 		$scope.products= data;
@@ -81,15 +82,15 @@ gecoRegistryControllers.controller('RocchiListDetailCtrl',["$scope","$http","$ro
 					if (result.type == "success"){	
 						$scope.list.idList = result.success;
 						$scope.idlist = result.success;
-						$scope.confirmSaved();
+						$scope.msg.successMessage("LISTINO SALVATO CON SUCCESSO");
 						$http.get(AppConfig.ServiceUrls.List+$scope.idlist).success(function(data){
 							$scope.list= data;
 						});
 					}else{
-						$scope.errorMessage(result.errorMessage);
+						$scope.msg.alertMessage(result.errorMessage);
 					}	
 				},error:function(data){
-					$scope.errorMessage(result.errorMessage);
+					$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
 				}	
 			})
 		//}
