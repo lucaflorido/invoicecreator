@@ -4,6 +4,7 @@ import it.progess.invoicecreator.pojo.TblUser;
 import it.progess.invoicecreator.vo.User;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -89,5 +90,37 @@ public class HibernateUtils {
 	public static double rounddouble(double a){
 		double b = Math.round(a*100.0d)/100.0d;
 		return b;
+	}
+	public static float calculatePercentage(float total,float percentage){
+		float res =0;
+		res  =total/100 *percentage;
+		BigDecimal bd = new BigDecimal(res);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        res= bd.floatValue();
+		return res;
+	}
+	public static float calculateFromPercentage(float total,float percentage){
+		float res =0;
+		res  =100*total/(100 +percentage);
+		BigDecimal bd = new BigDecimal(res);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        res= bd.floatValue();
+		return res;
+	}
+	public static double calculatePercentage(double total,double percentage){
+		double res =0;
+		res  =total/100 *percentage;
+		BigDecimal bd = new BigDecimal(res);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        res= bd.doubleValue();
+		return res;
+	}
+	public static double calculateFromPercentage(double total,double percentage){
+		double res =0;
+		res  =100*total/(100 +percentage);
+		BigDecimal bd = new BigDecimal(res);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        res= bd.doubleValue();
+		return res;
 	}
 }

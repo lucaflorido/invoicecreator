@@ -31,6 +31,7 @@ import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.GroupCustomer;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.ListCustomer;
+import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.ProductDatePrice;
@@ -338,6 +339,7 @@ public class RegistryDao {
 		try{
 			Criteria cr = session.createCriteria(TblProduct.class,"product");
 			cr.add(Restrictions.eq("product.company.idCompany",user.getCompany().getIdCompany() ));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblProduct> products = cr.list();
 			if (products.size() > 0){
 				for (Iterator<TblProduct> iterator = products.iterator(); iterator.hasNext();){
@@ -710,6 +712,9 @@ public class RegistryDao {
 	public GECOObject saveUpdatesList(NewList nlist,User user){
 		int id = 0;
 		it.progess.invoicecreator.vo.List sm = nlist.getList();
+		if (sm.getIdList() == 0 && sm.isFill()){
+			this.setAllProductsInList(sm, user);
+		}
 		if (sm.control() == null){
 			sm.setCompany(user.getCompany());
 			Date lastDate = getDate(sm.getIdList());
@@ -746,6 +751,18 @@ public class RegistryDao {
 			return sm.control();
 		}
 		return new GECOSuccess(id);
+	}
+	private void setAllProductsInList(it.progess.invoicecreator.vo.List l,User user){
+		ArrayList<Product> prods = getProductList(user);
+		l.setListproduct(new HashSet<ListProduct>());
+		for (int i =0; i<prods.size();i++){
+			Product p = prods.get(i);
+			ListProduct lp = new ListProduct();
+			lp.setProduct(p);
+			float pricediff = p.getPurchaseprice() / 100f * l.getIncrement(); 
+			lp.setPrice(p.getPurchaseprice() + pricediff);
+			l.getListproduct().add(lp);
+		}
 	}
 	public Date getDate(int idList){
 		Session session = HibernateUtils.getSessionFactory().openSession();

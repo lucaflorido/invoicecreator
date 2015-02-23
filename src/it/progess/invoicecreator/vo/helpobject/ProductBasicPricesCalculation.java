@@ -1,5 +1,7 @@
 package it.progess.invoicecreator.vo.helpobject;
 
+import it.progess.invoicecreator.hibernate.DataUtilConverter;
+import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.vo.Product;
 
 import java.math.BigDecimal;
@@ -8,6 +10,21 @@ public class ProductBasicPricesCalculation {
 	private float purchaseprice;
 	private float percentage;
 	private float sellprice;
+	private float endprice;
+	private float taxrate;
+	
+	public float getEndprice() {
+		return endprice;
+	}
+	public void setEndprice(float endprice) {
+		this.endprice = endprice;
+	}
+	public float getTaxrate() {
+		return taxrate;
+	}
+	public void setTaxrate(float taxrate) {
+		this.taxrate = taxrate;
+	}
 	public float getPurchaseprice() {
 		return purchaseprice;
 	}
@@ -36,12 +53,32 @@ public class ProductBasicPricesCalculation {
 		}else{
 			this.percentage = 0;
 		}
+		float taxdiff = HibernateUtils.calculatePercentage(sellprice, this.taxrate);
+        this.endprice = this.sellprice+taxdiff;
 	}
 	public void calculateSellPrice(){
 		this.sellprice =(this.purchaseprice/100*this.percentage)+this.purchaseprice;
 		BigDecimal bd = new BigDecimal(this.sellprice);
         bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.sellprice= bd.floatValue();
+        float taxdiff = HibernateUtils.calculatePercentage(sellprice, this.taxrate);
+        this.endprice = this.sellprice+taxdiff;
+	}
+	public void calculateFromTotalPrice(){
+		this.sellprice =HibernateUtils.calculateFromPercentage(this.endprice, this.taxrate);
+		BigDecimal bd = new BigDecimal(this.sellprice);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.sellprice= bd.floatValue();
+        float inc = this.sellprice - this.purchaseprice;
+		if (inc > 0){
+			this.percentage =inc*100/this.purchaseprice;
+			BigDecimal bdr = new BigDecimal(this.percentage);
+	        bdr = bdr.setScale(2, BigDecimal.ROUND_HALF_UP);
+	        this.percentage= bdr.floatValue();
+		}else{
+			this.percentage = 0;
+		}
+        
 	}
 	public void percentageIncrement(float inc,Product prod){
 		copyFromProd(prod);

@@ -67,6 +67,81 @@ angular.module("rocchi.list")
 		}
 		$scope.prodid = ump.idListProduct
 	}
+	$scope.calculatePercentage = function(listprod){
+		var obj = {purchaseprice:listprod.product.purchaseprice,sellprice:listprod.price,percentage:listprod.percentage,endprice:listprod.endprice,taxrate:listprod.product.taxrate.value};
+		$.ajax({
+			url:AppConfig.ServiceUrls.UtilPricePercentage,
+			type:"POST",
+			data:"prices="+JSON.stringify(obj),
+			success:function(data){
+				result = JSON.parse(data);
+				if (result.type == "success"){	
+					var priceCalc = result.success;
+					listprod.price = priceCalc.sellprice;
+					listprod.percentage = priceCalc.percentage;
+					listprod.endprice = priceCalc.endprice;
+					$scope.msg.infoMessage("SALVARE PER REGISTRARE LE MODIFICHE");
+					$scope.$apply();
+				}else{
+					$scope.msg.alertMessage(result.errorMessage);
+					$scope.$apply();
+				}	
+			},error:function(data){
+				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
+				$scope.$apply();
+			}	
+		})
+	};
+	$scope.calculateSellPrice = function(listprod){
+		var obj = {purchaseprice:listprod.product.purchaseprice,sellprice:listprod.price,percentage:listprod.percentage,endprice:listprod.endprice,taxrate:listprod.product.taxrate.value};
+		$.ajax({
+			url:AppConfig.ServiceUrls.UtilPricePrice,
+			type:"POST",
+			data:"prices="+JSON.stringify(obj),
+			success:function(data){
+				result = JSON.parse(data);
+				if (result.type == "success"){	
+					var priceCalc = result.success;
+					listprod.price = priceCalc.sellprice;
+					listprod.percentage = priceCalc.percentage;
+					listprod.endprice = priceCalc.endprice;
+					$scope.msg.infoMessage("SALVARE PER REGISTRARE LE MODIFICHE");
+					$scope.$apply();
+				}else{
+					$scope.msg.alertMessage(result.errorMessage);
+					$scope.$apply();
+				}	
+			},error:function(data){
+				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
+				$scope.$apply();
+			}	
+		})
+	};
+	$scope.calculateEndPrice = function(listprod){
+		var obj = {purchaseprice:listprod.product.purchaseprice,sellprice:listprod.price,percentage:listprod.percentage,endprice:listprod.endprice,taxrate:listprod.product.taxrate.value};
+		$.ajax({
+			url:AppConfig.ServiceUrls.UtilPriceEndPrice,
+			type:"POST",
+			data:"prices="+JSON.stringify(obj),
+			success:function(data){
+				result = JSON.parse(data);
+				if (result.type == "success"){	
+					var priceCalc = result.success;
+					listprod.price = priceCalc.sellprice;
+					listprod.percentage = priceCalc.percentage;
+					listprod.endprice = priceCalc.endprice;
+					$scope.msg.infoMessage("SALVARE PER REGISTRARE LE MODIFICHE");
+					$scope.$apply();
+				}else{
+					$scope.msg.alertMessage(result.errorMessage);
+					$scope.$apply();
+				}	
+			},error:function(data){
+				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
+				$scope.$apply();
+			}	
+		})
+	};
 	$scope.saveProduct = function(){
 	//if (GECO_validator.requiredFields()== true && GECO_validator.emailFields()==true){
 			

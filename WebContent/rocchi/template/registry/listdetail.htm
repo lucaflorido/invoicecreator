@@ -52,13 +52,60 @@
 					value="{{list.increment}}" capitalize />
 				</label>
 			</div>
-			<div class="large-8 columns">
-				<label>Percentuale<input type="text"
+			<div class="large-4 columns">
+				<label>Percentuale<input type="checkbox"
 					 ng-model="list.isPercentage"
 					value="{{list.isPercentage}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Forza Prodotti<input type="checkbox"
+					 ng-model="list.fill"
+					value="{{list.fill}}" capitalize />
 				</label>
 			</div>
 		</div>
 	</fieldset>
 </form>
+</div>	
+<div	class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h4>PRODOTTI</h4>
+	</div>
+</div>
+<div	class="row">
+<table st-table="prodsToDisplay" class="table table-striped" st-safe-src="list.listproduct">
+  <thead>
+    <tr>
+      <th width="50"></th>
+      <th width="20%"  st-sort="product.code" st-sort-default="reverse" st-skip-natural="true">Codice</th>
+      <th width="50%"  st-sort="product.description" st-sort-default="reverse" st-skip-natural="true">Descrizione</th>
+      <th width="10%"   st-sort-default="reverse" st-skip-natural="true">UM</th>
+      <th width="20%"   st-sort-default="reverse" st-skip-natural="true">Prezzo Netto</th>
+      <th width="20%"   >%</th>
+      <th width="20%"   st-sort-default="reverse" st-skip-natural="true">Aliquota</th>
+      <th width="20%"   st-sort-default="reverse" st-skip-natural="true">Prezzo</th>
+      <th width="50"></th>
+    </tr>
+    <tr>
+      <th colspan="8"><input st-search="" class="form-control" placeholder="Ricerca Globale ..." type="text"/></th> 
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="prod in prodsToDisplay ">
+      <td><a  class="matita" ng-click="changeProdElement(prod)"></a> </td>
+      <td class="hidden_cell">{{prod.product.code}}</td>
+      <td >{{prod.product.description}}</td>
+      <td >{{prod.product.umselected.code}}</td>
+      <td ><div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.price}}</div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.price"  value="{{prod.price}}" ng-blur="calculatePercentage(prod)" /> </td>
+      <td ><div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.percentage}}</div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.percentage"  value="{{prod.percentage}}" ng-blur="calculateSellPrice(prod)" /> </td>
+      <td >{{prod.product.taxrate.value}}</td>
+      <td ><div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.endprice}}</div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.endprice"  value="{{prod.endprice}}" ng-blur="calculateEndPrice(prod)" /> </td>
+      <td><a class="x" ></a></td>
+
+    </tr>
+  
+  
+  </tbody>
+</table>
 </div>		

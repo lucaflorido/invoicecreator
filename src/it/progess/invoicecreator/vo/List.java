@@ -21,6 +21,28 @@ public class List implements Ivo {
 	private String startdate;
 	private Set<ListProduct> listproduct;
 	private boolean active;
+	private boolean fill;
+	private float increment;
+	private boolean isPercentage;
+	
+	public float getIncrement() {
+		return increment;
+	}
+	public void setIncrement(float increment) {
+		this.increment = increment;
+	}
+	public boolean isPercentage() {
+		return isPercentage;
+	}
+	public void setPercentage(boolean isPercentage) {
+		this.isPercentage = isPercentage;
+	}
+	public boolean isFill() {
+		return fill;
+	}
+	public void setFill(boolean fill) {
+		this.fill = fill;
+	}
 	private Company company;
 	
 	public Company getCompany() {
@@ -78,6 +100,8 @@ public class List implements Ivo {
 		this.idList = lt.getIdList();
 		this.name  = lt.getName();
 		this.active = lt.isActive();
+		this.isPercentage = lt.isPercentage();
+		this.increment = lt.getIncrement();
 		this.startdate =  DataUtilConverter.convertStringFromDate( lt.getStartdate());
 		if (lt.getCompany() != null){
 			this.company = new Company();
@@ -96,6 +120,8 @@ public class List implements Ivo {
 		this.idList = lt.getIdList();
 		this.name  = lt.getName();
 		this.active = lt.isActive();
+		this.isPercentage = lt.isPercentage();
+		this.increment = lt.getIncrement();
 		this.startdate = DataUtilConverter.convertStringFromDate( lt.getStartdate());
 		this.listproduct = new HashSet<ListProduct>();
 		if (lt.getCompany() != null){
@@ -162,10 +188,10 @@ public class List implements Ivo {
 		if (this.code == null || this.code.equals("") == true){
 			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Codice Mancante");
 		}
-		if (this.description == null || this.description.equals("") == true){
+		if (this.name == null || this.name.equals("") == true){
 			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Nome Mancante");
 		}
-		if (this.startdate == null || this.startdate.equals("") == true){
+		if ((this.startdate == null || this.startdate.equals("") == true) && this.idList != 0 ){
 			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Data validità Mancante");
 		}
 		return null;

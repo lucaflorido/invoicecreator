@@ -34,6 +34,14 @@ public class TblListProduct implements Itbl{
 	private Date startdate;
 	@Column(name="active")
 	private boolean active;
+	@Column(name="percentage")
+	private float percentage;
+	public float getPercentage() {
+		return percentage;
+	}
+	public void setPercentage(float percentage) {
+		this.percentage = percentage;
+	}
 	public Date getStartdate() {
 		return startdate;
 	}
@@ -76,7 +84,7 @@ public class TblListProduct implements Itbl{
 		this.idListProduct = ltp.getIdListProduct();
 		this.price = ltp.getPrice();
 		this.product = new TblProduct();
-		
+		this.percentage = ltp.getPercentage();
 		if (ltp.getProduct()!=null){
 			this.product.convertToTable(ltp.getProduct());
 		}
@@ -89,6 +97,7 @@ public class TblListProduct implements Itbl{
 		if (this.startdate == null && this.idListProduct == 0){
 			this.startdate = ((TblList)tbl).getStartdate();
 			this.active = true;
+			this.percentage = ((TblList)tbl).getIncrement();
 		}
 		this.list = (TblList)tbl;
 	}

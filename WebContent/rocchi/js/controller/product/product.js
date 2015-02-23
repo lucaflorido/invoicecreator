@@ -155,7 +155,7 @@ angular.module("rocchi.product")
 .controller('RocchiProductDetailCtrl',["$scope","$http","$routeParams","$location","$rootScope","AppConfig",function($scope,$http,$routeParams,$location,$rootScope,AppConfig){
     
 	GECO_validator.startupvalidator();
-	$("#maincontainer_productdetail").focus();
+	
 	$scope.currentBrand = {};
 	$scope.currentSupplier = {};
 	$scope.currentGroup = {};
@@ -190,7 +190,7 @@ angular.module("rocchi.product")
 		$scope.isNew = false;
 	}
 	
-	$http.get('rest/basic/unitmeasure').success(function(data){
+	$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
 		$scope.ums= data;
 					$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
 						$scope.product= data;
@@ -200,7 +200,7 @@ angular.module("rocchi.product")
 							$scope.product.ums = [];
 							$scope.product.ums.push({idUnitMeasureProduct:0,preference:true,um:$scope.ums[0],conversion:1});
 						}
-						$http.get('rest/basic/groupproduct').success(function(data){
+						$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
 							$scope.groups= data;
 								if($scope.product.group){
 									for (var i=0;i<$scope.groups.length;i++){
@@ -210,7 +210,7 @@ angular.module("rocchi.product")
 									}
 								}
 						});
-						$http.get('rest/registry/supplier').success(function(data){
+						/*$http.get('rest/registry/supplier').success(function(data){
 							$scope.suppliers= data;
 							if($scope.product.supplier != null){
 								for (var i=0;i<$scope.suppliers.length;i++){
@@ -220,8 +220,8 @@ angular.module("rocchi.product")
 									
 								}
 							}
-						});
-						$http.get('rest/basic/taxrate').success(function(data){
+						});*/
+						$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
 				$scope.taxrates= data;
 						for (var itx=0;itx<$scope.taxrates.length;itx++){
 							if($scope.product.taxrate){
@@ -231,7 +231,7 @@ angular.module("rocchi.product")
 							}
 						}
 						});
-						$http.get('rest/basic/categoryproduct').success(function(data){
+						$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
 							$scope.categorys= data;
 							if($scope.product.category){
 								for (var ig=0;ig<$scope.categorys.length;ig++){
@@ -251,7 +251,7 @@ angular.module("rocchi.product")
 								}
 							}
 						});
-						$http.get('rest/basic/brand').success(function(data){
+						/*$http.get('rest/basic/brand').success(function(data){
 								$scope.brands= data;
 								for (var itx=0;itx<$scope.brands.length;itx++){
 									if ($scope.product != null && $scope.product.brand != null && $scope.brands != null){
@@ -260,8 +260,8 @@ angular.module("rocchi.product")
 										}
 									}
 								}
-								//$("#selbrand").trigger("chosen:updated");
-						});
+								
+						});*/
 						//$(".combobox").trigger("chosen:updated");
 					
 					

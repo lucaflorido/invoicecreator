@@ -31,8 +31,8 @@ angular.module("rocchi.transporter")
 		});
 	}
 	
-}]);
-gecoRegistryControllers.controller('RocchiTransporterDetailCtrl',["$scope","$http","$routeParams","AppConfig",function($scope,$http,$routeParams,AppConfig){
+}])
+.controller('RocchiTransporterDetailCtrl',["$scope","$http","$routeParams","AppConfig",function($scope,$http,$routeParams,AppConfig){
     //GECO_LOGGEDUSER.checkloginuser();
 	$scope.listsections = ["Dettagli","Listini","Destinazioni"];
 	$scope.selectedSection = $scope.listsections[0];

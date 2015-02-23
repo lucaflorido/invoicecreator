@@ -19,4 +19,13 @@ public class UtilDao {
 		}
 		return new GECOSuccess(basic);
 	}
+	public GECOObject calculateEndPriceProduct(ProductBasicPricesCalculation basic){
+		try{
+			basic.calculateFromTotalPrice();
+		}catch(Exception e){
+			new GECOError(GECOParameter.ERROR_CALCULATION, e.getMessage());
+		}
+
+		return new GECOSuccess(basic);
+	}
 }

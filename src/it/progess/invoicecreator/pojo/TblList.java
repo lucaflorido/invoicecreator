@@ -40,10 +40,26 @@ public class TblList implements Itbl {
 	private Date startdate;
 	@Column(name="active")
 	private boolean active;
+	@Column(name="isPercentage")
+	private boolean isPercentage;
 	@ManyToOne
 	@JoinColumn(name = "idCompany")
 	private TblCompany company;
+	@Column(name="increment")
+	private float increment;
 	
+	public float getIncrement() {
+		return increment;
+	}
+	public void setIncrement(float increment) {
+		this.increment = increment;
+	}
+	public boolean isPercentage() {
+		return isPercentage;
+	}
+	public void setPercentage(boolean isPercentage) {
+		this.isPercentage = isPercentage;
+	}
 	public TblCompany getCompany() {
 		return company;
 	}
@@ -98,6 +114,8 @@ public class TblList implements Itbl {
 		this.description = lt.getDescription();
 		this.idList = lt.getIdList();
 		this.name  = lt.getName();
+		this.isPercentage = lt.isPercentage();
+		this.increment = lt.getIncrement();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		if (lt.getCompany() != null){
 			this.company = new TblCompany();
@@ -112,6 +130,8 @@ public class TblList implements Itbl {
 		this.name  = lt.getName();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		this.active = lt.isActive();
+		this.isPercentage = lt.isPercentage();
+		this.increment = lt.getIncrement();
 		this.listproduct = new HashSet<TblListProduct>();
 		if (lt.getCompany() != null){
 			this.company = new TblCompany();
@@ -135,6 +155,8 @@ public class TblList implements Itbl {
 		this.active = lt.isActive();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		this.listproduct = new HashSet<TblListProduct>();
+		this.isPercentage = lt.isPercentage();
+		this.increment = lt.getIncrement();
 		if (lt.getListproduct() != null){
 			for (Iterator<ListProduct> iterator = lt.getListproduct().iterator(); iterator.hasNext();){
 				ListProduct listproduct = iterator.next();

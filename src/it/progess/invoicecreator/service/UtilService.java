@@ -32,4 +32,13 @@ public class UtilService {
 		ProductBasicPricesCalculation p = g.fromJson(prices,ProductBasicPricesCalculation.class);
 		return g.toJson(new UtilDao().calculateBasicPricesProduct(p,true));
 	}
+	@POST
+	@Path("prodbasicprice/endprice")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	public String productBasicEndPrice(@FormParam("prices") String prices){
+		Gson g = new Gson();
+		ProductBasicPricesCalculation p = g.fromJson(prices,ProductBasicPricesCalculation.class);
+		return g.toJson(new UtilDao().calculateEndPriceProduct(p));
+	}
 }

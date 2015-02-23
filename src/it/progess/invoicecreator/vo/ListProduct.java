@@ -1,10 +1,12 @@
 package it.progess.invoicecreator.vo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
 
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
+import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblListProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
@@ -17,6 +19,20 @@ public class ListProduct implements Ivo {
 	private float price;
 	private String startdate;
 	private boolean active;
+	private float percentage;
+	private float endprice;
+	public float getEndprice() {
+		return endprice;
+	}
+	public void setEndprice(float endprice) {
+		this.endprice = endprice;
+	}
+	public float getPercentage() {
+		return percentage;
+	}
+	public void setPercentage(float percentage) {
+		this.percentage = percentage;
+	}
 	public String getStartdate() {
 		return startdate;
 	}
@@ -60,9 +76,12 @@ public class ListProduct implements Ivo {
 		this.price = ltp.getPrice();
 		this.product = new Product();
 		this.active = ltp.isActive();
+		this.percentage = ltp.getPercentage();
+		
 		this.startdate = DataUtilConverter.convertStringFromDate(ltp.getStartdate());
 		if (ltp.getProduct()!=null){
 			this.product.convertFromTable(ltp.getProduct());
+			setEndPrice( (float)this.product.getTaxrate().getValue());
 		}
 	}
 	public void copy(ListProduct ltp){
@@ -78,9 +97,22 @@ public class ListProduct implements Ivo {
 		this.price = ltp.getPrice();
 		this.product = new Product();
 		this.active = ltp.isActive();
+		this.percentage = ltp.getPercentage();
 		this.startdate = DataUtilConverter.convertStringFromDate(ltp.getStartdate());
 		if (ltp.getProduct()!=null){
 			this.product.convertFromTable(ltp.getProduct());
+		}
+	}
+	public void setEndPrice(float taxrate){
+		
+		if (taxrate > 0){
+			float diff  =this.price/100 *taxrate;
+			BigDecimal bd = new BigDecimal(diff);
+	        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+	        diff= bd.floatValue();
+	        this.endprice = diff+this.price;
+		}else{
+			this.endprice = this.price;
 		}
 	}
 	public GECOObject control(){
