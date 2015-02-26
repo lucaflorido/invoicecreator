@@ -1,5 +1,6 @@
 package it.progess.invoicecreator.service;
 
+
 import it.progess.invoicecreator.dao.DocumentDao;
 import it.progess.invoicecreator.dao.RegistryDao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
@@ -9,12 +10,14 @@ import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.Destination;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.List;
+import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.Promoter;
 import it.progess.invoicecreator.vo.Role;
 import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.Transporter;
+import it.progess.invoicecreator.vo.UnitMeasureProduct;
 import it.progess.invoicecreator.vo.User;
 import it.progess.invoicecreator.vo.filter.HeadFilter;
 import it.progess.invoicecreator.vo.filter.PagesFilter;
@@ -280,7 +283,36 @@ public class RegistryService {
 		  }
 	  }
 	  
-	  
+	  @DELETE
+	  @Path("productum")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String deleteUMProduct(@FormParam("productobj") String productobj){
+		  Gson gson = new Gson();
+		  try{
+			  UnitMeasureProduct sm = gson.fromJson(productobj,UnitMeasureProduct.class);
+			  RegistryDao dao = new RegistryDao();
+			  dao.deleteUMProduct(sm);
+			  return gson.toJson(true);
+		  }catch(Exception e){
+			  return gson.toJson("");
+		  }
+	  }
+	  @DELETE
+	  @Path("productlist")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String deleteListProduct(@FormParam("productobj") String productobj){
+		  Gson gson = new Gson();
+		  try{
+			  ListProduct sm = gson.fromJson(productobj,ListProduct.class);
+			  RegistryDao dao = new RegistryDao();
+			  dao.deleteListProduct(sm);
+			  return gson.toJson(true);
+		  }catch(Exception e){
+			  return gson.toJson("");
+		  }
+	  }
 	  /*****
 	   * 
 	   * Bist
@@ -294,6 +326,16 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getListList( loggeduser));
+	  }
+	  @POST
+	  @Path("list/noproduct")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getListNoProduct(@Context HttpServletRequest request,@FormParam("product") String product){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		Product p = gson.fromJson(product, Product.class);
+		return gson.toJson(dao.getListListNoProduct( loggeduser,p));
 	  }
 	  /***
 		Get Single user

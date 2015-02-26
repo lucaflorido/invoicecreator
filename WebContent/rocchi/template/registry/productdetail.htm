@@ -5,123 +5,144 @@
 </div>
 <div class="row">
 	<div class="large-5 medium-5 small-5 columns">
-		<h3 ng-show="isNew == true">NUOVO PRODOTTO o SERVIZIO:</h3>
-		<h3 ng-show="isNew == false && product.isProduct == 'true'">PRODOTTO: {{product.code}} {{product.description}}</h3>
-		<h3 ng-show="isNew == false && product.isProduct == 'false'">SERVIZIO: {{product.code}} {{product.description}}</h3>
+		<h3 ng-show="product.idProduct == 0">NUOVO PRODOTTO o SERVIZIO:</h3>
+		<h3 ng-hide="product.idProduct > 0">PRODOTTO: {{product.code}} {{product.description}}</h3>
 	</div>
 	<div class="large-7 medium-7 small-7 columns">
 		<ul class="button-group">
 		  	<li><a ng-click="saveProduct()" class="button">Salva</a></li>
 		  	<li><a ng-click="mainPage()" class="button">Elenco</a></li>
-		  	<li><a ng-click="saveProduct()" class="button">Salva</a></li>
 		  	<li><a ng-show="isNew == false" ng-click="newProduct()" class="button">Nuovo</a></li>
 		</ul>
 	</div>
 </div>
 
 
+
 <div class="row">
-<form>
-	<fieldset>
-		
-		<div class="row">
-			<div class="large-4 columns">
-				<label>Codice<input type="text"
-					 ng-model="product.code"
-					value="{{product.code}}" capitalize />
-				</label>
-			</div>
-			<div class="large-8 columns">
-				<label>Descrizione<input type="text"
-					 ng-model="product.description"
-					value="{{product.description}}" capitalize />
-				</label>
-			</div>
-			
-		</div>
-		<div class="row">
-			<div class="large-4 columns">
-				<label>Aliquota 
-					<select ng-model="currentTaxRate" ng-options="taxrate as taxrate.description for taxrate in taxrates" ng-change="setModified()"  >
-					    <option value=""></option>
-					    
-					</select>
-				</label>
-			</div>
-			<div class="large-3 columns">
-				<label>Prezzo Acquisto<input type="text"
-					 ng-model="product.purchaseprice"
-					value="{{product.purchaseprice}}" capitalize ng-blur="calculatePrices('sellprice')" ng-change="setModified()" />
-				</label>
-			</div>
-			<div class="large-2 columns">
-				<label>%<input type="text"
-					 ng-model="product.percentage"
-					value="{{product.percentage}}" capitalize ng-blur="calculatePrices('sellprice')" ng-change="setModified()" />
-				</label>
-			</div>
-			<div class="large-3 columns">
-				<label>Prezzo Vendita<input type="checkbox"
-					 ng-model="product.sellprice"
-					value="{{product.sellprice}}" capitalize ng-blur="calculatePrices('percentage')" ng-change="setModified()" />
-				</label>
-			</div>
-		</div>
-	</fieldset>
-</form>
-</div>	
-<div class="row">
-	<div class="large-7 medium-7 small-7 columns">
-	<ul class="button-group">
-		  	<li><a ng-click="addUMElement(product)" class="button">Aggiungi Unit&#224; di Misura</a></li>
-		</ul>
-	
-	</div>
-</div>
-
-
-<div	class="row">
-<table st-table="umsToDisplay" class="table table-striped" st-safe-src="product.ums ">
-  <thead>
-  <td class="row_table td_five"><div class="td_div ">Codice</div></td>
-									<td class="row_table td_five"><div class="td_div ">U.M.</div></td>
-									<td class="row_table td_five"><div class="td_div ">Preferenziale</div></td>
-									<td class="row_table td_five"><div class="td_div ">Conversione</div></td>
-    <tr>
-      <th width="50"></th>
-      <th width="25%"  st-sort="product.code" st-sort-default="reverse" st-skip-natural="true">Codice</th>
-      <th width="25%"   st-sort-default="reverse" st-skip-natural="true">UM</th>
-      <th width="25%"   st-sort-default="reverse" st-skip-natural="true">Preferenziale</th>
-      <th width="25%"   st-sort-default="reverse" st-skip-natural="true">Conversione</th>
-      <th width="50"></th>
-    </tr>
-    
-  </thead>
-  <tbody>
-    <tr ng-repeat="ums in umsToDisplay ">
-      <td><a  class="matita" ng-click="changeUMElement($index)"></a> </td>
-      <td class="hidden_cell">
-      		<div ng-if="umpid != $index">&nbsp;{{ump.code}} </div>
-      		<input ng-if="umpid == $index"  ng-model="ump.code"  value="{{ump.code}}"  capitalize ng-change="setModified()"  />  </div>
-	  </td>
-      <td >
-      		<div ng-if="umpid != $index">&nbsp;{{ump.um.code}}</div>
-		    <select ng-if="umpid == $index" id="selcounter"  ng-model="currentUMP"    ng-options="um as um.code for um in ums" ng-change="ump.um = currentUMP;setModified();" ></select>
-	  </td>
-      <td ><div ng-if="umpid != $index">&nbsp;{{ump.preference}}</div>
-		   <input ng-if="umpid == $index" type="checkbox" ng-model="ump.preference"  value="{{ump.preference}}" />
-	  </td>
-      <td ><div class="td_div "><div ng-if="umpid != $index">&nbsp;{{ump.conversion}}</div>
-		   <input ng-if="umpid == $index" ng-model="ump.conversion"  value="{{ump.conversion}}" ng-change="setModified()"  />  
-	  </td>
-      <td><a class="x" ></a></td>
-
-    </tr>
- 						
-								
+    <div class="large-6 medium-12 small-12 columns">
   
-  </tbody>
-</table>
+
+    <div class="login">
+
+      <form name="login" method="GET" action="">
+
+            <label>Codice</label>
+            <input type="text" placeholder="Codice" value="{{product.code}}" ng-model="product.code">
+			
+             <label>Descrizione</label>
+            <input type="text" placeholder="Descrizione" value="{{product.description}}" ng-model="product.description">
+
+            <label>Tipo</label>
+            <select name="Tipo">
+            <option>Tipo</option>
+           
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>  
+            </select> 
+         
+               <label>Regione</label>
+            <select name="Regione">
+            <option>Regione</option>
+           
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>  
+            </select> 
+         
+
+             <label>Prezzo di Costo</label>
+            <input type="text" placeholder="Codice" value="{{product.purchaseprice}}" ng-model="product.purchaseprice" ng-blur="calculateListPrices();">
+			<label>Percentuale Ricarico</label>
+            <input type="text" placeholder="Descrizione" value="{{product.percentage}}" ng-model="product.percentage" ng-blur="calculatePrices('sellprice')">
+			
+			<label>Prezzo di Vendita base</label>
+            <input type="text" placeholder="Codice" value="{{product.sellprice}}" ng-model="product.sellprice" ng-blur="calculatePrices('percentage')">
+			
+			 <label>Aliquota</label>
+            <select name="taxrate" ng-options="taxrate.description for taxrate in taxrates" ng-model="currentTaxRate" ng-change="calculateListPrices();">
+           		 <option value=""></option>
+            </select> 
+      </form>
+
+    </div>
+    
+  </div>
+
+  <div class="large-6 medium-12 small-12 columns">
+    <div class="row">
+    	<div class="large-6 columns" ><h6>UNITA' DI MISURA</h6></div>
+    	<div class="small-3 columns" ><button class="button small"  ng-click="addUMElement(product)" >Aggiungi</button></div>
+    </div>
+    <div class="row">
+     <table  st-table="umsToDisplay" class="table table-striped" st-safe-src="product.ums" >
+        <thead>
+          <tr>
+            <th width="10%"></th>
+            <th width="30%">Codice</th>
+            <th width="30%">U.M</th>
+            <th width="10%" class="hidden_cell">Pref.</th>
+            <th width="10%" class="hidden_cell">Conv.</th>
+            <th width="10%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="ump in umsToDisplay ">
+            <td><a ng-click="changeUMElement($index)" class="matita"></a> </td>
+            <td><div ng-if="umpid != $index">&nbsp;{{ump.code}} </div>
+																					<input type="text" ng-if="umpid == $index"  ng-model="ump.code"  value="{{ump.code}}"  capitalize   >  
+																			</td>
+            <td><div ng-if="umpid != $index">&nbsp;{{ump.um.code}}</div>
+										<select ng-if="umpid == $index" id="selcounter"  ng-model="currentUMP"    ng-options="um as um.code for um in ums" ng-change="ump.um = currentUMP;" ></select></td>
+            <td class="hidden_cell"><div ng-if="umpid != $index">&nbsp;{{ump.preference}}</div>
+										<input ng-if="umpid == $index" type="checkbox" ng-model="ump.preference"  value="{{ump.preference}}" /></td>
+            <td class="hidden_cell"><div ng-if="umpid != $index">&nbsp;{{ump.conversion}}</div>
+										<input ng-if="umpid == $index" ng-model="ump.conversion"  value="{{ump.conversion}}"  /></td>
+            <td><a  class="x" ng-click="deleteUMElement(ump)"></a></td>
+          </tr>     
+        </tbody>
+      </table>
+      </div>
+      <div class="row">
+    
+		<div class="row">
+	    	<div class="large-6 columns" ><h6>LISTINI</h6></div>
+	    	<div class="small-3 columns" ><button class="button small" ng-click="addListElement()"  >Aggiungi</button></div>
+	    </div>
+        <table st-table="prodsToDisplay" class="table table-striped" st-safe-src="product.listproduct">
+        <thead>
+          <tr>
+            <th width="50"></th>
+            <th width="200">Codice</th>
+            <th width="200">Prezzo</th>
+            <th width="200">%</th>
+            <th width="200">Finale</th>
+            <th width="50"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="prod in prodsToDisplay ">
+            <td><a  class="matita" ng-click="setListId(prod)"></a> </td>
+            <td><div ng-hide="listid == prod.idListProduct && listid == 0">{{prod.list.code}}</div>
+				<select ng-show="listid == prod.idListProduct && listid == 0 " name="list" ng-options="list.code for list in availablelists" ng-model="prod.list" ng-change="selectList(prod)" >
+           		 	<option value=""></option>
+            	</select> 
+			</td>
+            <td><div ng-hide="listid == prod.idListProduct">{{prod.price}}</div><input  ng-show="listid == prod.idListProduct" type="text" placeholder="Number" value="{{prod.price}}" ng-model="prod.price"  ng-blur="calculatePercentage(prod)"  ></td>
+            <td><div ng-hide="listid == prod.idListProduct">{{prod.percentage}}</div><input ng-show="listid == prod.idListProduct" type="text" placeholder="Number" value="{{prod.percentage}}" ng-model="prod.percentage"  ng-blur="calculateSellPrice(prod)"  ></td>
+            <td><div ng-hide="listid == prod.idListProduct">{{prod.endprice}}</div><input ng-show="listid == prod.idListProduct" type="text" placeholder="Number" value="{{prod.endprice}}" ng-model="prod.endprice"   ng-blur="calculateEndPrice(prod)" ></td>
+            <td><a  class="x" ng-click="deleteListElement(prod)"></a></td>
+          </tr>
+		</tbody>
+      </table>
+      </div>
+  </div>
+
+   
+
+
+
 </div>		
 
 

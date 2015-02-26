@@ -1,9 +1,14 @@
 package it.progess.invoicecreator.dao;
 
+import java.util.Iterator;
+
+import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOSuccess;
+import it.progess.invoicecreator.vo.ListProduct;
+import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.helpobject.ProductBasicPricesCalculation;
 
 public class UtilDao {
@@ -27,5 +32,16 @@ public class UtilDao {
 		}
 
 		return new GECOSuccess(basic);
+	}
+	public GECOObject calculateProductListPrices(Product p){
+		float tr =(float) p.getTaxrate().getValue();
+		for (Iterator<ListProduct> it = p.getListproduct().iterator();it.hasNext();){
+			ListProduct lp = it.next();
+			lp.getProduct().setPurchaseprice(p.getPurchaseprice());
+			lp.calculatePrices(tr);
+		}
+		double increment = HibernateUtils.calculatePercentage(p.getPurchaseprice(),p.getPercentage());
+		p.setSellprice((float)increment+(float)p.getPurchaseprice());
+		return new GECOSuccess(p);
 	}
 }

@@ -1,6 +1,7 @@
 package it.progess.invoicecreator.service;
 
 import it.progess.invoicecreator.dao.UtilDao;
+import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.helpobject.ProductBasicPricesCalculation;
 
 import javax.ws.rs.Consumes;
@@ -40,5 +41,14 @@ public class UtilService {
 		Gson g = new Gson();
 		ProductBasicPricesCalculation p = g.fromJson(prices,ProductBasicPricesCalculation.class);
 		return g.toJson(new UtilDao().calculateEndPriceProduct(p));
+	}
+	@POST
+	@Path("prodbasicprice/list")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	public String productBasicListPrice(@FormParam("product") String product){
+		Gson g = new Gson();
+		Product p = g.fromJson(product,Product.class);
+		return g.toJson(new UtilDao().calculateProductListPrices(p));
 	}
 }

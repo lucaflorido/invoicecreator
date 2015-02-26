@@ -88,6 +88,10 @@ public class TblListProduct implements Itbl{
 		if (ltp.getProduct()!=null){
 			this.product.convertToTable(ltp.getProduct());
 		}
+		if (ltp.getList() != null){
+			this.list = new TblList();
+			this.list.convertToTable(ltp.getList());
+		}
 	}
 	public void convertToTableForSaving(Ivo obj,Itbl tbl){
 		convertToTable(obj);

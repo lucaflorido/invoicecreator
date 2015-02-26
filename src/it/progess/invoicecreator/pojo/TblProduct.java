@@ -2,6 +2,7 @@ package it.progess.invoicecreator.pojo;
 
 
 import it.progess.invoicecreator.vo.Ivo;
+import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.UnitMeasureProduct;
 
@@ -65,7 +66,15 @@ public class TblProduct implements Itbl{
 	private TblCompany company;
 	@Column(name="isProduct")
 	private boolean isProduct;
+	@OneToMany(fetch= FetchType.LAZY,mappedBy = "product",cascade = CascadeType.ALL)
+	private Set<TblListProduct> listproduct;
 	
+	public Set<TblListProduct> getListproduct() {
+		return listproduct;
+	}
+	public void setListproduct(Set<TblListProduct> listproduct) {
+		this.listproduct = listproduct;
+	}
 	public boolean isProduct() {
 		return isProduct;
 	}
@@ -218,6 +227,19 @@ public class TblProduct implements Itbl{
 			}
 		}else{
 			this.ums = null;
+		}
+		if (pd.getListproduct() != null){
+			this.listproduct = new HashSet<TblListProduct>();
+			for (Iterator<ListProduct> iterator = pd.getListproduct().iterator(); iterator.hasNext();){
+				ListProduct listproduct = iterator.next();
+				//if (listproduct.isActive() == true){
+					TblListProduct listp = new TblListProduct();
+					listp.convertToTable(listproduct);
+					listp.setProduct(this);
+					listp.setActive(true);
+					this.listproduct.add(listp);
+				//}
+			}
 		}
 	}
 }

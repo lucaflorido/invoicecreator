@@ -2,6 +2,7 @@ package it.progess.invoicecreator.vo;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblBrand;
+import it.progess.invoicecreator.pojo.TblListProduct;
 import it.progess.invoicecreator.pojo.TblProduct;
 import it.progess.invoicecreator.pojo.TblUnitMeasureProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
@@ -37,7 +38,13 @@ public class Product implements Ivo,Comparable<Product>{
 	private Set<ProductDatePrice> pricehistory;
 	private Company company;
 	private boolean isProduct;
-	
+	private Set<ListProduct> listproduct;
+	public Set<ListProduct> getListproduct() {
+		return listproduct;
+	}
+	public void setListproduct(Set<ListProduct> listproduct) {
+		this.listproduct = listproduct;
+	}
 	public boolean isProduct() {
 		return isProduct;
 	}
@@ -245,6 +252,21 @@ public class Product implements Ivo,Comparable<Product>{
 			}
 		}
 	}
+	public void convertFromTableSngle(Itbl obj){
+		this.convertFromTable(obj);
+		TblProduct pd = (TblProduct)obj;
+		if (pd.getListproduct() != null){
+			this.listproduct = new HashSet<ListProduct>();
+			for (Iterator<TblListProduct> iterator = pd.getListproduct().iterator(); iterator.hasNext();){
+				TblListProduct listproduct = iterator.next();
+				if (listproduct.isActive() == true){
+					ListProduct listp = new ListProduct();
+					listp.convertFromTable(listproduct);
+					this.listproduct.add(listp);
+				}
+			}
+		}
+	}
 	public void convertFromTableForSaving(Itbl obj,Ivo vo){
 		TblProduct pd = (TblProduct)obj;
 		this.barcode = pd.getBarcode();
@@ -282,6 +304,16 @@ public class Product implements Ivo,Comparable<Product>{
 			}
 		}else{
 			this.ums = null;
+		}
+		if (pd.getListproduct() != null){
+			for (Iterator<TblListProduct> iterator = pd.getListproduct().iterator(); iterator.hasNext();){
+				TblListProduct listproduct = iterator.next();
+				if (listproduct.isActive() == true){
+					ListProduct listp = new ListProduct();
+					listp.convertFromTable(listproduct);
+					this.listproduct.add(listp);
+				}
+			}
 		}
 	}
 	public GECOError control(){

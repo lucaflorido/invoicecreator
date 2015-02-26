@@ -152,10 +152,11 @@ angular.module("rocchi.product")
 		$scope.currentSubCategory = null;
 	}
 }])
-.controller('RocchiProductDetailCtrl',["$scope","$http","$routeParams","$location","$rootScope","AppConfig",function($scope,$http,$routeParams,$location,$rootScope,AppConfig){
+.controller('RocchiProductDetailCtrl',["$scope","$http","$routeParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$routeParams,$location,$rootScope,AppConfig,AlertsFactory){
     
 	GECO_validator.startupvalidator();
-	
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
 	$scope.currentBrand = {};
 	$scope.currentSupplier = {};
 	$scope.currentGroup = {};
@@ -189,87 +190,72 @@ angular.module("rocchi.product")
 	}else{
 		$scope.isNew = false;
 	}
-	
-	$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
-		$scope.ums= data;
-					$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
-						$scope.product= data;
-						if ($rootScope.newProductToAdd != null)
-							$scope.product.code = $rootScope.newProductToAdd;
-						if ($scope.product.idProduct == 0){
-							$scope.product.ums = [];
-							$scope.product.ums.push({idUnitMeasureProduct:0,preference:true,um:$scope.ums[0],conversion:1});
-						}
-						$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
-							$scope.groups= data;
-								if($scope.product.group){
-									for (var i=0;i<$scope.groups.length;i++){
-										if ($scope.product.group.idGroupProduct == $scope.groups[i].idGroupProduct){
-											$scope.currentGroup = $scope.groups[i]; 
+	var getProduct = function(){
+		$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
+			$scope.ums= data;
+						$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
+							$scope.product= data;
+							if ($rootScope.newProductToAdd != null)
+								$scope.product.code = $rootScope.newProductToAdd;
+							if ($scope.product.idProduct == 0){
+								$scope.product.ums = [];
+								$scope.product.ums.push({idUnitMeasureProduct:0,preference:true,um:$scope.ums[0],conversion:1});
+							}
+							$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
+								$scope.groups= data;
+									if($scope.product.group){
+										for (var i=0;i<$scope.groups.length;i++){
+											if ($scope.product.group.idGroupProduct == $scope.groups[i].idGroupProduct){
+												$scope.currentGroup = $scope.groups[i]; 
+											}
+										}
+									}
+							});
+							/*$http.get('rest/registry/supplier').success(function(data){
+								$scope.suppliers= data;
+								if($scope.product.supplier != null){
+									for (var i=0;i<$scope.suppliers.length;i++){
+										if ($scope.product.supplier.idSupplier == $scope.suppliers[i].idSupplier){
+											$scope.currentSupplier = $scope.suppliers[i]; 
+										}
+										
+									}
+								}
+							});*/
+							$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
+					$scope.taxrates= data;
+							for (var itx=0;itx<$scope.taxrates.length;itx++){
+								if($scope.product.taxrate){
+									if ($scope.product.taxrate.idtaxrate == $scope.taxrates[itx].idtaxrate){
+										$scope.currentTaxRate = $scope.taxrates[itx]; 
+									}
+								}
+							}
+							});
+							$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+								$scope.categorys= data;
+								if($scope.product.category){
+									for (var ig=0;ig<$scope.categorys.length;ig++){
+										if ($scope.product.category.idCategoryProduct == $scope.categorys[ig].idCategoryProduct){
+											$scope.currentCategory = $scope.categorys[ig];
+											$scope.subcategories = $scope.currentCategory.subcategories		
+											$scope.currentSubCategory = null;
+										}
+									}
+									for (var igs=0;igs<$scope.subcategories.length;igs++){
+										if ($scope.product.subcategory == null){
+											$scope.product.subcategory = {};
+										}
+										if ($scope.product.subcategory.idSubCategoryProduct == $scope.subcategories[igs].idSubCategoryProduct){
+											$scope.currentSubCategory = $scope.subcategories[igs]; 
 										}
 									}
 								}
-						});
-						/*$http.get('rest/registry/supplier').success(function(data){
-							$scope.suppliers= data;
-							if($scope.product.supplier != null){
-								for (var i=0;i<$scope.suppliers.length;i++){
-									if ($scope.product.supplier.idSupplier == $scope.suppliers[i].idSupplier){
-										$scope.currentSupplier = $scope.suppliers[i]; 
-									}
-									
-								}
-							}
-						});*/
-						$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
-				$scope.taxrates= data;
-						for (var itx=0;itx<$scope.taxrates.length;itx++){
-							if($scope.product.taxrate){
-								if ($scope.product.taxrate.idtaxrate == $scope.taxrates[itx].idtaxrate){
-									$scope.currentTaxRate = $scope.taxrates[itx]; 
-								}
-							}
-						}
-						});
-						$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
-							$scope.categorys= data;
-							if($scope.product.category){
-								for (var ig=0;ig<$scope.categorys.length;ig++){
-									if ($scope.product.category.idCategoryProduct == $scope.categorys[ig].idCategoryProduct){
-										$scope.currentCategory = $scope.categorys[ig];
-										$scope.subcategories = $scope.currentCategory.subcategories		
-										$scope.currentSubCategory = null;
-									}
-								}
-								for (var igs=0;igs<$scope.subcategories.length;igs++){
-									if ($scope.product.subcategory == null){
-										$scope.product.subcategory = {};
-									}
-									if ($scope.product.subcategory.idSubCategoryProduct == $scope.subcategories[igs].idSubCategoryProduct){
-										$scope.currentSubCategory = $scope.subcategories[igs]; 
-									}
-								}
-							}
-						});
-						/*$http.get('rest/basic/brand').success(function(data){
-								$scope.brands= data;
-								for (var itx=0;itx<$scope.brands.length;itx++){
-									if ($scope.product != null && $scope.product.brand != null && $scope.brands != null){
-										if ($scope.product.brand.idBrand == $scope.brands[itx].idBrand){
-											$scope.currentBrand = $scope.brands[itx]; 
-										}
-									}
-								}
-								
-						});*/
-						//$(".combobox").trigger("chosen:updated");
-					
-					
-				
-				
-			
+							});
+				});
 		});
-	});
+	}
+	getProduct();
 	$scope.changeCategory = function(){
 		$scope.subcategories = $scope.currentCategory.subcategories		
 		$scope.currentSubCategory = null;
@@ -278,12 +264,58 @@ angular.module("rocchi.product")
 		product.ums.push({idUnitMeasureProduct:0});
 		$scope.umpid = product.ums.length-1 ;
 	}
+	
+	$scope.deleteListElement = function(prod){
+		$.ajax({
+				url:AppConfig.ServiceUrls.ProductList,
+				type:"DELETE",
+				data:"productobj="+JSON.stringify(prod),
+				success:function(data){
+					$scope.msg.successMessage("UNITA' DI MISURA ELIMINATA CON SUCCESSO");
+					getProduct();
+					
+				}	
+			});
+	}
+	$scope.deleteUMElement = function(um){
+		$.ajax({
+				url:AppConfig.ServiceUrls.ProductUniteMeasure,
+				type:"DELETE",
+				data:"productobj="+JSON.stringify(um),
+				success:function(data){
+					$scope.msg.successMessage("UNITA' DI MISURA ELIMINATA CON SUCCESSO");
+					getProduct();
+					
+				}	
+			});
+	}
+	$scope.addListElement = function(){
+		$.ajax({
+			url:AppConfig.ServiceUrls.ListNoProduct,
+			type:"POST",
+			data:"product="+JSON.stringify($scope.product),
+			success:function(data){
+				var result = JSON.parse(data);
+				$scope.availablelists = result;
+				$scope.product.listproduct.push({idListProduct:0});
+				$scope.listid = 0 ;
+				$scope.$apply();
+				
+			}	
+		});
+		
+	}
+	$scope.selectList = function(prodlist){
+		prodlist.percentage = prodlist.list.increment;
+		$scope.calculateSellPrice(prodlist);
+	}
 	$scope.changeUMElement = function(ump){
 	    $scope.umpid = ump; //ump.idUnitMeasureProduct
 	}
 	
 	$scope.saveProduct = function(){
 		$scope.product.taxrate = $scope.currentTaxRate;
+		$scope.product.isProduct = true;
 		$.ajax({
 				url:AppConfig.ServiceUrls.Product,
 				type:"PUT",
@@ -305,13 +337,15 @@ angular.module("rocchi.product")
 						}
 						$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
 							$scope.product= data;
+							$scope.umpid = -1;
+							$scope.listid = -1;
 						});
-						$scope.confirmSaved();
+						$scope.msg.successMessage("PRODOTTO SALVATO CON SUCCESSO");
 					}else{
-						$scope.errorMessage(result.errorMessage);
+						$scope.msg.alertMessage(result.errorMessage);
 					}	
 				},error:function(data){
-					$scope.errorMessage(data);
+					$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
 				}	
 			})
 		//}
@@ -329,7 +363,7 @@ angular.module("rocchi.product")
 		$scope.basicPrices.percentage = $scope.product.percentage;
 		$scope.basicPrices.purchaseprice = $scope.product.purchaseprice;
 		$.ajax({
-				url:"rest/util/prodbasicprice/"+type,
+				url:AppConfig.ServiceUrls.ProductBasicPrice+type,
 				type:"POST",
 				data:"prices="+JSON.stringify($scope.basicPrices),
 				success:function(data){
@@ -341,9 +375,115 @@ angular.module("rocchi.product")
 						$scope.product.purchaseprice = result.success.purchaseprice;
 						$scope.$apply();
 					}else{
-						alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+						$scope.msg.alertMessage(result.errorMessage);
 					}	
 				}	
 			})
+	}
+	$scope.calculateListPrices = function(){
+		$scope.product.taxrate = $scope.currentTaxRate;
+		$.ajax({
+				url:AppConfig.ServiceUrls.ProductBasicPriceList,
+				type:"POST",
+				data:"product="+JSON.stringify($scope.product),
+				success:function(data){
+					
+					result = JSON.parse(data);
+					if (result.type == "success"){	
+						$scope.product = result.success;
+						$scope.$apply();
+					}else{
+						$scope.msg.alertMessage(result.errorMessage);
+					}	
+				}	
+			})
+	}
+	
+	$scope.calculatePercentage = function(listprod){
+		var obj = createProductCalcObj(listprod);
+		$.ajax({
+			url:AppConfig.ServiceUrls.UtilPricePercentage,
+			type:"POST",
+			data:"prices="+JSON.stringify(obj),
+			success:function(data){
+				result = JSON.parse(data);
+				if (result.type == "success"){	
+					var priceCalc = result.success;
+					listprod.price = priceCalc.sellprice;
+					listprod.percentage = priceCalc.percentage;
+					listprod.endprice = priceCalc.endprice;
+					$scope.msg.infoMessage("SALVARE PER REGISTRARE LE MODIFICHE");
+					$scope.$apply();
+				}else{
+					$scope.msg.alertMessage(result.errorMessage);
+					$scope.$apply();
+				}	
+			},error:function(data){
+				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
+				$scope.$apply();
+			}	
+		})
+	};
+	$scope.calculateSellPrice = function(listprod){
+		var obj = createProductCalcObj(listprod);
+		$.ajax({
+			url:AppConfig.ServiceUrls.UtilPricePrice,
+			type:"POST",
+			data:"prices="+JSON.stringify(obj),
+			success:function(data){
+				result = JSON.parse(data);
+				if (result.type == "success"){	
+					var priceCalc = result.success;
+					listprod.price = priceCalc.sellprice;
+					listprod.percentage = priceCalc.percentage;
+					listprod.endprice = priceCalc.endprice;
+					$scope.msg.infoMessage("SALVARE PER REGISTRARE LE MODIFICHE");
+					$scope.$apply();
+				}else{
+					$scope.msg.alertMessage(result.errorMessage);
+					$scope.$apply();
+				}	
+			},error:function(data){
+				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
+				$scope.$apply();
+			}	
+		})
+	};
+	var createProductCalcObj = function(listprod){
+		$scope.product.taxrate = $scope.currentTaxRate;
+		return {purchaseprice:$scope.product.purchaseprice,sellprice:listprod.price,percentage:listprod.percentage,endprice:listprod.endprice,taxrate:$scope.product.taxrate.value};
+	}
+	$scope.calculateEndPrice = function(listprod){
+		var obj = createProductCalcObj(listprod);
+		$.ajax({
+			url:AppConfig.ServiceUrls.UtilPriceEndPrice,
+			type:"POST",
+			data:"prices="+JSON.stringify(obj),
+			success:function(data){
+				result = JSON.parse(data);
+				if (result.type == "success"){	
+					var priceCalc = result.success;
+					listprod.price = priceCalc.sellprice;
+					listprod.percentage = priceCalc.percentage;
+					listprod.endprice = priceCalc.endprice;
+					$scope.msg.infoMessage("SALVARE PER REGISTRARE LE MODIFICHE");
+					$scope.$apply();
+				}else{
+					$scope.msg.alertMessage(result.errorMessage);
+					$scope.$apply();
+				}	
+			},error:function(data){
+				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL PRODOTTO");
+				$scope.$apply();
+			}	
+		})
+	};
+	$scope.setListId = function(listProd){
+		if (listProd.idListProduct == $scope.listid ){
+			$scope.listid = -1;
+		}else{
+			$scope.listid = listProd.idListProduct ;
+		}
+			
 	}
 }]);

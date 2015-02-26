@@ -83,6 +83,10 @@ public class ListProduct implements Ivo {
 			this.product.convertFromTable(ltp.getProduct());
 			setEndPrice( (float)this.product.getTaxrate().getValue());
 		}
+		if (ltp.getList() != null){
+			this.list = new List();
+			this.list.convertFromTable(ltp.getList());
+		}
 	}
 	public void copy(ListProduct ltp){
 		this.price = ltp.getPrice();
@@ -114,6 +118,11 @@ public class ListProduct implements Ivo {
 		}else{
 			this.endprice = this.price;
 		}
+	}
+	public void calculatePrices(float taxrate){
+		float increment = HibernateUtils.calculatePercentage(this.getProduct().getPurchaseprice(), this.getPercentage());
+		this.price = this.getProduct().getPurchaseprice()+increment;
+		setEndPrice(taxrate);
 	}
 	public GECOObject control(){
 		return null;

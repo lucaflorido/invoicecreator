@@ -66,6 +66,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 public class RegistryDao {
@@ -532,6 +533,48 @@ public class RegistryDao {
 		return true;
 		
 	}
+	public Boolean deleteUMProduct(UnitMeasureProduct sm){
+		TblUnitMeasureProduct tblsm = new TblUnitMeasureProduct();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return true;
+		
+	}
+	public Boolean deleteListProduct(ListProduct sm){
+		TblListProduct tblsm = new TblListProduct();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return true;
+		
+	}
 	/**
 	 * GET A SINGLE PRODUCT
 	 * **/
@@ -546,7 +589,7 @@ public class RegistryDao {
 			List products = cr.list();
 			if (products.size() > 0){
 				
-				product.convertFromTable((TblProduct)products.get(0));
+				product.convertFromTableSngle((TblProduct)products.get(0));
 				
 			}
 		}catch(HibernateException e){
@@ -687,6 +730,83 @@ public class RegistryDao {
 			//cr.createAlias("list.listproduct", "listproduct");
 			//cr.add(Restrictions.disjunction(Restrictions.isNull("listproduct"),Restrictions.eq("listproduct.active",true)));
 			cr.add(Restrictions.eq("list.company.idCompany",user.getCompany().getIdCompany()));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblList> lists = cr.list();
+			if (lists.size() > 0){
+				for (Iterator<TblList> iterator = lists.iterator(); iterator.hasNext();){
+					TblList tbllist = iterator.next();
+					it.progess.invoicecreator.vo.List listobj = new it.progess.invoicecreator.vo.List();
+					listobj.convertFromTable(tbllist);
+					list.add(listobj);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public ArrayList<it.progess.invoicecreator.vo.List> getListListNoProduct(User user,Product p){
+		ArrayList<it.progess.invoicecreator.vo.List> list = new ArrayList<it.progess.invoicecreator.vo.List>();
+		list.addAll(getListEmpty(user, p));
+		//list.addAll(getListNoProduct(user, p));
+		return list;
+	}
+	private ArrayList<it.progess.invoicecreator.vo.List> getListNoProduct(User user,Product p){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<it.progess.invoicecreator.vo.List> list = new ArrayList<it.progess.invoicecreator.vo.List>();
+		try{
+			
+			
+			DetachedCriteria subcr = DetachedCriteria.forClass(TblList.class,"list");
+			subcr.add(Restrictions.eq("list.active",true));
+			subcr.add(Restrictions.eq("list.company.idCompany",user.getCompany().getIdCompany()));
+			subcr.createAlias("list.listproduct", "listproduct");
+			subcr.add(Restrictions.eq("listproduct.product.idProduct", p.getIdProduct()));
+			subcr.setProjection(Projections.property("idList"));
+			
+			Criteria cr = session.createCriteria(TblList.class,"list");
+			cr.add(Restrictions.eq("list.active",true));
+			//cr.createAlias("list.listproduct", "listproduct");
+			//cr.add(Restrictions.disjunction(Restrictions.isNull("listproduct"),Restrictions.eq("listproduct.active",true)));
+			cr.add(Restrictions.eq("list.company.idCompany",user.getCompany().getIdCompany()));
+			//cr.createAlias("list.listproduct", "listproduct");
+			
+			//cr.add(Restrictions.ne("listproduct.product.idProduct", p.getIdProduct()));
+			cr.add(Property.forName("idList").notIn(subcr));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblList> lists = cr.list();
+			if (lists.size() > 0){
+				for (Iterator<TblList> iterator = lists.iterator(); iterator.hasNext();){
+					TblList tbllist = iterator.next();
+					it.progess.invoicecreator.vo.List listobj = new it.progess.invoicecreator.vo.List();
+					listobj.convertFromTable(tbllist);
+					list.add(listobj);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	private ArrayList<it.progess.invoicecreator.vo.List> getListEmpty(User user,Product p){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<it.progess.invoicecreator.vo.List> list = new ArrayList<it.progess.invoicecreator.vo.List>();
+		try{
+			Criteria cr = session.createCriteria(TblList.class,"list");
+			cr.add(Restrictions.eq("list.active",true));
+			//cr.createAlias("list.listproduct", "listproduct");
+			//cr.add(Restrictions.disjunction(Restrictions.isNull("listproduct"),Restrictions.eq("listproduct.active",true)));
+			cr.add(Restrictions.eq("list.company.idCompany",user.getCompany().getIdCompany()));
+			//cr.createAlias("list.listproduct", "listproduct");
+			cr.add(Restrictions.isEmpty("list.listproduct"));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblList> lists = cr.list();
 			if (lists.size() > 0){
