@@ -2,8 +2,9 @@
  * 
  */
 angular.module("rocchi.product")
-.controller('RocchiGroupProductCtrl',["$scope","$http","AppConfig",function($scope,$http,AppConfig){
-    
+.controller('RocchiGroupProductCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
+    $scope.msg = AlertsFactory;
+    $scope.msg.initialize();
 	$scope.groupproductsaved = true;
 	$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
 		$scope.groupproducts= data;
@@ -29,7 +30,8 @@ angular.module("rocchi.product")
 						type:"DELETE",
 						data:"groupproductobj="+JSON.stringify($scope.deletegroupproduct),
 						success:function(data){
-								$http.get('rest/basic/groupproduct').success(function(data){
+							$scope.msg.successMessage("ELIMINAZIONE RIUSCITA CON SUCCESSO");
+							$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
 										$scope.groupproducts= data;
 								});
 								
@@ -49,11 +51,12 @@ angular.module("rocchi.product")
 					$scope.groupproductsaved = true;
 					$scope.modifyid = 0;
 					$scope.$apply();
+					$scope.msg.successMessage("SALVATAGGIO RIUSCITO CON SUCCESSO");
 					$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
 						$scope.groupproducts= data;
 					});
 				}else{
-					alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+					$scope.msg.alertMessage(result.errorMessage);
 				}	
 					
 					

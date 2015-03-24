@@ -1,4 +1,62 @@
-<div class="container userlist clearfix">
+<div class="row">
+	<div class="large-3 medium-3 small-3 columns">
+		<h3>ELENCO DOCUMENTI</h3>
+	</div>
+	<div class="large-9 medium-9 small-9 columns">
+		<ul class="button-group">
+		  	<li><a href="#/head/0" class="button">NUOVO</a></li>
+		  	<li><a href="#" class="button">FILTRA</a></li>
+		  	<li><a ng-click="exportHeads()" class="button">ESPORTA EXCEL</a></li>
+		 	<li><a ng-click="printMassElements()" class="button">STAMPA</a></li>
+		</ul>
+	</div>
+</div>
+<div class="large-12 ">
+	<div class="row collapse">
+ 	
+ 	<table st-table="headToDisplay" class="table table-striped" st-safe-src="heads">
+  <thead>
+    <tr>
+      <th width="50"></th>
+      <th width="50"></th>
+      <th width="150" class="hidden_cell" st-sort="number" st-sort-default="reverse" st-skip-natural="true">Numero</th>
+      <th width="150" st-sort="date"  st-skip-natural="true">Data</th>
+      <th width="150" >Tipologia</th>
+      <th width="150" >Cliente</th>
+      <th width="100" class="hidden_cell">Imponibile</th>
+      <th width="100" class="hidden_cell">Imposta</th>
+      <th width="100" >Totale</th>
+      <th width="50"></th>
+    </tr>
+        <tr>
+          <th colspan="8"><input st-search="" class="form-control" placeholder="Ricerca Globale ..." type="text"/></th> 
+        </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="head in headToDisplay ">
+      <td><input type="checkbox" ng-click="addRemoveHeadId(head.idHead)" class="checkbox_single" /></td>	
+      <td><a  class="matita" ng-click= "location.path('/head/'+head.idHead)"></a> </td>
+      <td class="hidden_cell">{{head.number}}</td>
+      <td >{{head.date}}</td>
+      <td>{{head.document.name}}</td>
+      <td>{{head.customer.customername}}</td>
+      <td class="hidden_cell">{{head.amount}}</td>
+      <td class="hidden_cell">{{head.taxamount}}</td>
+      <td class="hidden_cell">{{head.total}}</td>
+      <td><a class="x" ng-click="confirmDelete(head)"></a></td>
+
+    </tr>
+  
+  
+  </tbody>
+</table>
+             
+     
+   </div>
+</div>
+		  
+
+<!-- div class="container userlist clearfix">
 	<table class="menutable">
 		<thead>
 			<tr class="title_tr">
@@ -56,13 +114,13 @@
 			<thead>
 				<tr class="header_table ">
 					<td class=" row_table td_five"><div class="td_div first"><input type="checkbox" ng-click="addRemoveHeads()" class="checkbox_all" /></div></td>
-					<!--td class=" row_table quarter delete">&nbsp;</td-->
+					
 					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
 					<td class=" row_table td_five"><div class="td_div ">&nbsp;</div></td>
 					<td class=" row_table  td_five"><div class="td_div sorter" ng-click="sortFunction('number')"><div class="sorter_label">N.</div><div class="sortericon number"></div></div></td>
 					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortDateFunction('date',dateSortFunction)"><div class="sorter_label">Data</div><div class="sortericon date"></div></div></td>
 					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('document.code')"><div class="sorter_label">Tipologia</div><div class="sortericon document code"></div></div></td>
-					<!--td ng-show="headfilter.isSupplier == true" class=" row_table double"><div class="sorter" ng-click="sortFunction('supplier.suppliername')"><div class="sorter_label">Fornitore</div><div class="sortericon supplier suppliername"></div></div></td-->
+					
 					<td  class=" row_table td_thirty"><div class="td_div sorter" ng-click="sortFunction('customer.customername')"><div class="sorter_label">Cliente</div><div class="sortericon customer customername"></div></div></td>
 					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('amount')"><div class="sorter_label">Imponibile</div><div class="sortericon amount"></div></div></td>
 					<td class=" row_table td_ten"><div class="td_div sorter" ng-click="sortFunction('taxamount')"><div class="sorter_label">Imposta</div><div class="sortericon taxamount"></div></div></td>
@@ -74,7 +132,7 @@
 			<tfoot>
 				<tr class="tr_table ">
 					<td class="row_table td_five"><div class="td_div first">&nbsp;</div></td>
-					<!--td class="row_table quarter delete">&nbsp;</td-->
+			
 					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
 					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
 					<td class="row_table  td_five"><div class="td_div ">&nbsp;</div></td>
@@ -110,4 +168,4 @@
 			</table>
 			
 	</div>
-</div>
+</div-->

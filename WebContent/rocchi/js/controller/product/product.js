@@ -1,7 +1,11 @@
 angular.module("rocchi.product")
-.controller('RocchiProductListCtrl',["$scope","$rootScope","$http","ScopeFactory","$location","AppConfig",function($scope,$rootScope,$http,ScopeFactory,$location,AppConfig){
-    	
+.controller('RocchiProductListCtrl',["$scope","$rootScope","$http","ScopeFactory","$location","AppConfig","AlertsFactory",function($scope,$rootScope,$http,ScopeFactory,$location,AppConfig,AlertsFactory){
+    $scope.importview = false;	
 	$scope.location = $location;
+	$scope.url = AppConfig.ServiceUrls;
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
+	$scope.importobj = {};
 	$(document).unbind("keydown");
 	$(document).keydown(function(e){
 		if(e.altKey && e.keyCode == 78 ){
@@ -20,6 +24,21 @@ angular.module("rocchi.product")
 	}else{
 		//$scope.pagesize = ScopeFactory.factory.productList.pagesize
 	}
+	var intitialize = function(){
+		$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+			$scope.categories= data;
+		});
+		$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
+			$scope.groups= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
+			$scope.brands= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
+			$scope.regions= data;
+		});
+	};
+	intitialize();
 	$scope.pageArray = [];
 	if ($scope.showFilter == null){
 		$scope.showFilter = false;
@@ -43,52 +62,31 @@ angular.module("rocchi.product")
 	
 	
 	$scope.getProducts = function(page){
-			$(".pag").removeClass("selected");
-			$("#pag"+page).addClass("selected");
-			$scope.filter.pagefilter.startelement = (page - 1 ) * $scope.pagesize;
-			$scope.filter.pagefilter.pageSize = $scope.pagesize;
-			$rootScope.filter = $scope.filter
-			$.ajax({
-				url:AppConfig.ServiceUrls.Product,
-				type:"GET",
-				data:"filter="+JSON.stringify($scope.filter),
-				success:function(data){
-					result = JSON.parse(data);
-					//if (result.type == "success"){	
-						$scope.products = result;
-						$scope.$apply();
-						
-					//}else{
-						//alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
-					//}	
-					
-				}
-				});
+			$scope.filter.pagefilter.startelement = (page - 1 ) * $scope.pagesize_confirmed;
+			$scope.filter.pagefilter.pageSize = $scope.pagesize_confirmed;
+			$scope.filter = $scope.filter
+			$http.post(AppConfig.ServiceUrls.ProductMainList,$scope.filter).then(function(result){
+				$scope.products = result.data.success;
+			})
+			
 	}
 	
 	$scope.getProductsNumber = function(){
-		$rootScope.pagesize = $scope.pagesize;
+		
 		if ($scope.products.length != $scope.pagesize){
 		$scope.pages = [];
+		$scope.totalitems = 0;
 		$scope.pageArray = [];
-			$.ajax({
-				url:"rest/registry/product/pages/"+$scope.pagesize,
-				type:"GET",
-				success:function(data){
-						$scope.pages= JSON.parse(data);
-						for (var i=0;i<$scope.pages;i++){
-							$scope.pageArray.push(i+1);
-						}
-						$scope.$apply();
-						$scope.getProducts(1);
-						$("#maincontainer_productlist").focus();
-					}
-				
-						
-				})
+			$http.get(AppConfig.ServiceUrls.ProductPagination+$scope.pagesize).then(function(result){
+				$scope.pages = result.data.pages;
+				$scope.totalitems = result.data.totalitems;
+				$scope.pagesize_confirmed = $scope.pagesize;
+				$scope.getProducts(1);
+			});
+			
 		}
 	}
-	$scope.getProducts();
+	$scope.getProductsNumber();
 	
 	$scope.deleteElement = function(id){
 		for(var i=0;i<$scope.products.length;i++){
@@ -131,7 +129,16 @@ angular.module("rocchi.product")
 		$rootScope.showIncrement = $scope.showIncrement;
 	}
 	$scope.incrementPrices = function(){
-		$.ajax({
+		$http.post(AppConfig.ServiceUrls.ProductIncrement,$scope.filter).then(
+			function(results){
+				var result = results.data;
+				if (result.type == "success"){	
+					$scope.getProductsNumber();
+				}else{
+					alert("Errore: "+results.errorName+" Messaggio:"+result.errorMessage);
+				}	
+		});
+		/*$.ajax({
 				url:"rest/registry/product/increment/",
 				type:"POST",
 				data:"filter="+JSON.stringify($scope.filter),
@@ -141,16 +148,42 @@ angular.module("rocchi.product")
 						
 						$scope.getProductsNumber();
 					}else{
-						alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+						$scope.msg.alertMessage(data.data.errorMessage);
 					}	
 				}	
-			});
+			});*/
 	}
 	$scope.changeCategory = function(){
 		$scope.filter.category = $scope.currentCategory;
 		$scope.subcategories = $scope.currentCategory.subcategories		
 		$scope.currentSubCategory = null;
 	}
+	$scope.novalid = false;
+	$scope.importProduct = function(filename){
+		
+		$scope.importobj.filename = filename;
+		$http.post(AppConfig.ServiceUrls.ImportProducts,$scope.importobj).then(function(result){
+			if (result.data.type == "success"){
+				$scope.msg.infoMessage("IMPORTAZIONE TERMINATA CON SUCCESSO");
+				$scope.importview = false;
+				$scope.novalid = true;
+				$scope.getProducts();
+			}else{
+				$scope.msg.alertMessage(result.data.errorMessage);
+			}
+			
+		});
+	}
+	 $scope.onComplete = function (response) {
+			if (response.data.type == "success"){
+				$scope.importProduct(response.data.success)
+			}else{
+				$scope.msg.alertMessage(response.data.errorMessage);
+			}
+		}
+	 $scope.addNew = function(){
+		 $location.path("/product/0");
+	 };
 }])
 .controller('RocchiProductDetailCtrl',["$scope","$http","$routeParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$routeParams,$location,$rootScope,AppConfig,AlertsFactory){
     
@@ -211,17 +244,17 @@ angular.module("rocchi.product")
 										}
 									}
 							});
-							/*$http.get('rest/registry/supplier').success(function(data){
-								$scope.suppliers= data;
-								if($scope.product.supplier != null){
-									for (var i=0;i<$scope.suppliers.length;i++){
-										if ($scope.product.supplier.idSupplier == $scope.suppliers[i].idSupplier){
-											$scope.currentSupplier = $scope.suppliers[i]; 
+							$http.get(AppConfig.ServiceUrls.Region).success(function(data){
+								$scope.regions= data;
+									if($scope.product.region){
+										for (var i=0;i<$scope.regions.length;i++){
+											if ($scope.product.region.idRegion == $scope.regions[i].idRegion){
+												$scope.currentRegion = $scope.regions[i]; 
+											}
 										}
-										
 									}
-								}
-							});*/
+							});
+							
 							$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
 					$scope.taxrates= data;
 							for (var itx=0;itx<$scope.taxrates.length;itx++){
@@ -315,6 +348,9 @@ angular.module("rocchi.product")
 	
 	$scope.saveProduct = function(){
 		$scope.product.taxrate = $scope.currentTaxRate;
+		$scope.product.group = $scope.currentGroup;
+		$scope.product.region = $scope.currentRegion;
+		$scope.product.category = $scope.currentCategory;
 		$scope.product.isProduct = true;
 		$.ajax({
 				url:AppConfig.ServiceUrls.Product,

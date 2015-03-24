@@ -11,7 +11,9 @@ import it.progess.invoicecreator.pojo.TblGroupCustomer;
 import it.progess.invoicecreator.pojo.TblGroupProduct;
 import it.progess.invoicecreator.pojo.TblGroupSupplier;
 import it.progess.invoicecreator.pojo.TblPayment;
+import it.progess.invoicecreator.pojo.TblRegion;
 import it.progess.invoicecreator.pojo.TblStoreMovement;
+import it.progess.invoicecreator.pojo.TblSubCategoryProduct;
 import it.progess.invoicecreator.pojo.TblTaxrate;
 import it.progess.invoicecreator.pojo.TblUnitMeasure;
 import it.progess.invoicecreator.vo.Brand;
@@ -27,7 +29,9 @@ import it.progess.invoicecreator.vo.GroupCustomer;
 import it.progess.invoicecreator.vo.GroupProduct;
 import it.progess.invoicecreator.vo.GroupSupplier;
 import it.progess.invoicecreator.vo.Payment;
+import it.progess.invoicecreator.vo.Region;
 import it.progess.invoicecreator.vo.StoreMovement;
+import it.progess.invoicecreator.vo.SubCategoryProduct;
 import it.progess.invoicecreator.vo.TaxRate;
 import it.progess.invoicecreator.vo.UnitMeasure;
 import it.progess.invoicecreator.vo.User;
@@ -149,11 +153,12 @@ public class BasicDao {
 	/*****
 	 * Get List of unit measure 
 	 */
-	public ArrayList<UnitMeasure> getUnitMeasureList(){
+	public ArrayList<UnitMeasure> getUnitMeasureList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<UnitMeasure> list = new ArrayList<UnitMeasure>();
 		try{
-			Criteria cr = session.createCriteria(TblUnitMeasure.class);
+			Criteria cr = session.createCriteria(TblUnitMeasure.class,"um");
+			checkORCompany("um",user,cr);
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblUnitMeasure> unitmeasures = cr.list();
 			if (unitmeasures.size() > 0){
@@ -178,14 +183,14 @@ public class BasicDao {
 	 * @param taxrates
 	 * @return
 	 */
-	public GECOObject saveUpdatesUnitMeasure(UnitMeasure[] ums){
+	public GECOObject saveUpdatesUnitMeasure(UnitMeasure[] ums,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< ums.length;i++){
 				UnitMeasure um = ums[i];
-				if (um.control() == null){
+				if (um.control(user) == null){
 					if (um.getName() != "" && um.getName() != null && um.getCode() != ""  && um.getCode() != ""){
 						TblUnitMeasure tblum = new TblUnitMeasure();
 						tblum.convertToTable(um);
@@ -622,6 +627,32 @@ public class BasicDao {
 		}
 		return list;
 	}
+	public ArrayList<Document> getDocumentOrderList(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Document> list = new ArrayList<Document>();
+		try{
+			Criteria cr = session.createCriteria(TblDocument.class,"document");
+			cr.add(Restrictions.eq("document.company.idCompany", user.getCompany().getIdCompany()));
+			cr.add(Restrictions.eq("document.order",true));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblDocument> documents = cr.list();
+			if (documents.size() > 0){
+				for (Iterator<TblDocument> iterator = documents.iterator(); iterator.hasNext();){
+					TblDocument tbldocument = iterator.next();
+					Document document = new Document();
+					document.convertFromTable(tbldocument);
+					list.add(document);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
 	/***
 	 * Save update Documents
 	 * **/
@@ -684,11 +715,12 @@ public class BasicDao {
 	/*****
 	 * Get List of GroupProduct 
 	 */
-	public ArrayList<GroupProduct> getGroupProductList(){
+	public ArrayList<GroupProduct> getGroupProductList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<GroupProduct> list = new ArrayList<GroupProduct>();
 		try{
-			Criteria cr = session.createCriteria(TblGroupProduct.class);
+			Criteria cr = session.createCriteria(TblGroupProduct.class,"group");
+			checkORCompany("group",user,cr);
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblGroupProduct> groupproducts = cr.list();
 			if (groupproducts.size() > 0){
@@ -708,8 +740,8 @@ public class BasicDao {
 		}
 		return list;
 	}
-	public ArrayList<GroupProduct> getGroupProductList(boolean defaultValue){
-		ArrayList<GroupProduct> list = getGroupProductList();
+	public ArrayList<GroupProduct> getGroupProductList(boolean defaultValue,User user){
+		ArrayList<GroupProduct> list = getGroupProductList(user);
 		GroupProduct gp = new GroupProduct();
 		gp.setCode(" ");
 		gp.setName(" ");
@@ -719,14 +751,14 @@ public class BasicDao {
 	/***
 	 * Save update GroupProducts
 	 * **/
-	public GECOObject saveUpdatesGroupProduct(GroupProduct[] sms){
+	public GECOObject saveUpdatesGroupProduct(GroupProduct[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< sms.length;i++){
 				GroupProduct sm = sms[i];
-				if (sm.control() == null ){
+				if (sm.control(user) == null ){
 					TblGroupProduct tblsm = new TblGroupProduct();
 					tblsm.convertToTable(sm);
 					session.saveOrUpdate(tblsm);
@@ -777,11 +809,12 @@ public class BasicDao {
 	/*****
 	 * Get List of CategoryProduct 
 	 */
-	public ArrayList<CategoryProduct> getCategoryProductList(){
+	public ArrayList<CategoryProduct> getCategoryProductList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<CategoryProduct> list = new ArrayList<CategoryProduct>();
 		try{
-			Criteria cr = session.createCriteria(TblCategoryProduct.class);
+			Criteria cr = session.createCriteria(TblCategoryProduct.class,"category");
+			checkORCompany("category",user,cr);
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblCategoryProduct> categoryproducts = cr.list();
 			if (categoryproducts.size() > 0){
@@ -804,14 +837,14 @@ public class BasicDao {
 	/***
 	 * Save update CategoryProducts
 	 * **/
-	public GECOObject saveUpdatesCategoryProduct(CategoryProduct[] sms){
+	public GECOObject saveUpdatesCategoryProduct(CategoryProduct[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< sms.length;i++){
 				CategoryProduct sm = sms[i];
-				if (sm.control() == null ){
+				if (sm.control(user) == null ){
 					TblCategoryProduct tblsm = new TblCategoryProduct();
 					tblsm.convertToTableForSaving(sm);
 					session.saveOrUpdate(tblsm);
@@ -857,7 +890,27 @@ public class BasicDao {
 		return true;
 		
 	}
-	
+	public Boolean deleteSubCategoryProduct(SubCategoryProduct sm){
+		TblSubCategoryProduct tblsm = new TblSubCategoryProduct();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return true;
+		
+	}
 	/*****
 	 * Get List of CategoryProduct 
 	 */
@@ -1203,11 +1256,13 @@ public class BasicDao {
 	/*****
 	 * Get List of CategoryProduct 
 	 */
-	public ArrayList<Brand> getBrandList(){
+	public ArrayList<Brand> getBrandList(User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Brand> list = new ArrayList<Brand>();
 		try{
-			Criteria cr = session.createCriteria(TblBrand.class);
+			Criteria cr = session.createCriteria(TblBrand.class,"brand");
+			checkORCompany("brand",user,cr);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblBrand> brands = cr.list();
 			if (brands.size() > 0){
 				for (Iterator<TblBrand> iterator = brands.iterator(); iterator.hasNext();){
@@ -1229,14 +1284,14 @@ public class BasicDao {
 	/***
 	 * Save update GroupSuppliers
 	 * **/
-	public GECOObject saveUpdatesBrand(Brand[] sms){
+	public GECOObject saveUpdatesBrand(Brand[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< sms.length;i++){
 				Brand sm = sms[i];
-				if (sm.control() == null ){
+				if (sm.control(user) == null ){
 					TblBrand tblsm = new TblBrand();
 					tblsm.convertToTable(sm);
 					session.saveOrUpdate(tblsm);
@@ -1281,5 +1336,84 @@ public class BasicDao {
 		}
 		return true;
 		
+	}
+	
+	/***
+	 * DELETE A SINGLE REGION
+	 * **/
+	public Boolean deleteRegion(Region re){
+		TblRegion tblre = new TblRegion();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblre.convertToTable(re);
+			tx = session.beginTransaction();
+			session.delete(tblre);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return true;
+		
+	}
+	public ArrayList<Region> getRegionList(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Region> list = new ArrayList<Region>();
+		try{
+			Criteria cr = session.createCriteria(TblRegion.class,"region");
+			checkORCompany("region",user,cr);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblRegion> regions = cr.list();
+			if (regions.size() > 0){
+				for (Iterator<TblRegion> iterator = regions.iterator(); iterator.hasNext();){
+					TblRegion tblregion = iterator.next();
+					Region region = new Region();
+					region.convertFromTable(tblregion);
+					list.add(region);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public GECOObject saveUpdatesRegion(Region[] regions,User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tx = session.beginTransaction();
+			for(int i =0; i< regions.length;i++){
+				Region region = regions[i];
+				if (region.control(user) == null){
+					TblRegion tblregion = new TblRegion();
+					tblregion.convertToTable(region);
+					session.saveOrUpdate(tblregion);
+					
+				}else{
+					if (tx!= null) tx.rollback();
+					return region.control();
+				}
+			}
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return new GECOSuccess();
 	}
 }

@@ -46,5 +46,18 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.28-bin.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/progesstransport.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/progessvalidator.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-examples-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-excelant-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-scratchpad-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/progessemailhelper.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jersey-multipart-1.18.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mimepull-1.8.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -3,6 +3,7 @@ package it.progess.invoicecreator.vo.filter.product;
 import it.progess.invoicecreator.pojo.TblBrand;
 import it.progess.invoicecreator.pojo.TblCategoryProduct;
 import it.progess.invoicecreator.pojo.TblGroupProduct;
+import it.progess.invoicecreator.pojo.TblRegion;
 import it.progess.invoicecreator.pojo.TblSubCategoryProduct;
 import it.progess.invoicecreator.pojo.TblSupplier;
 import it.progess.invoicecreator.vo.filter.PagesFilter;
@@ -14,9 +15,17 @@ public class SelectProductsFilter {
 	private TblGroupProduct group;
 	private TblSupplier supplier;
 	private TblSubCategoryProduct subcategory;
+	private TblRegion region;
 	private float increment;
 	private boolean isPercentage;
 	private String searchstring;
+	
+	public TblRegion getRegion() {
+		return region;
+	}
+	public void setRegion(TblRegion region) {
+		this.region = region;
+	}
 	public String getSearchstring() {
 		return searchstring;
 	}

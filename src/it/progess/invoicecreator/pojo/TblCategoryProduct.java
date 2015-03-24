@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,6 +36,15 @@ public class TblCategoryProduct implements Itbl {
 	private String note;
 	@OneToMany(fetch= FetchType.LAZY,mappedBy = "categoryproduct",cascade = CascadeType.ALL)
 	private Set<TblSubCategoryProduct> subcategories;
+	@ManyToOne
+	@JoinColumn(name = "idCompany")
+	private TblCompany company;
+	public TblCompany getCompany() {
+		return company;
+	}
+	public void setCompany(TblCompany company) {
+		this.company = company;
+	}
 	public Set<TblSubCategoryProduct> getSubcategories() {
 		return subcategories;
 	}

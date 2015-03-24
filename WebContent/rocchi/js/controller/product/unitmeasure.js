@@ -2,8 +2,9 @@
  * 
  */
 angular.module("rocchi.product")
-.controller('RocchiUnitmeasureCtrl',["$scope","$http","AppConfig",function($scope,$http,AppConfig){
-    
+.controller('RocchiUnitmeasureCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
+    $scope.msg = AlertsFactory;
+    $scope.msg.initialize();
 	$scope.umsaved = true;
 	$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
 		$scope.ums= data;
@@ -25,6 +26,7 @@ angular.module("rocchi.product")
 						type:"DELETE",
 						data:"umobj="+JSON.stringify($scope.deleteUm),
 						success:function(data){
+							$scope.msg.successMessage("ELIMINAZIONE RIUSCITA CON SUCCESSO");
 								$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
 										$scope.ums= data;
 								});
@@ -44,12 +46,13 @@ angular.module("rocchi.product")
 				if (result.type == "success"){	
 					$scope.umsaved = true;
 					$scope.modifyid = 0;
+					$scope.msg.successMessage("SALVATAGGIO RIUSCITO CON SUCCESSO");
 					$scope.$apply();
-					$http.get('rest/basic/unitmeasure').success(function(data){
+					$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
 							$scope.ums= data;
 					});
 				}else{
-					alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+					$scope.msg.alertMessage(result.errorMessage);
 				}		
 			}	
 		})

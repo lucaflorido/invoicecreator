@@ -116,6 +116,7 @@ public class TblList implements Itbl {
 		this.name  = lt.getName();
 		this.isPercentage = lt.isPercentage();
 		this.increment = lt.getIncrement();
+		this.active = lt.isActive();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		if (lt.getCompany() != null){
 			this.company = new TblCompany();

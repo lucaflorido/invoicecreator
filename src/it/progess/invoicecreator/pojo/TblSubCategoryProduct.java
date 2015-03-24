@@ -26,7 +26,7 @@ public class TblSubCategoryProduct implements Itbl {
 	@Column(name="description")
 	private String description;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idCategoryProduct", nullable = false)
+	@JoinColumn(name = "idCategoryProduct")
 	private TblCategoryProduct categoryproduct;
 	public TblCategoryProduct getCategoryproduct() {
 		return categoryproduct;

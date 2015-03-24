@@ -21,6 +21,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name="tblproduct")
 public class TblProduct implements Itbl{
@@ -41,34 +44,53 @@ public class TblProduct implements Itbl{
 	private float purchaseprice;
 	@Column(name="manageserialnumber")
 	private boolean manageserialnumber;//catalog
-	@OneToMany(fetch= FetchType.LAZY,mappedBy = "product",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
 	private Set<TblUnitMeasureProduct> ums;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idCategory")
+	@Fetch(FetchMode.SELECT)
 	private TblCategoryProduct category;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idSubcategory")
+	@Fetch(FetchMode.SELECT)
 	private TblSubCategoryProduct subcategory;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idGroup")
+	@Fetch(FetchMode.SELECT)
 	private TblGroupProduct group;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idTaxRate")
+	@Fetch(FetchMode.SELECT)
 	private TblTaxrate taxrate;
 	@ManyToOne
 	@JoinColumn(name = "idSupplier")
+	@Fetch(FetchMode.SELECT)
 	private TblSupplier supplier;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idBrand")
+	@Fetch(FetchMode.SELECT)
 	private TblBrand brand;
 	@ManyToOne
 	@JoinColumn(name = "idCompany")
+	@Fetch(FetchMode.SELECT)
 	private TblCompany company;
 	@Column(name="isProduct")
 	private boolean isProduct;
-	@OneToMany(fetch= FetchType.LAZY,mappedBy = "product",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
 	private Set<TblListProduct> listproduct;
+	@ManyToOne
+	@JoinColumn(name = "idRegion")
+	@Fetch(FetchMode.SELECT)
+	private TblRegion region;
 	
+	public TblRegion getRegion() {
+		return region;
+	}
+	public void setRegion(TblRegion region) {
+		this.region = region;
+	}
 	public Set<TblListProduct> getListproduct() {
 		return listproduct;
 	}
@@ -216,6 +238,10 @@ public class TblProduct implements Itbl{
 		if (pd.getCompany() != null){
 			this.company = new TblCompany();
 			this.company.convertToTable(pd.getCompany());
+		}
+		if (pd.getRegion() != null){
+			this.region = new TblRegion();
+			this.region.convertToTable(pd.getRegion());
 		}
 		if (pd.getUms() != null ){
 			this.ums = new HashSet<TblUnitMeasureProduct>();

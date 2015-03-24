@@ -1,128 +1,83 @@
-<div class="container userlist clearfix">
-	<div class="toolbar_table">
-		<h3>Elenco Categorie Prodotti</h3>
-		<div class=" buttonmenu addbutton "  >
-			<a ng-click="addcategoryproductElement()" ng-if="categoryproductsaved == true">
-				<div class="add">
-				</div>
-				<div class="addlabel">
-					Aggiungi Categorie Prodotti 
-				</div>
-			</a>
-		</div>
-		<div class="buttonmenu savebutton admin" ng-click="savecategoryproducts()">
-			<div class="save buttonicon">
-			</div>
-			<div class="buttonlabel">
-				Salva
-			</div>
-		</div>
-		<div class="filter">
-			<input class="filter" ng-model="query">
-			<div class="label filter">Cerca:</div>
-		</div>
-		<div class="sort">
-		    <select class="sort" ng-model="orderProp">
-				<option value="username">Username</option>
-				<option value="cognome">Cognome</option>
-			</select>
-			<div class="label sort">Ordina:</div> 
-		</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
-	<div class="tablecontainer categoryproduct" >
-		<table class="GECO_table four_two clearfix">
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>CATEGORIE PRODOTTI</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="addcategoryproductElement()" ng-if="categoryproductsaved == true" class="button">Aggiungi</a></li>
+		  	<li><a ng-click="savecategoryproducts()" class="button">Salva</a></li>
+		</ul>
+	</div>
+	
+</div>
+
+<div class="row">
+	<div class="large-8 medium-8 small-8 columns">
+	
+		<table st-table="categoryproductsToDisplay" class="table table-striped" st-safe-src="categoryproducts" >
 			<thead>
 				<tr>
-				<td class="header_table row_table first name">Codice</td>
-				<td class="header_table row_table cognome">Nome</td>
-				<td class="header_table row_table cognome">Descrizione</td>
-				<td class="header_table row_table cognome">Note</td>
-				<td class="header_table row_table half  modify">&nbsp;</td>
-				<td class="header_table row_table half  modify">&nbsp;</td>
-				<td class="header_table row_table half delete">&nbsp;</td>
+					<th  >&nbsp;</th>
+					<th st-sort="code"  st-sort-default="anything" st-skip-natural="true" >Codice</th>
+					<th  st-sort="name"  st-skip-natural="true"  >Nome</th>
+					<th >Descrizione</th>
+					
+					<th >&nbsp;</th>
 				</tr>
 			</thead>
+			<tbody>
+				<tr st-select-row="categoryproduct" ng-repeat="categoryproduct in categoryproductsToDisplay" class="row_selected">
+					<td  ><div class="matita" ng-click= "modifycategoryproductElement(categoryproduct)"></div></td>
+					<td   ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.code}}</div><div><input   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.code"  value="{{categoryproduct.code}}" />  </div></td>
+					<td  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.name}}</div><div><input   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.name"  value="{{categoryproduct.name}}" />  </div></td>
+					<td   ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.description}}</div><div><input   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.description"  value="{{categoryproduct.description}}" />  </div></td>
+					
+				    <td ><a class="x" ng-click="deletecategoryproductElement(categoryproduct)"></a></td>
+				</tr>
+			</tbody>
 		</table>
-		<div ng-repeat="categoryproduct in categoryproducts | filter:query | orderBy:orderProp">	
-			<table class="GECO_table four_two clearfix">
-				<tbody>
-					<tr  on-finish-render>
-						<td class="row_table first cognome"><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.code}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.code"  value="{{categoryproduct.code}}" />  </div></td>
-						<td class="row_table username"  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.name}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.name"  value="{{categoryproduct.name}}" />  </div></td>
-						<td class="row_table username"  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.description}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.description"  value="{{categoryproduct.description}}" />  </div></td>
-						<td class="row_table username"  ><div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{categoryproduct.note}}</div><div><input class="input_field"   ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="categoryproduct.note"  value="{{categoryproduct.note}}" />  </div></td>
-						<td class="row_table half username"  ><a >
-							<div class="  icon detail">
-								<div class="detailicon open" ng-click="detailView(categoryproduct.idCategoryProduct)" id="detail{{categoryproduct.idCategoryProduct}}" ></div>
-							</div>
-						</a></td>
-						<td class="row_table half username"  ><a href="#/categoryproduct"><div class=" modify"><div class="modifyicon" ng-click="modifycategoryproductElement(categoryproduct.idCategoryProduct)" ></div></div></a></td>
-						<td class="row_table half delete"><div class="deleteicon" id="del{{categoryproduct.idCategoryProduct}}" ng-click="deletecategoryproductElement(categoryproduct.idCategoryProduct)" ></div></td>
-						
-					</tr>	
-				</tbody>
-			</table>
-		<div class="detailview"   id="detailview{{categoryproduct.idCategoryProduct}}"  on-finish-render>
-				<div class="add_container" ng-click="addSubCategoryElement(categoryproduct)">
-							<div class="addlabel">
-								Aggiungi Sottocategoria 
-							</div>
-							<div class="add buttonicon">
-							</div>
-							
-						</div>
-				<div class="GECO_right_table">
-				
-				<table class="GECO_table GECO_table_subdetail three_two clearfix">
+	</div>
+	<div class="large-4 medium-4 small-4 columns" ng-show="selectedcategory">
+		<div class="row">
+			<div class="large-8 columns">
+				<h4>SOTTOCATEGORIE</h4>
+			</div>
+			<div class="large-4 columns">
+				<button ng-click="addSubCategoryElement()" ng-if="categoryproductsaved == true">Aggiungi </button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-12 columns">
+				<table st-table="subcategoryproductsToDisplay" class="table table-striped" st-safe-src="selectedcategory.subcategories" >
 					<thead>
 						<tr>
-							<td class="header_table row_table first">Codice</td>
-							<td class="header_table row_table ">Nome</td>
+							<th >&nbsp;</th>
+							<th st-sort="code"  st-sort-default="anything" st-skip-natural="true" >Codice</th>
+							<th  st-sort="name"  st-skip-natural="true">Nome</th>
+							<th >Descrizione</th>
+							
+							<th >&nbsp;</th>
 						</tr>
-						
 					</thead>
 					<tbody>
-						<tr  ng-repeat="subcategory in categoryproduct.subcategories | orderBy:orderYear" >
+						<tr st-select-row="subcategory" ng-repeat="subcategory in subcategoryproductsToDisplay" >
+							<td  ><div class="matita" ng-click= "modifysubcategoryproductElement(subcategory)"></div></td>
+							<td   ><div ng-if="modifyscid != subcategory.idSubCategoryProduct">&nbsp;{{subcategory.code}}</div><div><input class="input_field"  ng-if="modifyscid == subcategory.idSubCategoryProduct" ng-model="subcategory.code"  value="{{subcategory.code}}" />  </div></td>
+							<td  ><div ng-if="modifyscid != subcategory.idSubCategoryProduct">&nbsp;{{subcategory.name}}</div><div><input class="input_field"  ng-if="modifyscid == subcategory.idSubCategoryProduct" ng-model="subcategory.name"  value="{{subcategory.name}}" />  </div></td>
+							<td   ><div ng-if="modifyscid != subcategory.idSubCategoryProduct">&nbsp;{{subcategory.description}}</div><div><input class="input_field"  ng-if="modifyscid == subcategory.idSubCategoryProduct" ng-model="subcategory.description"  value="{{subcategory.description}}" />  </div></td>
 							
-							<td class="row_table first">
-								<div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{subcategory.code}}</div>
-										<div><input ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="subcategory.code"  value="{{subcategory.code}}" />  </div>
-							</td>
-							<td class="row_table ">
-								<div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{subcategory.name}}</div>
-										<div><input ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="subcategory.name"  value="{{subcategory.name}}" />  </div>
-							</td>
+						    <td ><a class="x" ng-click="deletesubcategorycustomerElement(subcategory)"></a></td>
 						</tr>
 					</tbody>
 				</table>
-				</div>	
-		<!--div class="detailview" id="detailview{{payment.idPayment}}" on-finish-render>
-			<td  > 
-						
-						<div class="tabledetail">
-							<div class="tabledetail_content categoryproduct">
-								<div class="tabledetail_header">
-									<div class="tabledetail_header_element tabledetail_row first">Codice</div>
-									<div class="tabledetail_header_element tabledetail_row">Nome</div>
-								</div>
-								<div class="tabledetail_rows" ng-repeat="subcategory in categoryproduct.subcategories | orderBy:orderYear" >
-									<div class="tabledetail_row first">
-										
-									</div>
-									<div class="tabledetail_row first">
-										<div ng-if="modifyid != categoryproduct.idCategoryProduct">&nbsp;{{subcategory.name}}</div>
-										<div><input ng-if="modifyid == categoryproduct.idCategoryProduct" ng-model="subcategory.name"  value="{{subcategory.name}}" />  </div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</td>
-		</div-->	
-				
-			</div>	
-				
-				
-			<!--/div>
-		</div-->
+			</div>
+		</div>
 	</div>
 </div>
+
+

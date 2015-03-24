@@ -27,6 +27,7 @@ import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.GenerateDocsObject;
 import it.progess.invoicecreator.vo.GenerateObject;
 import it.progess.invoicecreator.vo.Head;
+import it.progess.invoicecreator.vo.HeadTotalCalculation;
 import it.progess.invoicecreator.vo.NeededObject;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.Row;
@@ -37,6 +38,7 @@ import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.TaxRate;
 import it.progess.invoicecreator.vo.Transporter;
 import it.progess.invoicecreator.vo.UnitMeasure;
+import it.progess.invoicecreator.vo.UnitMeasureProduct;
 import it.progess.invoicecreator.vo.User;
 import it.progess.invoicecreator.vo.filter.GenerateDocsFilter;
 import it.progess.invoicecreator.vo.filter.HeadFilter;
@@ -1478,4 +1480,44 @@ public class DocumentDao {
 		}
 		return list;
 	}
+	public GECOObject addRow(UnitMeasureProduct um,Head h){
+		try{
+			Row r = new Row();
+			float price = new RegistryDao().getProductPriceList(um.getProduct().getIdProduct(), h.getList().getIdList());
+			if (price > 0){
+				um.getProduct().setListprice(price);
+			}else{
+				um.getProduct().setListprice(um.getProduct().getSellprice());
+			}
+			r.addProduct(um);
+			RowTotalCalculator rtc = new RowTotalCalculator();
+			rtc.rowCalculation(r);
+			if (h.getRows() == null)
+				h.setRows(new HashSet<Row>());
+			h.getRows().add(r);
+			HeadTotalCalculation htc = new HeadTotalCalculation();
+			htc.calculation(h);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new GECOError("error",e.getMessage());
+		}
+		return new GECOSuccess(h);
+	}
+	public GECOObject saveWizardHead(User user,Head h){
+		try{
+			Document d = new BasicDao().getDocumentOrderList(user).get(0);
+			h.setDocument(d);
+			Date today = new Date();
+			String todayString = DataUtilConverter.convertStringFromDate(today);
+			h.setDate(todayString);
+			h.calculateNumber();
+			return new DocumentDao().saveHead(h, user);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new GECOError("error", e.getMessage());
+		}
+	
+	}
+	
+	
 }

@@ -33,23 +33,20 @@
              <label>Descrizione</label>
             <input type="text" placeholder="Descrizione" value="{{product.description}}" ng-model="product.description">
 
-            <label>Tipo</label>
-            <select name="Tipo">
-            <option>Tipo</option>
-           
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>  
-            </select> 
+			<label>Categoria</label>
+            <select  name="category" ng-options="category.code for category in categorys" ng-model="currentCategory"  >
+          		 	<option value=""></option>
+           	</select> 
+            	
+            <label>Gruppo</label>
+            <select  name="group" ng-options="group.code for group in groups" ng-model="currentGroup"  >
+           		 	<option value=""></option>
+            	</select> 
          
                <label>Regione</label>
-            <select name="Regione">
-            <option>Regione</option>
-           
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>  
-            </select> 
+             <select  name="region" ng-options="region.name for region in regions" ng-model="currentRegion"  >
+           		 	<option value=""></option>
+            	</select> 
          
 
              <label>Prezzo di Costo</label>

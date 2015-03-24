@@ -1,57 +1,49 @@
-<div class="container userlist clearfix">
-	<div class="toolbar_table">
-		<h3>Elenco Marche</h3>
-		<div class=" buttonmenu addbutton "  >
-			<a ng-click="addbrandElement()" ng-if="brandsaved == true">
-				<div class="add">
-				</div>
-				<div class="addlabel">
-					Aggiungi Marca
-				</div>
-			</a>
-		</div>
-		<div class="buttonmenu savebutton admin" ng-click="savebrands()">
-			<div class="save buttonicon">
-			</div>
-			<div class="buttonlabel">
-				Salva
-			</div>
-		</div>
-		<div class="filter">
-			<input class="filter" ng-model="query">
-			<div class="label filter">Cerca:</div>
-		</div>
-		<div class="sort">
-		    <select class="sort" ng-model="orderProp">
-				<option value="username">Username</option>
-				<option value="cognome">Cognome</option>
-			</select>
-			<div class="label sort">Ordina:</div> 
-		</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
-	<div class="tablecontainer brand" >
-		
-		<table class="GECO_table four_two clearfix">
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>MARCHE</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="addbrandElement()" ng-if="brandsaved == true" class="button">Aggiungi</a></li>
+		  	<li><a ng-click="savebrands()" class="button">Salva</a></li>
+		</ul>
+	</div>
+	
+</div>
+
+<div class="row">
+	<div class="large-12 medium-12 small-12">
+	
+		<table st-table="brandsToDisplay" class="table table-striped" st-safe-src="brands" >
 			<thead>
 				<tr>
-				<td class="header_table row_table first name">Codice</td>
-				<td class="header_table row_table cognome">Nome</td>
-				<td class="header_table row_table cognome">Descrizione</td>
-				<td class="header_table row_table cognome">Note</td>
-				<td class="header_table row_table half  modify">&nbsp;</td>
-				<td class="header_table row_table half delete">&nbsp;</td>
+					<th >&nbsp;</th>
+					<th st-sort="code"  st-sort-default="anything" st-skip-natural="true" >Codice</th>
+					<th  st-sort="name"  st-skip-natural="true">Nome</th>
+					<th >Descrizione</th>
+					<th >Note</th>
+					
+					<th >&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="brand in brands | filter:query | orderBy:orderProp">
-					<td class="row_table first username"  ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.code}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.code"  value="{{brand.code}}" />  </div></td>
-					<td class="row_table  username"  ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.name}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.name"  value="{{brand.name}}" />  </div></td>
-					<td class="row_table  username"  ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.description}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.description"  value="{{brand.description}}" />  </div></td>
-					<td class="row_table  usernote"  ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.note}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.note"  value="{{brand.note}}" />  </div></td>
-					<td class="row_table  half"  ><a href="#/brand"><div class=" modify"><div class="modifyicon" ng-click="modifybrandElement(brand.idBrand)" ></div></div></a></td>
-				    <td class="row_table half"><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletebrandElement(brand.idBrand)" ></div></td>
-				</tr>	
+				<tr ng-repeat="brand in brandsToDisplay" >
+					<td  ><div class="matita" ng-click= "modifybrandElement(brand.idBrand)"></div></td>
+					<td   ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.code}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.code"  value="{{brand.code}}" />  </div></td>
+					<td  ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.name}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.name"  value="{{brand.name}}" />  </div></td>
+					<td   ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.description}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.description"  value="{{brand.description}}" />  </div></td>
+					<td><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.note}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.note"  value="{{brand.note}}" />  </div></td>
+					
+				    <td ><a class="x" ng-click="deletebrandElement(brand.idBrand)"></a></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
+
+

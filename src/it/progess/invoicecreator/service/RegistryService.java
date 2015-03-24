@@ -160,12 +160,12 @@ public class RegistryService {
 	   */
 	  @POST
 	  @Path("products")
- 	  @Produces(MediaType.TEXT_HTML)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String getProductList(@Context HttpServletRequest request,@FormParam("filter") String filterJSON){
+ 	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String getProductList(@Context HttpServletRequest request, String data){
 		Gson gson = new Gson();
 		RegistryDao dao = new RegistryDao();
-		SelectProductsFilter filter = gson.fromJson(filterJSON, SelectProductsFilter.class);
+		SelectProductsFilter filter = gson.fromJson(data, SelectProductsFilter.class);
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getProductList(filter,loggeduser));
 	  }
@@ -215,6 +215,16 @@ public class RegistryService {
 		return gson.toJson(dao.searchProducts(value,loggeduser));
 	  }
 	  @POST
+	  @Path("product/search/{value}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public String searchProductsHead(@Context HttpServletRequest request,@PathParam("value") String value,String data) {
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		Head h = gson.fromJson(data, Head.class);
+		return gson.toJson(dao.searchProducts(value,h,loggeduser));
+	  }
+	  @POST
 	  @Path("product/filtered/")
 	  @Produces(MediaType.TEXT_HTML)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -227,12 +237,12 @@ public class RegistryService {
 	  }
 	  @POST
 	  @Path("product/increment/")
-	  @Produces(MediaType.TEXT_HTML)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	  public String incrementProductsList(@Context HttpServletRequest request,@FormParam("filter") String filter) {
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON)
+	  public String incrementProductsList(@Context HttpServletRequest request, String data) {
 		Gson gson = new Gson();
 		RegistryDao dao = new RegistryDao();
-		SelectProductsFilter f = gson.fromJson(filter, SelectProductsFilter.class);
+		SelectProductsFilter f = gson.fromJson(data, SelectProductsFilter.class);
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.calculateIncrementProducts(f,loggeduser));
 	  }

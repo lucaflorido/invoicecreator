@@ -9,7 +9,14 @@ public class UnitMeasure implements Ivo {
 	private String description;
 	private String code;
 	private String name;
+	private Company company;
 	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public int getIdUnitMeasure() {
 		return idUnitMeasure;
 	}
@@ -40,6 +47,16 @@ public class UnitMeasure implements Ivo {
 		this.description = um.getDescription();
 		this.code = um.getCode();
 		this.name = um.getName();
+		if (um.getCompany() != null){
+			this.company = new Company();
+			this.company.convertFromTable(um.getCompany());
+		}
+	}
+	public GECOObject control(User user){
+		if (this.idUnitMeasure == 0){
+			this.company = user.getCompany();
+		}
+		return control();
 	}
 	public GECOObject control(){
 		if (this.code == null || this.code.equals("") == true){

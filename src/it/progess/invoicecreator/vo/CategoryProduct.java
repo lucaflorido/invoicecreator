@@ -16,6 +16,14 @@ public class CategoryProduct implements Ivo{
 	private String description;
 	private String note;
 	private Set<SubCategoryProduct> subcategories;
+	private Company company;
+	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public Set<SubCategoryProduct> getSubcategories() {
 		return subcategories;
 	}
@@ -68,6 +76,16 @@ public class CategoryProduct implements Ivo{
 				this.subcategories.add(subc);
 			}
 		}
+		if (cp.getCompany() != null){
+			this.company = new Company();
+			this.company.convertFromTable(cp.getCompany());
+		}
+	}
+	public GECOObject control(User user){
+		if (this.idCategoryProduct == 0){
+			this.company = user.getCompany();
+		}
+		return control();
 	}
 	public GECOObject control(){
 		if (this.code == null || this.code.equals("") == true){

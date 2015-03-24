@@ -4,17 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Foundation | Welcome</title>
+    
     <link rel="stylesheet" href="css/foundation.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/customerliststyle.css" />
 	<link rel="stylesheet" href="css/larghezze.css" />
 	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="css/foundation-datepicker.css" />
+    	<link rel="stylesheet"  href="css/btnUpload.css">
     <script src="js/vendor/modernizr.js"></script>
     <script src="js/vendor/jquery.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="../lib/angular.js"></script>
 	<script src="../lib/angular-route.js"></script>
+	<script src="../lib/angular-upload.min.js"></script>
 	 <script src="lib/bower_components/angular-foundation/mm-foundation.js"></script>
 	<script src="lib/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
 	<script src="lib/bower_components/foundation-datepicker/js/foundation-datepicker.js"></script>
@@ -27,11 +30,15 @@
 	<script type="text/javascript" src="js/controller/product/product.js"></script>
 	<script type="text/javascript" src="js/controller/product/group.js"></script>
 	<script type="text/javascript" src="js/controller/product/category.js"></script>
+	<script type="text/javascript" src="js/controller/product/unitmeasure.js"></script>
+	<script type="text/javascript" src="js/controller/product/region.js"></script>
+	<script type="text/javascript" src="js/controller/product/brand.js"></script>
 	
 	<script type="text/javascript" src="js/controller/list/list.js"></script>
 	<script type="text/javascript" src="js/controller/parameter/taxrate/taxrate.js"></script>
 	<script type="text/javascript" src="js/controller/document/documentlist.js"></script>
 	<script type="text/javascript" src="js/controller/document/documentdetails.js"></script>
+	<script type="text/javascript" src="js/controller/document/wizard.js"></script>
 	<script type="text/javascript" src="js/controller/transporter/transporter.js"></script>
 	
 	<script type="text/javascript" src="js/controller/promoter/promoterlist.js"></script>
@@ -82,6 +89,8 @@
 								<li><a href="#/product/0" >Nuovo</a></li>
 								<li><a href="#/categoryproduct" >Categorie</a></li> 
 								<li><a href="#/groupproduct" >Gruppi</a></li>  
+								<li><a href="#/brand" >Marche</a></li> 
+								<li><a href="#/region" >Regioni</a></li>
 								<li><a href="#/unitmeasure" >Unità di Misura</a></li>  
 							</ul> 
 						</li> 
@@ -108,10 +117,10 @@
 						<li class="has-dropdown" ><a>Ordini</a>
 							<ul class="dropdown"> 
 								<li><a href="#/head/0">Nuovo Ordine</a></li> 
-								<li><a href="#/headlist/1/1">Ricerca Ordine</a></li> 
-								<li><a >Riepilogo ordine e stampa</a></li> 
+								<li><a href="#/headlist/1/1">Elenco Ordini</a></li> 
+								<!-- li><a >Riepilogo ordine e stampa</a></li> 
 								<li><a >Esportazione Ordini</a></li> 
-								<li><a >Annullamento ordini</a></li>
+								<li><a >Annullamento ordini</a></li-->
 							</ul> 
 						</li>
 						<li class="has-dropdown" ><a >Pre Ordini</a>

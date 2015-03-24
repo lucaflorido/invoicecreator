@@ -24,7 +24,21 @@
 					value="{{customer.customercode}}" capitalize />
 				</label>
 			</div>
-			<div class="large-8 columns">
+			<div class="large-4 columns">
+				<label>Codice Alternativo 1<input type="text"
+					 ng-model="customer.alternativecode1"
+					value="{{customer.alternativecode1}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Codice Alternativo 2<input type="text"
+					 ng-model="customer.alternativecode2"
+					value="{{customer.alternativecode2}}" capitalize />
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-12 columns">
 				<label>Ragione Sociale <input type="text"
 					 ng-model="customer.customername"
 					value="{{customer.customername}}" />
@@ -66,7 +80,14 @@
 					</select>
 				</label>
 			</div>
-			
+			<div class="large-4 columns">
+				<label>Listino 
+					<select ng-model="currentList" ng-options="list.name for  list in lists"  >
+					    <option value=""></option>
+					    
+					</select>
+				</label>
+			</div>
 		</div>
 		<div class="row">
 			<div class="large-4 columns">

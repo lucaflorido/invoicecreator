@@ -6,6 +6,7 @@ import java.util.HashSet;
 import it.progess.invoicecreator.dao.DocumentDao;
 import it.progess.invoicecreator.exception.GecoException;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
+import it.progess.invoicecreator.vo.AddRowToHead;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GenerateDocsObject;
 import it.progess.invoicecreator.vo.GenerateObject;
@@ -223,5 +224,26 @@ public class DocumentService {
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
+	  }
+	  @POST
+	  @Path("addrow")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String addRow(String data) {
+		Gson gson = new Gson();
+		DocumentDao dao = new DocumentDao();
+		AddRowToHead addr = gson.fromJson(data,AddRowToHead.class);
+		return gson.toJson(dao.addRow(addr.getUm(), addr.getH()));
+	  }
+	  @PUT
+	  @Path("addrow")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String saveWizardHead(@Context HttpServletRequest request,String data) {
+		Gson gson = new Gson();
+		DocumentDao dao = new DocumentDao();
+		Head h = gson.fromJson(data,Head.class);
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.saveWizardHead(loggeduser, h));
 	  }
 }

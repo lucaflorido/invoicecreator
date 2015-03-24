@@ -188,6 +188,19 @@ public class Row implements Ivo{
 			this.um = h.getUm();
 		}
 	}
+	public void addProduct(UnitMeasureProduct um){
+		Product p = um.getProduct();
+		this.setProduct(p);
+		this.setProductcode(um.getCode());
+		this.setProductdescription(p.getDescription());
+		this.setUm(um.getUm());
+		this.setProductum(um.getUm().getCode());
+		this.setQuantity(um.getQuantity());
+		this.setPrice(p.getListprice());
+		this.setType("V");
+		this.setTaxrate(p.getTaxrate());
+	}
+
 	public GECOObject control(){
 		return null;
 	}

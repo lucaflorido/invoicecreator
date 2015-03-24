@@ -10,6 +10,7 @@ var gecoApp = angular.module("gecoApp",
 "gecoControllers",
 "mm.foundation",
 "smart-table",
+'lr.upload',
 "rocchi.customer",
 "rocchi.product",
 "rocchi.transporter",
@@ -26,18 +27,25 @@ var gecoApp = angular.module("gecoApp",
 		    {
 		    	return {
 	            ServiceUrls: {
+	            		AddRow:main_domain+ "/rest/head/addrow/",
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
 		                DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
 		                SaveCustomer:main_domain+ "/rest/registry/customer/",
 		                CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
 		                CustomerCategory:main_domain+ "/rest/basic/categorycustomer",
 		                Product:main_domain+ "/rest/registry/product/",
+		                ProductMainList:main_domain+ "/rest/registry/products/",
 		                ProductBasicPrice:main_domain+ "/rest/util/prodbasicprice/",
 		                ProductBasicPriceList:main_domain+ "/rest/util/prodbasicprice/list",
-		                ProductGroup:main_domain+ "/rest/basic/groupproduct/",
 		                ProductCategory:main_domain+ "/rest/basic/categoryproduct/",
+		                ProductSubCategory:main_domain+ "/rest/basic/subcategoryproduct/",
+		                ProductGroup:main_domain+ "/rest/basic/groupproduct/",
+		                ProductIncrement:main_domain+ "/rest/registry/product/increment/",
+		                Brand:main_domain+ "/rest/basic/brand/",
+		                
 		                List:main_domain+ "/rest/registry/list/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
+		                SearchProduct:main_domain+ "/rest/registry/product/search/",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
 	                    DocumentList:main_domain+"/rest/head/head/",
 		                DocumentDetails:main_domain+"",
@@ -48,7 +56,12 @@ var gecoApp = angular.module("gecoApp",
 		                UtilPricePrice:main_domain+"/rest/util/prodbasicprice/sellprice/",
 		                UtilPriceEndPrice:main_domain+"/rest/util/prodbasicprice/endprice/",
 		                Promoter:main_domain+"/rest/registry/promoter/",
+		                ProductPagination:main_domain+"/rest/registry/product/pages/",
 		                Role:main_domain+"/rest/role/",
+		                Region:main_domain+"/rest/basic/region/",
+		                ExportHeads:main_domain+"/rest/export/heads/",
+		                ImportProducts:main_domain+"/rest/import/products/",
+		                Upload:main_domain+"/rest/upload/file",
 		                TaxRate:main_domain+"/rest/basic/taxrate/"
 		            }
 		        };
@@ -172,6 +185,7 @@ function($routeProvider) {
 			templateUrl: 'template/basic/taxratelist.htm',
 			controller: 'RocchiTaxrateCtrl'
 		}).
+		
 		when('/counter', {
 			templateUrl: 'template/basic/counterlist.htm',
 			controller: 'CounterCtrl'
@@ -195,6 +209,10 @@ function($routeProvider) {
 		when('/categoryproduct', {
 			templateUrl: 'template/basic/categoryproductlist.htm',
 			controller: 'RocchiCategoryProductCtrl'
+		}).
+		when('/region', {
+			templateUrl: 'template/basic/regionlist.htm',
+			controller: 'RocchiRegionCtrl'
 		}).
 		when('/unitmeasure', {
 			templateUrl: 'template/basic/unitmeasurelist.htm',
@@ -282,8 +300,8 @@ function($routeProvider) {
 			controller: 'CreateOrdersCtrl'
 		}).
 		when('/head/:idhead', {
-			templateUrl: 'template/document/headdetail.htm',
-			controller: 'RocchiHeadDetailCtrl'
+			templateUrl: 'template/document/wizard.html',
+			controller: 'RocchiWizardCtrl'
 		}).
 		when('/head/:idhead/:rows', {
 			templateUrl: 'template/document/headdetail.htm',
@@ -319,7 +337,7 @@ function($routeProvider) {
 		}).
 		when('/brand', {
 			templateUrl: 'template/basic/brandlist.htm',
-			controller: 'BrandCtrl'
+			controller: 'RocchiBrandCtrl'
 		}).
 		when('/storeneeded', {
 			templateUrl: 'template/store/storeneeded.htm',

@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.documents")
-.controller('RocchiHeadListCtrl',["$scope","$http","$routeParams","$rootScope","ModalFactory","AppConfig",function($scope,$http,$routeParams,$rootScope,ModalFactory,AppConfig){
+.controller('RocchiHeadListCtrl',["$scope","$http","$routeParams","$rootScope","AppConfig",function($scope,$http,$routeParams,$rootScope,AppConfig){
     
 	$scope.pagesize = 1000;
 	$scope.pageArray = [];
@@ -251,5 +251,21 @@ angular.module("rocchi.documents")
 		}else{
 			$(".checkbox_single").prop("checked",false);
 		}
+	}
+	$scope.exportHeads = function(){
+		$http.post(AppConfig.ServiceUrls.ExportHeads,$scope.heads).then(function(result){
+			var deviceAgent = navigator.userAgent;
+			// Set var to iOS device name or null
+			var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad|android|webos|blackberry|iemobile|opera mini)/);
+			if (ios) {
+				// This is the line that matters
+				$scope.openTab(result.data.success);
+			} else {
+				// Your code that works for desktop browsers
+				//$scope.openTab(JSON.parse(data));
+				window.open(result.data.success);
+				//$scope.openTab(JSON.parse(data));
+			}
+		},function(resolve){})
 	}
 }]);

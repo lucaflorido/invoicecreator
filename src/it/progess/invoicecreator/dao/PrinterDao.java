@@ -60,67 +60,6 @@ public class PrinterDao {
 	public String printSingleDocument(ServletContext context,int id,User user){
 		int [] ids = {id};
 		return this.printMultipleDocument(context, ids, user);
-		/*String documentType ="";
-		try{
-			//generateAshwinFriends();
-			Company comp = user.getCompany();
-			Head head = new DocumentDao().getSingleHead(id);
-		    documentType = getReportName(head.getDocument());
-			File f = new File(context.getRealPath("report/"+documentType+".jasper"));
-			if(f.exists() == false){
-				JasperCompileManager.compileReportToFile(context.getRealPath("report/"+documentType+".jrxml"), context.getRealPath("report/"+documentType+".jasper"));
-			}
-			File pdf = new File(context.getRealPath("report/"+documentType+".pdf"));
-			if(pdf.exists() == true){
-				pdf.delete();
-			}
-			Collection<PrintSingleHead> headcoll = new ArrayList<PrintSingleHead>();
-			Map<String, Object> map = new HashMap<String ,Object>();
-			map.put("title","Fattura");
-			double totqta = 0;
-			double totnecks = 0;
-			Map<String,TaxRateCollection> taxratesmap = new HashMap<String, TaxRateCollection>(); 
-			TreeSet<TaxRateCollection> trct = new TreeSet<TaxRateCollection>();
-			for (Iterator<Row> it = head.getRows().iterator();it.hasNext();){
-				Row r = it.next();
-				PrintSingleHead ph = new PrintSingleHead();
-				ph.setFromObject(comp,head, r);
-				headcoll.add(ph);
-				totqta = totqta + r.getQuantity();
-				totnecks = totnecks + r.getNecks();
-				if (taxratesmap.containsKey(r.getTaxrate().getDescription())){
-					TaxRateCollection trc = taxratesmap.get(r.getTaxrate().getDescription());
-					trc.tot = trc.tot + r.getTaxamount();
-					trc.impo = r.getAmount();
-					trc.setValues();
-				}else{
-					TaxRateCollection trcNew = new TaxRateCollection(r.getTaxrate().getDescription(),r.getAmount(),r.getTaxamount());
-					taxratesmap.put(r.getTaxrate().getDescription(), trcNew);
-					trcNew.setValues();
-					trct.add(trcNew);
-				}
-				ph.setAliquote(trct);
-			}
-			
-			if (head.getDocument().isOrder() && head.getDocument().getSupplier()){
-				for (Iterator<PrintSingleHead> itp = headcoll.iterator();itp.hasNext();){
-					PrintSingleHead p = itp.next();
-					p.setTot_colli(String.valueOf(totnecks));
-					p.setTot_qta(String.valueOf(totqta));
-					
-					
-				}
-			}
-			JRDataSource datasource = new JRBeanCollectionDataSource(headcoll);
-			JasperPrint print = JasperFillManager.fillReport(context.getRealPath("report/"+documentType+".jasper"),map,datasource );
-			FileOutputStream fileOutputStream = new FileOutputStream(context.getRealPath("report/"+documentType+".pdf"));
-			JasperExportManager.exportReportToPdfStream(print, fileOutputStream);
-		}catch(Exception ex){
-			ex.printStackTrace();
-			throw new ExceptionInInitializerError(ex);
-		}
-		
-		return "/InvoiceCreator/report/"+documentType+".pdf";*/
 	}
 	private String getReportName(Document d){
 		if (d.getCustomer() == true){

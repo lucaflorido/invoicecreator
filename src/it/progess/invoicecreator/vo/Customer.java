@@ -37,7 +37,21 @@ public class Customer implements Ivo{
 	private String surnameUser;
 	private Double commission;
 	private Promoter promoter;
+	private String alternativecode1;
+	private String alternativecode2;
 	
+	public String getAlternativecode1() {
+		return alternativecode1;
+	}
+	public void setAlternativecode1(String alternativecode1) {
+		this.alternativecode1 = alternativecode1;
+	}
+	public String getAlternativecode2() {
+		return alternativecode2;
+	}
+	public void setAlternativecode2(String alternativecode2) {
+		this.alternativecode2 = alternativecode2;
+	}
 	public Promoter getPromoter() {
 		return promoter;
 	}
@@ -169,6 +183,8 @@ public class Customer implements Ivo{
 		TblCustomer c = (TblCustomer)obj;
 		this.active = c.isActive();
 		this.suspended = c.getSuspended();
+		this.alternativecode1 = c.getAlternativecode1();
+		this.alternativecode2 = c.getAlternativecode2();
 		if (c.getAddress() != null){
 			this.address = new Address();
 			this.address.convertFromTable(c.getAddress());

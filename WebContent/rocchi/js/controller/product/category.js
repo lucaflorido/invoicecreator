@@ -2,36 +2,52 @@
  * 
  */
 angular.module("rocchi.product")
-.controller('RocchiCategoryProductCtrl',["$scope","$http","AppConfig",function($scope,$http,AppConfig){
-    
+.controller('RocchiCategoryProductCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
+	$scope.msg = AlertsFactory;
+    $scope.msg.initialize();
 	$scope.categoryproductsaved = true;
 	$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
 		$scope.categoryproducts= data;
 	});
 	$scope.modifyid = 0;
-	$scope.modifycategoryproductElement = function(id){
-		if ($scope.modifyid != id){
-			$scope.modifyid = id;
-			$scope.detailViewOpen(id);
+	$scope.modifycategoryproductElement = function(cat){
+		if ($scope.modifyid != cat.idCategoryProduct){
+			$scope.modifyid = cat.idCategoryProduct;
+			$scope.selectedcategory = cat;
 		}else{
 			$scope.modifyid = 0;
-			$scope.detailViewClose(id);
+			$scope.selectedcategory = null;
 		}
 	}
-	
+	$scope.modifysubcategoryproductElement = function(cat){
+		if ($scope.modifyscid != cat.idSubCategoryProduct){
+			$scope.modifyscid = cat.idSubCategoryProduct;
+			
+		}else{
+			$scope.modifyscid = 0;
+			
+		}
+	}
 	$scope.addcategoryproductElement = function(id){
 		$scope.categoryproductsaved = false;
 		$scope.categoryproducts.push({idcategoryproduct:0});
 	}
-	$scope.addSubCategoryElement = function(categoryproduct){
-		if ($scope.categoryproductsaved == true){
-			$scope.categoryproductsaved = false;
-			categoryproduct.subcategories.push({idSubCategoryProduct:0});
-			$scope.detailViewOpen(categoryproduct.idCategoryProduct);
-		}
+	$scope.addSubCategoryElement = function(){
+		$scope.categoryproductsaved = false;
+		$scope.selectedcategory.subcategories.push({idSubCategoryProduct:0});
+			
+		
 	}
-	$scope.deletecategorycustomerElement = function(id){
-		for(var i=0;i<$scope.categoryproducts.length;i++){
+	$scope.deletecategoryproductElement = function(cat){
+		$http.delete(AppConfig.ServiceUrls.ProductCategory,{data:cat}).then(function(data){
+			$scope.msg.successMessage("ELEIMINAZIONE EFFETTUATA CON SUCCESSO");
+			$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+					$scope.categoryproducts= data;
+					$scope.selectedcategory = null;
+			});
+			
+			});
+		/*for(var i=0;i<$scope.categoryproducts.length;i++){
 			if (id == $scope.categoryproducts[i].idcategoryproduct){
 				$scope.deletecategoryproduct = $scope.categoryproducts[i];
 				$.ajax({
@@ -39,14 +55,26 @@ angular.module("rocchi.product")
 						type:"DELETE",
 						data:"categoryproductobj="+JSON.stringify($scope.deletecategoryproduct),
 						success:function(data){
-								$http.get('rest/basic/categoryproduct').success(function(data){
+							$scope.msg.successMessage("ELEIMINAZIONE EFFETTUATA CON SUCCESSO");
+								$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
 										$scope.categoryproducts= data;
 								});
 								
 						}	
 					})
 			}	
-		}
+		}*/
+	}
+	$scope.deletesubcategorycustomerElement = function(cat){
+		$http.delete(AppConfig.ServiceUrls.ProductSubCategory,{data:cat}).then(function(data){
+			$scope.msg.successMessage("ELEIMINAZIONE EFFETTUATA CON SUCCESSO");
+			$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+					$scope.categoryproducts= data;
+					$scope.selectedcategory = null;
+			});
+			
+		});
+		
 	}
 	$scope.savecategoryproducts = function(){
 		$.ajax({
@@ -59,11 +87,12 @@ angular.module("rocchi.product")
 					$scope.categoryproductsaved = true;
 					$scope.modifyid = 0;
 					$scope.$apply();
-					$http.get('rest/basic/categoryproduct').success(function(data){
+					$scope.msg.successMessage("ELEMENTO SALVATO CON SUCCESSO");
+					$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
 						$scope.categoryproducts= data;
 					});
 				}else{
-					alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+					$scope.msg.alertMessage(result.errorMessage);
 				}	
 					
 					

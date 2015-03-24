@@ -2,9 +2,15 @@ body {
 	font-family:"Open Sans Condensed", sans-serif;
 	
 }
-
+.st-selected{
+	background-color: #00adef ; 
+	color:#FFF ;
+}
 .height-200{
 	height: 200px;
+}
+.height-170{
+	height: 170px;
 }
 
 .panel_1 {
@@ -114,6 +120,62 @@ color: #00adef;
 .dati {
 margin: 20px;
 }
+.cliente_img{
+background-image: url("../img/man_icon.png");
+height: 180px;
+width: 160px;
+background-size: contain;
+float: left;
+background-repeat: no-repeat;
+
+
+}
+
+.vino_img{
+background-image: url("../img/vino.jpg");
+height: 180px;
+width: 160px;
+background-size: contain;
+float: left;
+background-repeat: no-repeat;
+margin-left: 40%;
+
+
+}
+.info_cliente{
+display: block;
+
+}
+.vino_cliente{
+display: block;
+margin-top: 20px;
+}
+
+nav.one ul li {
+list-style: outside none none;    
+font-size: 20px;
+color: #00adef;
+margin-top: 2px;
+margin-left: 90px;
+}
+nav.two ul li {
+list-style: outside none none;    
+font-size: 20px;
+margin-top: 2px;
+}
+nav.three ul li {
+list-style: outside none none;    
+font-size: 20px;
+color: #00adef;
+margin-top: 20px;
+margin-left: 90px;
+}
+nav.four ul li {
+list-style: outside none none;    
+font-size: 20px;
+margin-top: 20px;
+}
+
 
 @media only screen and (max-width: 548px){
 
@@ -134,4 +196,8 @@ margin-left: 33px;
 margin-left: -130px;
 left: 50%;
 position: relative;
+}
+
+.row_selected{
+	
 }

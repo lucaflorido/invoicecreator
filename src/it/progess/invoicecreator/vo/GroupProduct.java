@@ -10,17 +10,24 @@ import it.progess.invoicecreator.pojo.TblGroupProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
 
 public class GroupProduct implements Ivo {
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="idGroupProduct")
+	
 	private int idGroupProduct;
-	@Column(name="code")
+	
 	private String code;
-	@Column(name="description")
+	
 	private String description;
-	@Column(name="name")
+	
 	private String name;
-	@Column(name="note")
+	
 	private String note;
+	private Company company;
+	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public int getIdGroupProduct() {
 		return idGroupProduct;
 	}
@@ -58,6 +65,10 @@ public class GroupProduct implements Ivo {
 		this.idGroupProduct = gp.getIdGroupProduct();
 		this.name = gp.getName();
 		this.note = gp.getNote();
+		if (gp.getCompany() != null){
+			this.company = new Company();
+			this.company.convertFromTable(gp.getCompany());
+		}
 	}
 	public GECOObject control(){
 		if (this.code == null || this.code.equals("") == true){
@@ -67,5 +78,12 @@ public class GroupProduct implements Ivo {
 			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Nome Mancante");
 		}
 		return null;
+		
+	}
+	public GECOObject control(User user){
+		if (this.idGroupProduct == 0){
+			this.company = user.getCompany();
+		}
+		return control();
 	}
 }

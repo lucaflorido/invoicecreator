@@ -103,6 +103,7 @@
   		<mapping class="it.progess.invoicecreator.pojo.TblBrand"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblMailConfig"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblMailConfigCompany"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblRegion"></mapping>
     </session-factory>  
   
 </hibernate-configuration>  

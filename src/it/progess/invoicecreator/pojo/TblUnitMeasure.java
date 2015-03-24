@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -26,6 +28,15 @@ public class TblUnitMeasure implements Itbl {
 	private String name;
 	@Column(name="code")
 	private String code;
+	@ManyToOne
+	@JoinColumn(name = "idCompany")
+	private TblCompany company;
+	public TblCompany getCompany() {
+		return company;
+	}
+	public void setCompany(TblCompany company) {
+		this.company = company;
+	}
 	public int getIdUnitMeasure() {
 		return idUnitMeasure;
 	}
@@ -56,5 +67,9 @@ public class TblUnitMeasure implements Itbl {
 		this.description = um.getDescription();
 		this.code = um.getCode();
 		this.name = um.getName();
+		if (um.getCompany() != null){
+			this.company = new TblCompany();
+			this.company.convertToTable(um.getCompany());
+		}
 	}
 }

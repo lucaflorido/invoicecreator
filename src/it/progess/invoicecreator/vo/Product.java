@@ -39,6 +39,14 @@ public class Product implements Ivo,Comparable<Product>{
 	private Company company;
 	private boolean isProduct;
 	private Set<ListProduct> listproduct;
+	private Region region;
+	
+	public Region getRegion() {
+		return region;
+	}
+	public void setRegion(Region region) {
+		this.region = region;
+	}
 	public Set<ListProduct> getListproduct() {
 		return listproduct;
 	}
@@ -238,6 +246,10 @@ public class Product implements Ivo,Comparable<Product>{
 		if (pd.getSupplier() != null){
 			this.supplier = new Supplier();
 			this.supplier.convertFromTable(pd.getSupplier());
+		}
+		if (pd.getRegion() != null){
+			this.region = new Region();
+			this.region.convertFromTable(pd.getRegion());
 		}
 		this.ums = new HashSet<UnitMeasureProduct>();
 		if (pd.getUms() != null){

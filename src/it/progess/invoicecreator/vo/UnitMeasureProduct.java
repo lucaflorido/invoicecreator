@@ -11,6 +11,14 @@ public class UnitMeasureProduct implements Ivo {
 	private Product product;
 	private UnitMeasure um;
 	private String code;
+	private double quantity;
+	
+	public double getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(double quantity) {
+		this.quantity = quantity;
+	}
 	public String getCode() {
 		return code;
 	}

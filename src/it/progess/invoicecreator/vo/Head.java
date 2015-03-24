@@ -393,7 +393,8 @@ public class Head implements Ivo {
 						if (this.number >= cy.getValue()){
 							cy.setValue(this.number + 1);
 						}else if(this.number < cy.getValue() && this.number == 0 && this.idHead == 0){
-							//this.number = cy.getValue();
+							this.number = cy.getValue();
+							cy.setValue(this.number + 1);
 						}
 						
 					}
