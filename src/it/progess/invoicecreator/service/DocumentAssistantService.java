@@ -17,21 +17,19 @@ import com.google.gson.Gson;
 public class DocumentAssistantService {
 	  @POST
 	  @Path("rowtotal")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveRow(@FormParam("row") String row){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public String calculateRowTotal( String data){
 		  Gson gson = new Gson();
-		  RowTotalCalculator sms = gson.fromJson(row,RowTotalCalculator.class);
+		  RowTotalCalculator sms = gson.fromJson(data,RowTotalCalculator.class);
 		  sms.calculation();
 		  return gson.toJson(sms);
 	  }
 	  @POST
 	  @Path("headtotal")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveHead(@FormParam("head") String head){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public String saveHead(String data){
 		  Gson gson = new Gson();
-		  HeadTotalCalculation sms = gson.fromJson(head,HeadTotalCalculation.class);
+		  HeadTotalCalculation sms = gson.fromJson(data,HeadTotalCalculation.class);
 		  sms.calculation();
 		  return gson.toJson(sms);
 	  }

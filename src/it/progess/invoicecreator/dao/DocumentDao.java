@@ -1482,7 +1482,8 @@ public class DocumentDao {
 	}
 	public GECOObject addRow(UnitMeasureProduct um,Head h){
 		try{
-			Row r = new Row();
+			Row r = checkRowProd(h,um);
+			
 			float price = new RegistryDao().getProductPriceList(um.getProduct().getIdProduct(), h.getList().getIdList());
 			if (price > 0){
 				um.getProduct().setListprice(price);
@@ -1494,7 +1495,7 @@ public class DocumentDao {
 			rtc.rowCalculation(r);
 			if (h.getRows() == null)
 				h.setRows(new HashSet<Row>());
-			h.getRows().add(r);
+			
 			HeadTotalCalculation htc = new HeadTotalCalculation();
 			htc.calculation(h);
 		}catch(Exception e){
@@ -1502,6 +1503,25 @@ public class DocumentDao {
 			return new GECOError("error",e.getMessage());
 		}
 		return new GECOSuccess(h);
+	}
+	private Row checkRowProd(Head h, UnitMeasureProduct ump){
+		Row r = null;
+		if (h.getRows() == null){
+			Set<Row> rows = new HashSet<Row>();
+			h.setRows(rows);
+		}
+		for (Iterator<Row> it = h.getRows().iterator();it.hasNext();){
+			Row re = it.next();
+			if (re.getProductcode().equals(ump.getCode())){
+				r = re;
+				break;
+			}
+		}
+		if (r == null){
+			r = new Row();
+			h.getRows().add(r);
+		}
+		return r;
 	}
 	public GECOObject saveWizardHead(User user,Head h){
 		try{

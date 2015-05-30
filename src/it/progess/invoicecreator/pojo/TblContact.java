@@ -45,7 +45,15 @@ public class TblContact implements Itbl  {
 	private TblCustomer customer;
 	@OneToOne(mappedBy="contact")
 	private TblTransporter transporter;
+	@OneToOne(mappedBy="contact")
+	private TblPromoter promoter;
 	
+	public TblPromoter getPromoter() {
+		return promoter;
+	}
+	public void setPromoter(TblPromoter promoter) {
+		this.promoter = promoter;
+	}
 	public TblTransporter getTransporter() {
 		return transporter;
 	}

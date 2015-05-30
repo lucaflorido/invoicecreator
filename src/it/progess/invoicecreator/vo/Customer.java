@@ -39,7 +39,13 @@ public class Customer implements Ivo{
 	private Promoter promoter;
 	private String alternativecode1;
 	private String alternativecode2;
-	
+	private boolean hasuser;
+	public boolean isHasuser() {
+		return hasuser;
+	}
+	public void setHasuser(boolean hasuser) {
+		this.hasuser = hasuser;
+	}
 	public String getAlternativecode1() {
 		return alternativecode1;
 	}
@@ -185,6 +191,7 @@ public class Customer implements Ivo{
 		this.suspended = c.getSuspended();
 		this.alternativecode1 = c.getAlternativecode1();
 		this.alternativecode2 = c.getAlternativecode2();
+		this.hasuser = false;
 		if (c.getAddress() != null){
 			this.address = new Address();
 			this.address.convertFromTable(c.getAddress());
@@ -203,6 +210,9 @@ public class Customer implements Ivo{
 		if(c.getContact() != null){
 			this.contact = new Contact();
 			this.contact.convertFromTable(c.getContact());
+			if (c.getContact().getUser() != null){
+				this.hasuser = true;
+			}
 		}
 		this.customercode = c.getCustomercode();
 		this.customername = c.getCustomername();

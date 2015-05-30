@@ -3,6 +3,7 @@ package it.progess.invoicecreator.pojo;
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.vo.Ivo;
 import it.progess.invoicecreator.vo.ListProduct;
+import it.progess.invoicecreator.vo.Product;
 
 import java.util.Date;
 
@@ -16,6 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 @Table(name="tbllist_product")
 public class TblListProduct implements Itbl{
@@ -24,9 +28,11 @@ public class TblListProduct implements Itbl{
 	private int idListProduct;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idList")
+	@Fetch(FetchMode.SELECT)
 	private TblList list;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idProduct")
+	@Fetch(FetchMode.SELECT)
 	private TblProduct product;
 	@Column(name="price")
 	private float price;

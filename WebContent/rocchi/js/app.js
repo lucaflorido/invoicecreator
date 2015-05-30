@@ -6,20 +6,20 @@ angular.module("rocchi.documents",[]);
 angular.module("rocchi.parameters",[]);
 angular.module("rocchi.promoter",[]);
 var gecoApp = angular.module("gecoApp",
-["ngRoute",
-"gecoControllers",
-"mm.foundation",
-"smart-table",
-'lr.upload',
-"rocchi.customer",
-"rocchi.product",
-"rocchi.transporter",
-"rocchi.documents",
-"rocchi.parameters",
-"rocchi.promoter",
-"rocchi.list",
-'modules.common.shared',
-"gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
+[   "ngRoute",
+	"gecoControllers",
+	"mm.foundation",
+	"smart-table",
+	'lr.upload',
+	"rocchi.customer",
+	"rocchi.product",
+	"rocchi.transporter",
+	"rocchi.documents",
+	"rocchi.parameters",
+	"rocchi.promoter",
+	"rocchi.list",
+	'modules.common.shared',
+	"gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
 .provider('AppConfig', function ()
 		{
 			var main_domain = "/InvoiceCreator"
@@ -33,6 +33,9 @@ var gecoApp = angular.module("gecoApp",
 		                SaveCustomer:main_domain+ "/rest/registry/customer/",
 		                CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
 		                CustomerCategory:main_domain+ "/rest/basic/categorycustomer",
+		                CustomerUser:main_domain+ "/rest/registry/customer/user/",
+		                CheckUser:main_domain+ "/rest/user/loggedinuser/",
+		                PrintHead:main_domain+ "/rest/print/head/",
 		                Product:main_domain+ "/rest/registry/product/",
 		                ProductMainList:main_domain+ "/rest/registry/products/",
 		                ProductBasicPrice:main_domain+ "/rest/util/prodbasicprice/",
@@ -42,9 +45,11 @@ var gecoApp = angular.module("gecoApp",
 		                ProductGroup:main_domain+ "/rest/basic/groupproduct/",
 		                ProductIncrement:main_domain+ "/rest/registry/product/increment/",
 		                Brand:main_domain+ "/rest/basic/brand/",
-		                
+		                HeadTotal:main_domain+"/rest/documenthelp/headtotal",
+		                RowTotal:main_domain+"/rest/documenthelp/rowtotal",
 		                List:main_domain+ "/rest/registry/list/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
+		                Logout:main_domain+"/rest/user/logout/",
 		                SearchProduct:main_domain+ "/rest/registry/product/search/",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
 	                    DocumentList:main_domain+"/rest/head/head/",
@@ -56,13 +61,23 @@ var gecoApp = angular.module("gecoApp",
 		                UtilPricePrice:main_domain+"/rest/util/prodbasicprice/sellprice/",
 		                UtilPriceEndPrice:main_domain+"/rest/util/prodbasicprice/endprice/",
 		                Promoter:main_domain+"/rest/registry/promoter/",
+		                PromoterUser:main_domain+ "/rest/registry/promoter/user",
 		                ProductPagination:main_domain+"/rest/registry/product/pages/",
+		                ProductListPagination:main_domain+"/rest/registry/listproduct/pages/",
 		                Role:main_domain+"/rest/role/",
 		                Region:main_domain+"/rest/basic/region/",
 		                ExportHeads:main_domain+"/rest/export/heads/",
 		                ImportProducts:main_domain+"/rest/import/products/",
+		                ImportCustomers:main_domain+"/rest/import/customers/",
 		                Upload:main_domain+"/rest/upload/file",
-		                TaxRate:main_domain+"/rest/basic/taxrate/"
+		                TaxRate:main_domain+"/rest/basic/taxrate/",
+		                DeleteRow:main_domain+"/rest/head/removerow/",
+		                Role:main_domain+"/rest/role/"
+		            },Permissions:{
+		            	Promoter:"promoter",
+		            	Transporter:"transporter",
+		            	Admin:"",
+		            	Customer:"customer"
 		            }
 		        };
 		    };
@@ -393,19 +408,7 @@ gecoApp.factory('ScopeFactory', function ($http, $q) {
 gecoApp.run(function($rootScope) {
 	$rootScope.$on('$routeChangeStart', function(next, current) { 
 		$(document).unbind("keydown");
-		/*if ($rootScope.issaved == false){
-			$.confirm({
-			text: "ATTENZIONE ci sono dati non salvati...Salvare ora?",
-			confirm: 
-				$rootScope.saveFuntion
-			,
-			cancel: function(button) {
-				$rootScope.issaved = true;
-			},
-			confirmButton: "Si",
-			cancelButton: "No"
-		});
-		}*/
+		
 	});
 	$rootScope.user = {};
 	$rootScope.path = "";

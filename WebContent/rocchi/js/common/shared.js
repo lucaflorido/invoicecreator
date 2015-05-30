@@ -39,4 +39,16 @@ angular.module('modules.common.shared', [])
 		factory.message = message;
 	};
 	return factory;
+}).factory("PermissionFactory",function(){
+	var factory = {};
+	factory.permission = "";
+	factory.setupPermission = function(permit){
+		factory.permission = permit;
+	}
+	return factory;
+}).factory("LoaderFactory",function(){
+	var factory = {};
+	factory.loader = false;
+	
+	return factory;
 });

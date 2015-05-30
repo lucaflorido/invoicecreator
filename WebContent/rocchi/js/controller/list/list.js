@@ -46,12 +46,69 @@ angular.module("rocchi.list")
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
 	$scope.idlist= $routeParams.idlist;
-	$http.get(AppConfig.ServiceUrls.Product).success(function(data){
-		$scope.products= data;
-		$http.get(AppConfig.ServiceUrls.List+$scope.idlist).success(function(data){
+	$scope.menuselected = "";
+	$scope.filter = {"pagefilter":{}};
+	$scope.filterMenu = function(value){
+		if ($scope.menuselected == "" || $scope.menuselected != value){
+			$scope.menuselected = value;
+		}else{
+			$scope.menuselected = "";
+		}
+	}
+	var intitialize = function(){
+		$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+			$scope.categories= data;
+		});
+		$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
+			$scope.groups= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
+			$scope.brands= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
+			$scope.regions= data;
+		});
+	};
+	$scope.subcategories = [];
+	$scope.changeCategory = function(){
+		$scope.subcategories = [];
+		$scope.subcategories = $scope.filter.category.subcategories;
+	}
+	intitialize();
+	
+		/*$http.get(AppConfig.ServiceUrls.List+$scope.idlist).success(function(data){
+			$scope.list= data;
+			$scope.getProductsNumber();
+		});*/
+	
+	
+	$scope.getProductsNumber = function(){
+		$scope.pages = [];
+		$scope.totalitems = 0;
+		$scope.pageArray = [];
+			$http.get(AppConfig.ServiceUrls.ProductListPagination+$scope.pagesize+"/"+$scope.idlist).then(function(result){
+				$scope.pages = result.data.pages;
+				$scope.totalitems = result.data.totalitems;
+				$scope.pagesize_confirmed = $scope.pagesize;
+				$scope.getProducts(1);
+			});
+			
+		
+	}
+	
+	$scope.getProducts = function(page){
+		$scope.filter.pagefilter.startelement = (page - 1 ) * $scope.pagesize_confirmed;
+		$scope.filter.pagefilter.pageSize = $scope.pagesize_confirmed;
+		$scope.filter = $scope.filter
+		$http.post(AppConfig.ServiceUrls.List+$scope.idlist,$scope.filter).success(function(data){
 			$scope.list= data;
 		});
-	});
+		/*$http.post(AppConfig.ServiceUrls.ProductMainList,$scope.filter).then(function(result){
+			$scope.products = result.data.success;
+		})*/
+		
+	}
+	$scope.getProductsNumber();
 	$scope.addProdElement = function(list){
 		$scope.prodid = 0
 		list.listproduct.push({idListProduct:0});

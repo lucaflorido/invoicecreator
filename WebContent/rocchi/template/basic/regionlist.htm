@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>REGIONI</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="addregionElement()" ng-if="regionsaved == true" class="button">Aggiungi</a></li>
+		  	<li><a ng-click="saveregions()" class="button">Salva</a></li>
+		</ul>
+	</div>
+	
+</div>
+
+<div class="row">
+	<div class="large-12 medium-12 small-12">
+	
+		<table st-table="regionsToDisplay" class="table table-striped" st-safe-src="regions" >
+			<thead>
+				<tr>
+					<th >&nbsp;</th>
+					<th st-sort="code"  st-sort-default="anything" st-skip-natural="true" >Codice</th>
+					<th  st-sort="name"  st-skip-natural="true">Nome</th>
+					<th >Descrizione</th>
+					<th >Note</th>
+					<th >&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="region in regionsToDisplay" >
+					<td><div class="matita" ng-click="modifyregionElement(region.idRegion)"></div></td>
+					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.code}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.code"  value="{{region.code}}" />  </div></td>
+					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.name}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.name"  value="{{region.name}}" />  </div></td>
+					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.description}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.description"  value="{{region.description}}" />  </div></td>
+					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.note}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.note"  value="{{region.note}}" />  </div></td>
+					<td><a class="x" ng-click="deleteregionElement(region.idRegion)"></a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

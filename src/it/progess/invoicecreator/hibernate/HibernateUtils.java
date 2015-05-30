@@ -107,6 +107,15 @@ public class HibernateUtils {
         res= bd.floatValue();
 		return res;
 	}
+	public static float calculatePercentageFromPrices(float buy,float sell){
+		float diff = sell-buy;
+		float res =0;
+		res  =100/buy*diff;
+		BigDecimal bd = new BigDecimal(res);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        res= bd.floatValue();
+		return res;
+	}
 	public static double calculatePercentage(double total,double percentage){
 		double res =0;
 		res  =total/100 *percentage;
@@ -118,6 +127,15 @@ public class HibernateUtils {
 	public static double calculateFromPercentage(double total,double percentage){
 		double res =0;
 		res  =100*total/(100 +percentage);
+		BigDecimal bd = new BigDecimal(res);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        res= bd.doubleValue();
+		return res;
+	}
+	public static double calculatePercentageFromPrices(double buy,double sell){
+		double diff = sell-buy;
+		double res =0;
+		res  =100/buy*diff;
 		BigDecimal bd = new BigDecimal(res);
         bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
         res= bd.doubleValue();

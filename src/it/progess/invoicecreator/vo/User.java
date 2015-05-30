@@ -150,6 +150,10 @@ public class User {
 				this.entity = this.getContact().getTransporter();
 				this.path = "transporter";
 			}
+			if (this.getContact().getPromoter() != null){
+				this.entity = this.getContact().getPromoter();
+				this.path = "promoter";
+			}
 		}else{
 			this.path = "";
 		}

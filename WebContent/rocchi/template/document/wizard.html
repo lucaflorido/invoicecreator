@@ -1,0 +1,15 @@
+<div class="large-12 columns">
+	<div class="row">
+		<div class="button-group">
+	        <button ng-repeat="tab in tabs" type="button" class="button" ng-model="tabselected" btn-checkbox ng-disabled="tab.disable" ng-click="setSelection(tab)"  btn-radio="{{tab.name}}">{{tab.title}}</button>
+	    </div>
+	</div>
+	<div ng-repeat="element in tabs" class="row"  >
+		<div ng-if="element.name == wiz.selected" ng-include="element.template" ng-controller="WizardStepsCtrl"  ></div>
+	</div>
+</div>
+      
+
+
+
+

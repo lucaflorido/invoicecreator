@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.customer")
-.controller('RocchiCustomerListCtrl',["$scope","$http","$rootScope","$location","AppConfig",function($scope, $http, $rootScope, $location,AppConfig) {
+.controller('RocchiCustomerListCtrl',["$scope","$http","$rootScope","$location","AppConfig","AlertsFactory","LoaderFactory",function($scope, $http, $rootScope, $location,AppConfig,AlertsFactory,LoaderFactory) {
 	// $scope.loginuser =
 	// GECO_LOGGEDUSER.checkloginuser();
 	$scope.location = $location;
@@ -13,8 +13,21 @@ angular.module("rocchi.customer")
 		// $scope.pagesize =
 		// ScopeFactory.factory.productList.pagesize
 	}
-
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
 	$scope.pageArray = [];
+	$scope.showuser = false;
+	$scope.hasuser = false;
+	$scope.importobj = {};
+	$scope.url = AppConfig.ServiceUrls;
+	$scope.importobj = {colCode:"B",colName:"C",colAlternativecode1:"A",colAlternativecode2:"B",colTaxcode:"G",colSerialnumber:"H",colList:"Q",colPromoter:"T",colCommission:"W",colEmail:"BG",colPhone:"M",colMobile:"AC",colStreet:"D",colZipcode:"AD",colCity:"E",colZone:"F",startIndex:"2",endIndex:"5"};
+	$scope.filterMenu = function(value){
+		if ($scope.menuselected == "" || $scope.menuselected != value){
+			$scope.menuselected = value;
+		}else{
+			$scope.menuselected = "";
+		}
+	}
 	if ($scope.showFilter == null) {
 		$scope.showFilter = false;
 	}
@@ -34,9 +47,7 @@ angular.module("rocchi.customer")
 		$scope.currentSubCategory = $scope.filterCustomer.subcategory;
 		$scope.currentSupplier = $scope.filterCustomer.supplier;
 	}
-	$http
-			.get(AppConfig.ServiceUrls.CustomerGroup)
-			.success(
+	$http.get(AppConfig.ServiceUrls.CustomerGroup).success(
 					function(data) {
 						$scope.groups = data;
 						if ($scope.currentGroup != null) {
@@ -84,8 +95,7 @@ angular.module("rocchi.customer")
 		for (var i = 0; i < $scope.customers.length; i++) {
 			if (id == $scope.customers[i].idCustomer) {
 				$scope.deletecustomer = $scope.customers[i];
-				$
-						.ajax({
+				$.ajax({
 							url : "rest/registry/customer/",
 							type : "DELETE",
 							data : "customerobj="
@@ -111,7 +121,36 @@ angular.module("rocchi.customer")
 			window.open(data, '_blank');
 		});
 	}
-
+	$scope.onComplete = function (response) {
+		if (response.data.type == "success"){
+			$scope.importCustomer(response.data.success)
+		}else{
+			$scope.msg.alertMessage(response.data.errorMessage);
+		}
+	};
+	$scope.importCustomer = function(filename){
+		$scope.importobj.lists = [];
+		$scope.importobj.filename = filename;
+		$scope.infos = [];
+		LoaderFactory.loader = true;
+		$http.post(AppConfig.ServiceUrls.ImportCustomers,$scope.importobj).then(function(result){
+			if (result.data.type == "success"){
+				$scope.msg.infoMessage("IMPORTAZIONE TERMINATA CON SUCCESSO");
+				$scope.infos = result.data.success;
+				$scope.importview = false;
+				$scope.novalid = true;
+				$scope.getCustomers();
+				LoaderFactory.loader = false;
+			}else{
+				LoaderFactory.loader = false;
+				$scope.msg.alertMessage(result.data.errorMessage);
+			}
+			
+		},function(result){
+			LoaderFactory.loader = false;
+			});
+	};
+	
 } ])
 .controller('RocchiCustomerDetailCtrl',["$scope","$http","$routeParams","AppConfig","AlertsFactory",function($scope, $http, $routeParams, AppConfig,AlertsFactory) {
 							// GECO_LOGGEDUSER.checkloginuser();
@@ -120,6 +159,7 @@ $scope.msg = AlertsFactory;
 $scope.msg.initialize();
 GECO_validator.startupvalidator();
 $scope.idcustomer = $routeParams.idcustomer;
+$scope.showuser = false;
 /*
  * $http.get('rest/registry/list').success(function(data){
  * $scope.lists= data; });
@@ -162,6 +202,11 @@ var fillList = function(){
 }
 $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(function(data) {
 			$scope.customer = data;
+			if (customer.contact){
+				if (customer.contact.user){
+					$scope.hasuser = true;
+				}
+			}
 			if ($scope.groups !== null
 					&& $scope.groups !== undefined) {
 				for (var i = 0; i < $scope.groups.length; i++) {
@@ -257,7 +302,17 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 		// }
 	};
 	$scope.userCustomer = function() {
-		$.ajax({
+		var obj = {};
+		obj.customer = $scope.customer;
+		obj.role = $scope.currentRole;
+		$http.put(AppConfig.ServiceUrls.CustomerUser,obj).then(function(results){
+			$scope.showuser = false;
+			$scope.customer.hasuser = true;
+			$scope.msg.successMessage("UTENTE CREATO CON SUCCESSO");
+		},function(error){
+			$scope.msg.alertMessage(error);
+		});
+		/*$.ajax({
 					url : "rest/registry/customer/user",
 					type : "PUT",
 					data : "customers="
@@ -280,10 +335,10 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 									+ result.errorMessage);
 						}
 					}
-				})
+				})*/
 		// }
 	};
-	$http.get('rest/role/').success(function(data) {
+	$http.get(AppConfig.ServiceUrls.Role).success(function(data) {
 		$scope.roles = data;
 	});
 } ]);
