@@ -6,15 +6,19 @@ import it.progess.invoicecreator.properties.GECOParameter;
 
 public class Promoter implements Ivo {
 	private int idPromoter;
-	
 	private String surname;
-	
 	private String name;
-	
 	private Contact contact;
-	
 	private Company company;
 	private String code;
+	private boolean hasuser;
+	
+	public boolean isHasuser() {
+		return hasuser;
+	}
+	public void setHasuser(boolean hasuser) {
+		this.hasuser = hasuser;
+	}
 	public String getCode() {
 		return code;
 	}
@@ -57,9 +61,13 @@ public class Promoter implements Ivo {
 		this.surname = p.getSurname();
 		this.code = p.getCode();
 		this.idPromoter = p.getIdPromoter();
+		this.hasuser = false;
 		if (p.getContact() != null){
 			this.contact = new Contact();
 			this.contact.convertFromTable(p.getContact());
+			if (p.getContact().getUser() != null){
+				this.hasuser = true;
+			}
 		}
 		if (p.getCompany() != null){
 			this.company = new Company();

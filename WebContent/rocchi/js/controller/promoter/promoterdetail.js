@@ -7,7 +7,7 @@ angular.module("rocchi.promoter")
 					
 					$scope.msg = AlertsFactory;
 					$scope.msg.initialize();
-					
+					$scope.showuser = false;
 					$scope.idpromoter = $routeParams.idpromoter;
 					 
 					$http.get(AppConfig.ServiceUrls.Promoter+ $scope.idpromoter)
@@ -42,7 +42,7 @@ angular.module("rocchi.promoter")
 								})
 						// }
 					};
-					$scope.userPromoter = function() {
+					/*$scope.userPromoter = function() {
 						$.ajax({
 									url : "rest/registry/customer/user",
 									type : "PUT",
@@ -67,9 +67,20 @@ angular.module("rocchi.promoter")
 										}
 									}
 								})
-						// }
-					};
+					};*/
+					$scope.userPromoter = function(){
+						var obj = {};
+						obj.promoter = $scope.promoter;
+						obj.role = $scope.currentRole;
+						$http.put(AppConfig.ServiceUrls.PromoterUser,obj).then(function(results){
+							$scope.showuser = false;
+							$scope.promoter.hasuser = true;
+							$scope.msg.successMessage("UTENTE CREATO CON SUCCESSO");
+						},function(error){
+							$scope.msg.alertMessage(error);
+						});
+					}
 					$http.get(AppConfig.ServiceUrls.Role).success(function(data) {
 						$scope.roles = data;
 					});
-				} ]);
+}]);

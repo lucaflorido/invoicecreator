@@ -10,9 +10,39 @@
 	<div class="large-7 medium-7 small-7 columns">
 		<ul class="button-group">
 		  	<li><a ng-click="saveCustomer()" class="button">Salva</a></li>
+		  	<li ng-hide="customer.hasuser || customer.idCustomer == 0 " ><a  class="button" ng-click="showuser = !showuser">Crea Utente</a></li>
 		</ul>
 	</div>
 	</div>
+<div class="row" ng-show="showuser">
+	<form>
+		<fieldset>
+			<legend>Crea Utente</legend>
+			<div class="large-3 columns">
+				<label>Nome<input type="text"
+					 ng-model="customer.nameUser"
+					value="{{customer.nameUser}}" capitalize />
+				</label>
+			</div>
+			<div class="large-3 columns">
+				<label>Cognome<input type="text"
+					 ng-model="customer.surnameUser"
+					value="{{customer.surnameUser}}" capitalize />
+				</label>
+			</div>
+			<div class="large-3 columns">
+				<label>Ruolo
+					<select ng-model="currentRole" ng-options="role.name for  role in roles" >
+					    <option value=""></option>
+					</select>
+				</label>
+			</div>
+			<div class="large-3 columns">
+				<button class="button" ng-click="userCustomer()">Crea</button>
+			</div>
+		</fieldset>
+	</form>
+</div>
 <div class="row">
 <form>
 	<fieldset>

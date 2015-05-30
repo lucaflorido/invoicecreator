@@ -12,6 +12,7 @@ import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.MailConfig;
+import it.progess.invoicecreator.vo.PrintUrl;
 import it.progess.invoicecreator.vo.User;
 
 public class MailDao {
@@ -49,7 +50,8 @@ public class MailDao {
 			config.setPort(conf.getPort());
 		}
 		try{
-			String filename = new PrinterDao().getSingleDocumentPath(context, head.getIdHead(), user);
+			PrintUrl pu = new PrinterDao().getSingleDocumentPath(context, head.getIdHead(), user);
+			String filename = pu.getUrl();
 			if (conf.isPec() == false){
 				EMailSender.send(message, config, conf.getPassword(),filename);
 			}else{

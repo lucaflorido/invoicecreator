@@ -12,7 +12,7 @@ import it.progess.invoicecreator.pojo.TblListProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
 
 
-public class ListProduct implements Ivo {
+public class ListProduct implements Ivo,Comparable<ListProduct> {
 	private int idListProduct;
 	private List list;
 	private Product product;
@@ -124,7 +124,12 @@ public class ListProduct implements Ivo {
 		this.price = this.getProduct().getPurchaseprice()+increment;
 		setEndPrice(taxrate);
 	}
+	
 	public GECOObject control(){
 		return null;
+	}
+	@Override
+	public int compareTo(ListProduct p){
+		return this.getProduct().getCode().compareTo(p.getProduct().getCode());
 	}
 }

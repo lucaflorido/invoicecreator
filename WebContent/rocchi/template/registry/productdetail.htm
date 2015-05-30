@@ -34,10 +34,15 @@
             <input type="text" placeholder="Descrizione" value="{{product.description}}" ng-model="product.description">
 
 			<label>Categoria</label>
-            <select  name="category" ng-options="category.code for category in categorys" ng-model="currentCategory"  >
+            <select  name="category" ng-options="category.code for category in categorys" ng-model="currentCategory" ng-change="changeCategory()" >
           		 	<option value=""></option>
            	</select> 
-            	
+            
+            <label>Sottocategoria</label>
+            <select  name="subcategory" ng-options="subcategory.code for subcategory in subcategories" ng-model="currentSubCategory"  >
+          		 	<option value=""></option>
+           	</select> 
+           		
             <label>Gruppo</label>
             <select  name="group" ng-options="group.code for group in groups" ng-model="currentGroup"  >
            		 	<option value=""></option>

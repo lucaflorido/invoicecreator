@@ -69,8 +69,99 @@
 </form>
 </div>	
 <div	class="row">
-	<div class="large-5 medium-5 small-5 columns">
-		<h4>PRODOTTI</h4>
+	<div class="large-2 medium-2 small-2 columns">
+		<h3>PRODOTTI</h3>
+	</div>
+	<div class="large-10 medium-10 small-10 columns">
+		<ul class="button-group">
+			<li><div class="button" ng-click="filterMenu('filter')">Filtra </div></li>
+			<li><div class="button" ng-click="filterMenu('increment')">Incrementa Prezzi </div></li>
+		</ul>
+	
+	</div>
+</div>
+<div class="row" ng-show="menuselected == 'filter' || menuselected == 'increment'">
+	<form>
+	<fieldset>
+		<legend>FILTRAGGIO DATI</legend>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Codice o Descrizione
+				  <input type="text"
+					 ng-model="filter.searchstring"
+					value="{{filter.searchstring}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Regione <select  name="region" ng-options="region.code for region in regions" ng-model="filter.region"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Gruppo <select  name="group" ng-options="group.code for group in groups" ng-model="filter.group"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Categoria <select  name="category" ng-options="category.code for category in categories" ng-model="filter.category" ng-change="changeCategory()" >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Sottocategoria <select  name="subcategory" ng-options="subcategory.code for subcategory in subcategories" ng-model="filter.subcategory"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Marca <select  name="brand" ng-options="brand.code for brand in brands" ng-model="filter.brand"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+		</div>
+		
+	</fieldset>
+	</form>
+</div>
+<div class="row" ng-show="menuselected == 'increment'">
+	<form>
+		<fieldset>
+			<legend>INCREMENTO</legend>
+			<div class="row">
+			<div class="large-4 columns">
+				<label>Incremento
+				  <input type="text"
+					 ng-model="filter.increment"
+					value="{{filter.increment}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Percentuale
+				  <input type="checkbox"
+					 ng-model="filter.percentage"
+					value="{{filter.percentage}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<button class="button" ng-click="incrementPrices()" >Incrementa</button>
+			</div>
+		</div>
+		</fieldset>
+	</form>
+</div>
+<div class="row">
+	<div class="small-8 columns ">
+		<pagination total-items="totalitems" items-per-page="pagesize_confirmed" page="page" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pages" ng-click="getProducts(page)"></pagination>
+	</div>
+	<div class="small-4 columns ">
+		<input ng-model="pagesize" value="{{pagesize}}">
+		<div class="button"  ng-click="getProductsNumber()">Applica </div>
 	</div>
 </div>
 <div	class="row">
@@ -78,13 +169,13 @@
   <thead>
     <tr>
       <th width="50"></th>
-      <th width="20%"  st-sort="product.code" st-sort-default="reverse" st-skip-natural="true">Codice</th>
-      <th width="50%"  st-sort="product.description" st-sort-default="reverse" st-skip-natural="true">Descrizione</th>
-      <th width="10%"   st-sort-default="reverse" st-skip-natural="true">UM</th>
-      <th width="20%"   st-sort-default="reverse" st-skip-natural="true">Prezzo Netto</th>
+      <th width="20%"  st-sort="product.code" st-sort-default="anything" st-skip-natural="true">Codice</th>
+      <th width="50%"  st-sort="product.description"  st-skip-natural="true">Descrizione</th>
+      <th width="10%"    st-skip-natural="true">UM</th>
+      <th width="20%"    st-skip-natural="true">Prezzo Netto</th>
       <th width="20%"   >%</th>
-      <th width="20%"   st-sort-default="reverse" st-skip-natural="true">Aliquota</th>
-      <th width="20%"   st-sort-default="reverse" st-skip-natural="true">Prezzo</th>
+      <th width="20%"   >Aliquota</th>
+      <th width="20%"    st-skip-natural="true">Prezzo</th>
       <th width="50"></th>
     </tr>
     <tr>

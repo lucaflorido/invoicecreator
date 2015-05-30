@@ -2,7 +2,7 @@ var gecoControllers = angular.module("gecoControllers",[]);
 /**
 	LOGIN CONTROLLER
 */
-gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location",function($scope,$http,$rootScope,$location){
+gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location","PermissionFactory",function($scope,$http,$rootScope,$location,PermissionFactory){
 	$rootScope.viewheader = false;
 	$http.get('/InvoiceCreator/rest/user/startup').success(function(data){
 	});
@@ -20,6 +20,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 						$(".myprofilelabel").html(result.username);
 						$rootScope.user = result;
 						$rootScope.path = result.path;
+						PermissionFactory.setupPermission(result.path);
 						$rootScope.viewheader = true;
 						$location.path('/welcome');
 						$scope.$apply();
@@ -270,10 +271,19 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 /*****
 LOGOUT
 ***/
-gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$location",function($scope,$rootScope,$http,$location){
+gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$location","AppConfig","PermissionFactory","LoaderFactory",function($scope,$rootScope,$http,$location,AppConfig,PermissionFactory,LoaderFactory){
     $rootScope.viewheader = false;
+    $scope.auth = PermissionFactory;
+    $scope.loader = LoaderFactory;
+    $scope.conf_permission = AppConfig.Permissions;
 	$scope.logout = function(){
-		$.ajax({
+		$http.get(AppConfig.ServiceUrls.Logout).then(
+				function(result){
+					$rootScope.viewheader = false;
+					$location.path('/login');
+				}
+		);
+		/*$.ajax({
 			url:"/InvoiceCreator/rest/user/logout/",
 			type:"GET",
 			success:function(data){
@@ -281,9 +291,22 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 					$location.path('/login');
 					
 			}	
-		})
+		})*/
 	}
-	$.ajax({
+	$http.get(AppConfig.ServiceUrls.CheckUser).then(
+			function(result){
+				if (result.data.username != "" && result.data.username != null){
+					//checkrole(result);
+					
+					$rootScope.viewheader = true;
+				}else{
+					
+					$location.path('/login');
+					
+				}
+			}
+	);
+	/*$.ajax({
 		url:"/InvoiceCreator/rest/user/loggedinuser/",
 		type:"GET",
 		success:function(data){
@@ -298,7 +321,7 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 				
 			}
 		}	
-	})
+	})*/
 }]);
 
 

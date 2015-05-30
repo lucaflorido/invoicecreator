@@ -22,6 +22,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 @Table(name="tbllist")
 public class TblList implements Itbl {
@@ -35,6 +38,7 @@ public class TblList implements Itbl {
 	@Column(name="name")
 	private String name;
 	@OneToMany(fetch= FetchType.LAZY,mappedBy = "list",cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
 	private Set<TblListProduct> listproduct;
 	@Column(name="startdate")
 	private Date startdate;

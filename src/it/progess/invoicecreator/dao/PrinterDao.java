@@ -17,6 +17,7 @@ import it.progess.invoicecreator.vo.GECOReportOrderProduct;
 import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.ListProduct;
+import it.progess.invoicecreator.vo.PrintUrl;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.Row;
 import it.progess.invoicecreator.vo.User;
@@ -43,6 +44,7 @@ import javax.servlet.ServletContext;
 
 
 
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -57,7 +59,7 @@ public class PrinterDao {
 	  public String nextSessionId() {
 	    return new BigInteger(130, random).toString(16);
 	  }
-	public String printSingleDocument(ServletContext context,int id,User user){
+	public PrintUrl printSingleDocument(ServletContext context,int id,User user){
 		int [] ids = {id};
 		return this.printMultipleDocument(context, ids, user);
 	}
@@ -81,7 +83,7 @@ public class PrinterDao {
 		}
 		return "document";
 	}
-	public String printMultipleDocument(ServletContext context,int[] ids,User user){
+	public PrintUrl printMultipleDocument(ServletContext context,int[] ids,User user){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/document.jasper"));
@@ -144,10 +146,10 @@ public class PrinterDao {
 			ex.printStackTrace();
 			throw new ExceptionInInitializerError(ex);
 		}
-		return "/InvoiceCreator/report/multidocument.pdf";
+		return new PrintUrl("/InvoiceCreator/report/multidocument.pdf");
 	}
 	@SuppressWarnings("unchecked")
-	public String printProductList(ServletContext context,SelectProductsFilter filter,User user){
+	public PrintUrl printProductList(ServletContext context,SelectProductsFilter filter,User user){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/productlist.jasper"));
@@ -179,9 +181,9 @@ public class PrinterDao {
 			throw new ExceptionInInitializerError(ex);
 		}
 		
-		return "/InvoiceCreator/report/productlist.pdf";
+		return new PrintUrl("/InvoiceCreator/report/productlist.pdf");
 	}
-	public String printList(ServletContext context,int id,User user){
+	public PrintUrl printList(ServletContext context,int id,User user){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/pricelist.jasper"));
@@ -209,9 +211,9 @@ public class PrinterDao {
 			throw new ExceptionInInitializerError(ex);
 		}
 		
-		return "/InvoiceCreator/report/pricelist.pdf";
+		return new PrintUrl("/InvoiceCreator/report/pricelist.pdf");
 	}
-	public String printReportOrder(ServletContext context,GECOReportOrder[] report){
+	public PrintUrl printReportOrder(ServletContext context,GECOReportOrder[] report){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/reportOrder.jasper"));
@@ -281,9 +283,9 @@ public class PrinterDao {
 			throw new ExceptionInInitializerError(ex);
 		}
 		
-		return "/InvoiceCreator/report/reportOrder.pdf";
+		return new PrintUrl("/InvoiceCreator/report/reportOrder.pdf");
 	}
-	public String getSingleDocumentPath(ServletContext context,int id,User user){
+	public PrintUrl getSingleDocumentPath(ServletContext context,int id,User user){
 		String documentType ="";
 		String filename = "";
 		try{
@@ -326,6 +328,6 @@ public class PrinterDao {
 			throw new ExceptionInInitializerError(ex);
 		}
 		
-		return context.getRealPath("report/"+filename+".pdf");
+		return new PrintUrl(context.getRealPath("report/"+filename+".pdf"));
 	}
 }

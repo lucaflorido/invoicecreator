@@ -19,6 +19,8 @@ import it.progess.invoicecreator.vo.Supplier;
 import it.progess.invoicecreator.vo.Transporter;
 import it.progess.invoicecreator.vo.UnitMeasureProduct;
 import it.progess.invoicecreator.vo.User;
+import it.progess.invoicecreator.vo.UserCustomer;
+import it.progess.invoicecreator.vo.UserPromoter;
 import it.progess.invoicecreator.vo.filter.HeadFilter;
 import it.progess.invoicecreator.vo.filter.PagesFilter;
 import it.progess.invoicecreator.vo.filter.customer.SelectCustomerList;
@@ -182,13 +184,21 @@ public class RegistryService {
 	  @Path("product/pages/{size}")
 	  @Produces(MediaType.TEXT_HTML)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	  public String pages(@Context HttpServletRequest request,@PathParam("size") int size) {
+	  public String productPages(@Context HttpServletRequest request,@PathParam("size") int size) {
 		Gson gson = new Gson();
 		RegistryDao dao = new RegistryDao();
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getListPagesNumber(size,loggeduser));
 	  }
-	  
+	  @GET
+	  @Path("listproduct/pages/{size}/{idlist}")
+	  @Produces(MediaType.TEXT_HTML)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	  public String productListPages(@Context HttpServletRequest request,@PathParam("size") int size,@PathParam("idlist") int idlist) {
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		return gson.toJson(dao.getListProductsPagesNumber(size,idlist));
+	  }
 	  /***
 		Get Single user
       */
@@ -360,6 +370,18 @@ public class RegistryService {
 		list = dao.getSingleList(id);
 		return gson.toJson(list);
 	  }
+	  @POST
+	  @Path("list/{idlist}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public String singleListFiltered(@PathParam("idlist") int id,String data,@Context HttpServletRequest request) {
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  Gson gson = new Gson();
+		  RegistryDao dao = new RegistryDao();
+		  List list = new List();
+		  SelectProductsFilter filter = gson.fromJson(data, SelectProductsFilter.class);
+		  list = dao.getSingleList(id, filter, loggeduser);
+		  return gson.toJson(list);
+	  }
 	  @PUT
 	  @Path("list")
 	  @Produces(MediaType.TEXT_PLAIN)
@@ -439,15 +461,14 @@ public class RegistryService {
 	  }
 	  @PUT
 	  @Path("customer/user")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String createUserCustomer(@Context HttpServletRequest request,@FormParam("customers") String customer,@FormParam("role") String role){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String createUserCustomer(@Context HttpServletRequest request,String data){
 		  Gson gson = new Gson();
-		  Customer sms = gson.fromJson(customer,Customer.class);
-		  Role r = gson.fromJson(role,Role.class);
+		  UserCustomer sms = gson.fromJson(data,UserCustomer.class);
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
-		  return gson.toJson(dao.createUserCustomer(sms,loggeduser,r));
+		  return gson.toJson(dao.createUserCustomer(loggeduser,sms));
 	  }
 	  @PUT
 	  @Path("customer")
@@ -736,5 +757,16 @@ public class RegistryService {
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
+	  }
+	  @PUT
+	  @Path("promoter/user")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String createUserPromoter(@Context HttpServletRequest request,String data){
+		  Gson gson = new Gson();
+		  UserPromoter up = gson.fromJson(data,UserPromoter.class);
+		  RegistryDao dao = new RegistryDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.createUserPromoter(loggeduser,up));
 	  }
 }
