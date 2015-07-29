@@ -3,6 +3,7 @@ package it.progess.invoicecreator.service;
 import it.progess.invoicecreator.dao.UtilDao;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.helpobject.ProductBasicPricesCalculation;
+import it.progess.invoicecreator.vo.helpobject.ProductListIncrementVo;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -50,5 +51,14 @@ public class UtilService {
 		Gson g = new Gson();
 		Product p = g.fromJson(product,Product.class);
 		return g.toJson(new UtilDao().calculateProductListPrices(p));
+	}
+	@POST
+	@Path("incrementlist")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON) 
+	public String productListPriceIncrement(String data){
+		Gson g = new Gson();
+		ProductListIncrementVo p = g.fromJson(data,ProductListIncrementVo.class);
+		return g.toJson(new UtilDao().calculateIncrementProductListPrice(p));
 	}
 }

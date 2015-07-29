@@ -6,7 +6,7 @@ angular.module("rocchi.documents",[]);
 angular.module("rocchi.parameters",[]);
 angular.module("rocchi.promoter",[]);
 var gecoApp = angular.module("gecoApp",
-[   "ui.router",
+[   "ngRoute",
 	"gecoControllers",
 	"mm.foundation",
 	"smart-table",
@@ -49,7 +49,6 @@ var gecoApp = angular.module("gecoApp",
 		                RowTotal:main_domain+"/rest/documenthelp/rowtotal",
 		                List:main_domain+ "/rest/registry/list/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
-		                Login:main_domain+ "/rest/user/",
 		                Logout:main_domain+"/rest/user/logout/",
 		                SearchProduct:main_domain+ "/rest/registry/product/search/",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
@@ -73,8 +72,7 @@ var gecoApp = angular.module("gecoApp",
 		                Upload:main_domain+"/rest/upload/file",
 		                TaxRate:main_domain+"/rest/basic/taxrate/",
 		                DeleteRow:main_domain+"/rest/head/removerow/",
-		                Role:main_domain+"/rest/role/",
-		                ListIncrement:main_domain+"/rest/util/incrementlist"
+		                Role:main_domain+"/rest/role/"
 		            },Permissions:{
 		            	Promoter:"promoter",
 		            	Transporter:"transporter",
@@ -179,224 +177,227 @@ var gecoApp = angular.module("gecoApp",
     }
 });
 
-gecoApp.config(['$stateProvider', '$urlRouterProvider',
-function($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise("login");
-	
-	$stateProvider.state('userlist', {
-			url:'/userlist',
+gecoApp.config(['$routeProvider',
+function($routeProvider) {
+	$routeProvider.
+		when('/userlist', {
 			templateUrl: 'template/userlist.htm',
 			controller: 'UserListCtrl'
-		}).state('welcome', {
-			url:'/welcome',
+		}).
+		when('/welcome', {
 			templateUrl: 'template/home.htm',
 			controller: 'WelcomeCtrl'
-		}).state('userlist_details', {
-			url:'/userlist/:userId',
+		}).
+		when('/userlist/:userId', {
 			templateUrl: 'template/userdetail.htm',
 			controller: 'UserDetailCtrl'
-		}).state('role', {
-			url:'/role',
+		}).
+		when('/role', {
 			templateUrl: 'template/rolelist.htm',
 			controller: 'RoleCtrl'
-		}).state('taxrate', {
-			url:'/taxrate',
+		}).
+		when('/taxrate', {
 			templateUrl: 'template/basic/taxratelist.htm',
 			controller: 'RocchiTaxrateCtrl'
-		}).state('counter', {
-			url:'/counter',
+		}).
+		
+		when('/counter', {
 			templateUrl: 'template/basic/counterlist.htm',
 			controller: 'CounterCtrl'
-		}).state('storemovement_list', {
-			url:'/storemovement',
+		}).
+		when('/storemovement', {
 			templateUrl: 'template/basic/storemovementlist.htm',
 			controller: 'StoreMovementCtrl'
-		}).state('payment', {
-			url:'/payment',
+		}).
+		when('/payment', {
 			templateUrl: 'template/basic/paymentlist.htm',
 			controller: 'RocchiPaymentCtrl'
-		}).state('document', {
-			url:'/document',
+		}).
+		when('/document', {
 			templateUrl: 'template/basic/documentlist.htm',
 			controller: 'DocumentCtrl'
-		}).state('groupproduct', {
-			url:'/groupproduct',
+		}).
+		when('/groupproduct', {
 			templateUrl: 'template/basic/groupproductlist.htm',
 			controller: 'RocchiGroupProductCtrl'
-		}).state('categoryproduct', {
-			url:'/categoryproduct',
+		}).
+		when('/categoryproduct', {
 			templateUrl: 'template/basic/categoryproductlist.htm',
 			controller: 'RocchiCategoryProductCtrl'
-		}).state('region', {
-			url:'/region',
+		}).
+		when('/region', {
 			templateUrl: 'template/basic/regionlist.htm',
 			controller: 'RocchiRegionCtrl'
-		}).state('unitmeasure', {
-			url:'/unitmeasure',
+		}).
+		when('/unitmeasure', {
 			templateUrl: 'template/basic/unitmeasurelist.htm',
 			controller: 'RocchiUnitmeasureCtrl'
-		}).state('company', {
-			url:'/company',
+		}).
+		when('/company', {
 			templateUrl: 'template/registry/companydetail.htm',
 			controller: 'CompanyCtrl'
-		}).state('bank', {
-			url:'/bank',
+		}).
+		when('/bank', {
 			templateUrl: 'template/registry/banklist.htm',
 			controller: 'BankListCtrl'
-		}).state('bank_details', {
-			url:'/bank/:idbank',
+		}).
+		when('/bank/:idbank', {
 			templateUrl: 'template/registry/bankdetail.htm',
 			controller: 'BankDetailCtrl'
-		}).state('product', {
-			url:'/product',
+		}).
+		when('/product', {
 			templateUrl: 'template/registry/productlist.htm',
 			controller: 'RocchiProductListCtrl'
-		}).state('product_details', {
-			url:'/product/:idproduct',
+		}).
+		
+		when('/product/:idproduct', {
 			templateUrl: 'template/registry/productdetail.htm',
 			controller: 'RocchiProductDetailCtrl'
-		}).state('list', {
-			url:'/list',
+		}).
+		when('/list', {
 			templateUrl: 'template/registry/listlist.htm',
 			controller: 'RocchiListListCtrl'
-		}).state('list_details', {
-			url:'/list/:idlist',
+		}).
+		when('/list/:idlist', {
 			templateUrl: 'template/registry/listdetail.htm',
 			controller: 'RocchiListDetailCtrl'
-		}).state('customer', {
-			url:'/customer',
+		}).
+		when('/customer', {
 			templateUrl: 'template/registry/customerlist.htm',
 			controller: 'RocchiCustomerListCtrl'
-		}).state('customer_details', {
-			url:'/customer/:idcustomer',
+		}).
+		when('/customer/:idcustomer', {
 			templateUrl: 'template/registry/customerdetail.htm',
 			controller: 'RocchiCustomerDetailCtrl'
-		}).state('destination', {
-			url:'/destination',
+		}).
+		when('/destination', {
 			templateUrl: 'template/registry/destinationlist.htm',
 			controller: 'DestinationListCtrl'
-		}).state('destination_details', {
-			url:'/destination/:iddestination',
+		}).
+		when('/destination/:iddestination', {
 			templateUrl: 'template/registry/destinationdetail.htm',
 			controller: 'DestinationDetailCtrl'
-		}).state('supplier', {
-			url:'/supplier',
+		}).
+		when('/supplier', {
 			templateUrl: 'template/registry/supplierlist.htm',
 			controller: 'SupplierListCtrl'
-		}).state('supplier_details', {
-			url:'/supplier/:idsupplier',
+		}).
+		when('/supplier/:idsupplier', {
 			templateUrl: 'template/registry/supplierdetail.htm',
 			controller: 'SupplierDetailCtrl'
-		}).state('transporter', {
-			url:'/transporter',
+		}).
+		when('/transporter', {
 			templateUrl: 'template/registry/transporterlist.htm',
 			controller: 'RocchiTransporterListCtrl'
-		}).state('transporter_details', {
-			url:'/transporter/:idtransporter',
+		}).
+		when('/transporter/:idtransporter', {
 			templateUrl: 'template/registry/transporterdetail.htm',
 			controller: 'RocchiTransporterDetailCtrl'
-		}).state('headlist_details_type', {
-			url:'/headlist/:section/:type',
+		}).
+		when('/headlist/:section/:type', {
 			templateUrl: 'template/document/headlist.htm',
 			controller: 'RocchiHeadListCtrl'
-		}).state('generatedocs', {
-			url:'/generatedocs',
+		}).
+		when('/generatedocs', {
 			templateUrl: 'template/document/generatedocs.htm',
 			controller: 'GenerateDocsCtrl'
-		}).state('copyrows', {
-			url:'/copyrows',
+		}).
+		when('/copyrows', {
 			templateUrl: 'template/document/copyrows.htm',
 			controller: 'CopyRowsCtrl'
-		}).state('reportorder', {
-			url:'/reportorder',
+		}).
+		when('/reportorder', {
 			templateUrl: 'template/store/reportorder.htm',
 			controller: 'ReportOrderCtrl'
-		}).state('createorders', {
-			url:'/createorders',
+		}).
+		when('/createorders', {
 			templateUrl: 'template/document/openorders.htm',
 			controller: 'CreateOrdersCtrl'
-		}).state('head_details', {
-			url:'/head/:idhead',
+		}).
+		when('/head/:idhead', {
 			templateUrl: 'template/document/wizard.html',
 			controller: 'RocchiWizardCtrl'
-		}).state('head_details_rows', {
-			url:'/head/:idhead/:rows',
+		}).
+		when('/head/:idhead/:rows', {
 			templateUrl: 'template/document/headdetail.htm',
 			controller: 'RocchiHeadDetailCtrl'
-		}).state('customercategory', {
-			url:'/customercategory',
+		}).
+		when('/customercategory', {
 			templateUrl: 'template/basic/customercategorylist.htm',
 			controller: 'RocchiCustomerCategoryListCtrl'
-		}).state('customergroup', {
-			url:'/customergroup',
+		}).
+		when('/customergroup', {
 			templateUrl: 'template/basic/customergrouplist.htm',
 			controller: 'RocchiCustomerGroupListCtrl'
-		}).state('suppliercategory', {
-			url:'/suppliercategory',
+		}).
+		when('/suppliercategory', {
 			templateUrl: 'template/basic/suppliercategorylist.htm',
 			controller: 'SupplierCategoryListCtrl'
-		}).state('suppliergroup', {
-			url:'/suppliergroup',
+		}).
+		when('/suppliergroup', {
 			templateUrl: 'template/basic/suppliergrouplist.htm',
 			controller: 'SupplierGroupListCtrl'
-		}).state('myprofile_details', {
-			url:'/myprofile/:myuserId',
+		}).
+		when('/myprofile/:myuserId', {
 			templateUrl: 'template/myprofile.htm',
 			controller: 'MyProfileCtrl'
-		}).state('login', {
-			url:'/login',
+		}).
+		when('/login', {
 			templateUrl: 'template/welcome.htm',
 			controller:'LoginCtrl'
-		}).state('storelist', {
-			url:'/storelist',
+		}).
+		when('/storelist', {
 			templateUrl: 'template/store/productstorage.htm',
 			controller: 'StoreCtrl'
-		}).state('brand', {
-			url:'/brand',
+		}).
+		when('/brand', {
 			templateUrl: 'template/basic/brandlist.htm',
 			controller: 'RocchiBrandCtrl'
-		}).state('storeneeded', {
-			url:'/storeneeded',
+		}).
+		when('/storeneeded', {
 			templateUrl: 'template/store/storeneeded.htm',
 			controller: 'StoreNeededCtrl'
-		}).state('accounting_details', {
-			url:'/accounting/:type',
+		}).
+		when('/accounting/:type', {
 			templateUrl: 'template/accounting/accountingcustomer.htm',
 			controller: 'AccountingCustomerCtrl'
-		}).state('accountinglist_details', {
-			url:'/accountinglist/:type',
+		}).
+		when('/accountinglist/:type', {
 			templateUrl: 'template/accounting/accountinglist.htm',
 			controller: 'AccountingListCtrl'
-		}).state('parameters', {
-			url:'/parameters',
+		}).
+		when('/parameters', {
 			templateUrl: 'template/parameters/parameters.htm',
 			controller: 'ParametersCtrl'
-		}).state('rates', {
-			url:'/rates',
+		}).
+		when('/rates', {
 			templateUrl: 'template/parameters/rates.htm',
 			controller: 'TaxrateCtrl'	
-		}).state('storemovement', {
-			url:'/storemovement',
+		}).
+		when('/storemovement', {
 			templateUrl: 'template/parameters/storemovement.htm',
 			controller: 'StoreMovementCtrl'	
-		}).state('docpayment', {
-			url:'/docpayment',
+		}).
+		when('/docpayment', {
 			templateUrl: 'template/parameters/docpayment.htm',
 			controller: 'PaymentCtrl'
-		}).state('documents', {
-			url:'documents',
+		}).
+		when('/documents', {
 			templateUrl: 'template/parameters/documents.htm',
 			controller: 'ParametersCtrl'	
 				
-		}).state('promoter', {
-			url:'/promoter',
+		}).
+		when('/promoter', {
 			templateUrl: 'template/registry/promoterlist.htm',
 			controller: 'RocchiPromoterListCtrl'
-		}).state('promoter_details', {
-			url:'/promoter/:idpromoter',
+		}).
+		when('/promoter/:idpromoter', {
 			templateUrl: 'template/registry/promoterdetail.htm',
 			controller: 'RocchiPromoterDetailCtrl'
-		});
+		}).
+		otherwise({
+			redirectTo: '/login'
+}		);
 }]);
 gecoApp.factory('ScopeFactory', function ($http, $q) {
 	var scopefactory = {};

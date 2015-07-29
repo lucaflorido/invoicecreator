@@ -1,5 +1,5 @@
 angular.module("rocchi.product")
-.controller('RocchiProductListCtrl',["$scope","$rootScope","$http","ScopeFactory","$location","AppConfig","AlertsFactory",function($scope,$rootScope,$http,ScopeFactory,$location,AppConfig,AlertsFactory){
+.controller('RocchiProductListCtrl',["$scope","$rootScope","$http","ScopeFactory","$location","AppConfig","AlertsFactory","LoaderFactory",function($scope,$rootScope,$http,ScopeFactory,$location,AppConfig,AlertsFactory,LoaderFactory){
     $scope.importview = false;	
 	$scope.location = $location;
 	$scope.url = AppConfig.ServiceUrls;
@@ -27,7 +27,7 @@ angular.module("rocchi.product")
 	}else{
 		//$scope.pagesize = ScopeFactory.factory.productList.pagesize
 	}
-	$scope.importobj = {};
+	$scope.importobj = {code:'B',description:"C",group:"A",umcode:"I",purchaseprice:"F",taxrate:"H",startIndex:"3",endIndex:"10"};
 	$scope.filterMenu = function(value){
 		if ($scope.menuselected == "" || $scope.menuselected != value){
 			$scope.menuselected = value;
@@ -166,14 +166,17 @@ angular.module("rocchi.product")
 			
 		}
 		$scope.importobj.filename = filename;
+		LoaderFactory.loader = true;
 		$http.post(AppConfig.ServiceUrls.ImportProducts,$scope.importobj).then(function(result){
 			if (result.data.type == "success"){
 				$scope.msg.infoMessage("IMPORTAZIONE TERMINATA CON SUCCESSO");
 				$scope.importview = false;
 				$scope.novalid = true;
 				$scope.getProducts();
+				LoaderFactory.loader = false;
 			}else{
 				$scope.msg.alertMessage(result.data.errorMessage);
+				LoaderFactory.loader = false;
 			}
 			
 		});
@@ -189,7 +192,7 @@ angular.module("rocchi.product")
 		 $location.path("/product/0");
 	 };
 }])
-.controller('RocchiProductDetailCtrl',["$scope","$http","$routeParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$routeParams,$location,$rootScope,AppConfig,AlertsFactory){
+.controller('RocchiProductDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$stateParams,$location,$rootScope,AppConfig,AlertsFactory){
     
 	GECO_validator.startupvalidator();
 	$scope.msg = AlertsFactory;
@@ -219,7 +222,7 @@ angular.module("rocchi.product")
 			$scope.$apply();
 		}
 	});
-	$scope.idproduct= $routeParams.idproduct;
+	$scope.idproduct= $stateParams.idproduct;
 	$scope.isNew = false
 	if ($scope.idproduct == 0){
 		$scope.isNew = true;
@@ -526,5 +529,19 @@ angular.module("rocchi.product")
 			$scope.listid = listProd.idListProduct ;
 		}
 			
+	}
+	$scope.incrementPrices = function(){
+		$scope.increment.listproducts = $scope.product.listproduct;
+		$http.post(AppConfig.ServiceUrls.ListIncrement,$scope.increment).success(function(results){
+			if (results.type == "success"){	
+				$scope.product.listproduct = results.success
+				$scope.searched = false;
+				$scope.msg.successMessage("INCREMENTO EFFETTUATO CON SUCCESSO.SALVARE LE MODIFICHE PER RENDERLE EFFETTIVE");
+				
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}	
+			
+		})
 	}
 }]);

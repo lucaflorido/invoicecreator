@@ -10,6 +10,8 @@ import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.helpobject.ProductBasicPricesCalculation;
+import it.progess.invoicecreator.vo.helpobject.ProductListIncrementVo;
+import it.progess.invoicecreator.vo.helpobject.ProductListPricesCalculation;
 
 public class UtilDao {
 	public GECOObject calculateBasicPricesProduct(ProductBasicPricesCalculation basic,boolean isSellPrice){
@@ -43,5 +45,13 @@ public class UtilDao {
 		double increment = HibernateUtils.calculatePercentage(p.getPurchaseprice(),p.getPercentage());
 		p.setSellprice((float)increment+(float)p.getPurchaseprice());
 		return new GECOSuccess(p);
+	}
+	public GECOObject calculateIncrementProductListPrice(ProductListIncrementVo plivo){
+		for (Iterator<ListProduct> it = plivo.getListproducts().iterator();it.hasNext();){
+			ListProduct lp = it.next();
+			new ProductListPricesCalculation().calculateIncrement(plivo.isEndPrice(),plivo.isPercentage(), plivo.getIncrement(), lp);
+		}
+			
+		return new GECOSuccess(plivo.getListproducts());
 	}
 }

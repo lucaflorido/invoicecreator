@@ -2,13 +2,13 @@
  * 
  */
 angular.module("rocchi.promoter")
-.controller('RocchiPromoterDetailCtrl',["$scope","$http","$routeParams","AppConfig","AlertsFactory",function($scope, $http, $routeParams, AppConfig,AlertsFactory) {
+.controller('RocchiPromoterDetailCtrl',["$scope","$http","$stateParams","AppConfig","AlertsFactory",function($scope, $http, $stateParams, AppConfig,AlertsFactory) {
 					// GECO_LOGGEDUSER.checkloginuser();
 					
 					$scope.msg = AlertsFactory;
 					$scope.msg.initialize();
 					$scope.showuser = false;
-					$scope.idpromoter = $routeParams.idpromoter;
+					$scope.idpromoter = $stateParams.idpromoter;
 					 
 					$http.get(AppConfig.ServiceUrls.Promoter+ $scope.idpromoter)
 							.success(

@@ -5,7 +5,7 @@
  * 
  */
 angular.module("rocchi.documents")
- .controller('RocchiWizardCtrl',["$scope","$http","$routeParams","$location","$rootScope","$route","AppConfig","WizardFactory",function($scope,$http,$routeParams,$location,$rootScope,$route,AppConfig,WizardFactory){
+ .controller('RocchiWizardCtrl',["$scope","$http","$stateParams","$location","$rootScope","$route","AppConfig","WizardFactory",function($scope,$http,$stateParams,$location,$rootScope,$route,AppConfig,WizardFactory){
 	 $scope.tabs=[{title:"Cliente",template:"template/document/wizard/stepone.html",name:"step1",active:true,disable:false},
 		             {title:"Prodotto",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true}
 		             

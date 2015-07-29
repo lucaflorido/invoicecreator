@@ -32,12 +32,12 @@ angular.module("rocchi.transporter")
 	}
 	
 }])
-.controller('RocchiTransporterDetailCtrl',["$scope","$http","$routeParams","AppConfig",function($scope,$http,$routeParams,AppConfig){
+.controller('RocchiTransporterDetailCtrl',["$scope","$http","$stateParams","AppConfig",function($scope,$http,$stateParams,AppConfig){
     //GECO_LOGGEDUSER.checkloginuser();
 	$scope.listsections = ["Dettagli","Listini","Destinazioni"];
 	$scope.selectedSection = $scope.listsections[0];
 	GECO_validator.startupvalidator();
-	$scope.idtransporter= $routeParams.idtransporter;
+	$scope.idtransporter= $stateParams.idtransporter;
 	$http.get(AppConfig.ServiceUrls.List).success(function(data){
 		$scope.lists= data;
 	});

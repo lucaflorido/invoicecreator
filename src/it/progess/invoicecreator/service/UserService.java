@@ -77,12 +77,12 @@ public class UserService {
 		Check credentials 
        */
 	  @POST
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String checkCredentials(@FormParam("loginobj") String loginobj,@Context HttpServletRequest request){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String checkCredentials( String data,@Context HttpServletRequest request){
 		  HttpSession session = request.getSession();
 		  Gson gson = new Gson();
-		  User user = gson.fromJson(loginobj,User.class);
+		  User user = gson.fromJson(data,User.class);
 		  UserDao userdao = new UserDao();
 		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session));
 	  }

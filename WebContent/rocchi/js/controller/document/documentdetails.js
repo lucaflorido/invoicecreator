@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.documents")
- .controller('RocchiHeadDetailCtrl',["$scope","$http","$routeParams","$location","$rootScope","$route","AppConfig",function($scope,$http,$routeParams,$location,$rootScope,$route,AppConfig){
+ .controller('RocchiHeadDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","$route","AppConfig",function($scope,$http,$stateParams,$location,$rootScope,$route,AppConfig){
 	$rootScope.issaved = true;
 	$(document).unbind("keydown");
 	$(document).keydown(function(e){
@@ -55,15 +55,15 @@ angular.module("rocchi.documents")
 		$scope.isOrder = false;
 		$scope.isLoadSerialN = false;
 		$scope.isUnloadSerialN = false;
-		$scope.idhead= $routeParams.idhead;
+		$scope.idhead= $stateParams.idhead;
     GECO_validator.startupvalidator();
 	
-	if ($routeParams.rows == null){
+	if ($stateParams.rows == null){
 		if ($scope.selectedSection == null)
 			$scope.selectedSection = $scope.listsections[0];
 	}else{
 	$("#maincontainer_productdetail").focus();
-		switch ($routeParams.rows){
+		switch ($stateParams.rows){
 			case "1":
 				$scope.isOrder = true;
 				$scope.selectedSection = $scope.listsections[1];

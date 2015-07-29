@@ -45,13 +45,14 @@ import it.progess.invoicecreator.vo.importvo.ImportProductList;
 
 public class ImportDao {
 	public GECOObject importProducts(ServletContext context,ImportProduct ip,User user){
+		ArrayList<String> message = new ArrayList<String>();
 		try{
 			if (ip.control() != null){
 				return ip.control();
 			}
 			FileInputStream fileInputStream = new FileInputStream(context.getRealPath(ip.getFilename()));
-			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
-			HSSFSheet worksheet = workbook.getSheetAt(0);
+			Sheet worksheet = ExcelUtil.initialize(context, ip.getFilename());
+			
 			int startIndex = ip.getStartIndex();
 			int endIndex = 0;
 			if (ip.getEndIndex() > 0){
@@ -59,45 +60,48 @@ public class ImportDao {
 			}else{		
 				endIndex = worksheet.getLastRowNum();
 			}
+			
 			for (int i = startIndex;i < endIndex;i++){
-				HSSFRow row1 = worksheet.getRow(i);
-				//GROUP
-				int colgroup = CellReference.convertColStringToIndex(ip.getGroup());
-				HSSFCell cellGroup = row1.getCell(colgroup);
-				String groupcode = cellGroup.getStringCellValue();
-				GroupProduct gp = getGroupProduct(groupcode,user);
-				
-				//TAXRATE
-				int coltr= CellReference.convertColStringToIndex(ip.getTaxrate());
-				HSSFCell celltr = row1.getCell(coltr);
-				String valueStr = celltr.getStringCellValue();
-				double value = Double.parseDouble(valueStr);
-				TaxRate tr = getTaxrate(value, user);
-				
-				//PRODUCT
-				int colprod = CellReference.convertColStringToIndex(ip.getCode());
-				HSSFCell cellProd = row1.getCell(colprod);
-				String code = cellProd.getStringCellValue();
+				try{
+				Row row1 = worksheet.getRow(i);
+				String code = ExcelUtil.getColValue(row1, ip.getCode(),true);
 				Product p = getProduct(code,user);
-				
-				int coldesc = CellReference.convertColStringToIndex(ip.getDescription());
-				HSSFCell celldesc = row1.getCell(coldesc);
-				String desc = celldesc.getStringCellValue();
-				p.setDescription(desc);
 				p.setCode(code);
+				p.setDescription(ExcelUtil.getColValue(row1, ip.getDescription(),true));
 				p.setSellprice(1);
-				
-				int colpurchase = CellReference.convertColStringToIndex(ip.getPurchaseprice());
-				HSSFCell cellPPrice = row1.getCell(colpurchase);
-				String ppriceStr =String.valueOf(cellPPrice.getNumericCellValue());
-				ppriceStr = ppriceStr.replace(",", ".");
-				float cost = Float.parseFloat(ppriceStr);
-				p.setPurchaseprice(cost);
-				
-				
-				p.setTaxrate(tr);
-				p.setGroup(gp);
+				p.setPurchaseprice(Float.parseFloat(ExcelUtil.getColValue(row1, ip.getPurchaseprice(),true)));
 				p.setProduct(true);
+				p.setTaxrate(getTaxrate(Double.parseDouble(ExcelUtil.getColValue(row1, ip.getTaxrate(),true)), user));
+				p.setGroup(getGroupProduct(ExcelUtil.getColValue(row1, ip.getGroup(),true), user));
+				if (p.getUms() == null || p.getUms().size() == 0){
+					Set<UnitMeasureProduct> umps = new HashSet<UnitMeasureProduct>();
+					p.setUms(umps);
+					UnitMeasureProduct ump = new UnitMeasureProduct();
+					ump.setCode(code);
+					ump.setConversion(1);
+					ump.setPreference(true);
+					
+					UnitMeasure umobj = getUM(ExcelUtil.getColValue(row1, ip.getUmcode(),true), user);
+					ump.setUm(umobj);
+					umps.add(ump);
+				}
+				calculateListPrices(row1,ip,p);
+				
+				GECOObject go = new RegistryDao().saveUpdatesProduct(p, user);
+				if (go.type == GECOParameter.ERROR_TYPE){
+					int index = i+1;
+					message.add("Riga:"+ index+ " " +((GECOError)go).getErrorMessage());
+				}
+				}catch(Exception e){
+					int index = i+1;
+					message.add("Riga:"+ index+ " " +e.getMessage());
+				}
+				/*HSSFRow row1 = worksheet.getRow(i);
+				
+				
+				
+				
+				
 				if (p.getUms() == null || p.getUms().size() == 0){
 					Set<UnitMeasureProduct> umps = new HashSet<UnitMeasureProduct>();
 					p.setUms(umps);
@@ -113,7 +117,7 @@ public class ImportDao {
 					umps.add(ump);
 				}
 				calculateListPrices(row1,ip,p);
-				new RegistryDao().saveUpdatesProduct(p, user);
+				new RegistryDao().saveUpdatesProduct(p, user);*/
 			}
 			/*XSSFRow row1 = worksheet.getRow(0);
 			XSSFCell cellA1 = row1.getCell((short) 0);
@@ -122,7 +126,7 @@ public class ImportDao {
 			e.printStackTrace();
 			return new GECOError();
 		}
-		return new GECOSuccess();
+		return new GECOSuccess(message);
 	}
 	private GroupProduct getGroupProduct(String code,User user){
 		if (code.equals("")){
@@ -219,7 +223,7 @@ public class ImportDao {
 		}
 		return null;
 	}
-	private void calculateListPrices(HSSFRow row1,ImportProduct ip,Product p){
+	private void calculateListPrices(Row row1,ImportProduct ip,Product p){
 		if (p.getListproduct() == null){
 			Set<ListProduct> lp = new HashSet<ListProduct>();
 			p.setListproduct(lp);
@@ -228,9 +232,8 @@ public class ImportDao {
 			ImportProductList ipl = iterator.next();
 			ListProduct lp = checkProductinList(p,ipl.getList());
 			
-			int colprice = CellReference.convertColStringToIndex(ipl.getPricecol());
-			HSSFCell cellPPrice = row1.getCell(colprice);
-			String ppriceStr =String.valueOf(cellPPrice.getNumericCellValue());
+			
+			String ppriceStr =ExcelUtil.getColValue(row1, ipl.getPricecol(),true);
 			ppriceStr = ppriceStr.replace(",", ".");
 			float pricelist = Float.parseFloat(ppriceStr);
 			lp.setPrice(pricelist);

@@ -36,6 +36,18 @@
 	  maxIdle="4"
 	  validationQuery="Select 1" 
 	 />
+	 <Resource name="jdbc/progessDBremoteLocal" 
+	  global="jdbc/progessDB"
+	  auth="Container"
+	  type="javax.sql.DataSource" 
+	  username="lflorido3"
+	  password="svnf0rl0s"
+	  driverClassName="com.mysql.jdbc.Driver"
+	  url="jdbc:mysql://localhost/progesstest?autoReconnect=true"
+	  maxActive="50"
+	  maxIdle="4"
+	  validationQuery="Select 1" 
+	 />
 	 <Resource name="jdbc/progessDB" 
 	  global="jdbc/progessDB"
 	  auth="Container"

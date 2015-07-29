@@ -134,22 +134,30 @@
 		<fieldset>
 			<legend>INCREMENTO</legend>
 			<div class="row">
-			<div class="large-4 columns">
+			<div class="large-3 columns">
 				<label>Incremento
 				  <input type="text"
-					 ng-model="filter.increment"
-					value="{{filter.increment}}" capitalize />
+					 ng-model="increment.increment"
+					value="{{increment.increment}}" capitalize />
 				</label>
 			</div>
-			<div class="large-4 columns">
+			<div class="large-3 columns">
 				<label>Percentuale
 				  <input type="checkbox"
-					 ng-model="filter.percentage"
-					value="{{filter.percentage}}" capitalize />
+					 ng-model="increment.isPercentage"
+					value="{{increment.isPercentage}}" capitalize />
 				</label>
 			</div>
-			<div class="large-4 columns">
-				<button class="button" ng-click="incrementPrices()" >Incrementa</button>
+			<div class="large-3 columns">
+				<label>Prezzo Finale
+				  <input type="checkbox"
+					 ng-model="increment.isEndPrice"
+					value="{{increment.isEndPrice}}" capitalize />
+				</label>
+			</div>
+			<div class="large-3 columns">
+				<button class="button" ng-show="searched" ng-click="incrementPrices()" >Incrementa</button>
+				<button class="button" ng-hide="searched" ng-click="getProductsNumber();searched = true" >Filtra</button>
 			</div>
 		</div>
 		</fieldset>

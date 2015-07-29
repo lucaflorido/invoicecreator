@@ -107,6 +107,14 @@ public class HibernateUtils {
         res= bd.floatValue();
 		return res;
 	}
+	/***
+	 * 
+	 * @param buy
+	 * @param sell
+	 * @return
+	 * 
+	 * Calculate percentage between two prices
+	 */
 	public static float calculatePercentageFromPrices(float buy,float sell){
 		float diff = sell-buy;
 		float res =0;

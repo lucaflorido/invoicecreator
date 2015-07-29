@@ -152,13 +152,13 @@ angular.module("rocchi.customer")
 	};
 	
 } ])
-.controller('RocchiCustomerDetailCtrl',["$scope","$http","$routeParams","AppConfig","AlertsFactory",function($scope, $http, $routeParams, AppConfig,AlertsFactory) {
+.controller('RocchiCustomerDetailCtrl',["$scope","$http","$stateParams","AppConfig","AlertsFactory",function($scope, $http, $stateParams, AppConfig,AlertsFactory) {
 							// GECO_LOGGEDUSER.checkloginuser();
 
 $scope.msg = AlertsFactory;
 $scope.msg.initialize();
 GECO_validator.startupvalidator();
-$scope.idcustomer = $routeParams.idcustomer;
+$scope.idcustomer = $stateParams.idcustomer;
 $scope.showuser = false;
 /*
  * $http.get('rest/registry/list').success(function(data){

@@ -180,6 +180,7 @@
 		<pagination total-items="totalitems" items-per-page="pagesize_confirmed" page="page" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pages" ng-click="getProducts(page)"></pagination>
 	</div>
 	<div class="small-4 columns ">
+		Prodotti totali: {{totalitems}}
 		<input ng-model="pagesize" value="{{pagesize}}">
 		<div class="button"  ng-click="getProductsNumber()">Applica </div>
 	</div>

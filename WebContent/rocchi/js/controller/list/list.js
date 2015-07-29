@@ -39,13 +39,13 @@ angular.module("rocchi.list")
 		return date[2]+date[1]+date[0];
 	};
 }])
-.controller('RocchiListDetailCtrl',["$scope","$http","$routeParams","ScopeFactory","AppConfig","AlertsFactory",function($scope,$http,$routeParams,ScopeFactory,AppConfig,AlertsFactory){
+.controller('RocchiListDetailCtrl',["$scope","$http","$stateParams","ScopeFactory","AppConfig","AlertsFactory",function($scope,$http,$stateParams,ScopeFactory,AppConfig,AlertsFactory){
     
 	GECO_validator.startupvalidator();
 	$scope.newList = {isPercentage:true};
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
-	$scope.idlist= $routeParams.idlist;
+	$scope.idlist= $stateParams.idlist;
 	$scope.menuselected = "";
 	$scope.filter = {"pagefilter":{}};
 	$scope.filterMenu = function(value){
@@ -227,5 +227,18 @@ angular.module("rocchi.list")
 			})
 		//}
 	} ;
-	
+	$scope.incrementPrices = function(){
+		$scope.increment.listproducts = $scope.list.listproduct;
+		$http.post(AppConfig.ServiceUrls.ListIncrement,$scope.increment).success(function(results){
+			if (results.type == "success"){	
+				$scope.list.listproduct = results.success
+				$scope.searched = false;
+				$scope.msg.successMessage("INCREMENTO EFFETTUATO CON SUCCESSO.SALVARE LE MODIFICHE PER RENDERLE EFFETTIVE");
+				
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}	
+			
+		})
+	}
 }]);

@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.documents")
-.controller('RocchiHeadListCtrl',["$scope","$http","$routeParams","$rootScope","AppConfig",function($scope,$http,$routeParams,$rootScope,AppConfig){
+.controller('RocchiHeadListCtrl',["$scope","$http","$stateParams","$rootScope","AppConfig",function($scope,$http,$stateParams,$rootScope,AppConfig){
     
 	$scope.pagesize = 1000;
 	$scope.pageArray = [];
@@ -23,23 +23,23 @@ angular.module("rocchi.documents")
 		if($scope.headfilter.pageSize)
 			$scope.pagesize = $scope.headfilter.pageSize;
 	}
-	if ($routeParams.section == 1){
+	if ($stateParams.section == 1){
 		$scope.headfilter.isCustomer = true;
 		$scope.headfilter.isSupplier = false;
 	}else{
 		$scope.headfilter.isCustomer = false;
 		$scope.headfilter.isSupplier = true;
 	}
-	if ($routeParams.type == 1){
+	if ($stateParams.type == 1){
 		$scope.headfilter.isOrder = true;
 		$scope.headfilter.isInvoice = false;
 		$scope.headfilter.isTransport = false;
 	}else{
-		if ($routeParams.type == 2){
+		if ($stateParams.type == 2){
 			$scope.headfilter.isInvoice = true;
 			$scope.headfilter.isOrder = false;
 			$scope.headfilter.isTransport = false;
-		}else if ($routeParams.type == 3){
+		}else if ($stateParams.type == 3){
 			$scope.headfilter.isOrder = false;
 			$scope.headfilter.isTransport = true;
 			$scope.headfilter.isInvoice = false;
