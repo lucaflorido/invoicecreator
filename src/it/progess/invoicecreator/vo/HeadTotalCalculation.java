@@ -1,5 +1,7 @@
 package it.progess.invoicecreator.vo;
 
+import it.progess.invoicecreator.hibernate.HibernateUtils;
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -143,21 +145,21 @@ public class HeadTotalCalculation {
 			head.setWithholdingtax(0);
 		}
 		this.total = this.total4 + this.total10+ this.total20+this.total0-head.getWithholdingtax();
-		head.setAmount(amount);
-		head.setTaxamount(taxamount);
-		head.setTotal(total);
+		head.setAmount(HibernateUtils.roundfloat(amount));
+		head.setTaxamount(HibernateUtils.roundfloat(taxamount));
+		head.setTotal(HibernateUtils.roundfloat(total));
 		
-		head.setAmount4(amount4);
-		head.setTaxamount4(taxamount4);
-		head.setTotal4(total4);
+		head.setAmount4(HibernateUtils.roundfloat(amount4));
+		head.setTaxamount4(HibernateUtils.roundfloat(taxamount4));
+		head.setTotal4(HibernateUtils.roundfloat(total4));
 		
-		head.setAmount10(amount10);
-		head.setTaxamount10(taxamount10);
-		head.setTotal10(total10);
+		head.setAmount10(HibernateUtils.roundfloat(amount10));
+		head.setTaxamount10(HibernateUtils.roundfloat(taxamount10));
+		head.setTotal10(HibernateUtils.roundfloat(total10));
 		
-		head.setAmount20(amount20);
-		head.setTaxamount20(taxamount20);
-		head.setTotal20(total20);
+		head.setAmount20(HibernateUtils.roundfloat(amount20));
+		head.setTaxamount20(HibernateUtils.roundfloat(taxamount20));
+		head.setTotal20(HibernateUtils.roundfloat(total20));
 	}
 	private void setTaxesAmount(TaxRate t,Row r){
 		if (r.getType().endsWith("V")){

@@ -5,7 +5,7 @@
  * 
  */
 angular.module("rocchi.documents")
- .controller('RocchiWizardCtrl',["$scope","$http","$stateParams","$location","$rootScope","$route","AppConfig","WizardFactory",function($scope,$http,$stateParams,$location,$rootScope,$route,AppConfig,WizardFactory){
+ .controller('RocchiWizardCtrl',["$scope","$http","$stateParams","$location","$rootScope","$state","AppConfig","WizardFactory",function($scope,$http,$stateParams,$location,$rootScope,$state,AppConfig,WizardFactory){
 	 $scope.tabs=[{title:"Cliente",template:"template/document/wizard/stepone.html",name:"step1",active:true,disable:false},
 		             {title:"Prodotto",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true}
 		             
@@ -40,7 +40,7 @@ angular.module("rocchi.documents")
 }]).controller("WizardStepsCtrl",["$scope","WizardFactory",function($scope,WizardFactory){
 	$scope.wiz = WizardFactory;
 	//factory.wiz.getCustomers();
-}]).factory("WizardFactory",["$http", "$q","AppConfig","$route",function($http, $q,AppConfig,$route){
+}]).factory("WizardFactory",["$http", "$q","AppConfig","$state",function($http, $q,AppConfig,$state){
 	var factory = {};
 	factory.customerlist = [];
 	factory.productlist = [];
@@ -190,7 +190,7 @@ angular.module("rocchi.documents")
 	}
 	factory.reload = function(){
 		factory.initialize(factory.tabs)
-		$route.reload();
+		$state.reload();
 	}
 	factory.printHead = function(){
 		$http.get(AppConfig.ServiceUrls.PrintHead+factory.head.idHead).then(function(result){

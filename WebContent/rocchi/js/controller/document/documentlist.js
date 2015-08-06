@@ -2,13 +2,14 @@
  * 
  */
 angular.module("rocchi.documents")
-.controller('RocchiHeadListCtrl',["$scope","$http","$stateParams","$rootScope","AppConfig",function($scope,$http,$stateParams,$rootScope,AppConfig){
+.controller('RocchiHeadListCtrl',["$scope","$http","$stateParams","$rootScope","AppConfig","$location",function($scope,$http,$stateParams,$rootScope,AppConfig,$location){
     
 	$scope.pagesize = 1000;
 	$scope.pageArray = [];
 	$scope.headamount = 0;
 	$scope.headtaxamount = 0;
 	$scope.headtotal = 0;
+	$scope.location = $location;
 	//$scope.headfilter={};
 	$scope.heads = [];
 	if ($scope.headfilter == null){
@@ -46,13 +47,13 @@ angular.module("rocchi.documents")
 		}
 		
 	}
-	$http.get('rest/registry/supplier').success(function(data){
+	/*$http.get('rest/registry/supplier').success(function(data){
 				$scope.suppliers= data;
-	});
-	$http.get(AppConfig.ServiceUrls.ListOfCustomer).success(function(data){
+	});*/
+	$http.get(AppConfig.ServiceUrls.ListOfCustomer,'').success(function(data){
 		$scope.customers= data;
 	});
-	$http.get('rest/basic/document').success(function(data){
+	$http.get(AppConfig.ServiceUrls.DocumentList,'').success(function(data){
 		$scope.documents= data;
 	});
 	$scope.sendDocumentByEmail = function(head){
@@ -83,7 +84,7 @@ angular.module("rocchi.documents")
 			$scope.headfilter.pageSize = $scope.pagesize;
 			$rootScope.headfilter = $scope.headfilter;
 			$.ajax({
-				url:AppConfig.ServiceUrls.DocumentList,
+				url:AppConfig.ServiceUrls.HeadPaging,
 				type:"POST",
 				data:"filter="+JSON.stringify($scope.headfilter),
 				success:function(data){
@@ -123,7 +124,7 @@ angular.module("rocchi.documents")
 				});
 		}
 	}
-	$scope.getHeads();
+	$scope.getHeads(1);
 	$rootScope.deleteElement = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.DocumentList,

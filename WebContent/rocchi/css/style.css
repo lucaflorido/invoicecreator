@@ -248,10 +248,33 @@ background-color: white;
   width: 20px;
 
 }
-
-
+.fi-white{
+	color:#ffffff;
+}
+.fi-small{
+	font-size: 1.2em;
+	
+}
+.fi-button{
+	cursor:pointer;
+}
+.fi-medium{
+	font-size: 2em;
+	
+}
+.fi-large{
+	font-size: 3em;
+	
+}
 .table.active{
   opacity: 30%;
+}
+.progess_uppercase{
+	text-transform: uppercase;
+	font-weight: 600;
+}
+.pr_total{
+	font-weight: 700;
 }
 @media only screen and (max-width: 900px){
 	.height-250 {

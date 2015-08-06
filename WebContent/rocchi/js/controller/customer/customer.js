@@ -202,8 +202,8 @@ var fillList = function(){
 }
 $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(function(data) {
 			$scope.customer = data;
-			if (customer.contact){
-				if (customer.contact.user){
+			if ($scope.customer.contact){
+				if ($scope.customer.contact.user){
 					$scope.hasuser = true;
 				}
 			}

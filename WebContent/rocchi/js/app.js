@@ -28,15 +28,17 @@ var gecoApp = angular.module("gecoApp",
 		    	return {
 	            ServiceUrls: {
 	            		AddRow:main_domain+ "/rest/head/addrow/",
+	            		CheckUser:main_domain+ "/rest/user/loggedinuser/",
+	            		CustomerCategory:main_domain+ "/rest/basic/categorycustomer",
+	            		CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
+	            		CustomerUser:main_domain+ "/rest/registry/customer/user/",
+	            		DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
+	            		DocumentList:main_domain+ '/rest/basic/document',
+	            		HeadPaging:main_domain+ '/rest/head/head',
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
-		                DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
-		                SaveCustomer:main_domain+ "/rest/registry/customer/",
-		                CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
-		                CustomerCategory:main_domain+ "/rest/basic/categorycustomer",
-		                CustomerUser:main_domain+ "/rest/registry/customer/user/",
-		                CheckUser:main_domain+ "/rest/user/loggedinuser/",
 		                PrintHead:main_domain+ "/rest/print/head/",
 		                Product:main_domain+ "/rest/registry/product/",
+		                SaveCustomer:main_domain+ "/rest/registry/customer/",
 		                ProductMainList:main_domain+ "/rest/registry/products/",
 		                ProductBasicPrice:main_domain+ "/rest/util/prodbasicprice/",
 		                ProductBasicPriceList:main_domain+ "/rest/util/prodbasicprice/list",
@@ -47,13 +49,14 @@ var gecoApp = angular.module("gecoApp",
 		                Brand:main_domain+ "/rest/basic/brand/",
 		                HeadTotal:main_domain+"/rest/documenthelp/headtotal",
 		                RowTotal:main_domain+"/rest/documenthelp/rowtotal",
+		                HeadAllTotal:main_domain+"/rest/documenthelp/headalltotal",
 		                List:main_domain+ "/rest/registry/list/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
 		                Login:main_domain+ "/rest/user/",
 		                Logout:main_domain+"/rest/user/logout/",
 		                SearchProduct:main_domain+ "/rest/registry/product/search/",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
-	                    DocumentList:main_domain+"/rest/head/head/",
+	                    HeadList:main_domain+"/rest/head/head/",
 		                DocumentDetails:main_domain+"",
 		                ProductUniteMeasure:main_domain+"/rest/registry/productum/",
 		                ProductList:main_domain+ "/rest/registry/productlist/",
@@ -74,12 +77,19 @@ var gecoApp = angular.module("gecoApp",
 		                TaxRate:main_domain+"/rest/basic/taxrate/",
 		                DeleteRow:main_domain+"/rest/head/removerow/",
 		                Role:main_domain+"/rest/role/",
-		                ListIncrement:main_domain+"/rest/util/incrementlist"
+		                ListIncrement:main_domain+"/rest/util/incrementlist",
+		                PaymentsList:main_domain+"/rest/basic/payment",
+		                SuppliersList:main_domain+"/rest/registry/supplier",
+		                SearchProductCode:main_domain+"/rest/registry/product/code/",
+		                CheckHead:main_domain+"/rest/head/checkhead",
+		                PrintHead:main_domain+"/rest/print/head/"
 		            },Permissions:{
 		            	Promoter:"promoter",
 		            	Transporter:"transporter",
 		            	Admin:"",
 		            	Customer:"customer"
+		            },Const:{
+		            	ServerProblem:"Problema con la connessione al server,contattare l'amministrazione del sistema"
 		            }
 		        };
 		    };
@@ -317,6 +327,10 @@ function($stateProvider, $urlRouterProvider) {
 			controller: 'CreateOrdersCtrl'
 		}).state('head_details', {
 			url:'/head/:idhead',
+			templateUrl: 'template/document/headdetail.html',
+			controller: 'RocchiHeadDetailCtrl'
+		}).state('head_details_wizard', {
+			url:'/head_wizard/:idhead',
 			templateUrl: 'template/document/wizard.html',
 			controller: 'RocchiWizardCtrl'
 		}).state('head_details_rows', {
