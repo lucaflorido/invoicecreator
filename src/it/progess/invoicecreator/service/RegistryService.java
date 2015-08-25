@@ -180,6 +180,15 @@ public class RegistryService {
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getProductList(loggeduser));
 	  }
+	  @POST
+	  @Path("public/product")
+ 	  @Produces(MediaType.APPLICATION_JSON)
+	  public String getProductPublicList(String data){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		//User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getProductPublicList(data));
+	  }
 	  @GET
 	  @Path("product/pages/{size}")
 	  @Produces(MediaType.TEXT_HTML)
@@ -274,11 +283,11 @@ public class RegistryService {
 	  }
 	  @PUT
 	  @Path("product")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveProduct(@Context HttpServletRequest request,@FormParam("products") String product){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String saveProduct(@Context HttpServletRequest request, String data){
 		  Gson gson = new Gson();
-		  Product sms = gson.fromJson(product,Product.class);
+		  Product sms = gson.fromJson(data,Product.class);
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
 		  return gson.toJson(dao.saveUpdatesProduct(sms,loggeduser));

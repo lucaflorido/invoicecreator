@@ -192,7 +192,7 @@ angular.module("rocchi.product")
 		 $location.path("/product/0");
 	 };
 }])
-.controller('RocchiProductDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$stateParams,$location,$rootScope,AppConfig,AlertsFactory){
+.controller('RocchiProductDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","AppConfig","AlertsFactory","Upload",function($scope,$http,$stateParams,$location,$rootScope,AppConfig,AlertsFactory,Upload){
     
 	GECO_validator.startupvalidator();
 	$scope.msg = AlertsFactory;
@@ -235,6 +235,8 @@ angular.module("rocchi.product")
 			$scope.ums= data;
 						$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
 							$scope.product= data;
+							$scope.imageProduct = $scope.product.photo;
+					             
 							if ($rootScope.newProductToAdd != null)
 								$scope.product.code = $rootScope.newProductToAdd;
 							if ($scope.product.idProduct == 0){
@@ -292,6 +294,17 @@ angular.module("rocchi.product")
 									}
 								}
 							});
+							if ($scope.product.ecconfig){
+								if ($scope.product.ecconfig.umproduct){
+									angular.forEach($scope.product.ums, function(value, key) {
+										  if (value.idUnitMeasureProduct == $scope.product.ecconfig.umproduct.idUnitMeasureProduct){
+											  $scope.product.ecconfig.umproduct = value;
+										  }
+										});
+								}else{
+									$scope.product.ecconfig.umproduct = null;
+								}
+							}
 				});
 		});
 	}
@@ -360,39 +373,45 @@ angular.module("rocchi.product")
 		$scope.product.category = $scope.currentCategory;
 		$scope.product.subcategory = $scope.currentSubCategory;
 		$scope.product.isProduct = true;
-		$.ajax({
-				url:AppConfig.ServiceUrls.Product,
-				type:"PUT",
-				data:"products="+JSON.stringify($scope.product),
-				success:function(data){
-					
-					result = JSON.parse(data);
-					if (result.type == "success"){	
-						$scope.product.idProduct = result.success;
-						$scope.idproduct = result.success;
-						
-						$scope.$apply();
-						if ($rootScope.headScope != null){
-							$rootScope.newProductToAdd = $scope.product.code;
-							$scope.isNew = false;
+		$http.put(AppConfig.ServiceUrls.Product,$scope.product).success(function(data){
+			
+			result = data;
+			if (result.type == "success"){	
+				$scope.product.idProduct = result.success;
+				$scope.idproduct = result.success;
+				
+				//$scope.$apply();
+				if ($rootScope.headScope != null){
+					$rootScope.newProductToAdd = $scope.product.code;
+					$scope.isNew = false;
+				}else{
+					$scope.isNew = false;
+					//$location.path("/product/"+$scope.product.idProduct);
+				}
+				$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
+					$scope.product= data;
+					$scope.umpid = -1;
+					$scope.listid = -1;
+					if ($scope.product.ecconfig){
+						if ($scope.product.ecconfig.umproduct){
+							angular.forEach($scope.product.ums, function(value, key) {
+								  if (value.idUnitMeasureProduct == $scope.product.ecconfig.umproduct.idUnitMeasureProduct){
+									  $scope.product.ecconfig.umproduct = value;
+								  }
+								});
 						}else{
-							$scope.isNew = false;
-							//$location.path("/product/"+$scope.product.idProduct);
+							$scope.product.ecconfig.umproduct = null;
 						}
-						$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
-							$scope.product= data;
-							$scope.umpid = -1;
-							$scope.listid = -1;
-						});
-						$scope.msg.successMessage("PRODOTTO SALVATO CON SUCCESSO");
-					}else{
-						$scope.msg.alertMessage(result.errorMessage);
-					}	
-				},error:function(data){
-					$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
-				}	
-			})
-		//}
+					}
+				});
+				$scope.msg.successMessage("PRODOTTO SALVATO CON SUCCESSO");
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}	
+		}).error(function(data){
+			$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL LISTINO");
+		});	
+		
 	} ;
 	$rootScope.setSaveControl($scope.saveProduct);
 	$scope.newProduct = function(){
@@ -544,4 +563,19 @@ angular.module("rocchi.product")
 			
 		})
 	}
+	$scope.upload = function (file) {
+        Upload.upload({
+            url: '/InvoiceCreator/rest/upload/image',
+            file: file
+        }).progress(function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' );
+        }).success(function (data, status, headers, config) {
+            console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+            $scope.imageProduct = data;
+            $scope.product.photo = data;
+        }).error(function (data, status, headers, config) {
+            console.log('error status: ' + status);
+        })
+    };
 }]);

@@ -17,8 +17,9 @@
     <script src="js/vendor/jquery.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="lib/bower_components/angular/angular.js"></script>
+    <script src="lib/bower_components/angular-cookies/angular-cookies.js"></script>
 	<script src="lib/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-	<script src="lib/bower_components/angular-upload/angular-upload.min.js"></script>
+	<script src="lib/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 	 <script src="lib/bower_components/angular-foundation/mm-foundation.js"></script>
 	<script src="lib/bower_components/angular-smart-table/dist/smart-table.min.js"></script>
 	<script src="lib/bower_components/foundation-datepicker/js/foundation-datepicker.js"></script>
@@ -63,15 +64,15 @@
     	</div>
     </div>
     
-    <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" ng-show="viewheader == true"> 
-		<ul class="title-area"> 
+    <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" > 
+		<ul class="title-area" > 
 			<li class="name"> 
 				<a >Rocchi srl</a> </li> <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
 					<li class="toggle-topbar menu-icon"><a ><span>Menu</span></a></li>
 		</ul> 
-		<section class="top-bar-section"> <!-- Right Nav Section 
+		<section class="top-bar-section" > <!-- Right Nav Section 
 			<!-- Left Nav Section --> 
-			<ul class="left"> 
+			<ul class="left" ng-show="viewheader == true"> 
 				<li ng-hide="auth.permission == conf_permission.Customer" class="has-dropdown"><a >Anagrafica</a>
 					<ul class="dropdown"> 
 						<li class="has-dropdown" ><a >Clienti</a>
@@ -106,7 +107,14 @@
 								<li><a href="#/promoter/0" >Nuovo</a></li>
 								
 							</ul> 
-						</li>   
+						</li>  
+						<li class="has-dropdown" ><a href="#">Configurazioni</a>
+							<ul class="dropdown"> 
+								<li><a href="#/promoter">Mail aziendale</a></li>
+								<li><a href="#/promoter/0" >Tipologia documenti</a></li>
+								<li><a href="#/promoter/0" >Contatori documenti</a></li>
+							</ul> 
+						</li>    
 					</ul> 
 				</li> 
 				<!--  li class="has-dropdown"><a href="#">Listini</a>
@@ -146,7 +154,20 @@
 				
 			</ul> 
 			<ul class="right"> 
-				<li > <a ng-click="logout()">Logout</a> 
+			    <li class="has-form" ng-hide="viewheader == true">
+					  <div class="row collapse">
+					  	<div class="large-4 small-4 columns">
+					      <input type="text" name="username" placeholder="Username" ng-model="login.username" />
+					    </div>
+					    <div class="large-4 small-4 columns">
+					      <input type="password" name="password" placeholder="Password" ng-model="login.password" />
+					    </div>
+					    <div class="large-4 small-4 columns">
+					      <input type="submit" class="button expand" value="Log In" ng-click="loginfunction()"/>
+					    </div>
+					  </div>
+					</li>
+				<li ng-show="viewheader == true" > <a ng-click="logout()">Logout</a> 
 					
 				</li> 
 			</ul>

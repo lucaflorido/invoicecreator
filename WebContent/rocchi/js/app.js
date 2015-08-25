@@ -10,7 +10,7 @@ var gecoApp = angular.module("gecoApp",
 	"gecoControllers",
 	"mm.foundation",
 	"smart-table",
-	'lr.upload',
+	'ngFileUpload',
 	"rocchi.customer",
 	"rocchi.product",
 	"rocchi.transporter",
@@ -19,6 +19,7 @@ var gecoApp = angular.module("gecoApp",
 	"rocchi.promoter",
 	"rocchi.list",
 	'modules.common.shared',
+	'ngCookies',
 	"gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
 .provider('AppConfig', function ()
 		{
@@ -34,10 +35,13 @@ var gecoApp = angular.module("gecoApp",
 	            		CustomerUser:main_domain+ "/rest/registry/customer/user/",
 	            		DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
 	            		DocumentList:main_domain+ '/rest/basic/document',
+	            		DraftInit:main_domain+ '/rest/draft/init',
+	            		DraftAdd:main_domain+ '/rest/draft/addtodraft/',
 	            		HeadPaging:main_domain+ '/rest/head/head',
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
 		                PrintHead:main_domain+ "/rest/print/head/",
 		                Product:main_domain+ "/rest/registry/product/",
+		                ProductPublic:main_domain+ "/rest/registry/public/product/",
 		                SaveCustomer:main_domain+ "/rest/registry/customer/",
 		                ProductMainList:main_domain+ "/rest/registry/products/",
 		                ProductBasicPrice:main_domain+ "/rest/util/prodbasicprice/",
@@ -89,7 +93,8 @@ var gecoApp = angular.module("gecoApp",
 		            	Admin:"",
 		            	Customer:"customer"
 		            },Const:{
-		            	ServerProblem:"Problema con la connessione al server,contattare l'amministrazione del sistema"
+		            	ServerProblem:"Problema con la connessione al server,contattare l'amministrazione del sistema",
+		            	CompanyId:"94579938-e847-46b2-9063-4692f15aa8b6"
 		            }
 		        };
 		    };

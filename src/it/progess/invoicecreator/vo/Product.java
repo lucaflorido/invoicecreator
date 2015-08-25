@@ -4,6 +4,7 @@ import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblBrand;
 import it.progess.invoicecreator.pojo.TblListProduct;
 import it.progess.invoicecreator.pojo.TblProduct;
+import it.progess.invoicecreator.pojo.TblProductEcConfig;
 import it.progess.invoicecreator.pojo.TblUnitMeasureProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
 
@@ -13,6 +14,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.persistence.Column;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class Product implements Ivo,Comparable<Product>{
 	private int idProduct;
@@ -40,7 +45,41 @@ public class Product implements Ivo,Comparable<Product>{
 	private boolean isProduct;
 	private Set<ListProduct> listproduct;
 	private Region region;
-	
+	private boolean publish;
+	private String photo;
+	private ProductEcConfig ecconfig;
+	private String shortdescription;
+	private String longdescription;
+	public String getShortdescription() {
+		return shortdescription;
+	}
+	public void setShortdescription(String shortdescription) {
+		this.shortdescription = shortdescription;
+	}
+	public String getLongdescription() {
+		return longdescription;
+	}
+	public void setLongdescription(String longdescription) {
+		this.longdescription = longdescription;
+	}
+	public ProductEcConfig getEcconfig() {
+		return ecconfig;
+	}
+	public void setEcconfig(ProductEcConfig ecconfig) {
+		this.ecconfig = ecconfig;
+	}
+	public boolean isPublish() {
+		return publish;
+	}
+	public void setPublish(boolean publish) {
+		this.publish = publish;
+	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 	public Region getRegion() {
 		return region;
 	}
@@ -217,7 +256,15 @@ public class Product implements Ivo,Comparable<Product>{
 		this.purchaseprice = pd.getPurchaseprice();
 		this.sellprice = pd.getSellprice();
 		this.weightbarcode = pd.getWeightbarcode();
+		this.publish = pd.isPublish();
 		this.isProduct = pd.isProduct();
+		this.shortdescription = pd.getShortdescription();
+		this.longdescription = pd.getLongdescription();
+		if(pd.getPhoto() != null){
+			Base64 b64 = new Base64();
+			this.photo =    new String(pd.getPhoto());	
+		}
+
 		if (pd.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(pd.getCompany());
@@ -251,6 +298,10 @@ public class Product implements Ivo,Comparable<Product>{
 			this.region = new Region();
 			this.region.convertFromTable(pd.getRegion());
 		}
+		if(pd.getEcconfig()!= null){
+			this.ecconfig = new ProductEcConfig();
+			this.ecconfig.convertFromTable(pd.getEcconfig());
+		}
 		this.ums = new HashSet<UnitMeasureProduct>();
 		if (pd.getUms() != null){
 			for (Iterator<TblUnitMeasureProduct> iterator = pd.getUms().iterator(); iterator.hasNext();){
@@ -266,6 +317,7 @@ public class Product implements Ivo,Comparable<Product>{
 	}
 	public void convertFromTableSngle(Itbl obj){
 		this.convertFromTable(obj);
+		
 		TblProduct pd = (TblProduct)obj;
 		if (pd.getListproduct() != null){
 			this.listproduct = new HashSet<ListProduct>();
@@ -290,9 +342,21 @@ public class Product implements Ivo,Comparable<Product>{
 		this.sellprice = pd.getSellprice();
 		this.weightbarcode = pd.getWeightbarcode();
 		this.isProduct = pd.isProduct();
+		this.publish = pd.isPublish();
+		this.shortdescription = pd.getShortdescription();
+		this.longdescription = pd.getLongdescription();
+		if(pd.getPhoto() != null){
+			
+			this.photo = new String(pd.getPhoto());
+			//this.photo =    new String(b64.encode(pd.getPhoto()));	
+		}
 		if(pd.getGroup()!= null){
 			this.group = new GroupProduct();
 			this.group.convertFromTable(pd.getGroup());
+		}
+		if(pd.getEcconfig()!= null){
+			this.ecconfig = new ProductEcConfig();
+			this.ecconfig.convertFromTable(pd.getEcconfig());
 		}
 		if (pd.getTaxrate()!= null){
 			this.taxrate = new TaxRate();

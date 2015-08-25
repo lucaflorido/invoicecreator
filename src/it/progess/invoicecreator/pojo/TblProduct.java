@@ -4,6 +4,7 @@ package it.progess.invoicecreator.pojo;
 import it.progess.invoicecreator.vo.Ivo;
 import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.Product;
+import it.progess.invoicecreator.vo.ProductEcConfig;
 import it.progess.invoicecreator.vo.UnitMeasureProduct;
 
 import java.util.HashSet;
@@ -19,9 +20,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 @Entity
@@ -84,7 +88,48 @@ public class TblProduct implements Itbl{
 	@JoinColumn(name = "idRegion")
 	@Fetch(FetchMode.SELECT)
 	private TblRegion region;
-	
+	@Column(name="publish")
+	private boolean publish;
+	@Column(name="photo")
+	private byte[] photo;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "idproduct_ec_config")
+	@Fetch(FetchMode.SELECT)
+	private TblProductEcConfig ecconfig;
+	@Column(name="shortdescription")
+	private String shortdescription;
+	@Column(name="longdescription")
+	private String longdescription;
+	public String getShortdescription() {
+		return shortdescription;
+	}
+	public void setShortdescription(String shortdescription) {
+		this.shortdescription = shortdescription;
+	}
+	public String getLongdescription() {
+		return longdescription;
+	}
+	public void setLongdescription(String longdescription) {
+		this.longdescription = longdescription;
+	}
+	public TblProductEcConfig getEcconfig() {
+		return ecconfig;
+	}
+	public void setEcconfig(TblProductEcConfig ecconfig) {
+		this.ecconfig = ecconfig;
+	}
+	public boolean isPublish() {
+		return publish;
+	}
+	public void setPublish(boolean publish) {
+		this.publish = publish;
+	}
+	public byte[] getPhoto() {
+		return photo;
+	}
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
 	public TblRegion getRegion() {
 		return region;
 	}
@@ -211,6 +256,18 @@ public class TblProduct implements Itbl{
 		this.sellprice = pd.getSellprice();
 		this.weightbarcode = pd.getWeightbarcode();
 		this.isProduct = pd.isProduct();
+		this.publish = pd.isPublish();
+		this.shortdescription = pd.getShortdescription();
+		this.longdescription = pd.getLongdescription();
+		if(pd.getPhoto() != null){
+			try{
+				//this.photo = (new String(pd.getPhoto().getBytes(),"UTF-8")).getBytes();
+				this.photo = (pd.getPhoto()).getBytes();
+			}catch(Exception e){
+			
+			}
+			
+		}
 		if(pd.getGroup()!= null){
 			this.group = new TblGroupProduct();
 			this.group.convertToTable(pd.getGroup());
@@ -242,6 +299,10 @@ public class TblProduct implements Itbl{
 		if (pd.getRegion() != null){
 			this.region = new TblRegion();
 			this.region.convertToTable(pd.getRegion());
+		}
+		if(pd.getEcconfig()!= null){
+			this.ecconfig = new TblProductEcConfig();
+			this.ecconfig.convertToTable(pd.getEcconfig());
 		}
 		if (pd.getUms() != null ){
 			this.ums = new HashSet<TblUnitMeasureProduct>();

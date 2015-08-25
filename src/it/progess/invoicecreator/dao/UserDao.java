@@ -3,6 +3,9 @@ package it.progess.invoicecreator.dao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.TblRole;
 import it.progess.invoicecreator.pojo.TblUser;
+import it.progess.invoicecreator.vo.GECOError;
+import it.progess.invoicecreator.vo.GECOObject;
+import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.User;
 import it.progess.transport.config.ProgessParameters;
 import it.progess.transport.vo.ProgessError;
@@ -15,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -124,7 +128,12 @@ public class UserDao {
 				User u = new User();
 				u.convertFromTable(tu);
 				new DocumentDao().checkExpiredDoxuments(u);
-				return new ProgessSuccess(u);
+				if (u.getActive() == true){
+					return new ProgessSuccess(u);
+				}else{
+					return new ProgessError("CRWR", "Utente non attivo.Controlla la tua mail e clicca il link per confermare il tuo account");
+				}
+				
 			}else{
 			    return new ProgessError("CRWR", "Username o Password errati");
 			}
@@ -190,6 +199,10 @@ public class UserDao {
 	public int saveUpdate(User user){
 		TblUser tbluser = new TblUser();
 		int iduser=0;
+		if (user.getCode() == null || user.getCode() == ""){
+			UUID ui = UUID.randomUUID();
+			user.setCode(ui.toString());
+		}
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
@@ -268,8 +281,35 @@ public class UserDao {
 			session.close();
 		}
 	}
+	public TblUser getSingleUser(String code){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		try{
+			Criteria cr = session.createCriteria(TblUser.class,"user");
+			cr.add(Restrictions.eq("code", code));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List users = cr.list();
+			if (users.size() > 0){
+				return (TblUser)users.get(0);
+			}else{
+			    return new TblUser();
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
+	}
 	public User getSingleUserVO(int iduser){
 		TblUser tbluser = getSingleUser(iduser);
+		User user = new User();
+		user.convertFromTable(tbluser);
+		return user;
+	}
+	public User getSingleUserVO(String code){
+		TblUser tbluser = getSingleUser(code);
 		User user = new User();
 		user.convertFromTable(tbluser);
 		return user;
@@ -332,5 +372,16 @@ public class UserDao {
 			session.close();
 		}
 		return iduser;
+	}
+	public GECOObject setUserActive(String code){
+		User u;
+		try{
+			u = getSingleUserVO(code);
+			u.setActive(true);
+			saveUpdate(u);
+		}catch(Exception e){
+			return new GECOError("error",e.getMessage());
+		}
+	    return new GECOSuccess(u);
 	}
 }

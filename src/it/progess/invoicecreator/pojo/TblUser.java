@@ -44,6 +44,14 @@ public class TblUser {
 	private TblCompany company;
 	@OneToOne(mappedBy="user",cascade = CascadeType.ALL)
 	private TblContact contact;
+	@Column(name="code")
+	private String code;
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public TblContact getContact() {
 		return contact;
 	}
@@ -126,6 +134,7 @@ public class TblUser {
 		this.setMobile(user.getMobile());
 		this.setEmail(user.getEmail());
 		this.setActive(user.getActive());
+		this.setCode(user.getCode());
 		TblRole roleTo = new TblRole();
 		roleTo.convertToTable(user.getRole());
 		this.setRole(roleTo);

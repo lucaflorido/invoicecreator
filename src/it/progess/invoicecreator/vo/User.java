@@ -19,7 +19,7 @@ public class User {
 	private String path;
 	private Ivo entity;
 	private Contact contact;
-	
+	private String code;
 	public Contact getContact() {
 		return contact;
 	}
@@ -129,6 +129,7 @@ public class User {
 		roleFrom.convertFromTable(tbluser.getRole());
 		this.setRole(roleFrom);
 		this.setActive(tbluser.getActive());
+		this.setCode(tbluser.getCode());
 		if (tbluser.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(tbluser.getCompany());
@@ -139,6 +140,12 @@ public class User {
 			
 		}
 		this.setPath();
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	public void setPath(){
 		if (this.getContact() != null){

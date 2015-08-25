@@ -3,6 +3,7 @@ package it.progess.invoicecreator.vo;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCompany;
@@ -23,6 +24,13 @@ public class Company implements Ivo {
 	private Address address;
 	private BankContact bankcontact;
 	private Set<MailConfigCompany> mailconfig;
+	private String code; 
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public String getCompanycode() {
 		return companycode;
 	}
@@ -91,6 +99,7 @@ public class Company implements Ivo {
 		this.taxcode = co.getTaxcode();
 		this.companycode = co.getCompanycode();
 		this.companyzone = co.getCompanyzone();
+		this.code = co.getCode();
 		if(co.getContact() != null){
 			this.contact = new Contact();
 			this.contact.convertFromTable(co.getContact());

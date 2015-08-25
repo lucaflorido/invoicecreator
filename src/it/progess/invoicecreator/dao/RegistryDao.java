@@ -62,6 +62,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
+
+import javamailhelper.config.SMTPServerConfiguration;
+import javamailhelper.message.EMailMessage;
+import javamailhelper.runner.EMailSender;
+
+import javax.mail.MessagingException;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -140,6 +147,10 @@ public class RegistryDao {
 				if (sms.control() == null ){
 					TblCompany tblsm = new TblCompany();
 					tblsm.convertToTable(sms);
+					if (tblsm.getCode() == null || tblsm.getCode() == ""){
+						UUID ui = UUID.randomUUID();
+						tblsm.setCode(ui.toString());
+					}
 					session.saveOrUpdate(tblsm);
 				}else{
 					if (tx!= null) tx.rollback();
@@ -400,6 +411,34 @@ public class RegistryDao {
 					TblProduct tblproduct = iterator.next();
 					Product product = new Product();
 					product.convertFromTable(tblproduct);
+					list.add(product);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public ArrayList<Product> getProductPublicList(String key){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Product> list = new ArrayList<Product>();
+		try{
+			Criteria cr = session.createCriteria(TblProduct.class,"product");
+			cr.createAlias("product.company", "company");
+			cr.add(Restrictions.eq("company.code",key ));
+			cr.add(Restrictions.eq("product.publish",true ));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblProduct> products = cr.list();
+			if (products.size() > 0){
+				for (Iterator<TblProduct> iterator = products.iterator(); iterator.hasNext();){
+					TblProduct tblproduct = iterator.next();
+					Product product = new Product();
+					product.convertFromTable(tblproduct);
+					product.setPhoto("data:image/png;base64,"+product.getPhoto());
 					list.add(product);
 				}
 			}
@@ -1378,7 +1417,7 @@ public class RegistryDao {
 		User user = new User();
 		Customer sm = uc.getCustomer();
 		Role r = uc.getRole();
-		user.setActive(true);
+		user.setActive(false);
 		user.setName(sm.getNameUser());
 		user.setSurname(sm.getSurnameUser());
 		user.setEmail(sm.getContact().getEmail1());
@@ -1388,6 +1427,14 @@ public class RegistryDao {
 		user.setRole(r);
 		UserDao usdao = new UserDao();
 		usdao.saveUpdate(user);
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com","Test Email","http://localhost:8080/InvoiceCreator/rocchi/activate.html?code="+user.getCode());
+		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
+		try{
+			EMailSender.send(message, config, "svnf0rl0s");
+			System.out.println("Email success");
+		}catch(MessagingException ex){
+			System.out.println(ex.getMessage());
+		}
 		return new GECOSuccess();
 	}
 	public GECOObject saveUpdatesCustomer(Customer sm,Session session){
@@ -1953,7 +2000,7 @@ public class RegistryDao {
 	}
 	public GECOObject createUserPromoter(User loggeduser,UserPromoter up){
 		User user = new User();
-		user.setActive(true);
+		user.setActive(false);
 		user.setName(up.getPromoter().getName());
 		user.setSurname(up.getPromoter().getSurname());
 		user.setEmail(up.getPromoter().getContact().getEmail1());

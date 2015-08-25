@@ -3,6 +3,7 @@ package it.progess.invoicecreator.pojo;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Ivo;
@@ -52,6 +53,14 @@ public class TblCompany implements Itbl {
 	private TblBankContact bankcontact;
 	@OneToMany(fetch = FetchType.EAGER,mappedBy = "company",cascade = CascadeType.ALL)
 	private Set<TblMailConfigCompany> mailconfig;
+	@Column(name="code")
+	private String code;
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public Set<TblMailConfigCompany> getMailconfig() {
 		return mailconfig;
 	}
@@ -120,6 +129,11 @@ public class TblCompany implements Itbl {
 		this.companycode = co.getCompanycode();
 		this.companyzone = co.getCompanyzone();
 		this.taxcode = co.getTaxcode();
+		
+			this.code = co.getCode();
+		
+			
+		
 		if(co.getContact() != null){
 			this.contact = new TblContact();
 			this.contact.convertToTable(co.getContact());

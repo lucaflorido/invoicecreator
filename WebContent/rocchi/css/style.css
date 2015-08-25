@@ -248,6 +248,14 @@ background-color: white;
   width: 20px;
 
 }
+.ec_image{
+	height: 200px;
+	width: 100%;
+}
+.ec_image_draft{
+	height: 100px;
+	width: 100%;
+}
 .fi-white{
 	color:#ffffff;
 }

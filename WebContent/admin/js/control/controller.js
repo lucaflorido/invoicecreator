@@ -8,7 +8,29 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 	});
 	$scope.login = {username:"",password:""};
 	$scope.loginfunction = function(){
-		$.ajax({
+$http.post(GECO_LOGGEDUSER.getSecondDomain()+"rest/user/",$scope.login).success(function(result){
+			
+			if (result.type == 'success'){
+				result = result.success;
+				if (result.username !== null && result.username != ""){
+					$(".myprofilelabel").html(result.username);
+					$rootScope.user = result;
+					$rootScope.path = result.path;
+					//PermissionFactory.setupPermission(result.path);
+					//$rootScope.viewheader = true;
+					$(".header").css("display","");
+					$location.path('/welcome');
+					
+				}else{
+					
+				}
+			}else{
+				//$scope.msg.alertMessage(result.errorMessage);
+			}
+		}).error(function(error){
+			//$scope.msg.alertMessage(AppConfig.Const.ServerProblem)
+		});
+		/*$.ajax({
 			url:GECO_LOGGEDUSER.getSecondDomain()+"rest/user/",
 			type:"POST",
 			data:"loginobj="+JSON.stringify($scope.login),
@@ -30,7 +52,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 					$scope.errorMessage(result.errorMessage);
 				}
 			}	
-		})
+		})*/
 	};
 	$(".loginbutton").click(function(e){
 		$scope.loginfunction();

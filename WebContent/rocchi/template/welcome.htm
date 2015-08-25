@@ -1,9 +1,159 @@
+
 <div class="row">
 	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
 		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
 </div>
- <div class="large-3 large-centered columns">
+
+  <div class="row">
+     
+       
+     
+            <div class="large-4 small-12 columns">
+     
+              <img  src="assets/rocchilogo.png">
+     
+              <div class="hide-for-small panel">
+                <h3>Filtri</h3>
+                <h5 class="subheader">Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis.
+                </h5>
+              </div>
+     		  
+              <a ng-click="step = 1">
+	              <div class="panel callout radius" >
+	                <h6 ng-show="draft.products.length > 0" >ci sono {{draft.products.length}} prodotti nel carrello</h6>
+	                <h6 ng-show="draft.products.length == 0" >non ci sono prodotti nel carrello</h6>
+	              </div>
+              </a>
+     
+            </div>
+     
+         
+     
+     
+         
+     
+            <div class="large-8 columns">
+            <!-- LOGIN AND PAY  -->
+            <div class="row" ng-show="step == 2">
+            	<div class="large-3 large-centered small-12 columns" >
+            		<form>
+					    <div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="username" placeholder="Username" ng-model="login.username" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="password" name="password" placeholder="Password" ng-model="login.password" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 large-centered columns">
+								<input type="submit" class="button expand" value="Log In" ng-click="loginfunction()"/>
+							</div>
+						</div>
+					</form>
+            	</div>
+            </div>
+            <!-- SHOW DRAFT -->
+            <div class="row" ng-show="step == 1">
+            	<div class="large-12 small-12 columns" ng-repeat="prod in draft.products">
+            		<div class="row">
+            			<div class="large-2 small-4 columns">
+            				<img class="ec_image_draft" ng-src="{{prod.photo}}">
+            			</div>
+            			<div class="large-4 small-6 columns">
+            				<h6>{{prod.description}}</h6>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row" ng-show="step == 1">
+            	<div class="large-12 small-12 columns" >
+            		<div class="row">
+            			<div class="large-2 small-4 columns">
+            				<button class="button" ng-click="step = 2">Conferma e Paga</button>
+            			</div>
+            			
+            		</div>
+            	</div>
+            </div>
+            <!-- SHOW PRODUCTS -->
+              <div class="row" ng-show="step == 0">
+     
+                <div class="large-4 small-6 columns" ng-repeat="prod in prodlist">
+                  <img class="ec_image" ng-src="{{prod.photo}}">
+     
+                  <div class="panel panel_ec">
+                    <div class="ec_title">{{prod.shortdescription}}</div>
+                    <div class="ec_description">{{prod.description}}</div>
+                    
+                    <h7 class="subheader">€{{prod.listprice}}</h7>
+                    <button class="button" ng-click="addToChart(prod)" >Aggiungi al carrello</button>
+                  </div>
+                </div>
+     		</div>
+     
+         
+     
+     
+         
+              <div class="row">
+                <div class="large-12 columns">
+                  <div class="panel">
+                    <div class="row">
+     
+                      <div class="large-2 small-6 columns">
+                        <img src="assets/logo.jpg">
+                      </div>
+     
+                      <div class="large-10 small-6 columns">
+                        <strong>This Site Is Managed By<hr/></strong>
+     
+                        Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis
+                      </div>
+     
+                    </div>
+                  </div>
+                </div>
+     
+         
+     
+              </div>
+            </div>
+          </div>
+     
+     
+         
+     
+          <footer class="row">
+            <div class="large-12 columns"><hr/>
+              <div class="row">
+     
+                <div class="large-6 columns">
+                  <p>© Copyright no one at all. Go to town.</p>
+                </div>
+     
+                <div class="large-6 columns">
+                  <ul class="inline-list right">
+                    <li><a href="#">Link 1</a></li>
+                    <li><a href="#">Link 2</a></li>
+                    <li><a href="#">Link 3</a></li>
+                    <li><a href="#">Link 4</a></li>
+                  </ul>
+                </div>
+     
+              </div>
+            </div>
+          </footer>
+     
+         
+     
+        </div>
+      </div>
+    
+ <!--  <div class="large-3 large-centered columns">
 		<div class="login-box">
 			<div class="row">
 				<div class="large-12 columns">
@@ -27,4 +177,4 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->

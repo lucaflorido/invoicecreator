@@ -148,4 +148,13 @@ public class UserService {
 		  user.convertFromTable(tbluser);
 		  return gson.toJson(user);
 	  }
+	  @POST
+	  @Path("activate/{code}")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	  public String activateUser(@PathParam("code") String code){
+		 Gson gson = new Gson();
+		 UserDao userdao = new UserDao();
+		 return gson.toJson(userdao.setUserActive(code));
+	  }
 }

@@ -25,14 +25,19 @@
 
     <div class="login">
 
-      <form name="login" method="GET" action="">
+      <form name="login" >
 
             <label>Codice</label>
             <input type="text" placeholder="Codice" value="{{product.code}}" ng-model="product.code">
 			
              <label>Descrizione</label>
             <input type="text" placeholder="Descrizione" value="{{product.description}}" ng-model="product.description">
-
+			
+			<label>Titolo</label>
+            <input type="text" placeholder="Titolo" value="{{product.shortdescription}}" ng-model="product.shortdescription">
+			
+			<label>Descrizione completa</label>
+            <textarea  placeholder="Descrizione completa" value="{{product.longdescription}}" ng-model="product.longdescription" ></textarea>
 			<label>Categoria</label>
             <select  name="category" ng-options="category.code for category in categorys" ng-model="currentCategory" ng-change="changeCategory()" >
           		 	<option value=""></option>
@@ -66,6 +71,9 @@
             <select name="taxrate" ng-options="taxrate.description for taxrate in taxrates" ng-model="currentTaxRate" ng-change="calculateListPrices();">
            		 <option value=""></option>
             </select> 
+            <label>Pubblica</label>
+            <input type="checkbox" value="{{product.publish}}" ng-model="product.publish" >
+			
       </form>
 
     </div>
@@ -73,6 +81,10 @@
   </div>
 
   <div class="large-6 medium-12 small-12 columns">
+  	<div class="row">
+  		<div class="large-6 columns" ><img ng-src="data:image/png;base64,{{imageProduct}}"></div>
+  		<div class="small-3 columns" ><button class="button small"  ngf-select ngf-change="upload($file)" >Carica</button></div>
+  	</div>
     <div class="row">
     	<div class="large-6 columns" ><h6>UNITA' DI MISURA</h6></div>
     	<div class="small-3 columns" ><button class="button small"  ng-click="addUMElement(product)" >Aggiungi</button></div>
@@ -171,6 +183,25 @@
           </tr>
 		</tbody>
       </table>
+      </div>
+      <div class="row" ng-show="product.publish">
+	    	<div class="large-6 columns" ><h6>ECOMMERCE</h6></div>
+	    </div>
+      <div class="row" ng-show="product.publish">
+      	<form>
+      		<label>Giorni Consegna</label>
+      		<input type="numeric" ng-model="product.ecconfig.deliverydays">
+      		<label>Giorni Riordino</label>
+      		<input type="numeric" ng-model="product.ecconfig.orderdays">
+      		<label>Quantità minima</label>
+      		<input type="numeric" ng-model="product.ecconfig.quantitymin">
+      		<label>Quantità disponibile</label>
+      		<input type="numeric" ng-model="product.ecconfig.quantitymax">
+      		<label>Unità di misura </label>
+      		<select  name="um" ng-options="um.um.code for um in product.ums" ng-model="product.ecconfig.umproduct"  >
+          		 	
+           	</select> 
+      	</form>
       </div>
   </div>
 
