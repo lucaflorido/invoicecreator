@@ -1,0 +1,45 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foundation | Welcome</title>
+    <link rel="stylesheet" href="css/foundation.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/customerliststyle.css" />
+	<link rel="stylesheet" href="css/larghezze.css" />
+	
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/foundation-icons/foundation-icons.css" />
+    <link rel="stylesheet" href="css/foundation-datepicker.css" />
+    <link rel="stylesheet"  href="css/btnUpload.css">
+    <script src="js/vendor/modernizr.js"></script>
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script src="lib/bower_components/angular/angular.js"></script>
+	 <script src="lib/bower_components/angular-foundation/mm-foundation.js"></script>
+	<script type="text/javascript" src="js/appActive.js"></script>
+	
+	<!-- UTIL -->
+	
+  </head>
+  <body ng-app="gecoActiveApp" >
+    
+    
+    
+	
+   	<div ng-controller="MainController" class="maincontainer" ui-view>
+		 <div ng-show="result == 'success'">
+		 	Utente attivato correttamente
+		 </div>
+		 <div ng-show="result == 'error'">
+		 	Problemi nell'attivazione dell'utente si prega di contattare l'amministratore del sistema
+		 </div>
+	</div>
+	
+	
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
+</html>
