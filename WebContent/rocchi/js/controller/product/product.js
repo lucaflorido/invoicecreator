@@ -28,6 +28,7 @@ angular.module("rocchi.product")
 		//$scope.pagesize = ScopeFactory.factory.productList.pagesize
 	}
 	$scope.importobj = {code:'B',description:"C",group:"A",umcode:"I",purchaseprice:"F",taxrate:"H",startIndex:"3",endIndex:"10"};
+
 	$scope.filterMenu = function(value){
 		if ($scope.menuselected == "" || $scope.menuselected != value){
 			$scope.menuselected = value;

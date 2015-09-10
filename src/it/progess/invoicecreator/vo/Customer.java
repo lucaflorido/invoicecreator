@@ -41,6 +41,7 @@ public class Customer implements Ivo{
 	private String alternativecode1;
 	private String alternativecode2;
 	private boolean hasuser;
+<<<<<<< HEAD
 	private EcPayment ecpayment;
 	private boolean isprivate;
 	public boolean isIsprivate() {
@@ -55,6 +56,8 @@ public class Customer implements Ivo{
 	public void setEcpayment(EcPayment ecpayment) {
 		this.ecpayment = ecpayment;
 	}
+=======
+>>>>>>> refs/remotes/invoicecreator/styleapp
 	public boolean isHasuser() {
 		return hasuser;
 	}
@@ -207,7 +210,10 @@ public class Customer implements Ivo{
 		this.alternativecode1 = c.getAlternativecode1();
 		this.alternativecode2 = c.getAlternativecode2();
 		this.hasuser = false;
+<<<<<<< HEAD
 		this.isprivate = c.isIsprivate();
+=======
+>>>>>>> refs/remotes/invoicecreator/styleapp
 		if (c.getAddress() != null){
 			this.address = new Address();
 			this.address.convertFromTable(c.getAddress());

@@ -20,7 +20,7 @@ var gecoApp = angular.module("gecoApp",
 	"rocchi.list",
 	'modules.common.shared',
 	'ngCookies',
-	"gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
+"gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
 .provider('AppConfig', function ()
 		{
 			var main_domain = "/InvoiceCreator"
@@ -43,6 +43,7 @@ var gecoApp = angular.module("gecoApp",
 	            		DraftConfirm:main_domain+ '/rest/draft/confirmdraft/',
 	            		HeadPaging:main_domain+ '/rest/head/head',
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
+
 		                PrintHead:main_domain+ "/rest/print/head/",
 		                Product:main_domain+ "/rest/registry/product/",
 		                ProductPublic:main_domain+ "/rest/registry/public/product/",
@@ -62,6 +63,7 @@ var gecoApp = angular.module("gecoApp",
 		                List:main_domain+ "/rest/registry/list/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
 		                Login:main_domain+ "/rest/user/",
+
 		                Logout:main_domain+"/rest/user/logout/",
 		                SearchProduct:main_domain+ "/rest/registry/product/search/",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
@@ -78,6 +80,7 @@ var gecoApp = angular.module("gecoApp",
 		                ProductPagination:main_domain+"/rest/registry/product/pages/",
 		                ProductListPagination:main_domain+"/rest/registry/listproduct/pages/",
 		                ProductPublicPagination:main_domain+"/rest/registry/public/product/pages/",
+
 		                Role:main_domain+"/rest/role/",
 		                Region:main_domain+"/rest/basic/region/",
 		                ExportHeads:main_domain+"/rest/export/heads/",
@@ -101,6 +104,7 @@ var gecoApp = angular.module("gecoApp",
 		            },Const:{
 		            	ServerProblem:"Problema con la connessione al server,contattare l'amministrazione del sistema",
 		            	CompanyId:"94579938-e847-46b2-9063-4692f15aa8b6"
+
 		            }
 		        };
 		    };

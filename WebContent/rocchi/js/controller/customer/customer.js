@@ -159,6 +159,7 @@ $scope.msg = AlertsFactory;
 $scope.msg.initialize();
 GECO_validator.startupvalidator();
 $scope.idcustomer = $stateParams.idcustomer;
+
 $scope.showuser = false;
 /*
  * $http.get('rest/registry/list').success(function(data){
@@ -204,6 +205,7 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 			$scope.customer = data;
 			if ($scope.customer.contact){
 				if ($scope.customer.contact.user){
+
 					$scope.hasuser = true;
 				}
 			}

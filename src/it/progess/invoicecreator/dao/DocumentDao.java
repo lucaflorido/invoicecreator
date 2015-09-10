@@ -1526,6 +1526,25 @@ public class DocumentDao {
 		}
 		return r;
 	}
+	private Row checkRowProd(Head h, UnitMeasureProduct ump){
+		Row r = null;
+		if (h.getRows() == null){
+			Set<Row> rows = new HashSet<Row>();
+			h.setRows(rows);
+		}
+		for (Iterator<Row> it = h.getRows().iterator();it.hasNext();){
+			Row re = it.next();
+			if (re.getProductcode().equals(ump.getCode())){
+				r = re;
+				break;
+			}
+		}
+		if (r == null){
+			r = new Row();
+			h.getRows().add(r);
+		}
+		return r;
+	}
 	public GECOObject saveWizardHead(User user,Head h){
 		try{
 			Document d = new BasicDao().getDocumentOrderList(user).get(0);

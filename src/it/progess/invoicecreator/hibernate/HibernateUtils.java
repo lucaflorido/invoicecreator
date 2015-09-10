@@ -107,6 +107,7 @@ public class HibernateUtils {
         res= bd.floatValue();
 		return res;
 	}
+<<<<<<< HEAD
 	/***
 	 * 
 	 * @param buy
@@ -115,6 +116,8 @@ public class HibernateUtils {
 	 * 
 	 * Calculate percentage between two prices
 	 */
+=======
+>>>>>>> refs/remotes/invoicecreator/styleapp
 	public static float calculatePercentageFromPrices(float buy,float sell){
 		float diff = sell-buy;
 		float res =0;

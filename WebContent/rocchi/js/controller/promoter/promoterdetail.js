@@ -9,6 +9,7 @@ angular.module("rocchi.promoter")
 					$scope.msg.initialize();
 					$scope.showuser = false;
 					$scope.idpromoter = $stateParams.idpromoter;
+
 					 
 					$http.get(AppConfig.ServiceUrls.Promoter+ $scope.idpromoter)
 							.success(

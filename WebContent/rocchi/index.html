@@ -63,15 +63,17 @@
     		Elaborazione in corso...attendere prego
     	</div>
     </div>
-    
     <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" > 
 		<ul class="title-area" > 
 			 <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+
 					<li class="toggle-topbar menu-icon"><a ><span>Menu</span></a></li>
 		</ul> 
 		<section class="top-bar-section" > <!-- Right Nav Section 
 			<!-- Left Nav Section --> 
+
 			<ul class="left" ng-show="viewheader == true"> 
+
 				<li ng-hide="auth.permission == conf_permission.Customer" class="has-dropdown"><a >Anagrafica</a>
 					<ul class="dropdown"> 
 						<li class="has-dropdown" ><a >Clienti</a>
@@ -161,8 +163,9 @@
 			
 		</section> 
 	</nav>
-	
+
    	<div class="maincontainer" ui-view>
+
 		 
 	</div>
 	

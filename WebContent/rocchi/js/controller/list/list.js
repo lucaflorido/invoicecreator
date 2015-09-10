@@ -45,7 +45,8 @@ angular.module("rocchi.list")
 	$scope.newList = {isPercentage:true};
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
-	$scope.idlist= $stateParams.idlist;
+$scope.idlist= $stateParams.idlist;
+
 	$scope.menuselected = "";
 	$scope.filter = {"pagefilter":{}};
 	$scope.filterMenu = function(value){

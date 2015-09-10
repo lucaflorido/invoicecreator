@@ -95,5 +95,6 @@ angular.module('modules.common.shared', [])
 		}
 		return ecp;
 	}
+
 	return factory;
 });
