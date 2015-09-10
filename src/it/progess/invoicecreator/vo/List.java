@@ -24,7 +24,13 @@ public class List implements Ivo {
 	private boolean fill;
 	private float increment;
 	private boolean isPercentage;
-	
+	private boolean publish;
+	public boolean isPublish() {
+		return publish;
+	}
+	public void setPublish(boolean publish) {
+		this.publish = publish;
+	}
 	public float getIncrement() {
 		return increment;
 	}
@@ -102,6 +108,7 @@ public class List implements Ivo {
 		this.active = lt.isActive();
 		this.isPercentage = lt.isPercentage();
 		this.increment = lt.getIncrement();
+		this.publish = lt.isPublish();
 		this.startdate =  DataUtilConverter.convertStringFromDate( lt.getStartdate());
 		if (lt.getCompany() != null){
 			this.company = new Company();
@@ -124,6 +131,7 @@ public class List implements Ivo {
 		this.increment = lt.getIncrement();
 		this.startdate = DataUtilConverter.convertStringFromDate( lt.getStartdate());
 		this.listproduct = new HashSet<ListProduct>();
+		this.publish = lt.isPublish();
 		if (lt.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(lt.getCompany());

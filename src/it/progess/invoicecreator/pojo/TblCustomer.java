@@ -6,6 +6,7 @@ import it.progess.invoicecreator.vo.ListCustomer;
 
 
 
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -76,7 +77,23 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	private String alternativecode1;
 	@Column(name="alternativecode2")
 	private String alternativecode2;
-	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="idecpayment")
+	private TblEcPayment ecpayment;
+	@Column(name="isprivate")
+	private boolean isprivate;
+	public boolean isIsprivate() {
+		return isprivate;
+	}
+	public void setIsprivate(boolean isprivate) {
+		this.isprivate = isprivate;
+	}
+	public TblEcPayment getEcpayment() {
+		return ecpayment;
+	}
+	public void setEcpayment(TblEcPayment ecpayment) {
+		this.ecpayment = ecpayment;
+	}
 	public String getAlternativecode1() {
 		return alternativecode1;
 	}
@@ -212,6 +229,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 		this.suspended = c.getSuspended();
 		this.alternativecode1 = c.getAlternativecode1();
 		this.alternativecode2 = c.getAlternativecode2();
+		this.isprivate = c.isIsprivate();
 		if (c.getAddress() != null){
 			this.address = new TblAddress();
 			this.address.convertToTable(c.getAddress());
@@ -226,7 +244,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 		}
 		if(c.getContact() != null){
 			this.contact = new TblContact();
-			this.contact.convertToTable(c.getContact());
+			this.contact.convertToTableCustomer(c.getContact());
 		}
 		this.customercode = c.getCustomercode();
 		this.setCustomername(c.getCustomername());
@@ -281,7 +299,10 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	public void convertToTableSingle(Ivo obj,Itbl tbl){
 		Customer c = (Customer)obj;
 		this.convertToTable(obj);
-		
+		if (c.getEcpayment() != null){
+			this.ecpayment = new TblEcPayment();
+			this.ecpayment.convertToTable(c.getEcpayment());
+		}
 		if (c.getLists() != null){
 			this.lists = new HashSet<TblListCustomer>();
 			for (Iterator<ListCustomer> iterator = c.getLists().iterator(); iterator.hasNext();){

@@ -6,17 +6,24 @@ import java.util.List;
 
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
+import it.progess.invoicecreator.pojo.TblEcPayment;
 import it.progess.invoicecreator.pojo.TblHead;
+import it.progess.invoicecreator.pojo.TblProductEcConfig;
 import it.progess.invoicecreator.pojo.TblRow;
 import it.progess.invoicecreator.pojo.TblStorage;
 import it.progess.invoicecreator.pojo.TblStorageSerialCode;
-
+import it.progess.invoicecreator.vo.EcPayment;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.Product;
+import it.progess.invoicecreator.vo.ProductEcConfig;
 import it.progess.invoicecreator.vo.Storage;
 import it.progess.invoicecreator.vo.StorageSerialCode;
 import it.progess.invoicecreator.vo.UnitMeasureProduct;
 import it.progess.invoicecreator.vo.filter.StoreFilter;
+
+
+
+
 
 
 import org.hibernate.Criteria;
@@ -261,5 +268,23 @@ public class StoreDao {
 		}
 		return qta;
 	}
-	
+	public void saveEcCommerce(ProductEcConfig ecp){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tx = session.beginTransaction();
+			TblProductEcConfig st = new TblProductEcConfig();
+			st.convertToTable(ecp);
+			session.saveOrUpdate(st);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+	}
 }

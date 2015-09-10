@@ -4,12 +4,14 @@ import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.TblCompany;
 import it.progess.invoicecreator.pojo.TblBank;
+import it.progess.invoicecreator.pojo.TblContact;
 import it.progess.invoicecreator.pojo.TblCustomer;
 import it.progess.invoicecreator.pojo.TblDestination;
 import it.progess.invoicecreator.pojo.TblHead;
 import it.progess.invoicecreator.pojo.TblList;
 import it.progess.invoicecreator.pojo.TblListCustomer;
 import it.progess.invoicecreator.pojo.TblListProduct;
+import it.progess.invoicecreator.pojo.TblPaymentSolution;
 import it.progess.invoicecreator.pojo.TblProduct;
 import it.progess.invoicecreator.pojo.TblPromoter;
 import it.progess.invoicecreator.pojo.TblRow;
@@ -25,6 +27,7 @@ import it.progess.invoicecreator.vo.Bank;
 import it.progess.invoicecreator.vo.Contact;
 import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.Destination;
+import it.progess.invoicecreator.vo.DraftElement;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOSuccess;
@@ -34,6 +37,7 @@ import it.progess.invoicecreator.vo.ListCustomer;
 import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.PaginationObject;
+import it.progess.invoicecreator.vo.PaymentSolution;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.ProductDatePrice;
 import it.progess.invoicecreator.vo.Promoter;
@@ -118,6 +122,31 @@ public class RegistryDao {
 		try{
 			Criteria cr = session.createCriteria(TblCompany.class,"company");
 			cr.add(Restrictions.eq("company.idCompany", idcompany));
+			List<TblCompany> companys = cr.list();
+			if (companys.size() > 0){
+				for (Iterator<TblCompany> iterator = companys.iterator(); iterator.hasNext();){
+					TblCompany tblcompany = iterator.next();
+					
+					company.convertFromTable(tblcompany);
+					list.add(company);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return company;
+	}
+	public Company getCompany(String code){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Company> list = new ArrayList<Company>();
+		Company company = new Company();
+		try{
+			Criteria cr = session.createCriteria(TblCompany.class,"company");
+			cr.add(Restrictions.eq("company.code", code));
 			List<TblCompany> companys = cr.list();
 			if (companys.size() > 0){
 				for (Iterator<TblCompany> iterator = companys.iterator(); iterator.hasNext();){
@@ -329,45 +358,22 @@ public class RegistryDao {
 	}
 	private Criteria setProductCriteria(SelectProductsFilter filter,Session session,User user){
 		Criteria cr = session.createCriteria(TblProduct.class,"product");
-		/*cr.add(Restrictions.eq("product.company.idCompany",user.getCompany().getIdCompany() ));
-		
-		cr.setFirstResult(filter.getPagefilter().startelement);
-		cr.setMaxResults(filter.getPagefilter().pageSize);
-		if (filter.getBrand() != null){
-			cr.add(Restrictions.eq("product.brand.idBrand", filter.getBrand().getIdBrand()));
-			
-		}
-		if (filter.getRegion() != null){
-			cr.add(Restrictions.eq("product.region.idRegion", filter.getRegion().getIdRegion()));
-			
-		}
-		if (filter.getCategory() != null){
-			cr.add(Restrictions.eq("product.category.idCategoryProduct", filter.getCategory().getIdCategoryProduct()));
-			
-		}
-		if (filter.getSubcategory() != null){
-			cr.add(Restrictions.eq("product.subcategory.idSubCategoryProduct", filter.getSubcategory().getIdSubCategoryProduct()));
-		}
-		if (filter.getGroup() != null && filter.getGroup().getIdGroupProduct() != 0){
-			cr.add(Restrictions.eq("product.group.idGroupProduct", filter.getGroup().getIdGroupProduct()));
-		}
-		if (filter.getSupplier() != null){
-			cr.add(Restrictions.eq("product.supplier.idSupplier", filter.getSupplier().getIdSupplier()));
-		}
-		if (filter.getSearchstring() != null && filter.getSearchstring().equals("") == false){
-			cr.add(Restrictions.disjunction(Restrictions.like("product.code","%"+  filter.getSearchstring()+"%"),Restrictions.like("product.description","%"+ filter.getSearchstring()+"%")));
-		}
-		cr.addOrder(Order.asc("product.code"));
-		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		return cr;*/
-		cr =  setProductCriteria(cr,filter,session,user,"product");
+		cr =  setProductCriteria(cr,filter,session,user.getCompany().getCode(),"product");
 		cr.addOrder(Order.asc("product.code"));
 		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return cr;
 	}
-	private Criteria setProductCriteria(Criteria cr,SelectProductsFilter filter,Session session,User user,String table_name){
-		cr.add(Restrictions.eq("product.company.idCompany",user.getCompany().getIdCompany() ));
-		
+	private Criteria setProductCriteria(SelectProductsFilter filter,Session session,String key){
+		Criteria cr = session.createCriteria(TblProduct.class,"product");
+		cr =  setProductCriteria(cr,filter,session,key,"product");
+		cr.addOrder(Order.asc("product.code"));
+		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return cr;
+	}
+	private Criteria setProductCriteria(Criteria cr,SelectProductsFilter filter,Session session,String key,String table_name){
+		//cr.add(Restrictions.eq("product.company.code",key ));
+		cr.createAlias("product.company", "company");
+		cr.add(Restrictions.eq("company.code",key ));
 		cr.setFirstResult(filter.getPagefilter().startelement);
 		cr.setMaxResults(filter.getPagefilter().pageSize);
 		if (filter.getBrand() != null){
@@ -423,14 +429,45 @@ public class RegistryDao {
 		}
 		return list;
 	}
-	public ArrayList<Product> getProductPublicList(String key){
+	public ArrayList<it.progess.invoicecreator.vo.List> getPublicList(String key){
+		 
+			Session session = HibernateUtils.getSessionFactory().openSession();
+			ArrayList<it.progess.invoicecreator.vo.List> list = new ArrayList<it.progess.invoicecreator.vo.List>();
+			try{
+				Criteria cr = session.createCriteria(TblList.class,"list");
+				cr.add(Restrictions.eq("list.active",true));
+				cr.add(Restrictions.eq("list.publish",true));
+				cr.createAlias("list.company", "company");
+				cr.add(Restrictions.eq("company.code",key ));
+				cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+				List<TblList> lists = cr.list();
+				if (lists.size() > 0){
+					for (Iterator<TblList> iterator = lists.iterator(); iterator.hasNext();){
+						TblList tbllist = iterator.next();
+						it.progess.invoicecreator.vo.List listobj = new it.progess.invoicecreator.vo.List();
+						listobj.convertFromTable(tbllist);
+						list.add(listobj);
+					}
+				}
+			}catch(HibernateException e){
+				System.err.println("ERROR IN LIST!!!!!!");
+				e.printStackTrace();
+				throw new ExceptionInInitializerError(e);
+			}finally{
+				session.close();
+			}
+			return list;
+	}
+	public ArrayList<DraftElement> getProductPublicList(SelectProductsFilter filter,String key){
 		Session session = HibernateUtils.getSessionFactory().openSession();
-		ArrayList<Product> list = new ArrayList<Product>();
+		ArrayList<DraftElement> list = new ArrayList<DraftElement>();
+		ArrayList<it.progess.invoicecreator.vo.List> lists = getPublicList(key);
 		try{
-			Criteria cr = session.createCriteria(TblProduct.class,"product");
+			Criteria cr = setProductCriteria(filter, session,key); /*session.createCriteria(TblProduct.class,"product");
 			cr.createAlias("product.company", "company");
-			cr.add(Restrictions.eq("company.code",key ));
+			cr.add(Restrictions.eq("company.code",key ));*/
 			cr.add(Restrictions.eq("product.publish",true ));
+			
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<TblProduct> products = cr.list();
 			if (products.size() > 0){
@@ -439,7 +476,21 @@ public class RegistryDao {
 					Product product = new Product();
 					product.convertFromTable(tblproduct);
 					product.setPhoto("data:image/png;base64,"+product.getPhoto());
-					list.add(product);
+					DraftElement de = new DraftElement();
+					if (lists.size() > 0){
+						it.progess.invoicecreator.vo.List l = lists.get(0);
+						float price = getProductPriceList(product.getIdProduct(), l.getIdList());
+						if (price > 0){
+							product.setListprice(price);
+						}else{
+							product.setListprice(product.getSellprice());
+						}
+					}else{
+						product.setListprice(product.getSellprice());
+					}
+					de.setPrice(product.getListprice());
+					de.calculateEndPrice(product);
+					list.add(de);
 				}
 			}
 		}catch(HibernateException e){
@@ -548,6 +599,59 @@ public class RegistryDao {
 		try{
 			Criteria cr = session.createCriteria(TblListProduct.class,"prod");
 			cr.add(Restrictions.eq("prod.list.idList", idlist));
+			counters = ((Long) cr.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		if (counters > size){
+			pages = counters / size;
+		}else{
+			pages = 0;
+		}
+		PaginationObject po = new PaginationObject();
+		po.setPages(pages);
+		po.setTotalitems(counters);
+		return po;
+	}
+	public PaginationObject getListPublicPagesNumber(int size,String key){
+		int pages = 0;
+		int counters = 0;
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		try{
+			Criteria cr = session.createCriteria(TblProduct.class,"prod");
+			cr.createAlias("prod.company","company" );
+			cr.add(Restrictions.eq("company.code",key ));
+			cr.add(Restrictions.eq("prod.publish",true));
+			counters = ((Long) cr.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		if (counters > size){
+			pages = counters / size;
+		}else{
+			pages = 0;
+		}
+		PaginationObject po = new PaginationObject();
+		po.setPages(pages);
+		po.setTotalitems(counters);
+		return po;
+	}
+	public PaginationObject getListPublicProductsPagesNumber(int size,int idlist){
+		int pages = 0;
+		int counters = 0;
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		try{
+			Criteria cr = session.createCriteria(TblListProduct.class,"prod");
+			cr.add(Restrictions.eq("prod.list.idList", idlist));
+			cr.add(Restrictions.eq("prod.publish",true));
 			counters = ((Long) cr.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
@@ -785,6 +889,28 @@ public class RegistryDao {
 		}catch(Exception e){
 			
 		}
+		return product;
+	}
+	public UnitMeasureProduct getSingleCodeUMProduct(String code,User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		UnitMeasureProduct product = new UnitMeasureProduct();
+		try{			
+			Criteria cr = session.createCriteria(TblUnitMeasureProduct.class,"product");
+			cr.add(Restrictions.eq("product.code", code));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List products = cr.list();
+			if (products.size() == 1){
+				product.convertFromTableSearch((TblUnitMeasureProduct)products.get(0));
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
+		
 		return product;
 	}
 	public Product getSingleCodeProduct(String code,User user){
@@ -1231,7 +1357,7 @@ public class RegistryDao {
 			Criteria cr = session.createCriteria(TblListProduct.class,"listproduct");
 			cr.add(Restrictions.eq("listproduct.list.idList", idlist));
 			cr.createAlias("listproduct.product", "product");
-			cr = setProductCriteria(cr, filter, session, user, "product");
+			cr = setProductCriteria(cr, filter, session, user.getCompany().getCode(), "product");
 			cr.addOrder(Order.asc("product.code"));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List list = cr.list();
@@ -1313,6 +1439,33 @@ public class RegistryDao {
 			session.close();
 		}
 		return list;
+	}
+	public Customer getCustomerFromUser(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Customer> list = new ArrayList<Customer>();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.contact.idcontact", user.getContact().getIdcontact()));
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
+					TblCustomer tblcustomer = iterator.next();
+					Customer customer = new Customer();
+					//customer = getMockCustomer();
+					customer.convertFromTable(tblcustomer);
+					list.add(customer);
+				}
+			}else{
+				return null;
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list.get(0);
 	}
 	/*****
 	 * Get List of Customer 
@@ -1436,6 +1589,24 @@ public class RegistryDao {
 			System.out.println(ex.getMessage());
 		}
 		return new GECOSuccess();
+	}
+	public GECOObject createCustomerFromUser(User user){
+		RegistryDao rd = new RegistryDao();
+		Customer sm = new Customer();
+		sm.setCustomername(user.getName() + " " + user.getSurname());
+		sm.setCustomercode(user.getTaxcode().substring(0,10));
+		sm.setActive(true);
+		sm.setCompany(user.getCompany());
+		sm.setHasuser(true);
+		user.setContact(new Contact());
+		user.getContact().setEmail1(user.getEmail());
+		user.getContact().setPhone1(user.getPhone());
+		//user.getContact().setUser(user);
+		sm.setIsprivate(true);
+		sm.setContact(user.getContact());
+		sm.setAddress(user.getAddress());
+		sm.setTaxcode(user.getTaxcode());
+		return rd.saveUpdatesCustomer(sm, user);
 	}
 	public GECOObject saveUpdatesCustomer(Customer sm,Session session){
 		int id=0;
@@ -2086,5 +2257,49 @@ public class RegistryDao {
 		}
 		
 		return promoter;
+	}
+	public ArrayList<PaymentSolution> getPaymentSolutionList(){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<PaymentSolution> list = new ArrayList<PaymentSolution>();
+		try{
+			Criteria cr = session.createCriteria(TblPaymentSolution.class);
+			List<TblPaymentSolution> ps = cr.list();
+			if (ps.size() > 0){
+				for (Iterator<TblPaymentSolution> iterator = ps.iterator(); iterator.hasNext();){
+					TblPaymentSolution tblts = iterator.next();
+					PaymentSolution pays = new PaymentSolution();
+					pays.convertFromTable(tblts);
+					list.add(pays);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public Boolean updateContact(Contact sm){
+		TblContact tblsm = new TblContact();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.save(tblsm);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return true;
+		
 	}
 }

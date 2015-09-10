@@ -28,6 +28,14 @@ public class TblRole implements Itbl {
 	private Boolean read;
 	@Column(name="ADMIN_GRANT")
 	private Boolean admin;
+	@Column(name="ec")
+	private boolean ec;
+	public boolean isEc() {
+		return ec;
+	}
+	public void setEc(boolean ec) {
+		this.ec = ec;
+	}
 	public int getIdrole() {
 		return idrole;
 	}
@@ -79,5 +87,6 @@ public class TblRole implements Itbl {
 		this.setDelete(role.getDelete());
 		this.setRead(role.getRead());
 		this.setAdmin(role.getAdmin());
+		this.ec = role.isEc();
 	}
 }

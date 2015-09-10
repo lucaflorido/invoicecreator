@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCompany;
+import it.progess.invoicecreator.pojo.TblEcPaymentCompany;
 import it.progess.invoicecreator.pojo.TblMailConfigCompany;
 import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.transport.check.ProgessCheck;
@@ -25,6 +26,13 @@ public class Company implements Ivo {
 	private BankContact bankcontact;
 	private Set<MailConfigCompany> mailconfig;
 	private String code; 
+	private Set<EcPaymentCompany> ecpayments;
+	public Set<EcPaymentCompany> getEcpayments() {
+		return ecpayments;
+	}
+	public void setEcpayments(Set<EcPaymentCompany> ecpayments) {
+		this.ecpayments = ecpayments;
+	}
 	public String getCode() {
 		return code;
 	}
@@ -100,6 +108,17 @@ public class Company implements Ivo {
 		this.companycode = co.getCompanycode();
 		this.companyzone = co.getCompanyzone();
 		this.code = co.getCode();
+		if (co.getEcpayments() != null ){
+			this.ecpayments = new HashSet<EcPaymentCompany>();
+			for (Iterator<TblEcPaymentCompany> iterator = co.getEcpayments().iterator(); iterator.hasNext();){
+				TblEcPaymentCompany ecp = iterator.next();
+				EcPaymentCompany ecpt = new EcPaymentCompany();
+				ecpt.convertFromTable(ecp);
+				this.ecpayments.add(ecpt);
+			}
+		}else{
+			this.ecpayments = null;
+		}
 		if(co.getContact() != null){
 			this.contact = new Contact();
 			this.contact.convertFromTable(co.getContact());

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import it.progess.invoicecreator.vo.Company;
+import it.progess.invoicecreator.vo.EcPaymentCompany;
 import it.progess.invoicecreator.vo.Ivo;
 
 
@@ -13,6 +14,7 @@ import it.progess.invoicecreator.vo.Ivo;
 import it.progess.invoicecreator.vo.ListCustomer;
 import it.progess.invoicecreator.vo.MailConfig;
 import it.progess.invoicecreator.vo.MailConfigCompany;
+import it.progess.invoicecreator.vo.UnitMeasureProduct;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,6 +27,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name="tblcompany")
@@ -55,6 +60,17 @@ public class TblCompany implements Itbl {
 	private Set<TblMailConfigCompany> mailconfig;
 	@Column(name="code")
 	private String code;
+	@OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
+	private Set<TblEcPaymentCompany> ecpayments;
+	
+	
+	public Set<TblEcPaymentCompany> getEcpayments() {
+		return ecpayments;
+	}
+	public void setEcpayments(Set<TblEcPaymentCompany> ecpayments) {
+		this.ecpayments = ecpayments;
+	}
 	public String getCode() {
 		return code;
 	}
@@ -129,11 +145,7 @@ public class TblCompany implements Itbl {
 		this.companycode = co.getCompanycode();
 		this.companyzone = co.getCompanyzone();
 		this.taxcode = co.getTaxcode();
-		
-			this.code = co.getCode();
-		
-			
-		
+		this.code = co.getCode();
 		if(co.getContact() != null){
 			this.contact = new TblContact();
 			this.contact.convertToTable(co.getContact());
@@ -145,6 +157,18 @@ public class TblCompany implements Itbl {
 		if(co.getBankcontact() != null){
 			this.bankcontact = new TblBankContact();
 			this.bankcontact.convertToTable(co.getBankcontact());
+		}
+		
+		if (co.getEcpayments() != null ){
+			this.ecpayments = new HashSet<TblEcPaymentCompany>();
+			for (Iterator<EcPaymentCompany> iterator = co.getEcpayments().iterator(); iterator.hasNext();){
+				EcPaymentCompany ecp = iterator.next();
+				TblEcPaymentCompany ecpt = new TblEcPaymentCompany();
+				ecpt.convertToTable(ecp);
+				this.ecpayments.add(ecpt);
+			}
+		}else{
+			this.ecpayments = null;
 		}
 		if(co.getMailconfig() != null){
 			this.mailconfig = new HashSet<TblMailConfigCompany>();
@@ -172,6 +196,17 @@ public class TblCompany implements Itbl {
 				
 			}
 		}
-		
+		Company co = (Company)obj;
+		if (co.getEcpayments() != null ){
+			this.ecpayments = new HashSet<TblEcPaymentCompany>();
+			for (Iterator<EcPaymentCompany> iterator = co.getEcpayments().iterator(); iterator.hasNext();){
+				EcPaymentCompany ecp = iterator.next();
+				TblEcPaymentCompany ecpt = new TblEcPaymentCompany();
+				ecpt.convertToTableForSaving(ecp, this);
+				this.ecpayments.add(ecpt);
+			}
+		}else{
+			this.ecpayments = null;
+		}
 	}
 }

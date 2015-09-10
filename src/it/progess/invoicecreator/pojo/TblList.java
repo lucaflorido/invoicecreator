@@ -51,7 +51,14 @@ public class TblList implements Itbl {
 	private TblCompany company;
 	@Column(name="increment")
 	private float increment;
-	
+	@Column(name="publish")
+	private boolean publish;
+	public boolean isPublish() {
+		return publish;
+	}
+	public void setPublish(boolean publish) {
+		this.publish = publish;
+	}
 	public float getIncrement() {
 		return increment;
 	}
@@ -121,6 +128,7 @@ public class TblList implements Itbl {
 		this.isPercentage = lt.isPercentage();
 		this.increment = lt.getIncrement();
 		this.active = lt.isActive();
+		this.publish = lt.isPublish();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		if (lt.getCompany() != null){
 			this.company = new TblCompany();
@@ -133,6 +141,7 @@ public class TblList implements Itbl {
 		this.description = lt.getDescription();
 		this.idList = lt.getIdList();
 		this.name  = lt.getName();
+		this.publish = lt.isPublish();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		this.active = lt.isActive();
 		this.isPercentage = lt.isPercentage();
@@ -158,6 +167,7 @@ public class TblList implements Itbl {
 		this.idList = lt.getIdList();
 		this.name  = lt.getName();
 		this.active = lt.isActive();
+		this.publish = lt.isPublish();
 		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
 		this.listproduct = new HashSet<TblListProduct>();
 		this.isPercentage = lt.isPercentage();

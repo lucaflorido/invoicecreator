@@ -653,6 +653,60 @@ public class BasicDao {
 		}
 		return list;
 	}
+	public Document getDocumentOrderOnline(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Document> list = new ArrayList<Document>();
+		try{
+			Criteria cr = session.createCriteria(TblDocument.class,"document");
+			cr.add(Restrictions.eq("document.company.idCompany", user.getCompany().getIdCompany()));
+			cr.add(Restrictions.eq("document.order",true));
+			cr.add(Restrictions.eq("document.online",true));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblDocument> documents = cr.list();
+			if (documents.size() > 0){
+				for (Iterator<TblDocument> iterator = documents.iterator(); iterator.hasNext();){
+					TblDocument tbldocument = iterator.next();
+					Document document = new Document();
+					document.convertFromTable(tbldocument);
+					list.add(document);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list.get(0);
+	}
+	public Document getDocumentInvoiceOnline(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Document> list = new ArrayList<Document>();
+		try{
+			Criteria cr = session.createCriteria(TblDocument.class,"document");
+			cr.add(Restrictions.eq("document.company.idCompany", user.getCompany().getIdCompany()));
+			cr.add(Restrictions.eq("document.invoice",true));
+			cr.add(Restrictions.eq("document.online",true));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblDocument> documents = cr.list();
+			if (documents.size() > 0){
+				for (Iterator<TblDocument> iterator = documents.iterator(); iterator.hasNext();){
+					TblDocument tbldocument = iterator.next();
+					Document document = new Document();
+					document.convertFromTable(tbldocument);
+					list.add(document);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list.get(0);
+	}
 	/***
 	 * Save update Documents
 	 * **/

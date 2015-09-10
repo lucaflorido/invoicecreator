@@ -2,36 +2,28 @@ var gecoControllers = angular.module("gecoControllers",[]);
 /**
 	LOGIN CONTROLLER
 */
-gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location","PermissionFactory","AlertsFactory","AppConfig","$cookies",function($scope,$http,$rootScope,$location,PermissionFactory,AlertsFactory,AppConfig,$cookies){
+gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location","PermissionFactory","AlertsFactory","AppConfig","$cookies","FormatFactory","DraftFactory",function($scope,$http,$rootScope,$location,PermissionFactory,AlertsFactory,AppConfig,$cookies,FormatFactory,DraftFactory){
 	$rootScope.viewheader = false;
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
 	$scope.step = 0;
+	$scope.formatCurrency = FormatFactory.formatCurrency,
+	$scope.perm = PermissionFactory;
+	$scope.draftFactory = DraftFactory;
+	$scope.paymentValue = {};
+	$scope.paymentValue.code = "";
+	$scope.prodlist = [];
+	$scope.Range = function(start, end) {
+	    var result = [];
+	    for (var i = start; i <= end; i++) {
+	        result.push(i);
+	    }
+	    return result;
+	};
+	
 	/*$http.get('/InvoiceCreator/rest/user/startup').success(function(data){
 	});*/
-	if (!navigator.cookieEnabled){
-		 alert("Attenzione i cookie non sono abilitati...alcune informazioni potrebbero essere perse");
-		 $http.post(AppConfig.ServiceUrls.DraftInit,"").success(function(result){
-			if(result.type == "success"){
-				$scope.draft = result.success
-				$http.post(AppConfig.ServiceUrls.ProductPublic,AppConfig.Const.CompanyId).success(function(result){
-					$scope.prodlist = result;
-				});
-			}
-		 });
-	}else{
-		var cookie = $cookies.get("PROChart");
-		$http.post(AppConfig.ServiceUrls.DraftInit,cookie).success(function(result){
-			if(result.type == "success"){
-				$scope.draft = result.success
-				$cookies.put("PROChart",$scope.draft.id);
-				$http.post(AppConfig.ServiceUrls.ProductPublic,AppConfig.Const.CompanyId).success(function(result){
-					$scope.prodlist = result;
-					
-				});
-			}
-		});
-	}
+	
 	
 	$scope.loginfunction = function(){
 		$http.post(AppConfig.ServiceUrls.Login,$scope.login).success(function(result){
@@ -43,10 +35,14 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 					$rootScope.user = result;
 					$rootScope.path = result.path;
 					PermissionFactory.setupPermission(result.path);
+					PermissionFactory.user = angular.copy(result);
+					DraftFactory.user = angular.copy(PermissionFactory.user);
 					$rootScope.viewheader = true;
 					$scope.msg.initialize();
-					$location.path('/welcome');
-					
+					if (PermissionFactory.permission != AppConfig.Permissions.Customer){
+						$location.path('/welcome');
+					}
+					$scope.ecpayments = DraftFactory.checkPayments(PermissionFactory.user);
 				}else{
 					
 				}
@@ -58,14 +54,6 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 		});
 		
 	};
-	$scope.addToChart = function(product){
-		$http.post(AppConfig.ServiceUrls.DraftAdd+$scope.draft.id,product).success(function(result){
-			if(result.type == "success"){
-				$scope.draft = result.success;
-				product.added= true;
-			}
-		});
-	}
 	
 	$("#logoutbutton").click(function(e){
 		$scope.loginout();
@@ -85,7 +73,8 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 		$scope.users= data;
 	});*/
 	
-	
+
+
 	
 }]);
 gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope','$location',function($scope,$rootScope,$location){
@@ -310,6 +299,7 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 		$http.get(AppConfig.ServiceUrls.Logout).then(
 				function(result){
 					$rootScope.viewheader = false;
+					PermissionFactory.user = null;
 					$location.path('/login');
 				}
 		);
@@ -319,11 +309,12 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 			function(result){
 				if (result.data.username != "" && result.data.username != null){
 					//checkrole(result);
-					
 					$rootScope.viewheader = true;
 				}else{
+					if ($location.path() != "/ec"){
+						$location.path('/login');
+					}
 					
-					$location.path('/login');
 					
 				}
 			}
@@ -340,8 +331,11 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 					PermissionFactory.setupPermission(result.path);
 					$rootScope.viewheader = true;
 					//$scope.msg.initialize();
-					$location.path('/welcome');
-					
+					PermissionFactory.user = result;
+					if (PermissionFactory.permission != AppConfig.Permissions.Customer){
+						$location.path('/welcome');
+					}
+					//$scope.ecpayments = DraftFactory.checkPayments(PermissionFactory.user);
 				}else{
 					
 				}
@@ -353,6 +347,230 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 		});
 		
 	};
+	
+}]);
+gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$location","PermissionFactory","AlertsFactory","AppConfig","$cookies","FormatFactory","DraftFactory",function($scope,$http,$rootScope,$location,PermissionFactory,AlertsFactory,AppConfig,$cookies,FormatFactory,DraftFactory){
+	$rootScope.viewheader = false;
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
+	$scope.step = 0;
+	$scope.formatCurrency = FormatFactory.formatCurrency,
+	$scope.perm = PermissionFactory;
+	$scope.draftFactory = DraftFactory;
+	$scope.paymentValue = {};
+	$scope.paymentValue.code = "";
+	$scope.prodlist = [];
+	$scope.Range = function(start, end) {
+	    var result = [];
+	    for (var i = start; i <= end; i++) {
+	        result.push(i);
+	    }
+	    return result;
+	};
+	var intitialize = function(){
+		$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+			$scope.categories= data;
+		});
+		$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
+			$scope.groups= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
+			$scope.brands= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
+			$scope.regions= data;
+		});
+	};
+	$scope.subcategories = [];
+	$scope.changeCategory = function(){
+		$scope.subcategories = [];
+		$scope.subcategories = $scope.filter.category.subcategories;
+	}
+	intitialize();
+	/*$http.get('/InvoiceCreator/rest/user/startup').success(function(data){
+	});*/
+	$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
+		DraftFactory.company = result;
+		DraftFactory.payments = DraftFactory.company.ecpayments;
+		$scope.ecpayments = DraftFactory.checkPayments(PermissionFactory.user);
+	});
+	if (!navigator.cookieEnabled){
+		 alert("Attenzione i cookie non sono abilitati...alcune informazioni potrebbero essere perse");
+		 $http.post(AppConfig.ServiceUrls.DraftInit+AppConfig.Const.CompanyId,"").success(function(result){
+			if(result.type == "success"){
+				$scope.draft = result.success
+				/*$http.post(AppConfig.ServiceUrls.ProductPublic,AppConfig.Const.CompanyId).success(function(result){
+					$scope.prodlist = result;
+				});*/
+				$scope.getProductsNumber();
+			}
+		 });
+	}else{
+		var cookie = $cookies.get("PRODraft");
+		$http.post(AppConfig.ServiceUrls.DraftInit+AppConfig.Const.CompanyId,cookie).success(function(result){
+			if(result.type == "success"){
+				$scope.draft = result.success
+				$cookies.put("PRODraft",$scope.draft.id);
+				
+				$scope.getProductsNumber();
+			}
+		});
+	}
+	
+	$scope.loginfunction = function(){
+		$http.post(AppConfig.ServiceUrls.Login,$scope.login).success(function(result){
+			
+			if (result.type == 'success'){
+				result = result.success;
+				if (result.username !== null && result.username != ""){
+					$(".myprofilelabel").html(result.username);
+					$rootScope.user = result;
+					$rootScope.path = result.path;
+					PermissionFactory.setupPermission(result.path);
+					PermissionFactory.user = angular.copy(result);
+					DraftFactory.user = angular.copy(PermissionFactory.user);
+					$rootScope.viewheader = true;
+					$scope.msg.initialize();
+					if (PermissionFactory.permission != AppConfig.Permissions.Customer){
+						$location.path('/welcome');
+					}
+					$scope.ecpayments = DraftFactory.checkPayments(PermissionFactory.user);
+				}else{
+					
+				}
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}
+		}).error(function(error){
+			$scope.msg.alertMessage(AppConfig.Const.ServerProblem)
+		});
+		
+	};
+	$scope.addToChart = function(product){
+		$http.post(AppConfig.ServiceUrls.DraftAdd+$scope.draft.id+"/"+AppConfig.Const.CompanyId,product).success(function(result){
+			if(result.type == "success"){
+				$scope.draft = result.success;
+				product.added= true;
+			}
+		});
+	}
+	$scope.updateChart = function(product,force){
+		if (product.added == true || force){
+			$http.post(AppConfig.ServiceUrls.DraftUpdate+$scope.draft.id,product).success(function(result){
+				if(result.type == "success"){
+					$scope.draft = result.success;
+					
+				}
+			});
+		}
+		
+	}
+	$scope.confirmChart = function(user){
+		DraftFactory.user.entity = null;
+		$http.post(AppConfig.ServiceUrls.DraftConfirm+$scope.draft.id+"/"+$scope.paymentValue.code,DraftFactory.user).success(function(result){
+			if(result.type == "success"){
+				switch(result.success){
+					case "confirmed":
+						$scope.step = 3;
+						break;
+					case "paypal":
+						//$scope.userNew = PermissionFactory.user;
+						$("#paypalform").submit();
+						break;
+				}
+				
+				
+			}
+		});
+		
+		
+	}
+	$scope.removeChart = function(product){
+		
+			$http.post(AppConfig.ServiceUrls.DraftRemove+$scope.draft.id+"/"+AppConfig.Const.CompanyId,product).success(function(result){
+				if(result.type == "success"){
+					$scope.draft = result.success;
+					resetRemovedElement(product)
+				}
+			});
+		
+		
+	}
+	var resetRemovedElement = function(element){
+		angular.forEach($scope.prodlist,function(value){
+			if (value.product.idProduct == element.product.idProduct){
+				value.added = false;
+			}
+		});
+	}
+	$("#logoutbutton").click(function(e){
+		$scope.loginout();
+	})
+	$("#enterpassword").bind('keypress', function(e) {
+		var code = e.keyCode || e.which;
+		 if(code == 13) { //Enter keycode
+		   //Do something
+		   $scope.loginfunction();
+		 }
+	});
+	
+	$(".redobutton").click(function(e){
+		alert($("ifname").attr("required"));
+	})
+	/*$http.get('rest/user').success(function(data){
+		$scope.users= data;
+	});*/
+	if ($scope.filter == null){
+		$scope.filter = {"pagefilter":{}};
+		$scope.currentGroup = {};
+		$scope.currentBrand = {};
+		$scope.currentCategory = {};
+		$scope.currentSubCategory = {};
+		$scope.currentSupplier = {};
+	}else{
+		$scope.currentGroup = $scope.filter.group;
+		$scope.currentBrand = $scope.filter.brand;
+		$scope.currentCategory = $scope.filter.category;
+		$scope.currentSubCategory = $scope.filter.subcategory;
+		$scope.currentSupplier = $scope.filter.supplier;
+	}
+	$scope.getProducts = function(page){
+		$scope.filter.pagefilter.startelement = (page - 1 ) * $scope.pagesize_confirmed;
+		$scope.filter.pagefilter.pageSize = $scope.pagesize_confirmed;
+		$scope.filter = $scope.filter
+		$http.post(AppConfig.ServiceUrls.ProductMainPublicList+AppConfig.Const.CompanyId,$scope.filter).then(function(result){
+			$scope.prodlist = result.data;
+			angular.forEach($scope.draft.products,function(item){
+				$scope.tempDraft = item;
+				angular.forEach($scope.prodlist,function(elem){
+					if (elem.product.idProduct == $scope.tempDraft.product.idProduct){
+						elem.quantity = $scope.tempDraft.quantity;
+						elem.added = true;
+					}
+				});
+			});
+		})
+		
+}
+	$scope.pagesize = 6;
+$scope.getProductsNumber = function(){
+	
+	if ($scope.prodlist.length != $scope.pagesize){
+	$scope.pages = [];
+	$scope.totalitems = 0;
+	$scope.pageArray = [];
+		$http.get(AppConfig.ServiceUrls.ProductPublicPagination+$scope.pagesize+"/"+AppConfig.Const.CompanyId).then(function(result){
+			$scope.pages = result.data.pages;
+			$scope.totalitems = result.data.totalitems;
+			$scope.pagesize_confirmed = $scope.pagesize;
+			$scope.getProducts(1);
+		});
+		
+	}else{
+		$scope.getProducts(1);
+	}
+}
+
 	
 }]);
 

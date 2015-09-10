@@ -3,6 +3,7 @@ package it.progess.invoicecreator.service;
 import it.progess.invoicecreator.dao.DraftDao;
 import it.progess.invoicecreator.dao.ExportDao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
+import it.progess.invoicecreator.vo.DraftElement;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.User;
@@ -24,22 +25,53 @@ public class DraftService {
 	@Context
 	ServletContext context;
 	@POST
-	@Path("init")
+	@Path("init/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String initDraft(@Context HttpServletRequest request,String data) {
+	public String initDraft(@Context HttpServletRequest request,String data,@PathParam("key") String key) {
 		HttpSession session = request.getSession();  
 		DraftDao dao = new DraftDao();
 		Gson gson = new Gson();
-		return gson.toJson(dao.setupDraft(data, session));
+		return gson.toJson(dao.setupDraft(data,key, session));
 	}
 	@POST
-	@Path("addtodraft/{draftid}")
+	@Path("addtodraft/{draftid}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid) {
+	public String addDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid,@PathParam("draftid") String key) {
 		HttpSession session = request.getSession();  
 		DraftDao dao = new DraftDao();
 		Gson gson = new Gson();
-		Product product = gson.fromJson(data, Product.class);
-		return gson.toJson(dao.addToDraft(draftid, session, product));
+		DraftElement de = gson.fromJson(data, DraftElement.class);
+		return gson.toJson(dao.addToDraft(draftid, session, de,key));
+	}
+	@POST
+	@Path("removefromdraft/{draftid}/{key}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String removeDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid,@PathParam("draftid") String key) {
+		HttpSession session = request.getSession();  
+		DraftDao dao = new DraftDao();
+		Gson gson = new Gson();
+		DraftElement de = gson.fromJson(data, DraftElement.class);
+		
+		return gson.toJson(dao.removeFromDraft(draftid, session, de,key));
+	}
+	@POST
+	@Path("updatedraft/{draftid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updateDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid) {
+		HttpSession session = request.getSession();  
+		DraftDao dao = new DraftDao();
+		Gson gson = new Gson();
+		DraftElement de = gson.fromJson(data, DraftElement.class);
+		return gson.toJson(dao.updateDraft(draftid, session, de));
+	}
+	@POST
+	@Path("confirmdraft/{draftid}/{paymenttype}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String confirmDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid,@PathParam("paymenttype") String paymenttype) {
+		HttpSession session = request.getSession();  
+		DraftDao dao = new DraftDao();
+		Gson gson = new Gson();
+		User user = gson.fromJson(data, User.class);
+		return gson.toJson(dao.confirmPayment(session, user, draftid, paymenttype));
 	}
 }

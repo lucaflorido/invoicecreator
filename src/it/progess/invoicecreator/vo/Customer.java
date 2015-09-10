@@ -3,6 +3,7 @@ package it.progess.invoicecreator.vo;
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCustomer;
 import it.progess.invoicecreator.pojo.TblDestination;
+import it.progess.invoicecreator.pojo.TblEcPayment;
 import it.progess.invoicecreator.pojo.TblListCustomer;
 import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.transport.check.ProgessCheck;
@@ -40,6 +41,20 @@ public class Customer implements Ivo{
 	private String alternativecode1;
 	private String alternativecode2;
 	private boolean hasuser;
+	private EcPayment ecpayment;
+	private boolean isprivate;
+	public boolean isIsprivate() {
+		return isprivate;
+	}
+	public void setIsprivate(boolean isprivate) {
+		this.isprivate = isprivate;
+	}
+	public EcPayment getEcpayment() {
+		return ecpayment;
+	}
+	public void setEcpayment(EcPayment ecpayment) {
+		this.ecpayment = ecpayment;
+	}
 	public boolean isHasuser() {
 		return hasuser;
 	}
@@ -192,6 +207,7 @@ public class Customer implements Ivo{
 		this.alternativecode1 = c.getAlternativecode1();
 		this.alternativecode2 = c.getAlternativecode2();
 		this.hasuser = false;
+		this.isprivate = c.isIsprivate();
 		if (c.getAddress() != null){
 			this.address = new Address();
 			this.address.convertFromTable(c.getAddress());
@@ -246,6 +262,10 @@ public class Customer implements Ivo{
 	public void convertFromTableSingle(Itbl obj){
 		TblCustomer c = (TblCustomer)obj;
 		this.convertFromTable(obj);
+		if(c.getEcpayment() != null){
+			this.ecpayment = new EcPayment();
+			this.ecpayment.convertFromTable(c.getEcpayment());
+		}
 		this.lists = new HashSet<ListCustomer>();
 		if (c.getLists() != null){
 			for (Iterator<TblListCustomer> iterator = c.getLists().iterator(); iterator.hasNext();){

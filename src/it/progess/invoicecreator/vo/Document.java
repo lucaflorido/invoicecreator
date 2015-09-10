@@ -20,6 +20,13 @@ public class Document  implements Ivo{
 	private boolean transport;
 	private Company company;
 	private int expireday;
+	private boolean online;
+	public boolean isOnline() {
+		return online;
+	}
+	public void setOnline(boolean online) {
+		this.online = online;
+	}
 	public int getExpireday() {
 		return expireday;
 	}
@@ -125,6 +132,7 @@ public class Document  implements Ivo{
 		this.invoice = dc.isInvoice();
 		this.transport = dc.isTransport();
 		this.expireday = dc.getExpireday();
+		this.online = dc.isOnline();
 		if (dc.getStoremovement() != null){
 			this.storemovement = new StoreMovement();
 			this.storemovement.convertFromTable(dc.getStoremovement());

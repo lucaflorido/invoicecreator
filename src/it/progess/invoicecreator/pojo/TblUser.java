@@ -1,6 +1,9 @@
 package it.progess.invoicecreator.pojo;
 
 
+import java.util.Date;
+
+import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.vo.User;
 
 import javax.persistence.CascadeType;
@@ -46,6 +49,14 @@ public class TblUser {
 	private TblContact contact;
 	@Column(name="code")
 	private String code;
+	@Column(name="birthday")
+	private Date birthday;
+	public Date getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
 	public String getCode() {
 		return code;
 	}
@@ -135,9 +146,16 @@ public class TblUser {
 		this.setEmail(user.getEmail());
 		this.setActive(user.getActive());
 		this.setCode(user.getCode());
+		if (user.getBirthday() != null && user.getBirthday() != ""){
+			this.birthday = DataUtilConverter.convertDateFromString(user.getBirthday());
+		}else{
+			this.birthday = null;
+		}
+		
 		TblRole roleTo = new TblRole();
 		roleTo.convertToTable(user.getRole());
 		this.setRole(roleTo);
+		
 		if (user.getCompany() != null){
 			this.company = new TblCompany();
 			this.company.convertToTable(user.getCompany());

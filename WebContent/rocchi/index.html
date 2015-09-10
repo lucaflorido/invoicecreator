@@ -66,8 +66,7 @@
     
     <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" > 
 		<ul class="title-area" > 
-			<li class="name"> 
-				<a >Rocchi srl</a> </li> <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+			 <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
 					<li class="toggle-topbar menu-icon"><a ><span>Menu</span></a></li>
 		</ul> 
 		<section class="top-bar-section" > <!-- Right Nav Section 
@@ -154,19 +153,7 @@
 				
 			</ul> 
 			<ul class="right"> 
-			    <li class="has-form" ng-hide="viewheader == true">
-					  <div class="row collapse">
-					  	<div class="large-4 small-4 columns">
-					      <input type="text" name="username" placeholder="Username" ng-model="login.username" />
-					    </div>
-					    <div class="large-4 small-4 columns">
-					      <input type="password" name="password" placeholder="Password" ng-model="login.password" />
-					    </div>
-					    <div class="large-4 small-4 columns">
-					      <input type="submit" class="button expand" value="Log In" ng-click="loginfunction()"/>
-					    </div>
-					  </div>
-					</li>
+			    
 				<li ng-show="viewheader == true" > <a ng-click="logout()">Logout</a> 
 					
 				</li> 

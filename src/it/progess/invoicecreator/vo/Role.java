@@ -12,6 +12,13 @@ public class Role implements Ivo {
 	private Boolean delete;
 	private Boolean read;
 	private Boolean admin;
+	private boolean ec;
+	public boolean isEc() {
+		return ec;
+	}
+	public void setEc(boolean ec) {
+		this.ec = ec;
+	}
 	public int getIdrole() {
 		return idrole;
 	}
@@ -64,6 +71,7 @@ public class Role implements Ivo {
 			this.setDelete(roletbl.getDelete());
 			this.setRead(roletbl.getRead());
 			this.setAdmin(roletbl.getAdmin());
+			this.ec = roletbl.isEc();
 		}
 	}
 	public GECOObject control(){

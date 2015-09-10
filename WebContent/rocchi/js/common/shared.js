@@ -45,6 +45,7 @@ angular.module('modules.common.shared', [])
 	factory.setupPermission = function(permit){
 		factory.permission = permit;
 	}
+	factory.user = null;
 	return factory;
 }).factory("LoaderFactory",function(){
 	var factory = {};
@@ -54,5 +55,45 @@ angular.module('modules.common.shared', [])
 }).factory("MenuFactory",function(){
 	var factory = {};
 	
+	return factory;
+}).factory("FormatFactory",function(){
+	var factory = {};
+	factory.formatCurrency = function(value){
+		value=value+"";
+		var val = value.split(".");
+		if (val.length == 0){
+			return '0.00';
+		}else if (val.length == 1){
+			return val[0]+".00"
+		}else if (val.length == 2){
+			if (val[1] .length == 1){
+				return val[0]+"."+val[1]+"0";
+			}else{
+				return val[0]+"."+val[1];
+			}
+		}else{
+			return "0.00";
+		}
+	}
+	return factory;
+}).factory("DraftFactory",function(){
+	var factory = {};
+	factory.company = {};
+	factory.payments = {};
+	factory.user = {};
+	factory.checkPayments = function(user){
+		var ecp = [];
+		if (user && user.iduser){
+			ecp = angular.copy(factory.payments);
+			if (user.ecpayment){
+				ecp.push({ecpayment:user.ecpayment});
+			}
+		}else{
+			ecp = $.grep(factory.payments,function(item){
+				return item.ecpayment.nologgeduser == true;
+				});
+		}
+		return ecp;
+	}
 	return factory;
 });

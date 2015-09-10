@@ -32,10 +32,10 @@ public class ControlDao {
 			Disjunction r = Restrictions.disjunction();
 			r.add(Restrictions.eq("customer.customername", c.getCustomername()))
 			.add(Restrictions.eq("customer.customercode", c.getCustomercode()));
-			if (!c.getSerialnumber().equals("") && c.getSerialnumber() != null){
+			if (c.getSerialnumber() != null && !c.getSerialnumber().equals("") ){
 				r.add(Restrictions.eq("customer.serialnumber", c.getSerialnumber()));
 			}
-			if (!c.getTaxcode().equals("")  && c.getTaxcode() != null){
+			if (c.getTaxcode() != null && !c.getTaxcode().equals("")  ){
 				r.add(Restrictions.eq("customer.taxcode", c.getTaxcode()));
 			}
 			/*cr.add(Restrictions.disjunction()

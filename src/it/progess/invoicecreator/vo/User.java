@@ -1,5 +1,6 @@
 package it.progess.invoicecreator.vo;
 
+import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.pojo.TblUser;
 
 public class User {
@@ -20,6 +21,27 @@ public class User {
 	private Ivo entity;
 	private Contact contact;
 	private String code;
+	private String birthday;
+	private Address address;
+	private String taxcode;
+	public String getTaxcode() {
+		return taxcode;
+	}
+	public void setTaxcode(String taxcode) {
+		this.taxcode = taxcode;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
 	public Contact getContact() {
 		return contact;
 	}
@@ -130,6 +152,12 @@ public class User {
 		this.setRole(roleFrom);
 		this.setActive(tbluser.getActive());
 		this.setCode(tbluser.getCode());
+		if (tbluser.getBirthday() != null){
+			this.birthday = DataUtilConverter.convertStringFromDate(tbluser.getBirthday());
+		}else{
+			this.birthday = null;
+		}
+		
 		if (tbluser.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(tbluser.getCompany());
@@ -164,5 +192,8 @@ public class User {
 		}else{
 			this.path = "";
 		}
+	}
+	public User(){
+		
 	}
 }

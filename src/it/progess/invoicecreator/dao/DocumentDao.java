@@ -18,6 +18,8 @@ import it.progess.invoicecreator.vo.Counter;
 import it.progess.invoicecreator.vo.CounterYear;
 import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.Document;
+import it.progess.invoicecreator.vo.Draft;
+import it.progess.invoicecreator.vo.DraftElement;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOReportOrder;
@@ -1519,6 +1521,7 @@ public class DocumentDao {
 		}
 		if (r == null){
 			r = new Row();
+			r.setType("V");
 			h.getRows().add(r);
 		}
 		return r;
@@ -1539,5 +1542,62 @@ public class DocumentDao {
 	
 	}
 	
+	public GECOObject createOrderFromDraft(User user,Draft draft){
+		try{
+			Customer c = new RegistryDao().getCustomerFromUser(user);
+			if (c == null){
+				return new GECOError("CLINULL", "Cliente non registrato");
+			}
+			Head h = new Head();
+			h.setCustomer(c);
+			Document d = new BasicDao().getDocumentOrderOnline(user);
+			h.setDocument(d);
+			Date today = new Date();
+			String todayString = DataUtilConverter.convertStringFromDate(today);
+			h.setDate(todayString);
+			h.calculateNumber();
+			it.progess.invoicecreator.vo.List list = new RegistryDao().getPublicList(user.getCompany().getCode()).get(0);
+			h.setList(list);
+			setRowsFromDraft(draft,h,user);
+			return new DocumentDao().saveHead(h, user);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new GECOError("error", e.getMessage());
+		}
 	
+	}
+	public GECOObject createInvoiceFromDraft(User user,Draft draft){
+		try{
+			Customer c = new RegistryDao().getCustomerFromUser(user);
+			if (c == null){
+				return new GECOError("CLINULL", "Cliente non registrato");
+			}
+			Head h = new Head();
+			h.setCustomer(c);
+			Document d = new BasicDao().getDocumentInvoiceOnline(user);
+			h.setDocument(d);
+			Date today = new Date();
+			String todayString = DataUtilConverter.convertStringFromDate(today);
+			h.setDate(todayString);
+			h.calculateNumber();
+			it.progess.invoicecreator.vo.List list = new RegistryDao().getPublicList(user.getCompany().getCode()).get(0);
+			h.setList(list);
+			setRowsFromDraft(draft,h,user);
+			return new DocumentDao().saveHead(h, user);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new GECOError("error", e.getMessage());
+		}
+	
+	}
+	private void setRowsFromDraft(Draft d,Head h,User user){
+		RegistryDao dao = new RegistryDao();
+	    DocumentDao ddao = new DocumentDao();
+		for(Iterator<DraftElement> it = d.getProducts().iterator();it.hasNext() ;){
+	    	DraftElement de = it.next();
+	    	UnitMeasureProduct ump = dao.getSingleCodeUMProduct(de.getProduct().getCode(), user);
+	    	ump.setQuantity((double)de.getQuantity());
+	    	ddao.addRow(ump, h);
+	    }
+	}
 }

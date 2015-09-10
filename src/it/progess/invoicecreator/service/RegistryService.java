@@ -67,6 +67,14 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		return gson.toJson(dao.getCompanyList());
 	  }
+	  @GET
+	  @Path("company/{key}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public String getCompany(@PathParam("key") String key){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		return gson.toJson(dao.getCompany(key));
+	  }
 	  @PUT
 	  @Path("company")
 	  @Produces(MediaType.TEXT_PLAIN)
@@ -171,6 +179,17 @@ public class RegistryService {
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getProductList(filter,loggeduser));
 	  }
+	  @POST
+	  @Path("public/products/{key}")
+ 	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String getProductPublicList(@Context HttpServletRequest request, String data,@PathParam("key") String key){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		SelectProductsFilter filter = gson.fromJson(data, SelectProductsFilter.class);
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getProductPublicList(filter,key));
+	  }
 	  @GET
 	  @Path("product")
  	  @Produces(MediaType.TEXT_HTML)
@@ -181,13 +200,14 @@ public class RegistryService {
 		return gson.toJson(dao.getProductList(loggeduser));
 	  }
 	  @POST
-	  @Path("public/product")
+	  @Path("public/product/{key}")
  	  @Produces(MediaType.APPLICATION_JSON)
-	  public String getProductPublicList(String data){
+	  public String getProductPublicList(String data,@PathParam("key") String key){
 		Gson gson = new Gson();
 		RegistryDao dao = new RegistryDao();
 		//User loggeduser = HibernateUtils.getUserFromSession(request);
-		return gson.toJson(dao.getProductPublicList(data));
+		SelectProductsFilter sf = gson.fromJson(data, SelectProductsFilter.class);
+		return gson.toJson(dao.getProductPublicList(sf,key));
 	  }
 	  @GET
 	  @Path("product/pages/{size}")
@@ -198,6 +218,16 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getListPagesNumber(size,loggeduser));
+	  }
+	  @GET
+	  @Path("public/product/pages/{size}/{key}")
+	  @Produces(MediaType.TEXT_HTML)
+	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	  public String productPublicPages(@Context HttpServletRequest request,@PathParam("size") int size,@PathParam("key") String key) {
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getListPublicPagesNumber(size,key));
 	  }
 	  @GET
 	  @Path("listproduct/pages/{size}/{idlist}")
@@ -777,5 +807,13 @@ public class RegistryService {
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
 		  return gson.toJson(dao.createUserPromoter(loggeduser,up));
+	  }
+	  @GET
+	  @Path("paymentsolution")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getPaymentSolutionList(){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		return gson.toJson(dao.getPaymentSolutionList());
 	  }
 }

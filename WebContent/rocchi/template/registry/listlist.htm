@@ -21,6 +21,7 @@
       <th width="150"  st-sort="code" st-sort-default="reverse" st-skip-natural="true">Codice</th>
       <th width="150" st-sort="description"  st-skip-natural="true">Descrizione</th>
       <th width="150" class="hidden_cell">Validit&agrave;</th>
+      <th width="150" class="hidden_cell">Ecommerce</th>
       <th width="50"></th>
     </tr>
         <tr>
@@ -33,7 +34,7 @@
       <td >{{list.code}}</td>
       <td>{{list.description}}</td>
       <td class="hidden_cell">{{list.startdate}}</td>
-      
+      <td class="hidden_cell">{{list.publish}}</td>
       <td><a class="x" ng-click="deleteElement(list.idList)"></a></td>
 
     </tr>

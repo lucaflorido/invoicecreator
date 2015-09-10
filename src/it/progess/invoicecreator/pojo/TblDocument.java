@@ -52,6 +52,14 @@ public class TblDocument implements Itbl{
 	private TblCompany company;
 	@Column(name="expireday")
 	private int expireday;
+	@Column(name="online")
+	private boolean online;
+	public boolean isOnline() {
+		return online;
+	}
+	public void setOnline(boolean online) {
+		this.online = online;
+	}
 	public int getExpireday() {
 		return expireday;
 	}
@@ -156,6 +164,7 @@ public class TblDocument implements Itbl{
 		this.invoice = dc.isInvoice();
 		this.transport = dc.isTransport();
 		this.expireday = dc.getExpireday();
+		this.online = dc.isOnline();
 		if (dc.getStoremovement() != null){
 			this.storemovement = new TblStoreMovement();
 			this.storemovement.convertToTable(dc.getStoremovement());

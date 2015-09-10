@@ -1,0 +1,400 @@
+
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+	<div class="row">
+	
+	</div>
+  	<div class="row pro_container">
+     	<div class="large-4 small-12 columns">
+     
+              <img  src="assets/rocchilogo.png">
+     
+              <div class="hide-for-small panel">
+                <div class="row">
+					<form>
+						<div class="row">
+						    <div class="large-6 columns">
+						      <div class="row collapse postfix-round">
+						        <div class="small-9 columns">
+						          <input type="text" placeholder="Cerca" ng-model="filter.searchstring"
+										value="{{filter.searchstring}}"  >
+						        </div>
+						        <div class="small-3 columns">
+						          <a  class="button postfix" ng-click="getProductsNumber()"><i class="fi-magnifying-glass"></i></a>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="row">
+							<div class="large-4 columns">
+								<label>Categoria <select  name="category" ng-options="category.code for category in categories" ng-model="filter.category" ng-change="changeCategory()" >
+				           		 	<option value=""></option>
+				            	</select> 
+								</label>
+							</div>
+							<div class="large-4 columns">
+								<label>Sottocategoria <select  name="subcategory" ng-options="subcategory.code for subcategory in subcategories" ng-model="filter.subcategory"  >
+				           		 	<option value=""></option>
+				            	</select> 
+								</label>
+							</div>
+							<div class="large-4 columns">
+								<label>Marca <select  name="brand" ng-options="brand.code for brand in brands" ng-model="filter.brand"  >
+				           		 	<option value=""></option>
+				            	</select> 
+								</label>
+							</div>
+						</div>
+						  <div class="row">
+						  	<div class="large-4 columns">
+									<label>Regione <select  name="region" ng-options="region.code for region in regions" ng-model="filter.region"  >
+					           		 	<option value=""></option>
+					            	</select> 
+									</label>
+								</div>
+								<div class="large-4 columns">
+									<label>Gruppo <select  name="group" ng-options="group.code for group in groups" ng-model="filter.group"  >
+					           		 	<option value=""></option>
+					            	</select> 
+									</label>
+								</div>
+						  </div>
+					</form>
+					<!--  <div class="small-4 columns ">
+						
+						<div class="button  small"  >Applica </div>
+					</div>-->
+				</div>
+				
+              </div>
+     		  
+              <a ng-click="step = 1">
+	              <div class="panel callout radius" >
+	                <h6 ng-show="draft.products.length > 0" > {{draft.products.length}} <i class="fi-shopping-cart" ></i></h6>
+	                <h6 ng-show="draft.products.length == 0" ><i class="fi-shopping-cart" ></i></h6>
+	              </div>
+              </a>
+     		
+     			
+            </div>
+     		<div class="large-8 columns">
+            <!-- LOGIN AND PAY  -->
+            <div class="row" ng-show="step == 2">
+            	<div class="large-6 large-centered small-12 columns" ng-hide="perm.user" >
+            		<form ng-hide="enable_registration">
+					    <div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="username" placeholder="Username" ng-model="login.username" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="password" name="password" placeholder="Password" ng-model="login.password" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 large-centered columns">
+								<div class="row">
+			            			<div class="large-2 small-4 columns">
+			            				<button class="button " ng-click="loginfunction()">Log In</button>
+			           				</div>
+			           				<div class="large-2 small-4 columns">
+			            				<button class="button" ng-click="enable_registration = true">Registrati</button>
+			            			</div>
+			            			
+			            		</div>
+								
+							</div>
+						</div>
+					</form>
+					<form ng-hide="!enable_registration">
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="name" placeholder="Nome *" ng-model="draftFactory.user.name" class="input-text small" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="surname" placeholder="Cognome *" ng-model="draftFactory.user.surname" class="input-text small"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="dateofbirth" placeholder="Data di nascita *" ng-model="draftFactory.user.birthdate" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="taxcode" placeholder="Codice fiscale *" ng-model="draftFactory.user.taxcode" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="email" placeholder="Email *" ng-model="draftFactory.user.email" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="phone" placeholder="Telefono *" ng-model="draftFactory.user.phone" />
+							</div>
+						</div>
+					    <div class="row">
+							<div class="large-8 columns">
+								<input type="text" name="street" placeholder="Indirizzo *" ng-model="draftFactory.user.address.address" />
+							</div>
+							<div class="large-4 columns">
+								<input type="text" name="number" placeholder="Civico *" ng-model="draftFactory.user.address.number" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="city" placeholder="Città *" ng-model="draftFactory.user.address.city" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="zipcode" placeholder="CAP *" ng-model="draftFactory.user.address.zipcode" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="zone" placeholder="Provincia *" ng-model="draftFactory.user.address.zone" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="password" name="password" placeholder="Password" ng-model="draftFactory.user.password" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="password" name="password" placeholder="Conferma Password" ng-model="draftFactory.user.confirmpassword" />
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="large-12 large-centered columns">
+								<button  class="button expand" value="Indietro" ng-click="enable_registration = false"></button>
+							</div>
+						</div>
+					</form>
+					
+            	</div>
+            	<div class="large-8 large-centered small-12 columns" ng-show="perm.user" >
+            		<div class="row" >
+							<div class="large-12 large-centered columns">
+							  	<h5>Benvenuto {{draftFactory.user.name}} {{draftFactory.user.surname}}</h5>
+							</div>
+					</div>
+            	</div>
+            </div>
+            <div class="row" ng-show="step == 2">
+            	Pagamenti 
+            	<form >
+            		
+            		<label ng-repeat="ecp in ecpayments"><input type="radio" name="paymentmethod" ng-model="paymentValue.code" ng-value="ecp.ecpayment.paysolution.code" >  {{ecp.ecpayment.paysolution.name}}</label>
+            		
+            	<!--  	<label><input type="radio" name="paymentmethod" ng-model="paymentValue" value="paypal" >Paypal</label>
+            		<label><input type="radio" name="paymentmethod" ng-model="paymentValue" value="cc"  >Carta di credito</label>
+            		<label><input type="radio" name="paymentmethod" ng-model="paymentValue" value="bb"  >Bonifico bancario</label>
+            		<label><input type="radio" name="paymentmethod" ng-model="paymentValue" value="deliver" >Alla consegna</label>
+            		-->
+            	</form>
+            	
+            </div>
+            <div class="row" ng-show="step == 2">
+            	
+				<form id="paypalform" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top" >
+					<input type="hidden" name="cmd" value="_xclick">
+					<input type="hidden" name="business" value="luca.florido@pec.it">
+					<input type="hidden" name="amount" value="{{draft.total}}">
+					<input type="hidden" name="first_name" value="{{draftFactory.user.name}}">
+					<input type="hidden" name="last_name" value="{{draftFactory.user.surname}}">
+					<input type="hidden" name="address1" value="{{draftFactory.user.address.street}} {{user.address.number}}">
+					<input type="hidden" name="address2" value="">
+					<input type="hidden" name="city" value="{{draftFactory.user.address.city}}">
+					<input type="hidden" name="state" value="{{draftFactory.user.address.country}}">
+					<input type="hidden" name="zip" value="{{draftFactory.user.address.zipcode}}">
+					<input type="hidden" name="return" value="http://localhost:8080/InvoiceCreator/PaymentResult?did={{draft.id}}">
+				</form>
+                <button  ng-disabled="!paymentValue || (!enable_registration && !draftFactory.user)" ng-click="confirmChart(draftFactory.user)">Procedi</button>
+            </div>
+            <!-- SHOW DRAFT -->
+            <div class="row" ng-show="step == 1">
+            	<div class="large-12 small-12 columns" ng-repeat="element in draft.products">
+            		<div class="row">
+            			<div class="large-1 small-4 columns">
+            				<button class="button round tiny alert" ng-click="removeChart(element)"><i class="fi-x" ></i></button>
+            			</div>
+            			<div class="large-2 small-4 columns">
+            				<img class="ec_image_draft" ng-src="{{element.product.photo}}">
+            			</div>
+            			<div class="large-4 small-6 columns">
+            				<div class="ec_title" >{{element.product.shortdescription}}</div>
+            				<div class="ec_description" >{{element.product.description}}</div>
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				<select  ng-model="element.quantity" ng-change="updateChart(element,true)" >
+                    		<option ng-repeat="o in element.range" value="{{o}}" ng-selected="element.quantity == o">{{o}}</option>
+                    	</select>
+            				<div class="ec_delivery intime" ng-show="element.directdelivery">consegna entro il{{element.deliverydate}}</div>
+                     				<div class="ec_delivery late" ng-hide="element.directdelivery">consegna con riordino entro il{{element.deliverydate}}</div>
+            			</div>
+            			<div class="large-2 small-6 columns">
+            				<div>€ {{formatCurrency(element.endprice)}}</div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row" ng-show="step == 1">
+            	<div class="large-12 small-12 columns" >
+            		<div class="row">
+            			<div class="large-2 small-4 columns">
+            				
+            			</div>
+            			<div class="large-4 small-6 columns">
+            				
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				TOTALE :
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				<div>€ {{formatCurrency(draft.total)}} </div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row" ng-show="step == 1">
+            	<div class="large-12 small-12 columns" >
+            		<div class="row">
+            			<div class="large-2 small-4 columns">
+            				<button class="button" ng-click="step = 2">Paga</button>
+           				</div>
+           				<div class="large-2 small-4 columns">
+            				<button class="button" ng-click="step = 0">Indietro</button>
+            			</div>
+            			
+            		</div>
+            	</div>
+            </div>
+            <!--  CONFIRMATION -->
+            <div class="row" ng-show="step == 3">
+            	<h4>Acquisto riuscito con successo</h4>
+            	<h5>Grazie per averci scelto. A breve riceverà una mail con tutti i dettagli riguardanti il suo acquisto</h5>
+            	<button class="button" ng-click="step = 0">Pagina iniziale</button>
+            </div>
+            <!-- SHOW PRODUCTS -->
+              <div class="row" ng-show="step == 0">
+     			
+                <div class="large-4 small-6 columns" ng-repeat="element in prodlist">
+                  <img class="ec_image" ng-src="{{element.product.photo}}">
+     
+                  <div class="panel panel_ec">
+                    <div class="ec_title" ng-bind="element.product.shortdescription"></div>
+                      <div class="ec_description" ng-bind="element.product.description"></div>
+                    <div  class="ec_quantity">
+                    	<select  ng-model="element.quantity" ng-change="updateChart(element,false)">
+                    		<option ng-repeat="o in element.range" value="{{o}}"  ng-selected="element.quantity == o" ng-bind="o"></option>
+                    	</select>
+                    </div>
+                    <h7 class="subheader" ng-bind="'€'+formatCurrency(element.endprice)"></h7>
+                   <div class="ec_delivery intime" ng-if="element.directdelivery" ng-bind="'consegna entro il '+element.deliverydate"></div>
+                  <!-- -->   <div class="ec_delivery late" ng-if="!element.directdelivery" ng-bind="'riordino entro il '+element.deliverydate"></div>
+                     <button ng-if="!element.added" class="button round small " ng-click="addToChart(element)" >Aggiungi al carrello <i class="fi-shopping-cart" ></i> </button>
+                    <button class="button round small alert " ng-if="element.added" ng-click="removeChart(element)">Elimina dal carrello <i class="fi-x" ></i></button>
+                    
+                   
+                 </div>
+                </div>
+     		</div>
+            <div ng-show="step == 0">
+            	<div class="small-8 columns ">
+						<pagination total-items="totalitems" items-per-page="pagesize_confirmed" page="page" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pages" ng-click="getProducts(page)"></pagination>
+					</div>
+            </div>
+         
+     
+     
+         
+              <div class="row">
+                <div class="large-12 columns">
+                  <div class="panel">
+                    <div class="row">
+     
+                      <div class="large-2 small-6 columns">
+                        <img src="assets/logo.jpg">
+                      </div>
+     
+                      <div class="large-10 small-6 columns">
+                        <strong>This Site Is Managed By<hr/></strong>
+     
+                        Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis
+                      </div>
+     
+                    </div>
+                  </div>
+                </div>
+     
+         
+     
+              </div>
+            </div>
+          </div>
+     
+     
+         
+     
+          <footer class="row">
+            <div class="large-12 columns"><hr/>
+              <div class="row">
+     
+                <div class="large-6 columns">
+                  <p>© Copyright no one at all. Go to town.</p>
+                </div>
+     
+                <div class="large-6 columns">
+                  <ul class="inline-list right">
+                    <li><a href="#">Link 1</a></li>
+                    <li><a href="#">Link 2</a></li>
+                    <li><a href="#">Link 3</a></li>
+                    <li><a href="#">Link 4</a></li>
+                  </ul>
+                </div>
+     
+              </div>
+            </div>
+          </footer>
+     
+         
+     
+        </div>
+      </div>
+    
+ <!--  <div class="large-3 large-centered columns">
+		<div class="login-box">
+			<div class="row">
+				<div class="large-12 columns">
+					<form>
+					    <div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="username" placeholder="Username" ng-model="login.username" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="password" name="password" placeholder="Password" ng-model="login.password" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 large-centered columns">
+								<input type="submit" class="button expand" value="Log In" ng-click="loginfunction()"/>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>-->

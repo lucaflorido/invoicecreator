@@ -6,6 +6,7 @@ import it.progess.invoicecreator.pojo.TblUser;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOSuccess;
+import it.progess.invoicecreator.vo.Role;
 import it.progess.invoicecreator.vo.User;
 import it.progess.transport.config.ProgessParameters;
 import it.progess.transport.vo.ProgessError;
@@ -383,5 +384,14 @@ public class UserDao {
 			return new GECOError("error",e.getMessage());
 		}
 	    return new GECOSuccess(u);
+	}
+	public int createEcUser(User user, String key){
+		user.setActive(false);
+		user.setPassword(HibernateUtils.md5Java(user.getPassword()));
+		user.setUsername(user.getEmail());
+		user.setCompany(new RegistryDao().getCompany(key));
+		Role role = new RoleDao().getRoleListEc().get(0);
+	    user.setRole(role);
+		return saveUpdate(user);
 	}
 }

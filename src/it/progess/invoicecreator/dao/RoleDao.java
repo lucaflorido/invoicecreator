@@ -45,6 +45,30 @@ public class RoleDao {
 		}
 		return list;
 	}
+	public ArrayList<Role> getRoleListEc(){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Role> list = new ArrayList<Role>();
+		try{
+			Criteria cr = session.createCriteria(TblRole.class,"role");
+			cr.add(Restrictions.eq("role.ec", true));
+			List roles = cr.list();
+			if (roles.size() > 0){
+				for (Iterator iterator = roles.iterator(); iterator.hasNext();){
+					TblRole tblrole = (TblRole)iterator.next();
+					Role role = new Role();
+					role.convertFromTable(tblrole);
+					list.add(role);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
 	public ArrayList<Role> saveUpdatesRoles(Role[] roles){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Role> list = new ArrayList<Role>();

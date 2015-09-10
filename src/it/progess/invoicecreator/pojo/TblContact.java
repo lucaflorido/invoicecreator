@@ -148,5 +148,22 @@ public class TblContact implements Itbl  {
 			this.user.convertToTableSave(co.getUser());
 		}
 	}
+	public void convertToTableCustomer(Ivo obj){
+		Contact co = (Contact)obj;
+		this.email1 = co.getEmail1();
+		this.email2 = co.getEmail2();
+		this.fax = co.getFax();
+		this.idcontact = co.getIdcontact();
+		this.mobile1 = co.getMobile1();
+		this.mobile2 = co.getMobile2();
+		this.phone1 = co.getPhone1();
+		this.phone2 = co.getPhone2();
+		this.reference = co.getReference();
+		if (co.getUser() != null){
+			this.user = new TblUser();
+			co.getUser().setContact(null);
+			this.user.convertToTableSave(co.getUser());
+		}
+	}
 	
 }
