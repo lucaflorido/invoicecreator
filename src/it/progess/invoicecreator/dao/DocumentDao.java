@@ -1526,7 +1526,7 @@ public class DocumentDao {
 		}
 		return r;
 	}
-	private Row checkRowProd(Head h, UnitMeasureProduct ump){
+	/*private Row checkRowProd(Head h, UnitMeasureProduct ump){
 		Row r = null;
 		if (h.getRows() == null){
 			Set<Row> rows = new HashSet<Row>();
@@ -1544,7 +1544,7 @@ public class DocumentDao {
 			h.getRows().add(r);
 		}
 		return r;
-	}
+	}*/
 	public GECOObject saveWizardHead(User user,Head h){
 		try{
 			Document d = new BasicDao().getDocumentOrderList(user).get(0);

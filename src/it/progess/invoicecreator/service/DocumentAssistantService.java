@@ -30,11 +30,8 @@ public class DocumentAssistantService {
 	  @POST
 	  @Path("headtotal")
 	  @Produces(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
 	  public String calculateHead(String data){
-=======
-	  public String saveHead(String data){
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 		  Gson gson = new Gson();
 		  HeadTotalCalculation sms = gson.fromJson(data,HeadTotalCalculation.class);
 		  sms.calculation();

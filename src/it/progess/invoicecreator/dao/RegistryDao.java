@@ -358,7 +358,6 @@ public class RegistryDao {
 	}
 	private Criteria setProductCriteria(SelectProductsFilter filter,Session session,User user){
 		Criteria cr = session.createCriteria(TblProduct.class,"product");
-<<<<<<< HEAD
 		cr =  setProductCriteria(cr,filter,session,user.getCompany().getCode(),"product");
 		cr.addOrder(Order.asc("product.code"));
 		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -375,10 +374,7 @@ public class RegistryDao {
 		//cr.add(Restrictions.eq("product.company.code",key ));
 		cr.createAlias("product.company", "company");
 		cr.add(Restrictions.eq("company.code",key ));
-=======
-		/*cr.add(Restrictions.eq("product.company.idCompany",user.getCompany().getIdCompany() ));
-		
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 		cr.setFirstResult(filter.getPagefilter().startelement);
 		cr.setMaxResults(filter.getPagefilter().pageSize);
 		if (filter.getBrand() != null){
@@ -405,46 +401,7 @@ public class RegistryDao {
 		if (filter.getSearchstring() != null && filter.getSearchstring().equals("") == false){
 			cr.add(Restrictions.disjunction(Restrictions.like(table_name+".code","%"+  filter.getSearchstring()+"%"),Restrictions.like(table_name+".description","%"+ filter.getSearchstring()+"%")));
 		}
-<<<<<<< HEAD
-=======
-		cr.addOrder(Order.asc("product.code"));
-		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		return cr;*/
-		cr =  setProductCriteria(cr,filter,session,user,"product");
-		cr.addOrder(Order.asc("product.code"));
-		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		return cr;
-	}
-	private Criteria setProductCriteria(Criteria cr,SelectProductsFilter filter,Session session,User user,String table_name){
-		cr.add(Restrictions.eq("product.company.idCompany",user.getCompany().getIdCompany() ));
-		
-		cr.setFirstResult(filter.getPagefilter().startelement);
-		cr.setMaxResults(filter.getPagefilter().pageSize);
-		if (filter.getBrand() != null){
-			cr.add(Restrictions.eq(table_name+".brand.idBrand", filter.getBrand().getIdBrand()));
-			
-		}
-		if (filter.getRegion() != null){
-			cr.add(Restrictions.eq(table_name+".region.idRegion", filter.getRegion().getIdRegion()));
-			
-		}
-		if (filter.getCategory() != null){
-			cr.add(Restrictions.eq(table_name+".category.idCategoryProduct", filter.getCategory().getIdCategoryProduct()));
-			
-		}
-		if (filter.getSubcategory() != null){
-			cr.add(Restrictions.eq(table_name+".subcategory.idSubCategoryProduct", filter.getSubcategory().getIdSubCategoryProduct()));
-		}
-		if (filter.getGroup() != null && filter.getGroup().getIdGroupProduct() != 0){
-			cr.add(Restrictions.eq(table_name+".group.idGroupProduct", filter.getGroup().getIdGroupProduct()));
-		}
-		if (filter.getSupplier() != null){
-			cr.add(Restrictions.eq(table_name+".supplier.idSupplier", filter.getSupplier().getIdSupplier()));
-		}
-		if (filter.getSearchstring() != null && filter.getSearchstring().equals("") == false){
-			cr.add(Restrictions.disjunction(Restrictions.like(table_name+".code","%"+  filter.getSearchstring()+"%"),Restrictions.like(table_name+".description","%"+ filter.getSearchstring()+"%")));
-		}
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 		/*cr.addOrder(Order.asc(table_name+".code"));
 		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);*/
 		return cr;
@@ -662,7 +619,7 @@ public class RegistryDao {
 		po.setTotalitems(counters);
 		return po;
 	}
-<<<<<<< HEAD
+
 	public PaginationObject getListPublicPagesNumber(int size,String key){
 		int pages = 0;
 		int counters = 0;
@@ -716,8 +673,7 @@ public class RegistryDao {
 		po.setTotalitems(counters);
 		return po;
 	}
-=======
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 	/*****
 	 * Search Products 
 	 */
@@ -1405,11 +1361,8 @@ public class RegistryDao {
 			Criteria cr = session.createCriteria(TblListProduct.class,"listproduct");
 			cr.add(Restrictions.eq("listproduct.list.idList", idlist));
 			cr.createAlias("listproduct.product", "product");
-<<<<<<< HEAD
 			cr = setProductCriteria(cr, filter, session, user.getCompany().getCode(), "product");
-=======
-			cr = setProductCriteria(cr, filter, session, user, "product");
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 			cr.addOrder(Order.asc("product.code"));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List list = cr.list();
@@ -1622,11 +1575,8 @@ public class RegistryDao {
 		User user = new User();
 		Customer sm = uc.getCustomer();
 		Role r = uc.getRole();
-<<<<<<< HEAD
 		user.setActive(false);
-=======
-		user.setActive(true);
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 		user.setName(sm.getNameUser());
 		user.setSurname(sm.getSurnameUser());
 		user.setEmail(sm.getContact().getEmail1());
@@ -2227,11 +2177,8 @@ public class RegistryDao {
 	}
 	public GECOObject createUserPromoter(User loggeduser,UserPromoter up){
 		User user = new User();
-<<<<<<< HEAD
 		user.setActive(false);
-=======
-		user.setActive(true);
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 		user.setName(up.getPromoter().getName());
 		user.setSurname(up.getPromoter().getSurname());
 		user.setEmail(up.getPromoter().getContact().getEmail1());
@@ -2318,7 +2265,6 @@ public class RegistryDao {
 		
 		return promoter;
 	}
-<<<<<<< HEAD
 	public ArrayList<PaymentSolution> getPaymentSolutionList(){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<PaymentSolution> list = new ArrayList<PaymentSolution>();
@@ -2363,6 +2309,5 @@ public class RegistryDao {
 		return true;
 		
 	}
-=======
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 }

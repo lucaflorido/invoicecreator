@@ -220,7 +220,6 @@ public class RegistryService {
 		return gson.toJson(dao.getListPagesNumber(size,loggeduser));
 	  }
 	  @GET
-<<<<<<< HEAD
 	  @Path("public/product/pages/{size}/{key}")
 	  @Produces(MediaType.TEXT_HTML)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -231,8 +230,7 @@ public class RegistryService {
 		return gson.toJson(dao.getListPublicPagesNumber(size,key));
 	  }
 	  @GET
-=======
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 	  @Path("listproduct/pages/{size}/{idlist}")
 	  @Produces(MediaType.TEXT_HTML)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -811,7 +809,7 @@ public class RegistryService {
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
 		  return gson.toJson(dao.createUserPromoter(loggeduser,up));
 	  }
-<<<<<<< HEAD
+
 	  @GET
 	  @Path("paymentsolution")
  	  @Produces(MediaType.TEXT_PLAIN)
@@ -820,6 +818,5 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		return gson.toJson(dao.getPaymentSolutionList());
 	  }
-=======
->>>>>>> refs/remotes/invoicecreator/styleapp
+
 }
