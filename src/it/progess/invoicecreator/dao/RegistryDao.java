@@ -7,6 +7,7 @@ import it.progess.invoicecreator.pojo.TblBank;
 import it.progess.invoicecreator.pojo.TblContact;
 import it.progess.invoicecreator.pojo.TblCustomer;
 import it.progess.invoicecreator.pojo.TblDestination;
+import it.progess.invoicecreator.pojo.TblEcDelivery;
 import it.progess.invoicecreator.pojo.TblHead;
 import it.progess.invoicecreator.pojo.TblList;
 import it.progess.invoicecreator.pojo.TblListCustomer;
@@ -19,6 +20,7 @@ import it.progess.invoicecreator.pojo.TblSupplier;
 import it.progess.invoicecreator.pojo.TblTransporter;
 import it.progess.invoicecreator.pojo.TblUnitMeasureProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
+import it.progess.invoicecreator.properties.MailParameter;
 import it.progess.invoicecreator.vo.Address;
 import it.progess.invoicecreator.vo.BankContact;
 import it.progess.invoicecreator.vo.CategoryCustomer;
@@ -176,6 +178,38 @@ public class RegistryDao {
 				if (sms.control() == null ){
 					TblCompany tblsm = new TblCompany();
 					tblsm.convertToTable(sms);
+					if (tblsm.getCode() == null || tblsm.getCode() == ""){
+						UUID ui = UUID.randomUUID();
+						tblsm.setCode(ui.toString());
+					}
+					session.saveOrUpdate(tblsm);
+				}else{
+					if (tx!= null) tx.rollback();
+					//session.close();
+					return sms.control();
+				}
+			
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return new GECOSuccess();
+	}
+	public GECOObject saveUpdatesCompany(Company sms,TblEcDelivery tec){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tx = session.beginTransaction();
+				if (sms.control() == null ){
+					TblCompany tblsm = new TblCompany();
+					tblsm.convertToTableSave(sms);
+					tblsm.setEcdelivery(tec);
 					if (tblsm.getCode() == null || tblsm.getCode() == ""){
 						UUID ui = UUID.randomUUID();
 						tblsm.setCode(ui.toString());
@@ -1456,8 +1490,7 @@ public class RegistryDao {
 				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
 					TblCustomer tblcustomer = iterator.next();
 					Customer customer = new Customer();
-					//customer = getMockCustomer();
-					customer.convertFromTable(tblcustomer);
+					customer.convertFromTableSingle(tblcustomer);
 					list.add(customer);
 				}
 			}else{
@@ -1548,12 +1581,12 @@ public class RegistryDao {
 				sm.setCompany(user.getCompany());
 				try{
 					tx = session.beginTransaction();
-					if (sm.getCustomername() != "" && sm.getCustomername() != null ){
+					
 							TblCustomer tblsm = new TblCustomer();
 							tblsm.convertToTableSingle(sm, tblsm);
 							session.saveOrUpdate(tblsm);
 							id=tblsm.getIdCustomer();
-					}
+					
 					tx.commit();
 				}catch(HibernateException e){
 					System.err.println("ERROR IN LIST!!!!!!");
@@ -1572,6 +1605,9 @@ public class RegistryDao {
 		return new GECOSuccess(id);
 	}
 	public GECOObject createUserCustomer(User loggeduser,UserCustomer uc){
+		if (uc.control() != null){
+			return uc.control();
+		}
 		User user = new User();
 		Customer sm = uc.getCustomer();
 		Role r = uc.getRole();
@@ -1580,25 +1616,30 @@ public class RegistryDao {
 		user.setName(sm.getNameUser());
 		user.setSurname(sm.getSurnameUser());
 		user.setEmail(sm.getContact().getEmail1());
-		user.setUsername(sm.getSurnameUser());
+		user.setUsername(sm.getContact().getEmail1());
 		user.setCompany(loggeduser.getCompany());
 		user.setContact(sm.getContact());
 		user.setRole(r);
 		UserDao usdao = new UserDao();
+		
 		usdao.saveUpdate(user);
-		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com","Test Email","http://localhost:8080/InvoiceCreator/rocchi/activate.html?code="+user.getCode());
+		/*EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com","Test Email","http://localhost:8080/InvoiceCreator/rocchi/activate.html?code="+user.getCode());
 		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
 		try{
 			EMailSender.send(message, config, "svnf0rl0s");
 			System.out.println("Email success");
 		}catch(MessagingException ex){
 			System.out.println(ex.getMessage());
-		}
-		return new GECOSuccess();
+		}*/
+		user.setPassword(user.getUsername());
+		return new MailDao().sendNewCustomerUser(loggeduser, user,MailParameter.NEW_USER_CUSTOMER_MAIL);
 	}
 	public GECOObject createCustomerFromUser(User user){
 		RegistryDao rd = new RegistryDao();
 		Customer sm = new Customer();
+		if (user.getAddress() == null){
+			user.setAddress(user.getDeliveryaddress());
+		}
 		sm.setCustomername(user.getName() + " " + user.getSurname());
 		sm.setCustomercode(user.getTaxcode().substring(0,10));
 		sm.setActive(true);
@@ -1612,7 +1653,44 @@ public class RegistryDao {
 		sm.setContact(user.getContact());
 		sm.setAddress(user.getAddress());
 		sm.setTaxcode(user.getTaxcode());
+		if(user.getDeliveryaddress().getCode() == null){
+			UUID ui = UUID.randomUUID();
+			user.getDeliveryaddress().setCode(ui.toString());
+			Destination d = new Destination();
+			d.setActive(true);
+			d.setDestinationname(user.getDeliveryaddress().getAddress()+" "+user.getDeliveryaddress().getNumber());
+			d.setDestinationcode("0001");
+			d.setTaxcode(user.getTaxcode());
+			d.setAddress(user.getDeliveryaddress());
+			if (sm.getDestinations() == null){
+				sm.setDestinations(new HashSet<Destination>());
+			}
+			sm.getDestinations().add(d);
+		}
 		return rd.saveUpdatesCustomer(sm, user);
+	}
+	public GECOObject createDestinationFromUser(User user){
+		if(user.getDeliveryaddress().getCode() == null){
+			RegistryDao rd = new RegistryDao();
+			Customer sm = rd.getCustomerFromUser(user);
+			UUID ui = UUID.randomUUID();
+			user.getDeliveryaddress().setCode(ui.toString());
+			Destination d = new Destination();
+			d.setActive(true);
+			d.setDestinationname(user.getDeliveryaddress().getAddress()+" "+user.getDeliveryaddress().getNumber());
+			d.setDestinationcode("0001");
+			d.setTaxcode(user.getTaxcode());
+			d.setAddress(user.getDeliveryaddress());
+			sm.setDestinations(new HashSet<Destination>(rd.getCustomerDestinationList(sm.getIdCustomer())));
+			if (sm.getDestinations() == null){
+				sm.setDestinations(new HashSet<Destination>());
+			}
+			sm.getDestinations().add(d);
+			rd.saveUpdatesCustomer(sm, user);
+			user.setContact(sm.getContact());
+			new UserDao().saveUpdate(user);
+		}
+		return new GECOSuccess();
 	}
 	public GECOObject saveUpdatesCustomer(Customer sm,Session session){
 		int id=0;

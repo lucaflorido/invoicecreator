@@ -21,6 +21,29 @@ public class HeadTotalCalculation {
 	private float withholdingtax;
 	private float total0;
 	private float amount0;
+	private float commission;
+	private float commissionamount;
+	private float deliverycost;
+	public float getCommissionamount() {
+		return commissionamount;
+	}
+	public void setCommissionamount(float commissionamount) {
+		this.commissionamount = commissionamount;
+	}
+	
+	
+	public float getCommission() {
+		return commission;
+	}
+	public void setCommission(float commission) {
+		this.commission = commission;
+	}
+	public float getDeliverycost() {
+		return deliverycost;
+	}
+	public void setDeliverycost(float deliverycost) {
+		this.deliverycost = deliverycost;
+	}
 	public float getAmount0() {
 		return amount0;
 	}
@@ -134,6 +157,8 @@ public class HeadTotalCalculation {
 			Row row = itr.next();
 			this.setTaxesAmount(row.getTaxrate(), row);
 		}
+		this.deliverycost = head.getDeliverycost();
+		this.commission = head.getCommission();
 		
 		this.amount = this.amount4 + this.amount10+ this.amount20+this.amount0;
 		this.taxamount = this.taxamount4 + this.taxamount10+ this.taxamount20;
@@ -144,7 +169,12 @@ public class HeadTotalCalculation {
 		}else{
 			head.setWithholdingtax(0);
 		}
-		this.total = this.total4 + this.total10+ this.total20+this.total0-head.getWithholdingtax();
+		this.total = this.total4 + this.total10+ this.total20+this.total0-head.getWithholdingtax()+this.deliverycost;
+		if (this.commission > 0){
+			this.commissionamount = HibernateUtils.calculatePercentage(this.total,this.commission);
+			this.total = this.total +this.commissionamount;
+			head.setCommissionamount(this.commissionamount);
+		}
 		head.setAmount(HibernateUtils.roundfloat(amount));
 		head.setTaxamount(HibernateUtils.roundfloat(taxamount));
 		head.setTotal(HibernateUtils.roundfloat(total));

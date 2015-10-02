@@ -49,7 +49,34 @@ public class Head implements Ivo {
 	private TaxRate taxrate;
 	private String userinsert;
 	private String dateinsert;
-	
+	private float deliverycost;
+	private float commission;
+	private float commissionamount;
+	private String deliverydate;
+	public String getDeliverydate() {
+		return deliverydate;
+	}
+	public void setDeliverydate(String deliverydate) {
+		this.deliverydate = deliverydate;
+	}
+	public float getCommissionamount() {
+		return commissionamount;
+	}
+	public void setCommissionamount(float commissionamount) {
+		this.commissionamount = commissionamount;
+	}
+	public float getDeliverycost() {
+		return deliverycost;
+	}
+	public void setDeliverycost(float deliverycost) {
+		this.deliverycost = deliverycost;
+	}
+	public float getCommission() {
+		return commission;
+	}
+	public void setCommission(float commission) {
+		this.commission = commission;
+	}
 	public String getUserinsert() {
 		return userinsert;
 	}
@@ -283,6 +310,7 @@ public class Head implements Ivo {
 		this.amount20 = h.getAmount20();
 		this.amount4 = h.getAmount4();
 		this.date =DataUtilConverter.convertStringFromDate(h.getDate());
+		this.deliverydate =DataUtilConverter.convertStringFromDate(h.getDeliverydate());
 		this.idHead = h.getIdHead();
 		this.note = h.getNote();
 		this.number = h.getNumber();
@@ -295,6 +323,9 @@ public class Head implements Ivo {
 		this.total20 = h.getTotal20();
 		this.total4 = h.getTotal4();
 		this.disable = h.isDisable();
+		this.deliverycost = h.getDeliverycost();
+		this.commission = h.getCommission();
+		this.commissionamount = h.getCommissionamount();
 		if (h.getDestination() != null){
 			this.destination = new Destination();
 			this.destination.convertFromTable(h.getDestination());

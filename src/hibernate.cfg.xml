@@ -109,6 +109,15 @@
   		<mapping class="it.progess.invoicecreator.pojo.TblEcPayment"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblDraft"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblEcPaymentCompany"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCountry"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblZone"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCity"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblEcDelivery"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDeliveryCountry"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDeliveryDeliveryCountry"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDeliveryZone"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDeliveryCity"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblMailText"></mapping>
   	</session-factory>  
   
 </hibernate-configuration>  

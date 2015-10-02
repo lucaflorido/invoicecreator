@@ -17,6 +17,8 @@ public class PrintSingleHead extends PrintCompany {
 	public String cliente_ragionesociale;
 	public String cliente_indirizzo;
 	public String cliente_indirizzo2;
+	public String destinazione_indirizzo;
+	public String destinazione_indirizzo2;
 	public String cliente_pi;
 	public String cliente_cf;
 	public String prodotto_codice= "";
@@ -53,6 +55,40 @@ public class PrintSingleHead extends PrintCompany {
 	public String ritenuta;
 	public String percritenuta;
 	public TreeSet<TaxRateCollection> aliquote;
+	public String commissione;
+	public String importo_commissione;
+	public String trasporto;
+	
+	public String getDestinazione_indirizzo() {
+		return destinazione_indirizzo;
+	}
+	public void setDestinazione_indirizzo(String destinazione_indirizzo) {
+		this.destinazione_indirizzo = destinazione_indirizzo;
+	}
+	public String getDestinazione_indirizzo2() {
+		return destinazione_indirizzo2;
+	}
+	public void setDestinazione_indirizzo2(String destinazione_indirizzo2) {
+		this.destinazione_indirizzo2 = destinazione_indirizzo2;
+	}
+	public String getCommissione() {
+		return commissione;
+	}
+	public void setCommissione(String commissione) {
+		this.commissione = commissione;
+	}
+	public String getImporto_commissione() {
+		return importo_commissione;
+	}
+	public void setImporto_commissione(String importo_commissione) {
+		this.importo_commissione = importo_commissione;
+	}
+	public String getTrasporto() {
+		return trasporto;
+	}
+	public void setTrasporto(String trasporto) {
+		this.trasporto = trasporto;
+	}
 	public TreeSet<TaxRateCollection> getAliquote() {
 		return aliquote;
 	}
@@ -116,6 +152,10 @@ public class PrintSingleHead extends PrintCompany {
 			this.cliente_indirizzo2 = getValue(head.getCustomer().getAddress().getZipcode()+" "+head.getCustomer().getAddress().getCity()+" ("+head.getCustomer().getAddress().getZone()+")");
 			this.cliente_pi =getValue( head.getCustomer().getSerialnumber());
 			this.cliente_cf = getValue(head.getCustomer().getTaxcode());
+			if(head.getDestination() != null){
+				this.destinazione_indirizzo = getValue(head.getDestination().getAddress().getAddress()+" "+head.getDestination().getAddress().getNumber());
+				this.destinazione_indirizzo2 = getValue(head.getDestination().getAddress().getZipcode()+" "+head.getDestination().getAddress().getCity()+" ("+head.getDestination().getAddress().getZone()+")");
+			}
 		}else if (head.getSupplier() != null && head.getDocument().getSupplier() == true){
 			this.cliente_codice = getValue(head.getSupplier().getSuppliercode());
 			this.cliente_ragionesociale =getValue( head.getSupplier().getSuppliername());
@@ -149,6 +189,9 @@ public class PrintSingleHead extends PrintCompany {
 			this.imp = getValue(forceTwoDecimal(String.valueOf( head.getAmount())));
 			this.iva = getValue(forceTwoDecimal(String.valueOf( head.getTaxamount())));
 			this.tot = getValue(forceTwoDecimal(String.valueOf( head.getTotal())));
+			this.trasporto = getValue(forceTwoDecimal(String.valueOf( head.getDeliverycost())));
+			this.commissione = getValue(forceTwoDecimal(String.valueOf( head.getCommission())));
+			this.importo_commissione = getValue(forceTwoDecimal(String.valueOf( head.getCommissionamount())));
 			this.ritenuta =getValue( forceTwoDecimal(String.valueOf( head.getWithholdingtax())));
 			if (head.getTaxrate() != null){
 				this.percritenuta = getValue(removeDecimal(String.valueOf( head.getTaxrate().getValue())));

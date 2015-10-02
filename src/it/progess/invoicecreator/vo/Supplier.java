@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class Supplier implements Ivo{
+public class Supplier extends RegistryVO{
 	private int idSupplier;
 	private String suppliername;
 	private String suppliercode;
@@ -105,6 +105,7 @@ public class Supplier implements Ivo{
 	public void setLists(Set<ListSupplier> lists) {
 		this.lists = lists;
 	}
+	@Override
 	public void convertFromTable(Itbl obj){
 		TblSupplier c = (TblSupplier)obj;
 		this.active = c.isActive();
@@ -158,6 +159,7 @@ public class Supplier implements Ivo{
 		}
 		
 	}
+	@Override
 	public GECOError control(){
 		GECOError er = null;
 		if (this.suppliercode == null || this.suppliercode ==""){

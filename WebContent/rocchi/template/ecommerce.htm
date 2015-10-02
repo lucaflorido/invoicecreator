@@ -11,7 +11,57 @@
      	<div class="large-4 small-12 columns">
      
               <img  src="assets/rocchilogo.png">
-     
+              <div>
+              	<form>
+              		<div class="row"  ng-hide="perm.user">
+					    <div class="four columns" ng-hide="showUIDRecover || showPWDRecover">
+					      <input type="text" placeholder="username *" ng-model="login.username" />
+					    </div>
+					    <div class="four columns" ng-show="showUIDRecover">
+					      <input type="text" placeholder="codice fiscale *" ng-model="recoverUE" />
+					    </div>
+					    <div class="four columns" ng-show="showPWDRecover">
+					      <input type="text" placeholder="codice fiscale *" ng-model="recoverPW" />
+					    </div>
+					    <div class="four columns" ng-hide="showUIDRecover || showPWDRecover">
+					      <a ng-click="showUIDRecover = true">username dimenticato?</a>
+					    </div>
+					    <div class="four columns" ng-hide="showUIDRecover || showPWDRecover">
+					      <input type="password" placeholder="password *"  ng-model="login.password" />
+					    </div>
+					    <div class="four columns" ng-hide="showUIDRecover || showPWDRecover">
+					      <a  ng-click="showPWDRecover = true" >password dimenticata?</a>
+					    </div>
+					    <div class="four columns" ng-hide="showUIDRecover || showPWDRecover">
+					      <button class="button expand" ng-click="loginfunction()">Login</button>
+					     </div>
+					     <div class="four columns" ng-hide="showUIDRecover || showPWDRecover">
+					      <button class="button expand" ng-click="signup()" >Registrati</button>
+					    </div>
+					    <div class="four columns" ng-show="showUIDRecover  ">
+					      <button class="button expand" ng-click="recoverUsername()">Recupera</button>
+					      <button class="button expand" ng-click="showUIDRecover = false">Indietro</button>
+					    </div>
+					    <div class="four columns" ng-show="showPWDRecover  ">
+					      <button class="button expand" ng-click="recoverPassword()">Recupera</button>
+					      <button class="button expand" ng-click="showPWDRecover = false">Indietro</button>
+					    </div>
+					 </div>
+					 
+					 <div class="row"  ng-show="perm.user">
+					    <div class="two columns">
+					      <i class="fi-torso"></i>
+					    </div>
+					    <div class="four columns">
+					      {{perm.user.username}}
+					    </div>
+					    <div class="four columns">
+					      <button class="button expand" ng-click="logout()">Logout</button>
+					      
+					    </div>
+					 </div>
+              	</form>
+              </div>
               <div class="hide-for-small panel">
                 <div class="row">
 					<form>
@@ -82,8 +132,13 @@
             </div>
      		<div class="large-8 columns">
             <!-- LOGIN AND PAY  -->
+            <div class="row"  ng-show="step == 2"  >
+							<div class="large-12 large-centered columns">
+								<button ng-show="enable_registration"  class="button " value="Indietro" ng-click="enable_registration = false">Indietro</button>
+							</div>
+						</div>
             <div class="row" ng-show="step == 2">
-            	<div class="large-6 large-centered small-12 columns" ng-hide="perm.user" >
+            	<div class="large-8 large-centered small-12 columns" ng-hide="perm.user" >
             		<form ng-hide="enable_registration">
 					    <div class="row">
 							<div class="large-12 columns">
@@ -98,10 +153,10 @@
 						<div class="row">
 							<div class="large-12 large-centered columns">
 								<div class="row">
-			            			<div class="large-2 small-4 columns">
+			            			<div class="large-4 small-4 columns">
 			            				<button class="button " ng-click="loginfunction()">Log In</button>
 			           				</div>
-			           				<div class="large-2 small-4 columns">
+			           				<div class="large-4 small-4 columns">
 			            				<button class="button" ng-click="enable_registration = true">Registrati</button>
 			            			</div>
 			            			
@@ -133,35 +188,12 @@
 						</div>
 						<div class="row">
 							<div class="large-12 columns">
-								<input type="text" name="email" placeholder="Email *" ng-model="draftFactory.user.email" />
-							</div>
-						</div>
-						<div class="row">
-							<div class="large-12 columns">
 								<input type="text" name="phone" placeholder="Telefono *" ng-model="draftFactory.user.phone" />
 							</div>
 						</div>
-					    <div class="row">
-							<div class="large-8 columns">
-								<input type="text" name="street" placeholder="Indirizzo *" ng-model="draftFactory.user.address.address" />
-							</div>
-							<div class="large-4 columns">
-								<input type="text" name="number" placeholder="Civico *" ng-model="draftFactory.user.address.number" />
-							</div>
-						</div>
 						<div class="row">
 							<div class="large-12 columns">
-								<input type="text" name="city" placeholder="Città *" ng-model="draftFactory.user.address.city" />
-							</div>
-						</div>
-						<div class="row">
-							<div class="large-12 columns">
-								<input type="text" name="zipcode" placeholder="CAP *" ng-model="draftFactory.user.address.zipcode" />
-							</div>
-						</div>
-						<div class="row">
-							<div class="large-12 columns">
-								<input type="text" name="zone" placeholder="Provincia *" ng-model="draftFactory.user.address.zone" />
+								<input type="text" name="email" placeholder="Email *" ng-model="draftFactory.user.email" />
 							</div>
 						</div>
 						<div class="row">
@@ -174,10 +206,73 @@
 								<input type="password" name="password" placeholder="Conferma Password" ng-model="draftFactory.user.confirmpassword" />
 							</div>
 						</div>
+					  <!--   <div class="row">
+							<div class="large-8 columns">
+								<input type="text" name="street" placeholder="Indirizzo *" ng-model="draftFactory.user.deliveryaddress.address" />
+							</div>
+							<div class="large-4 columns">
+								<input type="text" name="number" placeholder="Civico *" ng-model="draftFactory.user.deliveryaddress.number" />
+							</div>
+						</div>
 						
 						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" ng-model="draftFactory.user.deliveryaddress.countryObj" typeahead="state as state.name for state in countries | orderBy:'name' | filter:$viewValue " 
+			            			 typeahead-editable="true" placeholder="Nazione *"
+			            			 typeahead-on-select="onSelect($item, $model, $label)"
+			            			 class="form-control" ng-change="calculateTransportPrice()">
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" ng-model="draftFactory.user.deliveryaddress.zoneObj" typeahead="zone as zone.name for zone in zones | orderBy:'name' | filter:$viewValue " 
+            			 typeahead-editable="true" placeholder="Provincia*"
+            			 typeahead-on-select="onSelectZone($item, $model, $label)"
+            			 class="form-control" ng-change="zoneChange()"  ng-disabled="!draftFactory.user.deliveryaddress.countryObj || draftFactory.user.deliveryaddress.countryObj == '' ">
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" ng-model="draftFactory.user.deliveryaddress.cityObj" typeahead="city as city.name for city in cities | orderBy:'name' | filter:$viewValue " 
+			            			 typeahead-editable="true" placeholder="Città*"
+			            			 typeahead-on-select="onSelectCity($item, $model, $label)"
+			            			 class="form-control" ng-change="cityChange()"  ng-disabled="!draftaddress.countryObj">
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="zipcode" placeholder="CAP *" ng-model="draftFactory.user.deliveryaddress.zipcode" />
+							</div>
+						</div>
+						
+						--> 
+						 <div class="row"  >
 							<div class="large-12 large-centered columns">
-								<button  class="button expand" value="Indietro" ng-click="enable_registration = false"></button>
+								Per inserire un diverso indirizzo di fatturazione clicca il bottone 
+								<button  class="button "  ng-click="showDeliveryAddress = !showDeliveryAddress">Indirizzo fatturazione</button>
+							</div>
+						</div>
+						<div class="row" ng-show="showDeliveryAddress">
+							<div class="large-8 columns">
+								<input type="text" name="street" placeholder="Indirizzo *" ng-model="draftFactory.user.address.address" />
+							</div>
+							<div class="large-4 columns">
+								<input type="text" name="number" placeholder="Civico *" ng-model="draftFactory.user.address.number" />
+							</div>
+						</div>
+						<div class="row" ng-show="showDeliveryAddress">
+							<div class="large-12 columns">
+								<input type="text" name="city" placeholder="Città *" ng-model="draftFactory.user.address.city" />
+							</div>
+						</div>
+						<div class="row" ng-show="showDeliveryAddress">
+							<div class="large-12 columns">
+								<input type="text" name="zipcode" placeholder="CAP *" ng-model="draftFactory.user.address.zipcode" />
+							</div>
+						</div>
+						<div class="row" ng-show="showDeliveryAddress">
+							<div class="large-12 columns">
+								<input type="text" name="zone" placeholder="Provincia *" ng-model="draftFactory.user.address.zone" />
 							</div>
 						</div>
 					</form>
@@ -195,7 +290,7 @@
             	Pagamenti 
             	<form >
             		
-            		<label ng-repeat="ecp in ecpayments"><input type="radio" name="paymentmethod" ng-model="paymentValue.code" ng-value="ecp.ecpayment.paysolution.code" >  {{ecp.ecpayment.paysolution.name}}</label>
+            		<label ng-repeat="ecp in ecpayments"><input type="radio" name="paymentmethod" ng-model="paymentValue.code" ng-value="ecp.ecpayment.paysolution.code" ng-click="commissionCalculation(ecp)" >  {{ecp.ecpayment.paysolution.name}}</label>
             		
             	<!--  	<label><input type="radio" name="paymentmethod" ng-model="paymentValue" value="paypal" >Paypal</label>
             		<label><input type="radio" name="paymentmethod" ng-model="paymentValue" value="cc"  >Carta di credito</label>
@@ -249,7 +344,113 @@
             		</div>
             	</div>
             </div>
-            <div class="row" ng-show="step == 1">
+           
+             <div class="row" ng-show="step == 1">
+             			<div class="row" >
+							<h4>Indirizzo di consegna</h4>
+						</div>
+             			
+						
+						<div class="row" ng-show="draftFactory.user.destinations" >
+							<div class="large-12 columns" ng-repeat= "dest in draftFactory.user.destinations ">
+								<input type="radio"  name="delivery" ng-value="dest" ng-model="selectedDestination" ng-click="setDestination(selectedDestination)" /> {{dest.address.address}} {{dest.address.number}} {{dest.address.city}} {{dest.address.zone}} {{dest.address.country}}
+							</div>
+						</div>
+						<div class="row" ng-show="draftFactory.user.destinations" >
+							<div class="large-12 columns" >
+								<button class="button" ng-click="newDeliveryAddress()" >Nuovo Indirizzo </button>
+							</div>
+						</div>
+						<div class="row" >
+							<div class="large-8 columns">
+								<input type="text" name="street" placeholder="Indirizzo *" ng-model="draftaddress.address" />
+							</div>
+							<div class="large-4 columns">
+								<input type="text" name="number" placeholder="Civico *" ng-model="draftaddress.number" />
+							</div>
+						</div>
+						<div class="row" >
+							<div class="large-12 columns">
+								<input type="text" ng-model="draftaddress.countryObj" typeahead="state as state.name for state in countries | orderBy:'name' | filter:$viewValue " 
+			            			 typeahead-editable="true" placeholder="Nazione*"
+			            			 typeahead-on-select="onSelect($item, $model, $label)"
+			            			 class="form-control" ng-change="calculateTransportPrice()">
+							</div>
+						</div>
+						<div class="row" >
+							<div class="large-12 columns">
+								<input type="text" ng-model="draftaddress.zoneObj" typeahead="zone as zone.name for zone in zones | orderBy:'name' | filter:$viewValue " 
+            			 typeahead-editable="true" placeholder="Provincia*"
+            			 typeahead-on-select="onSelectZone($item, $model, $label)"
+            			 class="form-control" ng-change="zoneChange()"  ng-disabled="!draftaddress.countryObj || draftaddress.countryObj == '' ">
+							</div>
+						</div>
+						<div class="row" >
+							<div class="large-12 columns">
+								<input type="text" ng-model="draftaddress.cityObj" typeahead="city as city.name for city in cities | orderBy:'name' | filter:$viewValue " 
+			            			 typeahead-editable="true" placeholder="Città*"
+			            			 typeahead-on-select="onSelectCity($item, $model, $label)"
+			            			 class="form-control" ng-change="cityChange()"  ng-disabled="!draftaddress.countryObj">
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="zipcode" placeholder="CAP *" ng-model="draftaddress.zipcode" />
+							</div>
+						</div>
+						
+            	<!--  <div class="large-4 medium-6 small-12 columns" >
+            		Nazione:
+            		<div class="row">
+            			<input type="text" ng-model="draftaddress.countryObj" typeahead="state as state.name for state in countries | orderBy:'name' | filter:$viewValue " 
+            			 typeahead-editable="true"
+            			 typeahead-on-select="onSelect($item, $model, $label)"
+            			 class="form-control" ng-change="calculateTransportPrice()">
+            		</div>
+            	</div>
+            	<div class="large-4 medium-6 small-12 columns" >
+            		Provincia:
+            		<div class="row">
+            			
+            		</div>
+            	</div>
+            	<div class="large-4 medium-6 small-12 columns" >
+            		City:
+            		<div class="row">
+            			<input type="text" ng-model="draftaddress.cityObj" typeahead="city as city.name for city in cities | orderBy:'name' | filter:$viewValue " 
+            			 typeahead-editable="true"
+            			 typeahead-on-select="onSelectCity($item, $model, $label)"
+            			 class="form-control" ng-change="cityChange()"  ng-disabled="!draftaddress.countryObj">
+            		</div>
+            	</div>-->
+            </div>
+             <div class="row" ng-show="step == 1">
+            	<div class="large-6 small-12 columns" >
+            		Costo:
+            		<input type="text" ng-model="draft.deliverycost.price" value="{{draft.deliverycost.price}}" />
+            	</div>
+            	<div class="large-6 small-12 columns" >
+            		Limite trasporto gratuito:
+            		<input type="text" ng-model="draft.deliverycost.bound" value="{{draft.deliverycost.bound}}" />
+            	</div>
+           	</div>
+           	 <div class="row" ng-show="step == 1">
+           	 	<div class="large-12 small-12 columns" >
+            		<div class="row">
+            			<div class="large-2 small-4 columns">
+            				
+            			</div>
+            			<div class="large-4 small-6 columns">
+            				
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				TOTALE PRODOTTI:
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				<div>€ {{formatCurrency(draft.amount)}} </div>
+            			</div>
+            		</div>
+            	</div>
             	<div class="large-12 small-12 columns" >
             		<div class="row">
             			<div class="large-2 small-4 columns">
@@ -259,7 +460,23 @@
             				
             			</div>
             			<div class="large-3 small-6 columns">
-            				TOTALE :
+            				TRASPORTO :
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				<div>€ {{formatCurrency(draft.delcost)}} </div>
+            			</div>
+            		</div>
+            	</div>
+            	<div class="large-12 small-12 columns" >
+            		<div class="row">
+            			<div class="large-2 small-4 columns">
+            				
+            			</div>
+            			<div class="large-4 small-6 columns">
+            				
+            			</div>
+            			<div class="large-3 small-6 columns">
+            				TOTALE CARRELLO :
             			</div>
             			<div class="large-3 small-6 columns">
             				<div>€ {{formatCurrency(draft.total)}} </div>
@@ -271,7 +488,7 @@
             	<div class="large-12 small-12 columns" >
             		<div class="row">
             			<div class="large-2 small-4 columns">
-            				<button class="button" ng-click="step = 2">Paga</button>
+            				<button class="button" ng-click="gotoPay()">Paga</button>
            				</div>
            				<div class="large-2 small-4 columns">
             				<button class="button" ng-click="step = 0">Indietro</button>

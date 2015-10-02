@@ -39,7 +39,7 @@ var GECO_LOGGEDUSER = function(){
 					
 				}else{
 					$(".header").css("display","none");
-					$(window.location).attr('href', '#/');
+					//$(window.location).attr('href', '#/');
 					
 				}
 			}	

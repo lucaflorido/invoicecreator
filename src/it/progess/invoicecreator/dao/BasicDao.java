@@ -11,6 +11,7 @@ import it.progess.invoicecreator.pojo.TblGroupCustomer;
 import it.progess.invoicecreator.pojo.TblGroupProduct;
 import it.progess.invoicecreator.pojo.TblGroupSupplier;
 import it.progess.invoicecreator.pojo.TblPayment;
+import it.progess.invoicecreator.pojo.TblPaymentSolution;
 import it.progess.invoicecreator.pojo.TblRegion;
 import it.progess.invoicecreator.pojo.TblStoreMovement;
 import it.progess.invoicecreator.pojo.TblSubCategoryProduct;
@@ -29,6 +30,7 @@ import it.progess.invoicecreator.vo.GroupCustomer;
 import it.progess.invoicecreator.vo.GroupProduct;
 import it.progess.invoicecreator.vo.GroupSupplier;
 import it.progess.invoicecreator.vo.Payment;
+import it.progess.invoicecreator.vo.PaymentSolution;
 import it.progess.invoicecreator.vo.Region;
 import it.progess.invoicecreator.vo.StoreMovement;
 import it.progess.invoicecreator.vo.SubCategoryProduct;
@@ -1469,5 +1471,28 @@ public class BasicDao {
 			session.close();
 		}
 		return new GECOSuccess();
+	}
+	public ArrayList<PaymentSolution> getPaymentSolutionList(){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<PaymentSolution> list = new ArrayList<PaymentSolution>();
+		try{
+			Criteria cr = session.createCriteria(TblPaymentSolution.class);
+			List<TblPaymentSolution> payments = cr.list();
+			if (payments.size() > 0){
+				for (Iterator<TblPaymentSolution> iterator = payments.iterator(); iterator.hasNext();){
+					TblPaymentSolution tblpayment = iterator.next();
+					PaymentSolution payment = new PaymentSolution();
+					payment.convertFromTable(tblpayment);
+					list.add(payment);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
 	}
 }

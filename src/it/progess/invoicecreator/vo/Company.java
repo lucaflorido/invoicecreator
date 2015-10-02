@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblCompany;
+import it.progess.invoicecreator.pojo.TblEcDelivery;
 import it.progess.invoicecreator.pojo.TblEcPaymentCompany;
 import it.progess.invoicecreator.pojo.TblMailConfigCompany;
 import it.progess.invoicecreator.properties.GECOParameter;
@@ -27,6 +28,13 @@ public class Company implements Ivo {
 	private Set<MailConfigCompany> mailconfig;
 	private String code; 
 	private Set<EcPaymentCompany> ecpayments;
+	private EcDelivery ecdelivery;
+	public EcDelivery getEcdelivery() {
+		return ecdelivery;
+	}
+	public void setEcdelivery(EcDelivery ecdelivery) {
+		this.ecdelivery = ecdelivery;
+	}
 	public Set<EcPaymentCompany> getEcpayments() {
 		return ecpayments;
 	}
@@ -139,6 +147,10 @@ public class Company implements Ivo {
 				listp.convertFromTable(mailconf);
 				this.mailconfig.add(listp);
 			}
+		}
+		if (co.getEcdelivery() != null){
+			this.ecdelivery = new EcDelivery();
+			this.ecdelivery.convertFromTable(co.getEcdelivery());
 		}
 	}
 	public GECOError control(){

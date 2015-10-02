@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import it.progess.invoicecreator.vo.Company;
+import it.progess.invoicecreator.vo.EcDelivery;
 import it.progess.invoicecreator.vo.EcPaymentCompany;
 import it.progess.invoicecreator.vo.Ivo;
 
@@ -60,11 +61,19 @@ public class TblCompany implements Itbl {
 	private Set<TblMailConfigCompany> mailconfig;
 	@Column(name="code")
 	private String code;
-	@OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "company",cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
 	private Set<TblEcPaymentCompany> ecpayments;
-	
-	
+	@ManyToOne
+	@JoinColumn(name="idEcDelivery", insertable = false, updatable = false)
+	@Fetch(FetchMode.SELECT)
+	private TblEcDelivery ecdelivery;
+	public TblEcDelivery getEcdelivery() {
+		return ecdelivery;
+	}
+	public void setEcdelivery(TblEcDelivery ecdelivery) {
+		this.ecdelivery = ecdelivery;
+	}
 	public Set<TblEcPaymentCompany> getEcpayments() {
 		return ecpayments;
 	}
@@ -180,6 +189,10 @@ public class TblCompany implements Itbl {
 				this.mailconfig.add(listp);
 			}
 		}
+		if (co.getEcdelivery() != null){
+			this.ecdelivery = new TblEcDelivery();
+			this.ecdelivery.convertToTable(co.getEcdelivery());
+		}
 		
 	}
 	
@@ -208,5 +221,6 @@ public class TblCompany implements Itbl {
 		}else{
 			this.ecpayments = null;
 		}
+		
 	}
 }

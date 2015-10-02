@@ -1,8 +1,11 @@
 package it.progess.invoicecreator.dao;
 
 import it.progess.invoicecreator.hibernate.HibernateUtils;
+import it.progess.invoicecreator.pojo.TblCustomer;
 import it.progess.invoicecreator.pojo.TblRole;
 import it.progess.invoicecreator.pojo.TblUser;
+import it.progess.invoicecreator.vo.Contact;
+import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOSuccess;
@@ -104,10 +107,35 @@ public class UserDao {
 	 * Check if exists the credentials are correct
 	 * @return
 	 */
-	public ProgessObject checkCredentials(String username,String password,HttpSession session){
+	public ProgessObject checkCredentials(String username,String password,HttpSession session,boolean ecommerce){
 		ProgessObject obj = checkCredentials(username,password);
 		if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS)){
-			session.setAttribute("user",new Gson().toJson(((ProgessSuccess)obj).getSuccess()));
+			ProgessSuccess ps = (ProgessSuccess)obj;
+			User u =(User)ps.getSuccess();
+			if (ecommerce == false){
+				if (u.getEntity() instanceof Customer){
+					Customer c = (Customer)u.getEntity();
+					if (c.isIsprivate() == true){
+						return new ProgessError("err","Utente non autorizzato");
+					}else{
+						session.setAttribute("user",new Gson().toJson(((ProgessSuccess)obj).getSuccess()));
+					}
+				}else{
+					session.setAttribute("user",new Gson().toJson(((ProgessSuccess)obj).getSuccess()));
+				}
+			}else{
+				if (u.getEntity() instanceof Customer){
+					Customer c = (Customer)u.getEntity();
+					if (c.isIsprivate() == true){
+						session.setAttribute("user",new Gson().toJson(((ProgessSuccess)obj).getSuccess()));
+					}else{
+						return new ProgessError("err","Utente non autorizzato");
+					}
+				}else{
+					return new ProgessError("err","Utente non autorizzato");
+				}
+			}
+			
 		}
 		return obj;
 	}
@@ -344,24 +372,33 @@ public class UserDao {
 	/**
 	 * Change the user password
 	 * **/
-	public int changePassword(User user){
+	public GECOObject changePassword(User user){
 		TblUser tbluser = new TblUser();
-		int iduser=0;
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		if (user.getNewpassword().equals(user.getConfirmpassword()) == false){
+			return new GECOError("PWD", "La nuova Password è differente dalla conferma");
+		}
+		if (user.getNewpassword().equals("") == true || user.getNewpassword().equals(null) == true){
+			return new GECOError("PWD", "La nuova Password non puo' essere vuota");
+		}
 		try{
-			ProgessObject obj = this.checkCredentials(user.getUsername(), user.getPassword());
-				if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS)){
+			ProgessObject obj = this.checkCredentials(user.getUsername(), user.getOldpassword());
+			if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS) == true){
 					ProgessSuccess ps = (ProgessSuccess)obj;
 					User checkeduser = (User)ps.getSuccess();	
-					if (checkeduser.getIduser() == user.getIduser() && user.getNewpassword() != "" && user.getNewpassword() != null ){
+					if (checkeduser.getIduser() == user.getIduser()  ){
 					user.setPassword(HibernateUtils.md5Java(user.getNewpassword()));  
 				    tbluser.convertToTable(user);
 				    tx = session.beginTransaction();
 				    session.saveOrUpdate(tbluser);
-				    iduser = tbluser.getIduser();
+				    
 				    tx.commit();
+				}else{
+					return new GECOError("PWD", "Utente non autorizzato");
 				}
+			}else{
+				return new GECOError("PWD", "La vecchia password non è corretta");
 			}
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
@@ -372,7 +409,7 @@ public class UserDao {
 		}finally{
 			session.close();
 		}
-		return iduser;
+		return new GECOSuccess();
 	}
 	public GECOObject setUserActive(String code){
 		User u;
@@ -393,5 +430,118 @@ public class UserDao {
 		Role role = new RoleDao().getRoleListEc().get(0);
 	    user.setRole(role);
 		return saveUpdate(user);
+	}
+	public GECOObject createEcommerceUser(User user, String key){
+		return new DraftDao().createEcUserForm(user, key);
+	}
+	public GECOObject usernameECForgotten(String tc,String key){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Contact c = new Contact();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.taxcode", tc));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> itc = customers.iterator();itc.hasNext();){
+					TblCustomer ct = itc.next();
+					if (ct.isIsprivate() == true){
+						c.convertFromTable(customers.get(0).getContact());
+					}
+				}
+				if (c.getIdcontact() == 0){
+					return new GECOError("UT","Utente non valido");
+				}
+			}else{
+			    return new GECOError("CF","Codice fiscale non presente in anagrafica");
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
+		TblUser u = getUserFromContact(c);
+		if (u.getIduser() == 0){
+			return new GECOError("UT","Utente non valido");
+		}
+		if (u.getCompany().getCode().equals(key) == false){
+			return new GECOError("UT","Utente non valido");
+		}
+		return new MailDao().sendEcRecoverUsername(u);
+	}
+	public GECOObject passwordECForgotten(String tc,String key){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Contact c = new Contact();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.taxcode", tc));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> itc = customers.iterator();itc.hasNext();){
+					TblCustomer ct = itc.next();
+					if (ct.isIsprivate() == true){
+						c.convertFromTable(customers.get(0).getContact());
+					}
+				}
+				if (c.getIdcontact() == 0){
+					return new GECOError("UT","Utente non valido");
+				}
+			}else{
+			    return new GECOError("CF","Codice fiscale non presente in anagrafica");
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
+		TblUser u = getUserFromContact(c);
+		if (u.getIduser() == 0){
+			return new GECOError("UT","Utente non valido");
+		}
+		if (u.getCompany().getCode().equals(key) == false){
+			return new GECOError("UT","Utente non valido");
+		}
+		return new MailDao().sendEcRecoverPassword(u);
+	}
+	public GECOObject resetPassword(User u){
+		if (u.getPassword().equals(u.getConfirmpassword()) == false){
+			return new GECOError("PWD","La password inserita è diversa da quella di conferma");
+		}
+		User user = getSingleUserVO(u.getCode());
+		user.setPassword(HibernateUtils.md5Java(u.getPassword()));
+		if (saveUpdate(user) <=0){
+			return new GECOError("PWD","Cambio password non riuscito");
+		}
+		
+		return new GECOSuccess();
+	}
+	public TblUser getUserFromContact(Contact c){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		try{
+			Criteria cr = session.createCriteria(TblUser.class,"user");
+			cr.createAlias("user.contact", "contact");
+			cr.add(Restrictions.eq("contact.idcontact", c.getIdcontact()));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List users = cr.list();
+			if (users.size() > 0){
+				return (TblUser)users.get(0);
+			}else{
+			    return new TblUser();
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
 	}
 }

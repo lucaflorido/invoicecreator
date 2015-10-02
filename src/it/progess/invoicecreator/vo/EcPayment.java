@@ -13,6 +13,14 @@ public class EcPayment implements Ivo{
 	private String accountID;
 	private String token;
 	private PaymentSolution paysolution;
+    private float commission;
+	
+	public float getCommission() {
+		return commission;
+	}
+	public void setCommission(float commission) {
+		this.commission = commission;
+	}
 	public int getIdEcPayment() {
 		return idEcPayment;
 	}
@@ -57,6 +65,7 @@ public class EcPayment implements Ivo{
 		this.loggeduser = tep.isLoggeduser();
 		this.nologgeduser = tep.isNologgeduser();
 		this.token = tep.getToken();
+		this.commission = tep.getCommission();
 		if (tep.getPaysolution() != null){
 			this.paysolution = new PaymentSolution();
 			this.paysolution.convertFromTable(tep.getPaysolution());

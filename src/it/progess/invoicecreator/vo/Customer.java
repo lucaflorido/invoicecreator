@@ -16,7 +16,7 @@ import java.util.Set;
 
 
 
-public class Customer implements Ivo{
+public class Customer extends RegistryVO   {
 	private int idCustomer;
 	private String customername;
 	private String customercode;
@@ -43,6 +43,9 @@ public class Customer implements Ivo{
 	private boolean hasuser;
 	private EcPayment ecpayment;
 	private boolean isprivate;
+	public Customer(){
+		super();
+	}
 	public boolean isIsprivate() {
 		return isprivate;
 	}
@@ -201,7 +204,8 @@ public class Customer implements Ivo{
 	public void setLists(Set<ListCustomer> lists) {
 		this.lists = lists;
 	}
-	public void convertFromTable(Itbl obj){
+	@Override
+	 public void convertFromTable(Itbl obj){
 		TblCustomer c = (TblCustomer)obj;
 		this.active = c.isActive();
 		this.suspended = c.getSuspended();
@@ -287,6 +291,7 @@ public class Customer implements Ivo{
 			}
 		}
 	}
+	@Override
 	public GECOError control(){
 		GECOError er = null;
 		/*

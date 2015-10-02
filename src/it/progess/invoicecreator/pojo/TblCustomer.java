@@ -58,7 +58,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	private TblPayment payment;
 	@OneToMany(fetch= FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Set<TblListCustomer> lists;
-	@OneToMany(fetch= FetchType.LAZY,mappedBy = "customer")
+	@OneToMany(fetch= FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Set<TblDestination> destinations;
 	@Column(name="suspended")
 	private double suspended;
@@ -318,6 +318,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 				Destination destination = iterator.next();
 				TblDestination dest = new TblDestination();
 				dest.convertToTable(destination);
+				dest.setCustomer((TblCustomer)tbl);
 				this.destinations.add(dest);
 			}
 		}

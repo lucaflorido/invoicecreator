@@ -97,4 +97,32 @@ angular.module('modules.common.shared', [])
 	}
 
 	return factory;
+}).factory('URLFactory', function ($http, $q, AppConfig)
+{
+    var factory = {};
+     factory.getParameter = function (name)
+    {
+
+        sParam = name;
+        var sPageURL = window.location.href;
+        var sURLIntPoint = sPageURL.split('?');
+        if (sURLIntPoint.length > 1){
+        	var sURLVariables = sURLIntPoint[1].split('&');
+            for (var i = 0; i < sURLVariables.length; i++)
+            {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam)
+                {
+                    this.successMessage = sParameterName[1];
+                    return this.successMessage;
+                }
+            }
+        }
+        
+
+
+        return this.successMessage;
+
+    };
+    return factory;
 });

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
@@ -22,6 +23,7 @@ import it.progess.invoicecreator.pojo.TblCompany;
 import it.progess.invoicecreator.pojo.TblDraft;
 import it.progess.invoicecreator.pojo.TblRole;
 import it.progess.invoicecreator.pojo.TblUser;
+import it.progess.invoicecreator.properties.MailParameter;
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Contact;
 import it.progess.invoicecreator.vo.Customer;
@@ -116,6 +118,13 @@ public class DraftDao {
 		persistenceDraft(draft);
 		return new GECOSuccess(draft);
 	}
+	/*refresh draft*/
+	public GECOObject refreshDraft(HttpSession session,Draft draft){
+		draft.calculateTotal();
+		session.setAttribute(draft.getId(),draft);
+		persistenceDraft(draft);
+		return new GECOSuccess(draft);
+	}
 	public void persistenceDraft(Draft draft){
 		TblDraft td = getDraft(draft.getId());
 		if (td == null){
@@ -128,7 +137,7 @@ public class DraftDao {
 	/*calcola totale*/
 	/*chiude il carrello*/
 	/*Paga il carrello*/
-	public GECOObject confirmPayment(HttpSession session,User user,String draftid,String paymentType){
+	public GECOObject confirmPayment(HttpSession session,ServletContext context,User user,String draftid,String paymentType){
 		Draft draft = (Draft)session.getAttribute(draftid);
 		draft.setUser(user);
 		
@@ -136,11 +145,12 @@ public class DraftDao {
 			case "03":
 				createEcUser(user,draft.getKey());
 				DocumentDao dd = new DocumentDao();
-				dd.createOrderFromDraft(user, draft);
+				dd.createOrderFromDraft(context,user, draft);
 				//dd.createInvoiceFromDraft(user, draft);
 				return new GECOSuccess("confirmed");
 			case "01":
-				if (storeDraft(draft) == true){
+				TblDraft td = getDraft(draft.getKey());
+				if (storeDraft(td,draft) == true){
 					return new GECOSuccess("paypal");
 				}else{
 					return new GECOError("ERP","Errore nel pagamento");
@@ -191,7 +201,7 @@ public class DraftDao {
 			
 			Gson gson = new Gson();
 			draft.setValue(gson.toJson(d));
-			session.save(draft);
+			session.saveOrUpdate(draft);
 		    tx.commit();
 		    result = true;
 		}catch(HibernateException e){
@@ -224,7 +234,7 @@ public class DraftDao {
 		}
 		return null;
 	}
-	public GECOObject confirmPayment(String draftid){
+	public GECOObject confirmPayment(ServletContext context,String draftid){
 		TblDraft td = getDraft(draftid);
 		if (td == null){
 			return new GECOError();
@@ -233,7 +243,7 @@ public class DraftDao {
 		User user = draft.getUser();
 		createEcUser(user,draft.getKey());
 		DocumentDao dd = new DocumentDao();
-		dd.createOrderFromDraft(user, draft);
+		dd.createOrderFromDraft(context,user, draft);
 		//dd.createInvoiceFromDraft(user, draft);
 		removeDraft(td);		
 		/*Utente Registrato*/
@@ -241,8 +251,8 @@ public class DraftDao {
 		return new GECOSuccess();
 	}
 	private void createEcUser(User user,String key){
+		RegistryDao rd = new RegistryDao();
 		if (user.getIduser() == 0){
-			RegistryDao rd = new RegistryDao();
 			user.set_iduser(new UserDao().createEcUser(user,key));
 			GECOObject obj  = rd.createCustomerFromUser(user);
 			if(obj instanceof GECOSuccess ){
@@ -254,6 +264,30 @@ public class DraftDao {
 				user.setContact(co);
 				new UserDao().saveUpdate(user);
 			}
+		}else{
+			rd.createDestinationFromUser(user);
+		}
+	}
+	public GECOObject createEcUserForm(User user,String key){
+		if (user.getIduser() == 0){
+			RegistryDao rd = new RegistryDao();
+			user.set_iduser(new UserDao().createEcUser(user,key));
+			GECOObject obj  = rd.createCustomerFromUser(user);
+			UserDao daou = new UserDao(); 
+			if(obj instanceof GECOSuccess ){
+				int idc = (int)((GECOSuccess)obj).success;
+				Customer c = rd.getSingleCustomer(idc);
+				Contact co = c.getContact();
+				user.setContact(co);
+				int iduser =  daou.saveUpdate(user);
+				user = daou.getSingleUserVO(iduser);
+				return new MailDao().sendNewCustomerUser(key,user,MailParameter.NEW_USER_CUSTOMER_MAIL);
+			}else{
+				return obj;
+			}
+				
+		}else{
+			return new GECOError("USR", "Utente già registrato");
 		}
 	}
 	public void removeDraft(TblDraft td){

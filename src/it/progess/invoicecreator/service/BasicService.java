@@ -692,5 +692,12 @@ public class BasicService {
 			  return gson.toJson("");
 		  }
 	  }
-	  
+	  @GET
+	  @Path("paymentsolution")
+ 	  @Produces(MediaType.APPLICATION_JSON)
+	  public String getPaymentSolutionList(){
+		Gson gson = new Gson();
+		BasicDao dao = new BasicDao();
+		return gson.toJson(dao.getPaymentSolutionList());
+	  }
 }

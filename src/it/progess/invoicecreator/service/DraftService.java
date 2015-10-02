@@ -3,6 +3,7 @@ package it.progess.invoicecreator.service;
 import it.progess.invoicecreator.dao.DraftDao;
 import it.progess.invoicecreator.dao.ExportDao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
+import it.progess.invoicecreator.vo.Draft;
 import it.progess.invoicecreator.vo.DraftElement;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.Product;
@@ -65,6 +66,16 @@ public class DraftService {
 		return gson.toJson(dao.updateDraft(draftid, session, de));
 	}
 	@POST
+	@Path("refresh")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String refreshDraft(@Context HttpServletRequest request,String data) {
+		HttpSession session = request.getSession();  
+		DraftDao dao = new DraftDao();
+		Gson gson = new Gson();
+		Draft de = gson.fromJson(data, Draft.class);
+		return gson.toJson(dao.refreshDraft( session, de));
+	}
+	@POST
 	@Path("confirmdraft/{draftid}/{paymenttype}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String confirmDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid,@PathParam("paymenttype") String paymenttype) {
@@ -72,6 +83,6 @@ public class DraftService {
 		DraftDao dao = new DraftDao();
 		Gson gson = new Gson();
 		User user = gson.fromJson(data, User.class);
-		return gson.toJson(dao.confirmPayment(session, user, draftid, paymenttype));
+		return gson.toJson(dao.confirmPayment(session,context, user, draftid, paymenttype));
 	}
 }

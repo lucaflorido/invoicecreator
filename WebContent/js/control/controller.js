@@ -108,7 +108,7 @@ gecoControllers.controller('UserListCtrl',["$scope","$http",function($scope,$htt
 }]);
 
 gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',function($scope,$routeParams,$http){
-	GECO_LOGGEDUSER.checkloginuser();
+	
 	GECO_validator.startupvalidator();
 	$scope.userId= $routeParams.userId ;
 	
@@ -140,7 +140,6 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 }]);
 
 gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http','ModalFactory',function($scope,$routeParams,$http,ModalFactory){
-	GECO_LOGGEDUSER.checkloginuser();
 	$scope.myuserId= $routeParams.myuserId ;
 	$scope.isuser = true;
 	$http.get('rest/role/').success(function(data){
@@ -301,7 +300,7 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 					$rootScope.viewheader = true;
 				}else{
 					
-					$location.path('/login');
+					//$location.path('/login');
 					
 				}
 			}

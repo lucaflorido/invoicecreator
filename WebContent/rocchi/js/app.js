@@ -20,6 +20,7 @@ var gecoApp = angular.module("gecoApp",
 	"rocchi.list",
 	'modules.common.shared',
 	'ngCookies',
+	"geco.ecommerce",
 "gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
 .provider('AppConfig', function ()
 		{
@@ -34,16 +35,24 @@ var gecoApp = angular.module("gecoApp",
 	            		CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
 	            		CustomerUser:main_domain+ "/rest/registry/customer/user/",
 	            		Company:main_domain+ "/rest/registry/company/",
+	            		Country:main_domain+ "/rest/geo/countries/",
+	            		Zone:main_domain+ "/rest/geo/zones/",
+	            		City:main_domain+ "/rest/geo/cities/",
+	            		CityCountry:main_domain+ "/rest/geo/cities/country/",
+	            		CityZone:main_domain+ "/rest/geo/cities/zone/",
 	            		DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
 	            		DocumentList:main_domain+ '/rest/basic/document',
 	            		DraftInit:main_domain+ '/rest/draft/init/',
 	            		DraftAdd:main_domain+ '/rest/draft/addtodraft/',
+	            		DraftRefresh:main_domain+ '/rest/draft/refresh/',
 	            		DraftRemove:main_domain+ '/rest/draft/removefromdraft/',
 	            		DraftUpdate:main_domain+ '/rest/draft/updatedraft/',
 	            		DraftConfirm:main_domain+ '/rest/draft/confirmdraft/',
+	            		Delivery:main_domain+ "/rest/delivery/ecdelivery/",
+	            		DeliveryCost:main_domain+ "/rest/delivery/costs/",
 	            		HeadPaging:main_domain+ '/rest/head/head',
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
-
+		                ListOfCustomerDestinations:main_domain+ "/rest/registry/destination/customer/",
 		                PrintHead:main_domain+ "/rest/print/head/",
 		                Product:main_domain+ "/rest/registry/product/",
 		                ProductPublic:main_domain+ "/rest/registry/public/product/",
@@ -63,7 +72,11 @@ var gecoApp = angular.module("gecoApp",
 		                List:main_domain+ "/rest/registry/list/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
 		                Login:main_domain+ "/rest/user/",
-
+		                LoginEc:main_domain+ "/rest/user/ec/",
+		                CreateEcUser:main_domain+ "/rest/user/ecuser/",
+		                EcRecoverUID:main_domain+ "/rest/user/ecuser/recoverusername/",
+		                EcRecoverPWD:main_domain+ "/rest/user/ecuser/recoverpassword/",
+		                EcAskRecoverPWD:main_domain+ "/rest/user/ecuser/askrecoverpassword/",
 		                Logout:main_domain+"/rest/user/logout/",
 		                SearchProduct:main_domain+ "/rest/registry/product/search/",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
@@ -92,10 +105,13 @@ var gecoApp = angular.module("gecoApp",
 		                Role:main_domain+"/rest/role/",
 		                ListIncrement:main_domain+"/rest/util/incrementlist",
 		                PaymentsList:main_domain+"/rest/basic/payment",
+		                PaymentsSolution:main_domain+"/rest/basic/paymentsolution",
 		                SuppliersList:main_domain+"/rest/registry/supplier",
 		                SearchProductCode:main_domain+"/rest/registry/product/code/",
 		                CheckHead:main_domain+"/rest/head/checkhead",
-		                PrintHead:main_domain+"/rest/print/head/"
+		                PrintHead:main_domain+"/rest/print/head/",
+		                UserSave:main_domain+ "/rest/user/saveuser",
+		                UserChangePassword:main_domain+ "/rest/user/changepassword"
 		            },Permissions:{
 		            	Promoter:"promoter",
 		            	Transporter:"transporter",
@@ -262,8 +278,16 @@ function($stateProvider, $urlRouterProvider) {
 			controller: 'RocchiUnitmeasureCtrl'
 		}).state('company', {
 			url:'/company',
-			templateUrl: 'template/registry/companydetail.htm',
+			templateUrl: 'template/company/companydetails.html',
 			controller: 'CompanyCtrl'
+		}).state('companymail', {
+			url:'/companymail',
+			templateUrl: 'template/config/companymail.html',
+			controller: 'CompanyCtrl'
+		}).state('companyec', {
+			url:'/companyec',
+			templateUrl: 'template/config/companyec.html',
+			controller: 'CompanyEcCtrl'
 		}).state('bank', {
 			url:'/bank',
 			templateUrl: 'template/registry/banklist.htm',
@@ -372,6 +396,10 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/myprofile/:myuserId',
 			templateUrl: 'template/myprofile.htm',
 			controller: 'MyProfileCtrl'
+		}).state('myprofile', {
+			url:'/myprofile',
+			templateUrl: 'template/profile/profile.html',
+			controller: 'MyProfileCtrl'
 		}).state('login', {
 			url:'/login',
 			templateUrl: 'template/welcome.htm',
@@ -380,6 +408,14 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/ec',
 			templateUrl: 'template/ecommerce.htm',
 			controller:'ECommerceCtrl'
+		}).state('newecuser', {
+			url:'/newecuser',
+			templateUrl: 'template/profile/newecuser.html',
+			controller:'ECommerceUserCtrl'
+		}).state('ecpassword', {
+			url:'/ecpassword',
+			templateUrl: 'template/profile/passwordrecovery.html',
+			controller:'EcPasswordRecover'
 		}).state('storelist', {
 			url:'/storelist',
 			templateUrl: 'template/store/productstorage.htm',

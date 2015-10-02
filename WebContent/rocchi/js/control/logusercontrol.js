@@ -25,7 +25,7 @@ var GECO_LOGGEDUSER = function(){
 	
 	var checkloginuser = function(){
 	    var resulttosend;
-		$.ajax({
+		/*$.ajax({
 			url:"rest/user/loggedinuser/",
 			type:"GET",
 			success:function(data){
@@ -34,16 +34,16 @@ var GECO_LOGGEDUSER = function(){
 					checkrole(result);
 					$(".myprofilelabel").html(result.username);
 					$("#myprofilebutton").click(function(e){
-						$(window.location).attr('href', '#/myprofile/'+result.iduser);
+						//$(window.location).attr('href', '#/myprofile/'+result.iduser);
 					})
 					
 				}else{
 					$(".header").css("display","none");
-					$(window.location).attr('href', '#/');
+					//$(window.location).attr('href', '#/');
 					
 				}
 			}	
-		})
+		})*/
 	} 
 	return {
 		"checkloginuser":checkloginuser,

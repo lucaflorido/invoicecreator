@@ -46,7 +46,7 @@ public class PaymentResult extends HttpServlet {
 	private void manageResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String draft = request.getParameter("did");
 		DraftDao d = new DraftDao();
-		d.confirmPayment(draft);
+		d.confirmPayment(getServletContext(),draft);
 		response.sendRedirect("http://localhost:8080/InvoiceCreator/rocchi");
 	}
 }

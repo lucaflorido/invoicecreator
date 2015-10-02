@@ -158,44 +158,50 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 	} );
 }]);
 
-gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http','ModalFactory',function($scope,$routeParams,$http,ModalFactory){
-	GECO_LOGGEDUSER.checkloginuser();
-	$scope.myuserId= $routeParams.myuserId ;
+gecoControllers.controller('MyProfileCtrl',function($scope,$http,AppConfig,AlertsFactory){
+	//GECO_LOGGEDUSER.checkloginuser();
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
 	$scope.isuser = true;
-	$http.get('rest/role/').success(function(data){
-		$scope.roles= data;
-		$http.get('rest/user/'+$scope.myuserId).success(function(data){
-			$scope.user= data;
-			for (var i=0;i<$scope.roles.length;i++){
-				if($scope.roles[i].idrole == $scope.user.role.idrole){
-					$scope.currentRole = $scope.roles[i];
-				}
-			}
+	/*$http.get('rest/role/').success(function(data){
+		$scope.roles= data;*/
+		$http.get(AppConfig.ServiceUrls.CheckUser).success(function(data){
+			$scope.cuser= data;
+			
 		});
-	});
+	//});
 	
 	$scope.saveuser = function(){
-		$scope.user.role = $scope.currentRole;
-		$.ajax({
+		$http.post(AppConfig.ServiceUrls.UserSave,$scope.cuser).success(function(result){
+			$scope.msg.successMessage("Utente salvato con successo");
+		})
+		/*$.ajax({
 			url:"rest/user/",
 			type:"PUT",
 			data:"loginobj="+JSON.stringify($scope.user),
 			success:function(data){
-				$scope.confirmSaved();
+				$scope.msg.successMessage("Utente salvato con successo")
 			}	
-		})
+		})*/
 	};
 	$scope.changepassword = function(){
-		$scope.user.password = $("#oldpassword").val();
-		$scope.user.newpassword = $("#newpassword").val();
-		$.ajax({
+		$http.post(AppConfig.ServiceUrls.UserChangePassword,$scope.cuser).then().success(function(result){
+			if (result.type == "success"){
+				$scope.msg.successMessage("Password cambiata con successo");
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}
+			
+		})
+		
+		/*$.ajax({
 			url:"rest/user/changepassword/",
 			type:"PUT",
 			data:"userobj="+JSON.stringify($scope.user),
 			success:function(data){
-				$scope.confirmSaved();
+				$scope.msg.successMessage("Password cambiata con successo")
 			}	
-		})
+		})*/
 		
 	};
 	$scope.changeView = function(){
@@ -208,7 +214,7 @@ gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http','Mo
 		$scope.user.company.mailconfig.push({});
 	}
 	$scope.testemail = function(mailconfig){
-		ModalFactory.sendMail($scope.user,mailconfig,$scope.emailService);
+		//ModalFactory.sendMail($scope.user,mailconfig,$scope.emailService);
 		
 		
 	}
@@ -230,7 +236,7 @@ gecoControllers.controller('MyProfileCtrl',['$scope', '$routeParams','$http','Mo
 			}	
 		});
 	};
-}]);
+});
 /*****
 ROLE
 ***/
@@ -311,7 +317,7 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 					//checkrole(result);
 					$rootScope.viewheader = true;
 				}else{
-					if ($location.path() != "/ec"){
+					if ($location.path() != "/ec" && $location.path() != "/ecpassword" ){
 						$location.path('/login');
 					}
 					
@@ -347,9 +353,21 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 		});
 		
 	};
+	$scope.openProfile = function(){
+		$location.path("/myprofile");
+	} 
+	$scope.openCompany = function(){
+		$location.path("/company");
+	} 
 	
 }]);
-gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$location","PermissionFactory","AlertsFactory","AppConfig","$cookies","FormatFactory","DraftFactory",function($scope,$http,$rootScope,$location,PermissionFactory,AlertsFactory,AppConfig,$cookies,FormatFactory,DraftFactory){
+
+gecoControllers.controller('ProfileCtrl',function($scope,$http,AppConfig,$cookies,FormatFactory,DraftFactory){
+	$http.get(AppConfig.ServiceUrls.CheckUser).success(function(data){
+		$scope.user= data;
+	});
+});
+/*gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$location","PermissionFactory","AlertsFactory","AppConfig","$cookies","FormatFactory","DraftFactory",function($scope,$http,$rootScope,$location,PermissionFactory,AlertsFactory,AppConfig,$cookies,FormatFactory,DraftFactory){
 	$rootScope.viewheader = false;
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
@@ -367,6 +385,44 @@ gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$loca
 	    }
 	    return result;
 	};
+	var controlAddress = function(){
+		if (!$scope.draftaddress){
+			$scope.draftaddress = {};
+		}
+		if (!$scope.draftaddress.countryObj){
+			$scope.draftaddress.countryObj = null;
+		}else{
+			if ( $scope.draftaddress.countryObj.idCountry == null ||  $scope.draftaddress.countryObj.idCountry  == undefined ){
+				var cn = angular.copy($scope.draftaddress.countryObj);
+				$scope.draftaddress.countryObj = {};
+				$scope.draftaddress.countryObj.name = cn;
+				$scope.draftaddress.countryObj.idCountry = 0;
+			}
+		}
+		
+		if (!$scope.draftaddress.zoneObj){
+			$scope.draftaddress.zoneObj = null;
+		}else{
+			if ( $scope.draftaddress.zoneObj.idZone == null ||  $scope.draftaddress.zoneObj.idZone  == undefined  ){
+				var cnz = angular.copy($scope.draftaddress.zoneObj);
+				$scope.draftaddress.zoneObj = {};
+				$scope.draftaddress.zoneObj.name = cnz;
+				$scope.draftaddress.zoneObj.idZone = 0;
+			}
+		}
+		
+		if (!$scope.draftaddress.cityObj){
+			$scope.draftaddress.cityObj = null;
+		}else{
+			if ( $scope.draftaddress.cityObj.idCity == null ||  $scope.draftaddress.cityObj.idCity  == undefined ){
+				var cnc = angular.copy($scope.draftaddress.cityObj);
+				$scope.draftaddress.cityObj = {};
+				$scope.draftaddress.cityObj.name = cnc;
+				$scope.draftaddress.cityObj.idCity = 0;
+			}
+		}
+		
+	}
 	var intitialize = function(){
 		$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
 			$scope.categories= data;
@@ -380,6 +436,18 @@ gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$loca
 		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
 			$scope.regions= data;
 		});
+		
+			$http.get(AppConfig.ServiceUrls.Country).success(function(result){
+				$scope.countries = result;
+				
+			});
+			controlAddress();
+			$http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+				if (result.type == "success"){
+					$scope.draft.deliverycost  = result.success;
+				}
+			});
+		
 	};
 	$scope.subcategories = [];
 	$scope.changeCategory = function(){
@@ -387,8 +455,89 @@ gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$loca
 		$scope.subcategories = $scope.filter.category.subcategories;
 	}
 	intitialize();
-	/*$http.get('/InvoiceCreator/rest/user/startup').success(function(data){
-	});*/
+	$scope.onSelect = function ($item, $model, $label) {
+	    $scope.draftaddress.countryObj = $model;
+	    $http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+			if (result.type == "success"){
+				$scope.draft.deliverycost  = result.success;
+			}
+			$http.get(AppConfig.ServiceUrls.Zone+$scope.draftaddress.countryObj.idCountry).success(function(result){
+				$scope.zones = result;
+			});
+			$http.get(AppConfig.ServiceUrls.CityCountry+$scope.draftaddress.countryObj.idCountry).success(function(result){
+				$scope.cities = result;
+			});
+		});
+	};
+	$scope.onSelectZone = function ($item, $model, $label) {
+		$scope.draftaddress.zoneObj = $model;
+		controlAddress();
+		$http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+			if (result.type == "success"){
+				$scope.draft.deliverycost  = result.success;
+			}
+			
+			$http.get(AppConfig.ServiceUrls.CityZone+$scope.draftaddress.zoneObj.idZone).success(function(result){
+				$scope.cities = result;
+			});
+		});
+	};
+	//TODO eliminare gli oggetti
+	
+	$scope.calculateTransportPrice = function(){
+		
+		controlAddress();
+		$scope.zones = [];
+		$scope.cities = [];
+		$scope.draftaddress.zoneObj = null;
+		$scope.draftaddress.cityObj = null;
+		$http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+			if (result.type == "success"){
+				$scope.draft.deliverycost  = result.success;
+			}
+		
+		});
+	};
+	$scope.onSelectCity = function ($item, $model, $label) {
+		$scope.draftaddress.cityObj = $model;
+		controlAddress();
+		$http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+			if (result.type == "success"){
+				$scope.draft.deliverycost  = result.success;
+			}
+		});
+	};
+	
+	$scope.zoneChange = function(){
+		controlAddress();
+		$scope.draftaddress.cityObj = null;
+		if ($scope.draftaddress.countryObj.idCountry){
+			$http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+				if (result.type == "success"){
+					$scope.draft.deliverycost  = result.success;
+				}
+				$http.get(AppConfig.ServiceUrls.Zone+$scope.draftaddress.countryObj.idCountry).success(function(result){
+					$scope.zones = result;
+				});
+				$http.get(AppConfig.ServiceUrls.CityCountry+$scope.draftaddress.countryObj.idCountry).success(function(result){
+					$scope.cities = result;
+				});
+			});
+		}else{
+			$scope.cities = [];
+		}
+	}
+	$scope.cityChange = function(){
+		controlAddress();
+		if ($scope.draftaddress.countryObj.idCountry){
+			$http.post(AppConfig.ServiceUrls.DeliveryCost+AppConfig.Const.CompanyId,$scope.draftaddress).success(function(result){
+				if (result.type == "success"){
+					$scope.draft.deliverycost  = result.success;
+				}
+				
+			});
+		}
+	}
 	$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
 		DraftFactory.company = result;
 		DraftFactory.payments = DraftFactory.company.ecpayments;
@@ -399,9 +548,7 @@ gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$loca
 		 $http.post(AppConfig.ServiceUrls.DraftInit+AppConfig.Const.CompanyId,"").success(function(result){
 			if(result.type == "success"){
 				$scope.draft = result.success
-				/*$http.post(AppConfig.ServiceUrls.ProductPublic,AppConfig.Const.CompanyId).success(function(result){
-					$scope.prodlist = result;
-				});*/
+				
 				$scope.getProductsNumber();
 			}
 		 });
@@ -517,9 +664,7 @@ gecoControllers.controller('ECommerceCtrl',["$scope","$http","$rootScope","$loca
 	$(".redobutton").click(function(e){
 		alert($("ifname").attr("required"));
 	})
-	/*$http.get('rest/user').success(function(data){
-		$scope.users= data;
-	});*/
+	
 	if ($scope.filter == null){
 		$scope.filter = {"pagefilter":{}};
 		$scope.currentGroup = {};
@@ -572,6 +717,6 @@ $scope.getProductsNumber = function(){
 }
 
 	
-}]);
+}]);*/
 
 

@@ -17,6 +17,7 @@ import it.progess.invoicecreator.util.store.StoreManager;
 import it.progess.invoicecreator.vo.Counter;
 import it.progess.invoicecreator.vo.CounterYear;
 import it.progess.invoicecreator.vo.Customer;
+import it.progess.invoicecreator.vo.Destination;
 import it.progess.invoicecreator.vo.Document;
 import it.progess.invoicecreator.vo.Draft;
 import it.progess.invoicecreator.vo.DraftElement;
@@ -57,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.sql.rowset.serial.SerialClob;
 
 import org.hibernate.Criteria;
@@ -1561,13 +1563,24 @@ public class DocumentDao {
 	
 	}
 	
-	public GECOObject createOrderFromDraft(User user,Draft draft){
+	public GECOObject createOrderFromDraft(ServletContext context,User user,Draft draft){
 		try{
-			Customer c = new RegistryDao().getCustomerFromUser(user);
+			RegistryDao rdao = new RegistryDao();
+			Customer c = rdao.getCustomerFromUser(user);
 			if (c == null){
 				return new GECOError("CLINULL", "Cliente non registrato");
 			}
+			ArrayList<Destination> destinations = rdao.getCustomerDestinationList(c.getIdCustomer()); 
 			Head h = new Head();
+			if (destinations != null && user.getDeliveryaddress().getCode() != null){
+				for (Iterator<Destination> itd = destinations.iterator();itd.hasNext();){
+					Destination d = itd.next();
+					if(user.getDeliveryaddress().getCode().equals(d.getAddress().getCode())){
+						h.setDestination(d);
+						break;
+					}
+				}
+			}
 			h.setCustomer(c);
 			Document d = new BasicDao().getDocumentOrderOnline(user);
 			h.setDocument(d);
@@ -1575,10 +1588,19 @@ public class DocumentDao {
 			String todayString = DataUtilConverter.convertStringFromDate(today);
 			h.setDate(todayString);
 			h.calculateNumber();
+			h.setDeliverycost(draft.getDelcost());
+			h.setCommission(draft.getCommission());
 			it.progess.invoicecreator.vo.List list = new RegistryDao().getPublicList(user.getCompany().getCode()).get(0);
 			h.setList(list);
+			h.setDeliverydate(draft.getDeliverydate());
 			setRowsFromDraft(draft,h,user);
-			return new DocumentDao().saveHead(h, user);
+			GECOObject objg = new DocumentDao().saveHead(h, user);
+			if (objg .type.equals(GECOParameter.SUCCESS_TYPE) == true){
+				return new MailDao().sendOrderOnline(context, h, user);
+			}else{
+				return objg;
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			return new GECOError("error", e.getMessage());

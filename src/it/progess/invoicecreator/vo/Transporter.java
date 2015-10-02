@@ -4,7 +4,7 @@ import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblTransporter;
 import it.progess.invoicecreator.properties.GECOParameter;
 
-public class Transporter implements Ivo {
+public class Transporter extends RegistryVO {
 	private int idTransporter;
 	private String transportercode;
 	private String transportername;
@@ -84,6 +84,7 @@ public class Transporter implements Ivo {
 	public void setBankcontact(BankContact bankcontact) {
 		this.bankcontact = bankcontact;
 	}
+	@Override
 	public void convertFromTable(Itbl obj){
 		TblTransporter t = (TblTransporter)obj;
 	    this.idTransporter = t.getIdTransporter();

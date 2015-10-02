@@ -35,7 +35,7 @@ public class TblDestination implements Itbl {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idBankContact")
 	private TblBankContact bankcontact;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "idCustomer")
 	private TblCustomer customer;
 	public int getIdDestination() {

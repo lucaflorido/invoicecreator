@@ -4,7 +4,7 @@ var gecoBasicControllers = angular.module("gecoBasicControllers",[]);
 TAXRATE
 ***/
 gecoBasicControllers.controller('TaxrateCtrl',["$scope","$http","$rootScope",function($scope,$http,$rootScope){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
+    
 	$scope.taxratesaved = true;
 	$http.get(GECO_LOGGEDUSER.getSecondDomain()+'rest/basic/taxrate').success(function(data){
 		$scope.taxrates= data;
@@ -72,7 +72,7 @@ gecoBasicControllers.controller('TaxrateCtrl',["$scope","$http","$rootScope",fun
 Store Movement
 ***/
 gecoBasicControllers.controller('StoreMovementCtrl',["$scope","$http",function($scope,$http){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
+    
 	$scope.storemovementsaved = true;
 	$http.get('rest/basic/storemovement').success(function(data){
 		$scope.storemovements= data;

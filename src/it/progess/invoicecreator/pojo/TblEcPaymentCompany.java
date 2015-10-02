@@ -5,6 +5,7 @@ import it.progess.invoicecreator.vo.EcPayment;
 import it.progess.invoicecreator.vo.EcPaymentCompany;
 import it.progess.invoicecreator.vo.Ivo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,10 +23,10 @@ public class TblEcPaymentCompany implements Itbl {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="idecpayment_company")
 	private int idEcPaymentCompany;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "idCompany")
 	private TblCompany company;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idecpayment")
 	private TblEcPayment ecpayment;
 	public int getIdEcPaymentCompany() {

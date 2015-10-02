@@ -4,7 +4,7 @@ import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblPromoter;
 import it.progess.invoicecreator.properties.GECOParameter;
 
-public class Promoter implements Ivo {
+public class Promoter extends RegistryVO{
 	private int idPromoter;
 	private String surname;
 	private String name;
@@ -55,6 +55,7 @@ public class Promoter implements Ivo {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
+	@Override
 	public void convertFromTable(Itbl obj){
 		TblPromoter p = (TblPromoter)obj;
 		this.name = p.getName();
@@ -80,6 +81,7 @@ public class Promoter implements Ivo {
 		}
 		return control();
 	}
+	@Override
 	public GECOError control(){
 		GECOError er = null;
 		if (this.name == null || this.name ==""){

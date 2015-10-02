@@ -35,6 +35,15 @@ public class TblEcPayment implements Itbl {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="idpaymentsolution")
 	private TblPaymentSolution paysolution;
+	@Column(name="commission")
+	private float commission;
+	
+	public float getCommission() {
+		return commission;
+	}
+	public void setCommission(float commission) {
+		this.commission = commission;
+	}
 	public TblPaymentSolution getPaysolution() {
 		return paysolution;
 	}
@@ -79,6 +88,7 @@ public class TblEcPayment implements Itbl {
 		this.loggeduser = tep.isLoggeduser();
 		this.nologgeduser = tep.isNologgeduser();
 		this.token = tep.getToken();
+		this.commission = tep.getCommission();
 		if (tep.getPaysolution() != null){
 			this.paysolution = new TblPaymentSolution();
 			this.paysolution.convertToTable(tep.getPaysolution());

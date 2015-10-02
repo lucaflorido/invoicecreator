@@ -99,7 +99,38 @@ public class TblHead extends it.progess.model.pojo.Head implements Itbl {
 	@ManyToOne
 	@JoinColumn(name = "idCompany")
 	private TblCompany company;
+	@Column(name="deliverycost")
+	private float deliverycost;
+	@Column(name="commission")
+	private float commission;
+	@Column(name="commissionamount")
+	private float commissionamount;
+	private Date deliverydate;
 	
+	public Date getDeliverydate() {
+		return deliverydate;
+	}
+	public void setDeliverydate(Date deliverydate) {
+		this.deliverydate = deliverydate;
+	}
+	public float getCommissionamount() {
+		return commissionamount;
+	}
+	public void setCommissionamount(float commissionamount) {
+		this.commissionamount = commissionamount;
+	}
+	public float getDeliverycost() {
+		return deliverycost;
+	}
+	public void setDeliverycost(float deliverycost) {
+		this.deliverycost = deliverycost;
+	}
+	public float getCommission() {
+		return commission;
+	}
+	public void setCommission(float commission) {
+		this.commission = commission;
+	}
 	public float getWithholdingtax() {
 		return withholdingtax;
 	}
@@ -300,6 +331,10 @@ public class TblHead extends it.progess.model.pojo.Head implements Itbl {
 		this.total20 = h.getTotal20();
 		this.total4 = h.getTotal4();
 		this.disable = h.isDisable();
+		this.deliverycost = h.getDeliverycost();
+		this.commission = h.getCommission();
+		this.commissionamount = h.getCommissionamount();
+		this.deliverydate =DataUtilConverter.convertDateFromString(h.getDeliverydate());
 		if (h.getCustomer() != null){
 			this.customer = new TblCustomer();
 			this.customer.convertToTable(h.getCustomer());

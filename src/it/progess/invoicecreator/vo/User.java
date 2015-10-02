@@ -18,12 +18,27 @@ public class User {
 	private Boolean active;
 	private Company company;
 	private String path;
-	private Ivo entity;
+	private RegistryVO entity;
 	private Contact contact;
 	private String code;
 	private String birthday;
 	private Address address;
 	private String taxcode;
+	private String oldpassword;
+	private String confirmpassword;
+	private Address deliveryaddress;
+	public String getOldpassword() {
+		return oldpassword;
+	}
+	public void setOldpassword(String oldpassword) {
+		this.oldpassword = oldpassword;
+	}
+	public String getConfirmpassword() {
+		return confirmpassword;
+	}
+	public void setConfirmpassword(String confirmpassword) {
+		this.confirmpassword = confirmpassword;
+	}
 	public String getTaxcode() {
 		return taxcode;
 	}
@@ -54,10 +69,10 @@ public class User {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public Ivo getEntity() {
+	public RegistryVO getEntity() {
 		return entity;
 	}
-	public void setEntity(Ivo entity) {
+	public void setEntity(RegistryVO entity) {
 		this.entity = entity;
 	}
 	public Company getCompany() {
@@ -137,6 +152,13 @@ public class User {
 	}
 	public void setNewpassword(String newpassword) {
 		this.newpassword = newpassword;
+	}
+	
+	public Address getDeliveryaddress() {
+		return deliveryaddress;
+	}
+	public void setDeliveryaddress(Address deliveryaddress) {
+		this.deliveryaddress = deliveryaddress;
 	}
 	public void convertFromTable(TblUser tbluser){
 		this.set_iduser(tbluser.getIduser());

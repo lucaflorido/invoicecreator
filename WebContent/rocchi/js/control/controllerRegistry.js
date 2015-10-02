@@ -3,36 +3,128 @@ var gecoRegistryControllers = angular.module("gecoRegistryControllers",[]);
 /*****
 REGISTRY
 ***/
-gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",function($scope,$http){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
-	GECO_validator.startupvalidator();
+gecoRegistryControllers.controller('CompanyCtrl',function($scope,$http,AppConfig,AlertsFactory){
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
 	$scope.companysaved = true;
-	$http.get('rest/registry/company').success(function(data){
-		$scope.company = data;
-		if ($scope.company == null  ){
-			$scope.company = {idCompany:0};
-		}
-	});
-	$scope.saveCompany = function(){
-		$.ajax({
-			url:"rest/registry/company",
-			type:"PUT",
-			data:"companys="+JSON.stringify($scope.company),
-			success:function(data){
-					/*$http.get('rest/basic/payment').success(function(data){
-										$scope.payments= data;
-										$scope.paymentsaved = true;
-										$scope.modifyid = 0;
-								});*/
-					
-			}	
-		})
+	$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
+		$scope.company = result;
 		
+	});
+	$scope.savecompany = function(){
+		$http.post(AppConfig.ServiceUrls.Company,$scope.company).success(function(result){
+			if (result.type == "success"){
+				$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
+					$scope.company = result;
+					$scope.msg.successMessage("AZIENDA SALVATA CON SUCCESSO");
+				});
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}
+		}).error(function(error){
+			$scope.msg.alertMessage(error);
+		});
 	}
-}]);
-
+	$scope.addMailObject = function(){
+		if (!$scope.company.mailconfig){
+			$scope.company.mailconfig = [];
+		}
+		$scope.company.mailconfig.push({});
+	}
+});
+gecoRegistryControllers.controller('CompanyEcCtrl',function($scope,$http,AppConfig,AlertsFactory){
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
+	$scope.companysaved = true;
+	$scope.draftaddress = {};
+	$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
+		$scope.company = result;
+		angular.forEach($scope.company.ecdelivery.deliverycountry,function(value){
+			if (value.deliveryzones && value.deliveryzones.length > 0){
+				value.showZoneRule = true;
+			}
+			if (value.deliverycities && value.deliverycities.length > 0){
+				value.showCityRule = true;
+			}
+		});
+	});
+	$scope.savecompany = function(){
+		$http.post(AppConfig.ServiceUrls.Delivery,$scope.company).success(function(result){
+			if (result.type == "success"){
+				$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
+					$scope.company = result;
+					angular.forEach($scope.company.ecdelivery.deliverycountry,function(value){
+						if (value.deliveryzones){
+							value.showZoneRule = true;
+						}
+					});
+					$scope.msg.successMessage("CONFIGURAZIONE SALVATA CON SUCCESSO");
+				});
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}
+		}).error(function(error){
+			$scope.msg.alertMessage(error);
+		});
+	}
+	$scope.addPaymentConfig = function(payment){
+		if(!$scope.company.ecpayments){
+			$scope.company.ecpayments = [];
+		}
+		$scope.company.ecpayments.push({ecpayment:{paysolution:payment}});
+	}
+	$scope.addMailObject = function(){
+		if (!$scope.company.mailconfig){
+			$scope.company.mailconfig = [];
+		}
+		$scope.company.mailconfig.push({});
+	}
+	$scope.initialize = function(){
+		$http.get(AppConfig.ServiceUrls.Country).success(function(result){
+			$scope.countries = result;
+			
+		});
+		$http.get(AppConfig.ServiceUrls.PaymentsSolution).success(function(result){
+			$scope.paymentsols = result;
+			
+		});
+	}
+	$scope.initialize();
+	$scope.addRule = function(){
+		if (!$scope.company.ecdelivery.deliverycountry){
+			$scope.company.ecdelivery.deliverycountry = [];
+		}
+		$scope.company.ecdelivery.deliverycountry.push({deliverycountry:{country:$scope.countrySelected}});
+	}
+	$scope.showZones = function(dc){
+		dc.showZoneRule = true;
+		$http.get(AppConfig.ServiceUrls.Zone+dc.deliverycountry.country.idCountry).success(function(result){
+			dc.zones = result;
+		});
+	}
+	$scope.addZoneRule = function(dc){
+		if (!dc.deliveryzones){
+			dc.deliveryzones = [];
+		}
+		dc.deliveryzones.push({zone:dc.zoneSelected});
+	}
+	
+	$scope.showCities = function(dc){
+		dc.showCityRule = true;
+		$http.get(AppConfig.ServiceUrls.CityCountry+dc.deliverycountry.country.idCountry).success(function(result){
+			dc.cities = result;
+		});
+	}
+	$scope.addCityRule = function(dc){
+		if (!dc.deliverycities){
+			dc.deliverycities = [];
+		}
+		dc.deliverycities.push({city:dc.citySelected});
+	}
+	
+});
 gecoRegistryControllers.controller('BankListCtrl',["$scope","$http",function($scope,$http){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
+    
 	$http.get('rest/registry/bank').success(function(data){
 		$scope.banks= data;
 	});

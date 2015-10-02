@@ -75,13 +75,13 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		return gson.toJson(dao.getCompany(key));
 	  }
-	  @PUT
+	  @POST
 	  @Path("company")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveCompany(@FormParam("companys") String companys){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String saveCompany(String data){
 		  Gson gson = new Gson();
-		  Company smsarray = gson.fromJson(companys,Company.class);
+		  Company smsarray = gson.fromJson(data,Company.class);
 		  RegistryDao dao = new RegistryDao();
 		  
 		  return gson.toJson(dao.saveUpdatesCompany(smsarray));

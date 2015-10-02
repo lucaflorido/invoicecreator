@@ -152,7 +152,7 @@ angular.module("rocchi.customer")
 	};
 	
 } ])
-.controller('RocchiCustomerDetailCtrl',["$scope","$http","$stateParams","AppConfig","AlertsFactory",function($scope, $http, $stateParams, AppConfig,AlertsFactory) {
+.controller('RocchiCustomerDetailCtrl',["$scope","$http","$stateParams","AppConfig","AlertsFactory","LoaderFactory",function($scope, $http, $stateParams, AppConfig,AlertsFactory,LoaderFactory) {
 							// GECO_LOGGEDUSER.checkloginuser();
 
 $scope.msg = AlertsFactory;
@@ -307,10 +307,18 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 		var obj = {};
 		obj.customer = $scope.customer;
 		obj.role = $scope.currentRole;
+		LoaderFactory.loader = true;
 		$http.put(AppConfig.ServiceUrls.CustomerUser,obj).then(function(results){
-			$scope.showuser = false;
-			$scope.customer.hasuser = true;
-			$scope.msg.successMessage("UTENTE CREATO CON SUCCESSO");
+			LoaderFactory.loader = false;
+			if (results.data.type == "success"){
+				$scope.showuser = false;
+				$scope.customer.hasuser = true;
+				LoaderFactory.loader = false;
+				$scope.msg.successMessage("UTENTE CREATO CON SUCCESSO");
+			}else{
+				$scope.msg.alertMessage(results.data.errorMessage);
+			}
+			
 		},function(error){
 			$scope.msg.alertMessage(error);
 		});

@@ -55,7 +55,7 @@ public class UserService {
 	  */
 	  @GET
 	  @Path("loggedinuser")
-	  @Produces(MediaType.TEXT_PLAIN)
+	  @Produces(MediaType.APPLICATION_JSON)
 	  public String userloggedin(@Context HttpServletRequest request) {
 		Gson gson = new Gson();
 		User loggeduser = HibernateUtils.getUserFromSession(request);
@@ -84,17 +84,29 @@ public class UserService {
 		  Gson gson = new Gson();
 		  User user = gson.fromJson(data,User.class);
 		  UserDao userdao = new UserDao();
-		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session));
+		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session,false));
+	  }
+	  @POST
+	  @Path("ec")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String checkEcCredentials( String data,@Context HttpServletRequest request){
+		  HttpSession session = request.getSession();
+		  Gson gson = new Gson();
+		  User user = gson.fromJson(data,User.class);
+		  UserDao userdao = new UserDao();
+		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session,true));
 	  }
 	  /***
 		Save new User 
       */
-	  @PUT
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveUser(@FormParam("loginobj") String loginobj,@Context HttpServletRequest request){
+	  @POST
+	  @Path("saveuser")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String saveUser(String data,@Context HttpServletRequest request){
 		  Gson gson = new Gson();
-		  User user = gson.fromJson(loginobj,User.class);
+		  User user = gson.fromJson(data,User.class);
 		  UserDao userdao = new UserDao();
 		  HttpSession session = request.getSession();  
 		  int iduser = userdao.saveUpdate(user,session,request);
@@ -135,18 +147,15 @@ public class UserService {
 	  /***
 		Save new User 
     */
-	  @PUT
+	  @POST
 	  @Path("changepassword")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String changePassword(@FormParam("userobj") String userobj,@Context HttpServletRequest request){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String changePassword( String data,@Context HttpServletRequest request){
 		  Gson gson = new Gson();
-		  User user = gson.fromJson(userobj,User.class);
+		  User user = gson.fromJson(data,User.class);
 		  UserDao userdao = new UserDao();
-		  int iduser = userdao.changePassword(user);
-		  TblUser tbluser = userdao.getSingleUser(iduser);
-		  user.convertFromTable(tbluser);
-		  return gson.toJson(user);
+		  return gson.toJson(userdao.changePassword(user));
 	  }
 	  @POST
 	  @Path("activate/{code}")
@@ -156,5 +165,43 @@ public class UserService {
 		 Gson gson = new Gson();
 		 UserDao userdao = new UserDao();
 		 return gson.toJson(userdao.setUserActive(code));
+	  }
+	  @POST
+	  @Path("ecuser/{key}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String createECUser(String data,@Context HttpServletRequest request,@PathParam("key") String key){
+		  Gson gson = new Gson();
+		  User user = gson.fromJson(data,User.class);
+		  UserDao userdao = new UserDao();
+		  return gson.toJson(userdao.createEcommerceUser(user, key));
+	  }
+	  @POST
+	  @Path("ecuser/recoverusername/{key}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String recoverECUsername(String data,@Context HttpServletRequest request,@PathParam("key") String key){
+		  Gson gson = new Gson();
+		  UserDao userdao = new UserDao();
+		  return gson.toJson(userdao.usernameECForgotten(data, key));
+	  }
+	  @POST
+	  @Path("ecuser/recoverpassword/")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String recoverECPassword(String data,@Context HttpServletRequest request){
+		  Gson gson = new Gson();
+		  UserDao userdao = new UserDao();
+		  User u = gson.fromJson(data,User.class);
+		  return gson.toJson(userdao.resetPassword(u));
+	  }
+	  @POST
+	  @Path("ecuser/askrecoverpassword/{key}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String askrecoverECPassword(String data,@Context HttpServletRequest request,@PathParam("key") String key){
+		  Gson gson = new Gson();
+		  UserDao userdao = new UserDao();
+		  return gson.toJson(userdao.passwordECForgotten(data, key));
 	  }
 }

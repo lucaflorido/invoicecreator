@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ea2e4e17-4651-429f-b0f0-5522f72621e5">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="208"/>
-	<property name="ireport.y" value="481"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="style1"/>
 	<subDataset name="Table Dataset 1" uuid="f4eec932-f9ea-41f7-a44f-2f57c93c1876"/>
 	<field name="cliente_ragionesociale" class="java.lang.String"/>
@@ -46,6 +46,11 @@
 	<field name="azienda_telefono" class="java.lang.String"/>
 	<field name="azienda_fax" class="java.lang.String"/>
 	<field name="azienda_email" class="java.lang.String"/>
+	<field name="commissione" class="java.lang.String"/>
+	<field name="importo_commissione" class="java.lang.String"/>
+	<field name="trasporto" class="java.lang.String"/>
+	<field name="destinazione_indirizzo" class="java.lang.String"/>
+	<field name="destinazione_indirizzo2" class="java.lang.String"/>
 	<variable name="variable1" class="java.lang.Number" resetType="Column" incrementType="Column" calculation="Count"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -88,33 +93,22 @@
 				<text><![CDATA[P IVA e C.F.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="102" y="61" width="100" height="20" uuid="2f3bba36-60bd-4450-a0a5-08c26128723c"/>
+				<reportElement x="29" y="60" width="100" height="20" uuid="2f3bba36-60bd-4450-a0a5-08c26128723c"/>
 				<textFieldExpression><![CDATA[$F{azienda_telefono}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="239" y="61" width="100" height="20" uuid="58f924de-bc9f-47db-aa43-4dd22b0028e4"/>
-				<textFieldExpression><![CDATA[$F{azienda_fax}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="385" y="61" width="147" height="20" uuid="088d96ef-213f-49fb-8342-8e1b95121620"/>
+				<reportElement x="165" y="60" width="147" height="20" uuid="088d96ef-213f-49fb-8342-8e1b95121620"/>
 				<textFieldExpression><![CDATA[$F{azienda_email}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="80" y="61" width="18" height="20" uuid="bdadded2-afa7-4af6-be93-dcb1355740fb"/>
+				<reportElement x="11" y="60" width="18" height="20" uuid="bdadded2-afa7-4af6-be93-dcb1355740fb"/>
 				<textElement markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Tel.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="202" y="60" width="34" height="20" uuid="49423b26-e661-44f0-bac3-69adf741b4ee"/>
-				<textElement markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false"/>
-				</textElement>
-				<text><![CDATA[- Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="346" y="60" width="34" height="20" uuid="3241220a-0506-44c0-98e5-300f0076b35e"/>
+				<reportElement x="129" y="60" width="34" height="20" uuid="3241220a-0506-44c0-98e5-300f0076b35e"/>
 				<textElement markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false"/>
 				</textElement>
@@ -212,6 +206,21 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{documento_numero}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="310" y="128" width="221" height="20" uuid="2677b121-768d-4fa7-9834-cd3732e67365"/>
+				<textFieldExpression><![CDATA[$F{destinazione_indirizzo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="148" width="221" height="20" uuid="74171b9c-d7f5-4c57-872e-b06b696db709"/>
+				<textFieldExpression><![CDATA[$F{destinazione_indirizzo2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="128" width="58" height="20" uuid="b698fbfa-375e-433a-ad7f-ed9c7db68fd8"/>
+				<textElement markup="none">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consegna ]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -490,7 +499,7 @@
 				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="447" y="75" width="100" height="20" uuid="eb726a1d-3088-4ee9-8043-dd78b922423f"/>
+				<reportElement x="447" y="114" width="100" height="20" uuid="eb726a1d-3088-4ee9-8043-dd78b922423f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
@@ -511,7 +520,7 @@
 				<text><![CDATA[Imposta:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="366" y="75" width="81" height="20" uuid="22d72fc4-fcd7-4803-95f0-309b7d1197f9"/>
+				<reportElement x="366" y="114" width="81" height="20" uuid="22d72fc4-fcd7-4803-95f0-309b7d1197f9"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -589,24 +598,48 @@
 				</textElement>
 				<text><![CDATA[Note]]></text>
 			</staticText>
-			<rectangle>
-				<reportElement x="369" y="95" width="175" height="36" uuid="ed301e0c-5f28-4178-9e6e-ec0f6dae6d60"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="375" y="97" width="50" height="10" uuid="83601931-02e0-4d26-bad0-8c50cf844ef7"/>
-				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[Firma cessionario]]></text>
-			</staticText>
 			<line>
-				<reportElement x="366" y="73" width="181" height="1" uuid="470bed78-2764-4361-80e8-55b2979d3f3d"/>
+				<reportElement x="366" y="112" width="181" height="1" uuid="470bed78-2764-4361-80e8-55b2979d3f3d"/>
 			</line>
 			<staticText>
 				<reportElement x="7" y="137" width="540" height="36" uuid="76880f9a-aa4e-4227-ae7e-7cf5f37f6869"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Il presente documente assolve gli obblighi di cui all'art.62, comma 1 del decreto legge 24 gennaio 2012 n.1 convertito con modificazioni dalla legge 24 marzo 2012 n. 27.]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="447" y="75" width="23" height="18" uuid="7d8555b8-bc00-4b4c-839e-f17f3b360063"/>
+				<textFieldExpression><![CDATA[$F{commissione}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="366" y="72" width="80" height="20" uuid="d2e644c2-7aca-499c-a1ec-02d16e3ee8dc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[commissione:]]></text>
+			</staticText>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="470" y="72" width="77" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c930409d-ad83-4134-9439-d04f92db6efb"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importo_commissione}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="366" y="92" width="80" height="20" uuid="5021a506-0c68-4a69-9bee-c4a8c6861141"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[trasporto:]]></text>
+			</staticText>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="447" y="91" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="672a3795-2c9f-441d-881d-b1a2e7e9c869"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trasporto}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>
