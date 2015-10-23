@@ -59,6 +59,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.rowset.serial.SerialClob;
 
 import org.hibernate.Criteria;
@@ -1563,7 +1564,7 @@ public class DocumentDao {
 	
 	}
 	
-	public GECOObject createOrderFromDraft(ServletContext context,User user,Draft draft){
+	public GECOObject createOrderFromDraft(ServletContext context,HttpServletRequest request,User user,Draft draft,boolean newuser){
 		try{
 			RegistryDao rdao = new RegistryDao();
 			Customer c = rdao.getCustomerFromUser(user);
@@ -1596,7 +1597,7 @@ public class DocumentDao {
 			setRowsFromDraft(draft,h,user);
 			GECOObject objg = new DocumentDao().saveHead(h, user);
 			if (objg .type.equals(GECOParameter.SUCCESS_TYPE) == true){
-				return new MailDao().sendOrderOnline(context, h, user);
+				return new MailDao().sendOrderOnline(context,request, h, user,newuser);
 			}else{
 				return objg;
 			}

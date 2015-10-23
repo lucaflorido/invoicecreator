@@ -296,10 +296,11 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 /*****
 LOGOUT
 ***/
-gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$location","AppConfig","PermissionFactory","LoaderFactory",function($scope,$rootScope,$http,$location,AppConfig,PermissionFactory,LoaderFactory){
+gecoControllers.controller('StartupCtrl',function($scope,$rootScope,$http,$location,AppConfig,PermissionFactory,LoaderFactory,MenuFactory){
     $rootScope.viewheader = false;
     $scope.auth = PermissionFactory;
     $scope.loader = LoaderFactory;
+    $scope.menu = MenuFactory;
     $scope.conf_permission = AppConfig.Permissions;
 	$scope.logout = function(){
 		$http.get(AppConfig.ServiceUrls.Logout).then(
@@ -313,7 +314,7 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 	}
 	$http.get(AppConfig.ServiceUrls.CheckUser).then(
 			function(result){
-				if (result.data.username != "" && result.data.username != null){
+				if (result && result.data && result.data.username && result.data.username != "" ){
 					//checkrole(result);
 					$rootScope.viewheader = true;
 				}else{
@@ -360,7 +361,7 @@ gecoControllers.controller('StartupCtrl',["$scope","$rootScope","$http","$locati
 		$location.path("/company");
 	} 
 	
-}]);
+});
 
 gecoControllers.controller('ProfileCtrl',function($scope,$http,AppConfig,$cookies,FormatFactory,DraftFactory){
 	$http.get(AppConfig.ServiceUrls.CheckUser).success(function(data){

@@ -128,6 +128,15 @@ public class UserService {
 		user.convertFromTable(tbluser);
 		return gson.toJson(user);
 	  }
+	  @GET
+	  @Path("refreshuser/{code}")
+	  @Produces(MediaType.TEXT_HTML)
+	  public String singleUser(@PathParam("code") String code) {
+		Gson gson = new Gson();
+		UserDao userdao = new UserDao();
+		User user =  userdao.getSingleUserVO(code);
+		return gson.toJson(user);
+	  }
 	  /***
 		Delete user 
 	   */
@@ -174,7 +183,7 @@ public class UserService {
 		  Gson gson = new Gson();
 		  User user = gson.fromJson(data,User.class);
 		  UserDao userdao = new UserDao();
-		  return gson.toJson(userdao.createEcommerceUser(user, key));
+		  return gson.toJson(userdao.createEcommerceUser(user, key,request));
 	  }
 	  @POST
 	  @Path("ecuser/recoverusername/{key}")
@@ -202,6 +211,6 @@ public class UserService {
 	  public String askrecoverECPassword(String data,@Context HttpServletRequest request,@PathParam("key") String key){
 		  Gson gson = new Gson();
 		  UserDao userdao = new UserDao();
-		  return gson.toJson(userdao.passwordECForgotten(data, key));
+		  return gson.toJson(userdao.passwordECForgotten(data, key,request));
 	  }
 }

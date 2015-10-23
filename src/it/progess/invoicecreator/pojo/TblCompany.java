@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import it.progess.invoicecreator.vo.Company;
+import it.progess.invoicecreator.vo.Currency;
 import it.progess.invoicecreator.vo.EcDelivery;
 import it.progess.invoicecreator.vo.EcPaymentCompany;
 import it.progess.invoicecreator.vo.Ivo;
@@ -68,6 +69,16 @@ public class TblCompany implements Itbl {
 	@JoinColumn(name="idEcDelivery", insertable = false, updatable = false)
 	@Fetch(FetchMode.SELECT)
 	private TblEcDelivery ecdelivery;
+	@ManyToOne
+	@JoinColumn(name="idcurrency")
+	private TblCurrency currency;
+	
+	public TblCurrency getCurrency() {
+		return currency;
+	}
+	public void setCurrency(TblCurrency currency) {
+		this.currency = currency;
+	}
 	public TblEcDelivery getEcdelivery() {
 		return ecdelivery;
 	}
@@ -193,7 +204,10 @@ public class TblCompany implements Itbl {
 			this.ecdelivery = new TblEcDelivery();
 			this.ecdelivery.convertToTable(co.getEcdelivery());
 		}
-		
+		if (co.getCurrency() != null){
+			this.currency = new TblCurrency();
+			this.currency.convertToTable(co.getCurrency());
+		}
 	}
 	
 	public void convertToTableSave(Ivo obj){

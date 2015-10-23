@@ -76,11 +76,12 @@ public class HibernateUtils {
 		}
 		
 		Gson gson = new Gson();
-		TblUser tbluser = gson.fromJson(user, TblUser.class);
+		/*TblUser tbluser = gson.fromJson(user, TblUser.class);
 		User loggeduser = new User();
 		if (tbluser != null){
 			loggeduser.convertFromTable(tbluser);
-		}
+		}*/
+		User loggeduser = gson.fromJson(user, User.class);
 		return loggeduser;
 	}
 	public static float roundfloat(float a){

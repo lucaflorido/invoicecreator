@@ -508,7 +508,7 @@ public class RegistryService {
 		  UserCustomer sms = gson.fromJson(data,UserCustomer.class);
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
-		  return gson.toJson(dao.createUserCustomer(loggeduser,sms));
+		  return gson.toJson(dao.createUserCustomer(loggeduser,sms,request));
 	  }
 	  @PUT
 	  @Path("customer")

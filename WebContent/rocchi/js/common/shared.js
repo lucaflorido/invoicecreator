@@ -54,7 +54,7 @@ angular.module('modules.common.shared', [])
 	return factory;
 }).factory("MenuFactory",function(){
 	var factory = {};
-	
+	factory.ec = false;
 	return factory;
 }).factory("FormatFactory",function(){
 	var factory = {};

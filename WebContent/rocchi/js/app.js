@@ -36,6 +36,7 @@ var gecoApp = angular.module("gecoApp",
 	            		CustomerUser:main_domain+ "/rest/registry/customer/user/",
 	            		Company:main_domain+ "/rest/registry/company/",
 	            		Country:main_domain+ "/rest/geo/countries/",
+	            		Currency:main_domain+"/rest/basic/currency/",
 	            		Zone:main_domain+ "/rest/geo/zones/",
 	            		City:main_domain+ "/rest/geo/cities/",
 	            		CityCountry:main_domain+ "/rest/geo/cities/country/",
@@ -111,6 +112,7 @@ var gecoApp = angular.module("gecoApp",
 		                CheckHead:main_domain+"/rest/head/checkhead",
 		                PrintHead:main_domain+"/rest/print/head/",
 		                UserSave:main_domain+ "/rest/user/saveuser",
+		                UserRefresh:main_domain+ "/rest/user/refreshuser/",
 		                UserChangePassword:main_domain+ "/rest/user/changepassword"
 		            },Permissions:{
 		            	Promoter:"promoter",
@@ -119,7 +121,8 @@ var gecoApp = angular.module("gecoApp",
 		            	Customer:"customer"
 		            },Const:{
 		            	ServerProblem:"Problema con la connessione al server,contattare l'amministrazione del sistema",
-		            	CompanyId:"94579938-e847-46b2-9063-4692f15aa8b6"
+		            	CompanyId:"94579938-e847-46b2-9063-4692f15aa8b6",
+		            	PaypalURL:"https://www.sandbox.paypal.com/cgi-bin/webscr"
 
 		            }
 		        };
@@ -156,19 +159,21 @@ var gecoApp = angular.module("gecoApp",
    return {
      require: 'ngModel',
      link: function(scope, element, attrs, modelCtrl) {
-        var capitalize = function(inputValue) {
-		if (inputValue != null && inputValue != undefined){
-			   var capitalized = inputValue.toUpperCase();
-			   if(capitalized !== inputValue) {
-				  modelCtrl.$setViewValue(capitalized);
-				  modelCtrl.$render();
-				}         
-				return capitalized;
-			 }
+    	 var capitalize = function(inputValue) {
+				var capitalized ="";
+				if (inputValue !== null && inputValue != undefined){
+				   capitalized = inputValue.toUpperCase();
+				   if(capitalized !== inputValue) {
+					  modelCtrl.$setViewValue(capitalized);
+					  modelCtrl.$render();
+					}         
+					return capitalized;
+				}
+			}
 			 modelCtrl.$parsers.push(capitalize);
 			 capitalize($parse(attrs.ngModel)(scope)); // capitalize initial value
 		 }
-     }
+     
    };
 }).directive('createDatepicker', function ($timeout) {
     return {
@@ -408,6 +413,10 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/ec',
 			templateUrl: 'template/ecommerce.htm',
 			controller:'ECommerceCtrl'
+		}).state('ecproduct', {
+			url:'/ecproduct/:idproduct',
+			templateUrl: 'template/draft/productdetails.html',
+			controller:'EcProjectDetail'
 		}).state('newecuser', {
 			url:'/newecuser',
 			templateUrl: 'template/profile/newecuser.html',

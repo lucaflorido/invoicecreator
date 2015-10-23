@@ -9,6 +9,7 @@ import javamailhelper.runner.EMailSender;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -19,6 +20,7 @@ import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.TblMailText;
 import it.progess.invoicecreator.pojo.TblStorage;
 import it.progess.invoicecreator.pojo.TblUser;
+import it.progess.invoicecreator.properties.ICParameter;
 import it.progess.invoicecreator.properties.MailParameter;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
@@ -31,6 +33,7 @@ import it.progess.invoicecreator.vo.Storage;
 import it.progess.invoicecreator.vo.User;
 
 public class MailDao {
+	private String testResponseEmail = "lucaflorido@gmail.com"; // "a1d1@libero.it"; //"lucaflorido@gmail.com";
 	public GECOObject testEmail(User user,MailConfig conf ){
 		if (conf == null){
 			return new GECOError("MAIL", "Mail non configurata");
@@ -78,7 +81,7 @@ public class MailDao {
 		}
 		return new GECOSuccess();
 	}
-	public GECOObject sendNewCustomerUser(User user,User newUser,String param){
+	public GECOObject sendNewCustomerUser(User user,User newUser,String param,HttpServletRequest request){
 		/**REAL CONFIGURATION**/
 		/*if (conf == null){
 			return new GECOError("MAIL", "Mail non configurata");
@@ -93,12 +96,12 @@ public class MailDao {
 		values.add(newUser.getName()+" "+newUser.getSurname());
 		values.add(newUser.getUsername());
 		values.add(newUser.getPassword());
-		values.add("http://localhost:8080/InvoiceCreator/rocchi/activate.html?code="+newUser.getCode());
+		values.add(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ICParameter.SECOND_DOMAIN+"activate.html?code="+newUser.getCode());
 		TblMailText tmt = getMailProperties(param,user.getCompany().getCode());
 		if(tmt == null){
 			return new GECOError("MAIL", "Testo Mail non configurato nel sistema");
 		}
-		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com",tmt.getObject(),fillMailText(tmt.getText(), values));
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com",testResponseEmail,tmt.getObject(),fillMailText(tmt.getText(), values));
 		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
 		config.setPort("587");
 		try{
@@ -110,7 +113,7 @@ public class MailDao {
 		return new GECOSuccess();
 	}
 	
-	public GECOObject sendNewCustomerUser(String key,User newUser,String param){
+	public GECOObject sendNewCustomerUser(String key,User newUser,String param,HttpServletRequest request){
 		/**REAL CONFIGURATION**/
 		/*if (conf == null){
 			return new GECOError("MAIL", "Mail non configurata");
@@ -125,12 +128,12 @@ public class MailDao {
 		values.add(newUser.getName()+" "+newUser.getSurname());
 		values.add(newUser.getUsername());
 		values.add(newUser.getPassword());
-		values.add("http://localhost:8080/InvoiceCreator/rocchi/activate.html?code="+newUser.getCode());
+		values.add(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ICParameter.SECOND_DOMAIN+"activate.html?code="+newUser.getCode());
 		TblMailText tmt = getMailProperties(param,key);
 		if(tmt == null){
 			return new GECOError("MAIL", "Testo Mail non configurato nel sistema");
 		}
-		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com",tmt.getObject(),fillMailText(tmt.getText(), values));
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com",testResponseEmail,tmt.getObject(),fillMailText(tmt.getText(), values));
 		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
 		config.setPort("587");
 		try{
@@ -141,7 +144,7 @@ public class MailDao {
 		}
 		return new GECOSuccess();
 	}
-	public GECOObject sendOrderOnline(ServletContext context,Head head,User user  ){
+	public GECOObject sendOrderOnline(ServletContext context,HttpServletRequest request,Head head,User user,boolean newuser  ){
 		/*if (conf == null){
 			return new GECOError("MAIL", "Mail non configurata");
 		}*/
@@ -155,10 +158,14 @@ public class MailDao {
 		}*/
 		ArrayList<String> values = new ArrayList<String>();
 		values.add(head.getCustomer().getCustomername());
+		String mailtype = MailParameter.NEW_ONLINE_ORDER_MAIL;
+		if (newuser == true){
+			values.add(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ICParameter.SECOND_DOMAIN+"activate.html?code="+user.getCode());
+			mailtype = MailParameter.NEW_USER_NEW_ORDER_ONLINE;
+		}
 		
-		
-		TblMailText tmt = getMailProperties(MailParameter.NEW_ONLINE_ORDER_MAIL,user.getCompany().getCode());
-		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com",tmt.getObject(),fillMailText(tmt.getText(), values));
+		TblMailText tmt = getMailProperties(mailtype,user.getCompany().getCode());
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com",testResponseEmail,tmt.getObject(),fillMailText(tmt.getText(), values));
 		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
 		config.setPort("587");
 		try{
@@ -196,7 +203,7 @@ public class MailDao {
 			return new GECOError("MAIL", "Testo Mail non configurato nel sistema");
 		}
 		
-		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com",tmt.getObject(),fillMailText(tmt.getText(), values));
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com",testResponseEmail,tmt.getObject(),fillMailText(tmt.getText(), values));
 		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
 		config.setPort("587");
 		try{
@@ -208,7 +215,7 @@ public class MailDao {
 		}
 		return new GECOSuccess();
 	}
-	public GECOObject sendEcRecoverPassword(TblUser u){
+	public GECOObject sendEcRecoverPassword(TblUser u,HttpServletRequest request){
 		/**REAL CONFIGURATION**/
 		/*if (conf == null){
 			return new GECOError("MAIL", "Mail non configurata");
@@ -221,13 +228,13 @@ public class MailDao {
 		/*TODO calculate the main domain*/
 		ArrayList<String> values = new ArrayList<String>();
 		values.add(u.getName()+" "+u.getSurname());
-		values.add("http://localhost:8080/InvoiceCreator/rocchi/#/ecpassword?uid="+u.getCode());
+		values.add(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ICParameter.SECOND_DOMAIN+"#/ecpassword?uid="+u.getCode());
 		TblMailText tmt = getMailProperties(MailParameter.EC_RECOVER_PASSWORD,u.getCompany().getCode());
 		if(tmt == null){
 			return new GECOError("MAIL", "Testo Mail non configurato nel sistema");
 		}
 		
-		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com","lucaflorido@gmail.com",tmt.getObject(),fillMailText(tmt.getText(), values));
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com",testResponseEmail,tmt.getObject(),fillMailText(tmt.getText(), values));
 		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
 		config.setPort("587");
 		try{

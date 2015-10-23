@@ -1,12 +1,14 @@
 package it.progess.invoicecreator.service;
 
 import it.progess.invoicecreator.dao.BasicDao;
+import it.progess.invoicecreator.dao.RegistryDao;
 import it.progess.invoicecreator.dao.UserDao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.vo.Brand;
 import it.progess.invoicecreator.vo.CategoryCustomer;
 import it.progess.invoicecreator.vo.CategoryProduct;
 import it.progess.invoicecreator.vo.CategorySupplier;
+import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Counter;
 import it.progess.invoicecreator.vo.Document;
 import it.progess.invoicecreator.vo.GroupCustomer;
@@ -29,6 +31,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -306,7 +309,8 @@ public class BasicService {
 	  
 	  /*****
 	   * 
-	   * GroupProduct
+	   * GroupProduct User user = new User();
+		user.setCompany(new RegistryDao().getCompany(key));
 	   * @return
 	   */
 	  @GET
@@ -317,6 +321,16 @@ public class BasicService {
 		Gson gson = new Gson();
 		BasicDao dao = new BasicDao();
 		return gson.toJson(dao.getGroupProductList(loggeduser));
+	  }
+	  @GET
+	  @Path("groupproduct/{key}")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getGroupProductList(@Context HttpServletRequest request,@PathParam("key") String key){
+		User user = new User();
+		user.setCompany(new RegistryDao().getCompany(key));
+		Gson gson = new Gson();
+		BasicDao dao = new BasicDao();
+		return gson.toJson(dao.getGroupProductList(user));
 	  }
 	  @GET
 	  @Path("groupproduct/prompt")
@@ -368,9 +382,20 @@ public class BasicService {
  	  @Produces(MediaType.TEXT_PLAIN)
 	  public String getCategoryProductList(@Context HttpServletRequest request){
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
-		Gson gson = new Gson();
-		BasicDao dao = new BasicDao();
+		  Gson gson = new Gson();
+		  BasicDao dao = new BasicDao();
 		return gson.toJson(dao.getCategoryProductList(loggeduser));
+	  }
+	  @GET
+	  @Path("categoryproduct/{key}")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getCategoryProductList(@Context HttpServletRequest request,@PathParam("key") String key){
+		  User user = new User();
+		  Company c = new RegistryDao().getCompany(key);
+		  user.setCompany(c);
+		  Gson gson = new Gson();
+		  BasicDao dao = new BasicDao();
+		return gson.toJson(dao.getCategoryProductList(user));
 	  }
 	  @PUT
 	  @Path("categoryproduct")
@@ -615,6 +640,16 @@ public class BasicService {
 		BasicDao dao = new BasicDao();
 		return gson.toJson(dao.getBrandList(loggeduser));
 	  }
+	  @GET
+	  @Path("brand/{key}")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getBrandList(@Context HttpServletRequest request,@PathParam("key") String key){
+		User user = new User();
+		user.setCompany(new RegistryDao().getCompany(key));
+		Gson gson = new Gson();
+		BasicDao dao = new BasicDao();
+		return gson.toJson(dao.getBrandList(user));
+	  }
 	  @PUT
 	  @Path("brand")
 	  @Produces(MediaType.TEXT_PLAIN)
@@ -650,7 +685,7 @@ public class BasicService {
 	  /*****
 	   * 
 	   * Region
-	   * @return
+	   * @return 
 	   */
 	  @GET
 	  @Path("region")
@@ -661,7 +696,16 @@ public class BasicService {
 		BasicDao dao = new BasicDao();
 		return gson.toJson(dao.getRegionList(loggeduser));
 	  }
-	  
+	  @GET
+	  @Path("region/{key}")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getRegionList(@Context HttpServletRequest request,@PathParam("key") String key){
+		User user = new User();
+		user.setCompany(new RegistryDao().getCompany(key));
+		Gson gson = new Gson();
+		BasicDao dao = new BasicDao();
+		return gson.toJson(dao.getRegionList(user));
+	  }
 	  @PUT
 	  @Path("region")
 	  @Produces(MediaType.TEXT_PLAIN)
@@ -699,5 +743,13 @@ public class BasicService {
 		Gson gson = new Gson();
 		BasicDao dao = new BasicDao();
 		return gson.toJson(dao.getPaymentSolutionList());
+	  }
+	  @GET
+	  @Path("currency")
+ 	  @Produces(MediaType.APPLICATION_JSON)
+	  public String getCurrency(){
+		Gson gson = new Gson();
+		BasicDao dao = new BasicDao();
+		return gson.toJson(dao.getCurrencyList());
 	  }
 }

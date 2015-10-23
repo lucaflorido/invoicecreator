@@ -6,6 +6,7 @@ import it.progess.invoicecreator.pojo.TblCategoryCustomer;
 import it.progess.invoicecreator.pojo.TblCategoryProduct;
 import it.progess.invoicecreator.pojo.TblCategorySupplier;
 import it.progess.invoicecreator.pojo.TblCounter;
+import it.progess.invoicecreator.pojo.TblCurrency;
 import it.progess.invoicecreator.pojo.TblDocument;
 import it.progess.invoicecreator.pojo.TblGroupCustomer;
 import it.progess.invoicecreator.pojo.TblGroupProduct;
@@ -22,6 +23,7 @@ import it.progess.invoicecreator.vo.CategoryCustomer;
 import it.progess.invoicecreator.vo.CategoryProduct;
 import it.progess.invoicecreator.vo.CategorySupplier;
 import it.progess.invoicecreator.vo.Counter;
+import it.progess.invoicecreator.vo.Currency;
 import it.progess.invoicecreator.vo.Document;
 import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
@@ -1484,6 +1486,29 @@ public class BasicDao {
 					PaymentSolution payment = new PaymentSolution();
 					payment.convertFromTable(tblpayment);
 					list.add(payment);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public ArrayList<Currency> getCurrencyList(){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Currency> list = new ArrayList<Currency>();
+		try{
+			Criteria cr = session.createCriteria(TblCurrency.class);
+			List<TblCurrency> currencies = cr.list();
+			if (currencies.size() > 0){
+				for (Iterator<TblCurrency> iterator = currencies.iterator(); iterator.hasNext();){
+					TblCurrency tblcurrency = iterator.next();
+					Currency currency = new Currency();
+					currency.convertFromTable(tblcurrency);
+					list.add(currency);
 				}
 			}
 		}catch(HibernateException e){

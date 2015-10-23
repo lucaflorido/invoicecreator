@@ -39,6 +39,17 @@ gecoRegistryControllers.controller('CompanyEcCtrl',function($scope,$http,AppConf
 	$scope.draftaddress = {};
 	$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
 		$scope.company = result;
+		$http.get(AppConfig.ServiceUrls.Currency).success(function(result){
+			$scope.currencies = result;
+			if($scope.company.currency){
+				angular.forEach($scope.currencies,function(value){
+					if (value.idcurrency == $scope.company.currency.idcurrency){
+						$scope.company.currency = value;
+					}
+				});
+			}
+			
+		});
 		angular.forEach($scope.company.ecdelivery.deliverycountry,function(value){
 			if (value.deliveryzones && value.deliveryzones.length > 0){
 				value.showZoneRule = true;
@@ -82,12 +93,11 @@ gecoRegistryControllers.controller('CompanyEcCtrl',function($scope,$http,AppConf
 	$scope.initialize = function(){
 		$http.get(AppConfig.ServiceUrls.Country).success(function(result){
 			$scope.countries = result;
-			
 		});
 		$http.get(AppConfig.ServiceUrls.PaymentsSolution).success(function(result){
 			$scope.paymentsols = result;
-			
 		});
+		
 	}
 	$scope.initialize();
 	$scope.addRule = function(){

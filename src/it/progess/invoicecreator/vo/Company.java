@@ -29,6 +29,14 @@ public class Company implements Ivo {
 	private String code; 
 	private Set<EcPaymentCompany> ecpayments;
 	private EcDelivery ecdelivery;
+	private Currency currency;
+	
+	public Currency getCurrency() {
+		return currency;
+	}
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
 	public EcDelivery getEcdelivery() {
 		return ecdelivery;
 	}
@@ -138,6 +146,10 @@ public class Company implements Ivo {
 		if(co.getBankcontact() != null){
 			this.bankcontact = new BankContact();
 			this.bankcontact.convertFromTable(co.getBankcontact());
+		}
+		if (co.getCurrency() != null){
+			this.currency = new Currency();
+			this.currency.convertFromTable(co.getCurrency());
 		}
 		if(co.getMailconfig() != null){
 			this.mailconfig = new HashSet<MailConfigCompany>();

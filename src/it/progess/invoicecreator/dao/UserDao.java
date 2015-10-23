@@ -431,8 +431,8 @@ public class UserDao {
 	    user.setRole(role);
 		return saveUpdate(user);
 	}
-	public GECOObject createEcommerceUser(User user, String key){
-		return new DraftDao().createEcUserForm(user, key);
+	public GECOObject createEcommerceUser(User user, String key,HttpServletRequest request){
+		return new DraftDao().createEcUserForm(user, key,request);
 	}
 	public GECOObject usernameECForgotten(String tc,String key){
 		Session session = HibernateUtils.getSessionFactory().openSession();
@@ -472,7 +472,7 @@ public class UserDao {
 		}
 		return new MailDao().sendEcRecoverUsername(u);
 	}
-	public GECOObject passwordECForgotten(String tc,String key){
+	public GECOObject passwordECForgotten(String tc,String key,HttpServletRequest request){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Contact c = new Contact();
 		try{
@@ -508,7 +508,7 @@ public class UserDao {
 		if (u.getCompany().getCode().equals(key) == false){
 			return new GECOError("UT","Utente non valido");
 		}
-		return new MailDao().sendEcRecoverPassword(u);
+		return new MailDao().sendEcRecoverPassword(u,request);
 	}
 	public GECOObject resetPassword(User u){
 		if (u.getPassword().equals(u.getConfirmpassword()) == false){

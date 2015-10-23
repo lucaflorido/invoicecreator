@@ -75,6 +75,7 @@ import javamailhelper.message.EMailMessage;
 import javamailhelper.runner.EMailSender;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -1604,7 +1605,7 @@ public class RegistryDao {
 		}
 		return new GECOSuccess(id);
 	}
-	public GECOObject createUserCustomer(User loggeduser,UserCustomer uc){
+	public GECOObject createUserCustomer(User loggeduser,UserCustomer uc,HttpServletRequest request){
 		if (uc.control() != null){
 			return uc.control();
 		}
@@ -1632,7 +1633,7 @@ public class RegistryDao {
 			System.out.println(ex.getMessage());
 		}*/
 		user.setPassword(user.getUsername());
-		return new MailDao().sendNewCustomerUser(loggeduser, user,MailParameter.NEW_USER_CUSTOMER_MAIL);
+		return new MailDao().sendNewCustomerUser(loggeduser, user,MailParameter.NEW_USER_CUSTOMER_MAIL,request);
 	}
 	public GECOObject createCustomerFromUser(User user){
 		RegistryDao rd = new RegistryDao();
@@ -1746,6 +1747,29 @@ public class RegistryDao {
 		try{
 			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
 			cr.add(Restrictions.eq("idCustomer", idcustomer));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List customers = cr.list();
+			if (customers.size() > 0){
+				customer.convertFromTableSingle((TblCustomer)customers.get(0));
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return customer;
+	}
+	public Customer getSingleCustomerByTaxcode(String tc,String key){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Customer customer = new Customer();
+		//customer = getMockCustomer();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.taxcode", tc));
+			cr.createAlias("customer.company", "company");
+			cr.add(Restrictions.eqOrIsNull("company.code",key));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List customers = cr.list();
 			if (customers.size() > 0){

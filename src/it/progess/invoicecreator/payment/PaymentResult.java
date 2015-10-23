@@ -1,6 +1,7 @@
 package it.progess.invoicecreator.payment;
 
 import it.progess.invoicecreator.dao.DraftDao;
+import it.progess.invoicecreator.properties.ICParameter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,7 +47,7 @@ public class PaymentResult extends HttpServlet {
 	private void manageResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String draft = request.getParameter("did");
 		DraftDao d = new DraftDao();
-		d.confirmPayment(getServletContext(),draft);
-		response.sendRedirect("http://localhost:8080/InvoiceCreator/rocchi");
+		d.confirmPayment(getServletContext(),request,draft);
+		response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ICParameter.SECOND_DOMAIN+"#/ec?po=success");
 	}
 }

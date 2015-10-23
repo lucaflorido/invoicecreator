@@ -37,7 +37,7 @@ public class TblAddress implements Itbl {
 	@JoinColumn(name = "idzone")
 	private TblZone zoneObj;
 	@ManyToOne
-	@JoinColumn(name = "idcity", insertable = false, updatable = false)
+	@JoinColumn(name = "idcity")
 	private TblCity cityObj;
 	@Column(name="name")
 	private String name;
@@ -128,15 +128,15 @@ public class TblAddress implements Itbl {
 		this.country = ad.getCountry();
 		this.code = ad.getCode();
 		this.name = ad.getName();
-		if (ad.getCountryObj() != null){
+		if (ad.getCountryObj() != null && ad.getCountryObj().getIdCountry() > 0){
 			this.countryObj = new TblCountry();
 			this.countryObj.convertToTable(ad.getCountryObj());
 		}
-		if (ad.getZoneObj() != null){
+		if (ad.getZoneObj() != null && ad.getZoneObj().getIdZone() > 0){
 			this.zoneObj = new TblZone();
 			this.zoneObj.convertToTable(ad.getZoneObj());
 		}
-		if (ad.getCityObj() != null){
+		if (ad.getCityObj() != null && ad.getCityObj().getIdCity()>0){
 			this.cityObj = new TblCity();
 			this.cityObj.convertToTable(ad.getCityObj());
 		}

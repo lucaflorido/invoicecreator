@@ -76,13 +76,13 @@ public class DraftService {
 		return gson.toJson(dao.refreshDraft( session, de));
 	}
 	@POST
-	@Path("confirmdraft/{draftid}/{paymenttype}")
+	@Path("confirmdraft/{draftid}/{paymenttype}/{companyKey}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String confirmDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid,@PathParam("paymenttype") String paymenttype) {
+	public String confirmDraft(@Context HttpServletRequest request,String data,@PathParam("draftid") String draftid,@PathParam("paymenttype") String paymenttype,@PathParam("companyKey") String companyKey) {
 		HttpSession session = request.getSession();  
 		DraftDao dao = new DraftDao();
 		Gson gson = new Gson();
 		User user = gson.fromJson(data, User.class);
-		return gson.toJson(dao.confirmPayment(session,context, user, draftid, paymenttype));
+		return gson.toJson(dao.confirmPayment(session,context,request, user, draftid, paymenttype,companyKey));
 	}
 }

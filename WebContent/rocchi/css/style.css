@@ -7,7 +7,13 @@ body {
   margin: 100px 0;
   padding: 40px 20px 0 20px;
 }
-
+.ec_product_details{
+	padding-left:30px;
+}
+img.ec_image{
+	height: 250px;
+	width: 100%;
+}
 h1{
 	color: #fff;
 	font-size: 30px;
@@ -15,14 +21,146 @@ h1{
 	padding-top: 75px;
 	text-transform: uppercase;
 }
+@font-face {
+    font-family: 'england_hand_dbregular';
+    src: url('england-webfont.eot');
+    src: url('england-webfont.eot?#iefix') format('embedded-opentype'),
+         url('england-webfont.woff') format('woff'),
+         url('england-webfont.ttf') format('truetype'),
+         url('england-webfont.svg#england_hand_dbregular') format('svg');
+    font-weight: lighter;
+    font-style: normal;
 
+}
+.title {
+    font-family: england_hand_dbregular;
+    text-align: center;
+    font-size: 80px;
+    color: #00ABF4;
+    text-shadow: 1px 2px #000;
+    font-weight: lighter;
+}
+.subtitle{
+	font-family: helvetica;
+	color: #00ABF4;
+	text-align: center;
+	font-weight: lighter;
+	text-shadow: 1px 2px #000;
+	margin: 0px;
+	
+}
+select{
+	-moz-appearance: none !important;
+background-color: #FAFAFA;
+background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+");
+background-position: 100% center;
+background-repeat: no-repeat;
+border-style: solid;
+border-width: 1px;
+border-color: #CCC;
+color: rgba(0, 0, 0, 0.75);
+font-family: inherit;
+font-size: 0.77778rem;
+line-height: normal;
+padding: 0.44444rem;
+border-radius: 0px;
+height: 2.05556rem;
+}
+.login_recover{
+	font-size:12px;
+}
+input.login_input{
+	margin: 0px;
+	font-size: 12px;
+	height: 2.3em;
+}
 .hero {
 	background-image: url(../assets/hero.jpg);
 	background-repeat: no-repeat;
 	background-size: cover;
 
 }
+.hero_ec {
+	background-image: url(../assets/provaperhero2.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: absolute;
+	top:45px;
+	left:0;
+	width:100%;
+	height:441px;
+}
+.header_space{
+	height:50px;
+}
+.header{
+	height:100px;
+	position:absolute;
+	top:0px;
+	right:0px;
+}
+button{
+	background-color: #00ABF4;
+	}
+.draftbox{
+	
+}
+.draft_title{
+	font-family: england_hand_dbregular;
+    text-align: center;
+    font-size: 40px;
+    color: #00ABF4;
+    
+    font-weight: lighter;
+}
+.ec_top_box{
+	height:400px;
+}
+alert{
+	font-family: helvetica;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.subtotal_ec h5, .subtotal_ec_amount h5{
+	font-family: helvetica;
+	font-weight: lighter;
+	font-size: 30px;
+}
+.subtotal_ec_amount{}
+h5.ec_warning{
+	color:orange;
+	font-family: england_hand_dbregular;
+}
+button.tiny, .button.tiny{
+	font-size:16px;
+}
+.draftbox button.tiny, .draftbox .button.tiny{
+	font-size:20px;
+}
+.login_button{
+	padding-top:2px;
+	float:right;
+}
+.loginbox{
+	background-color:rgb(223, 223, 223);
+	padding: 5px;
+border: 2px solid  #00ABF4;
 
+}
+.login_container{
+	position: absolute;
+	top: 48px;
+	right: -10px;
+	max-width: 240px;
+}
+.filterlabel{
+	font-family: england_hand_dbregular;
+	color: #AE9A71;
+	text-align: left;
+	font-size:20px;
+	font-weight: lighter;
+	margin-bottom: 1px;
+}
 .img1 {
 	background-image: url(../assets/botti.jpg);
 	background-repeat: no-repeat;
@@ -132,7 +270,7 @@ background-color: white;
   left: 50%;
   margin-left: -225px;
   margin-top: 4%;
-
+}
 .loading {
     background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.8);
     height: 100%;
@@ -277,17 +415,40 @@ background-color: white;
   width: 20px;
 
 }
-.ec_image{
-	height: 200px;
-	width: 100%;
+.ec_pricebox{
+	background-color: #dedede;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.ec_quantity{
+	background-color:#00ADEF;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 .ec_image_draft{
 	height: 100px;
 	width: 100%;
 }
 .ec_title{
-	font-size: 12px;
-	font-weight: 700;
+	font-size: 16px;
+	text-align: center;
+	font-style: italic;
+	color: #007095;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.ec_price{
+	font-size: 22px;
+	text-align: center;
+	font-weight: bold;
+	color: #007095;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.ec_btn{
+	text-align:center;
 }
 .ec_description{
 	font-size: 11px;
@@ -297,9 +458,20 @@ background-color: white;
 }
 .ec_delivery.intime{
 	color:green;
+	font-size: 17px;
+	font-style: italic;
+	font-weight: bold;
 }
 .ec_delivery.late{
 	color:red;
+	font-size: 17px;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.panel_ec{
+	background-color:#EBEBEB;
+	padding-top: 15px;
 }
 .fi-white{
 	color:#ffffff;
@@ -329,6 +501,7 @@ background-color: white;
 .pr_total{
 	font-weight: 700;
 }
+
 @media only screen and (max-width: 900px){
 	.height-250 {
 		height: 200px;

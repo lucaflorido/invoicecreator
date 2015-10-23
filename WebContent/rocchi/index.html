@@ -67,7 +67,7 @@
     		Elaborazione in corso...attendere prego
     	</div>
     </div>
-    <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl" > 
+    <nav class="top-bar" data-topbar role="navigation" ng-controller="StartupCtrl"  > 
 		<ul class="title-area" > 
 			 <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
 
@@ -158,13 +158,13 @@
 				
 			</ul> 
 			
-			<ul class="right"> 
+			<ul class="right" ng-hide="menu.ec" > 
 			    <li ng-show="viewheader == true" > <a ng-click="logout()">Logout</a> </li> 
 			</ul>
-			<ul class="right"> 
+			<ul class="right" ng-hide="menu.ec" > 
 			    <li ><a ng-click="openProfile()"> <i class="fi-torso" ng-show="viewheader == true"></i>{{auth.user.username}}</a></li>
 			</ul>
-			<ul class="right"> 
+			<ul class="right" ng-hide="menu.ec" > 
 			    <li ><a ng-click="openCompany()"> <i class="fi-torso" ng-show="viewheader == true"></i>{{auth.user.company.companyname}}</a></li>
 			</ul>
 		</section> 
