@@ -381,14 +381,6 @@ public class TblHead extends it.progess.model.pojo.Head implements Itbl {
 	public void convertToTableSingle(Ivo obj,User user){
 		this.convertToTable(obj);
 		Head h = (Head)obj;
-		if (h.getRows() != null){
-			for (Iterator<Row> iterator = h.getRows().iterator(); iterator.hasNext();){
-				Row listrow = iterator.next();
-				TblRow rowtbl = new TblRow();
-				rowtbl.convertToTable(listrow);
-				this.rows.add(rowtbl);
-			}
-		}
 		if (this.idHead > 0){
 			super.setDateupdate(new Date());
 			super.setUserupdate(user.getUsername());
@@ -397,10 +389,34 @@ public class TblHead extends it.progess.model.pojo.Head implements Itbl {
 			super.setUsercreate(user.getUsername());
 		
 		}
+		if (h.getRows() != null){
+			for (Iterator<Row> iterator = h.getRows().iterator(); iterator.hasNext();){
+				Row listrow = iterator.next();
+				TblRow rowtbl = new TblRow();
+				rowtbl.convertToTable(listrow);
+				if (rowtbl.getIdRow() == 0){
+					rowtbl.setUsercreate(user.getUsername());
+					rowtbl.setDateinsert(new Date());
+				}else{
+					rowtbl.setUserupdate(user.getUsername());
+					rowtbl.setDateupdate(new Date());
+				}
+				this.rows.add(rowtbl);
+			}
+		}
+		
 	}
 	public void convertToTableSingleToSave(Ivo obj,User user){
 		this.convertToTable(obj);
 		Head h = (Head)obj;
+		if (this.idHead > 0){
+			super.setDateupdate(new Date());
+			super.setUserupdate(user.getUsername());
+		}else{
+			super.setDateinsert(new Date());
+			super.setUsercreate(user.getUsername());
+		
+		}
 		if (h.getRows() != null){
 			this.rows = new HashSet<TblRow>();
 			for (Iterator<Row> iterator = h.getRows().iterator(); iterator.hasNext();){
@@ -409,17 +425,17 @@ public class TblHead extends it.progess.model.pojo.Head implements Itbl {
 				TblRow rowtbl = new TblRow();
 				rowtbl.convertToTable(listrow);
 				rowtbl.setHead(this);
+				if (rowtbl.getIdRow() == 0){
+					rowtbl.setUsercreate(user.getUsername());
+					rowtbl.setDateinsert(new Date());
+				}else{
+					rowtbl.setUserupdate(user.getUsername());
+					rowtbl.setDateupdate(new Date());
+				}
 				this.rows.add(rowtbl);
 			}
 		}
-		if (this.idHead > 0){
-			super.setDateupdate(new Date());
-			super.setUserupdate(user.getUsername());
-		}else{
-			super.setDateinsert(new Date());
-			super.setUsercreate(user.getUsername());
 		
-		}
 	}
 	
 }

@@ -57,6 +57,42 @@ public class TblRow implements Itbl {
 	private TblUnitMeasure um;
 	@Column(name="necks")
 	private double necks;
+	@Column(name="conversion")
+	private float conversion;
+	
+	@Column(name="usercreate")
+	private String usercreate;
+	@Column(name="userupdate")
+	private String userupdate;
+	@Column(name="dateupdate")
+	private Date dateupdate;
+	@Column(name="dateinsert")
+	private Date dateinsert;
+	
+	public String getUsercreate() {
+		return usercreate;
+	}
+	public void setUsercreate(String usercreate) {
+		this.usercreate = usercreate;
+	}
+	public String getUserupdate() {
+		return userupdate;
+	}
+	public void setUserupdate(String userupdate) {
+		this.userupdate = userupdate;
+	}
+	public Date getDateupdate() {
+		return dateupdate;
+	}
+	public void setDateupdate(Date dateupdate) {
+		this.dateupdate = dateupdate;
+	}
+	public Date getDateinsert() {
+		return dateinsert;
+	}
+	public void setDateinsert(Date dateinsert) {
+		this.dateinsert = dateinsert;
+	}
 	public double getNecks() {
 		return necks;
 	}
@@ -159,6 +195,13 @@ public class TblRow implements Itbl {
 	public void setExpiredate(Date expiredate) {
 		this.expiredate = expiredate;
 	}
+	
+	public float getConversion() {
+		return conversion;
+	}
+	public void setConversion(float conversion) {
+		this.conversion = conversion;
+	}
 	public void convertToTable(Ivo obj){
 		Row h = (Row)obj;
 		this.amount = h.getAmount();
@@ -173,6 +216,9 @@ public class TblRow implements Itbl {
 		this.type = h.getType();
 		this.serialnumber = h.getSerialnumber();
 		this.necks = h.getNecks();
+		this.conversion = h.getConversion();
+		if (this.conversion == 0)
+			this.conversion = 1;
 		this.expiredate = DataUtilConverter.convertDateFromString(h.getExpiredate());
 		if (h.getProduct()!= null){
 			this.product = new TblProduct();
@@ -186,5 +232,9 @@ public class TblRow implements Itbl {
 			this.um = new TblUnitMeasure();
 			this.um.convertToTable(h.getUm());
 		}
+		this.usercreate = h.getUsercreate();
+		this.userupdate = h.getUserupdate();
+		this.dateinsert = DataUtilConverter.convertDateFromString(h.getDateinsert());
+		this.dateupdate = DataUtilConverter.convertDateFromString(h.getDateupdate());
 	}
 }

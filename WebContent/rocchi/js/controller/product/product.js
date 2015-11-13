@@ -53,6 +53,7 @@ angular.module("rocchi.product")
 	$scope.subcategories = [];
 	$scope.changeCategory = function(){
 		$scope.subcategories = [];
+		if ($scope.filter && $scope.filter.category)
 		$scope.subcategories = $scope.filter.category.subcategories;
 	}
 	intitialize();
@@ -90,7 +91,7 @@ angular.module("rocchi.product")
 	
 	$scope.getProductsNumber = function(){
 		
-		if ($scope.products.length != $scope.pagesize){
+		//if ($scope.products.length != $scope.pagesize){
 		$scope.pages = [];
 		$scope.totalitems = 0;
 		$scope.pageArray = [];
@@ -101,7 +102,7 @@ angular.module("rocchi.product")
 				$scope.getProducts(1);
 			});
 			
-		}
+		//}
 	}
 	$scope.getProductsNumber();
 	
@@ -193,7 +194,7 @@ angular.module("rocchi.product")
 		 $location.path("/product/0");
 	 };
 }])
-.controller('RocchiProductDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","AppConfig","AlertsFactory","Upload",function($scope,$http,$stateParams,$location,$rootScope,AppConfig,AlertsFactory,Upload){
+.controller('RocchiProductDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$stateParams,$location,$rootScope,AppConfig,AlertsFactory){
     
 	GECO_validator.startupvalidator();
 	$scope.msg = AlertsFactory;

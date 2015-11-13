@@ -147,10 +147,12 @@ height: 37px;
 width: 40px;
 margin-top: -53px;
 position: relative;
-margin-left: 91%;
+margin-left: 94%;
 
 }
-
+.search.full{
+	margin-left: 96%;
+}
 .x {
 background-image: url("../img/x.png");
 height: 17px;
@@ -175,7 +177,7 @@ input.nameproduct{
 top: 20px;
 background-repeat: no-repeat;
 background-image: url(../img/carrello.jpg);
-background-size: cover;
+/*background-size: cover;*/
 position: relative;
 }
 
@@ -183,7 +185,7 @@ position: relative;
 top: 20px;
 background-repeat: no-repeat;
 background-image: url(../img/carrellofull.jpg);
-background-size: cover;
+/*background-size: cover;*/
 position: relative;
 }
 
@@ -191,7 +193,7 @@ position: relative;
 top: 20px;
 background-repeat: no-repeat;
 background-image: url(../img/carrelloerror.jpg);
-background-size: cover;
+/*background-size: cover;*/
 position: relative;
 }
 
@@ -199,7 +201,7 @@ position: relative;
 top: 20px;
 background-repeat: no-repeat;
 background-image: url(../img/carrellowarning.jpg);
-background-size: cover;
+/*background-size: cover;*/
 position: relative;
 }
 
@@ -394,7 +396,8 @@ height: 46px;
 }
 
 .elements{
-border: grey 1px solid;
+border: #dfdfdf 3px solid;
+border-radius: 20px;
 }
 
 li h2 {

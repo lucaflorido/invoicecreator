@@ -1491,13 +1491,13 @@ public class DocumentDao {
 			
 			float price = new RegistryDao().getProductPriceList(um.getProduct().getIdProduct(), h.getList().getIdList());
 			if (price > 0){
-				um.getProduct().setListprice(price);
+				um.getProduct().setListprice(HibernateUtils.roundfloat( price ));
 			}else{
-				um.getProduct().setListprice(um.getProduct().getSellprice());
+				um.getProduct().setListprice(HibernateUtils.roundfloat(um.getProduct().getSellprice()));
 			}
-			r.addProduct(um);
+			//r.addProduct(um);
 			RowTotalCalculator rtc = new RowTotalCalculator();
-			rtc.rowCalculation(r);
+			rtc.addRowCalculation(r, um);
 			if (h.getRows() == null)
 				h.setRows(new HashSet<Row>());
 			
@@ -1548,9 +1548,14 @@ public class DocumentDao {
 		}
 		return r;
 	}*/
-	public GECOObject saveWizardHead(User user,Head h){
+	public GECOObject saveWizardHead(User user,Head h,String type){
 		try{
-			Document d = new BasicDao().getDocumentOrderList(user).get(0);
+			Document d = null;
+			if (type.equals("normal") == true){
+				d = new BasicDao().getDocumentOrderList(user).get(0);
+			}else{
+				d = new BasicDao().getDocumentOrderTimeList(user).get(0);
+			}
 			h.setDocument(d);
 			Date today = new Date();
 			String todayString = DataUtilConverter.convertStringFromDate(today);

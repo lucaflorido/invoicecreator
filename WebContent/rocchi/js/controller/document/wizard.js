@@ -5,10 +5,10 @@
  * 
  */
 angular.module("rocchi.documents")
- .controller('RocchiWizardCtrl',["$scope","$http","$stateParams","$location","$rootScope","$state","AppConfig","WizardFactory",function($scope,$http,$stateParams,$location,$rootScope,$state,AppConfig,WizardFactory){
+ .controller('RocchiWizardCtrl',function($scope,$http,$stateParams,$location,$rootScope,$state,$localStorage,AppConfig,WizardFactory,AlertsFactory){
 	 $scope.tabs=[{title:"Cliente",template:"template/document/wizard/stepone.html",name:"step1",active:true,disable:false},
-		             {title:"Prodotto",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true}
-		             
+		             {title:"Prodotti",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true},
+	 {title:"Resoconto",template:"template/document/wizard/draft.html",name:"step3",active:false,disable:true}
 		             ];
 		$scope.wiz = WizardFactory;
 		$scope.wiz.initialize($scope.tabs);
@@ -20,15 +20,16 @@ angular.module("rocchi.documents")
 		}
 		$scope.head = {};
 		$scope.gotoStep2 = function(){
+			
 			$scope.wiz.head.list = $scope.wiz.head.customer.lists[0].list;
 			$scope.wiz.goToStep(1);
 			
 			
 		}
 		$scope.gotoStep3 = function(){
-			$scope.wiz.saveHead().then(function(){
+			//$scope.wiz.saveHead().then(function(){
 				$scope.wiz.goToStep(2);
-			});
+			//});
 				
 		}
 		$scope.changeCustomer = function(customer){
@@ -37,10 +38,10 @@ angular.module("rocchi.documents")
 			});
 		}
 		
-}]).controller("WizardStepsCtrl",["$scope","WizardFactory",function($scope,WizardFactory){
+}).controller("WizardStepsCtrl",["$scope","WizardFactory",function($scope,WizardFactory){
 	$scope.wiz = WizardFactory;
 	//factory.wiz.getCustomers();
-}]).factory("WizardFactory",["$http", "$q","AppConfig","$state",function($http, $q,AppConfig,$state){
+}]).factory("WizardFactory",function($http, $q,AppConfig,$state,$localStorage,AlertsFactory){
 	var factory = {};
 	factory.customerlist = [];
 	factory.productlist = [];
@@ -55,9 +56,54 @@ angular.module("rocchi.documents")
 	factory.opencart = false;
 	factory.warningProd = [];
 	factory.errorProd = [];
+	factory.pageArray = [];
+	factory.msg = AlertsFactory;
+	factory.storage = $localStorage;
+	factory.msg.initialize();
+	factory.ignoreDraft = false;
+	factory.showDraftManage = false;
+	if (factory.showFilter == null){
+		factory.showFilter = false;
+	}
+	if (factory.filter == null){
+		factory.filter = {"pagefilter":{}};
+		factory.currentGroup = {};
+		factory.currentBrand = {};
+		factory.currentCategory = {};
+		factory.currentSubCategory = {};
+		factory.currentSupplier = {};
+	}else{
+		factory.currentGroup = factory.filter.group;
+		factory.currentBrand = factory.filter.brand;
+		factory.currentCategory = factory.filter.category;
+		factory.currentSubCategory = factory.filter.subcategory;
+		factory.currentSupplier = factory.filter.supplier;
+	}
+	factory.pagesize = 10;
+	factory.getProductsNumber = function(){
+		
+		//if ($scope.products.length != $scope.pagesize){
+		factory.pages = [];
+		factory.totalitems = 0;
+		factory.pageArray = [];
+			$http.post(AppConfig.ServiceUrls.ProductPagination+factory.pagesize,factory.filter).then(function(result){
+				factory.pages = result.data.pages;
+				factory.totalitems = result.data.totalitems;
+				factory.pagesize_confirmed = factory.pagesize;
+				factory.getProducts(1);
+			});
+			
+		//}
+	}
+	//factory.getProductsNumber();
 	var makeinactivetabs = function(){
 		for(var i=0;i <factory.tabs.length;i++){
 			factory.tabs[i].active = false;
+		}
+	}
+	var makedisabletabs = function(){
+		for(var i=0;i <factory.tabs.length;i++){
+			factory.tabs[i].disable = false;
 		}
 	}
 	var getTabIndexByName = function(name){
@@ -87,6 +133,29 @@ angular.module("rocchi.documents")
 		factory.productlist = [];
 		factory.opencart = false;
 		factory.globalstatus = 0;
+		factory.ignoreDraft = false;
+		if (factory.storage.draft){
+			var head = angular.fromJson(factory.storage.draft);
+			factory.msg.warningMessage("Ordine non completo per il cliente "+head.customer.customername);
+			factory.showDraftManage = true;
+		}
+		$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
+			factory.categories= data;
+		});
+		$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
+			factory.groups= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
+			factory.brands= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
+			factory.regions= data;
+		});
+	}
+	factory.changeCategory = function(){
+		factory.subcategories = [];
+		if (factory.filter && factory.filter.category)
+			factory.subcategories = factory.filter.category.subcategories;
 	}
 	factory.getTab = function(index){
 		return factory.tabs[index];
@@ -99,7 +168,6 @@ angular.module("rocchi.documents")
 		factory.selected = t.name;
 	}
 	factory.goToStepByName = function(name){
-		
 		var t = factory.getTabByName(name);
 		t.active = true;
 		t.disable = false;
@@ -113,64 +181,86 @@ angular.module("rocchi.documents")
 		});
 		return deferred.promise;
 	}
-	factory.getProducts = function(value){
-		var deferred = $q.defer();
-		$http.post(AppConfig.ServiceUrls.SearchProduct+value,factory.head).then(function(result){
-			factory.productlist = result.data;
+	factory.getProducts = function(page){
+		factory.filter.pagefilter.startelement = (page - 1 ) * factory.pagesize_confirmed;
+		factory.filter.pagefilter.pageSize = factory.pagesize_confirmed;
+		factory.filter.h = factory.head;
+		$http.post(AppConfig.ServiceUrls.ProductMainListPrice+"1",factory.filter).then(function(result){
+			factory.productlist = result.data.success;
 			if (factory.head.rows && factory.head.rows.length > 0){
 				factory.globalstatus = 1;
 			}else{
 				factory.globalstatus = 0;
 			}
 			factory.errorProd = [];
-			deferred.resolve();
-		});
-		return deferred.promise;
-	}
+		})
+		
+}
+	
 	factory.addProduct = function(prod){
 		if (prod.status == factory.STATUS_WARNING){
 			var addrow = {"um":prod,"h":factory.head};	
 			$http.post(AppConfig.ServiceUrls.AddRow,addrow).then(function(result){
 				factory.head = result.data.success;
+				factory.updateDraft();
 				prod.status = factory.STATUS_ADDED ;
 				factory.warningProd = $.grep(factory.warningProd,function(a){return a !== prod.idUnitMeasureProduct});
 				if(factory.errorProd.length == 0 && factory.warningProd.length ==0){
 					factory.globalstatus = prod.status;
 				}
 				
+				factory.msg.successMessage("Prodotto inserito con successo");
 				
 			},function(result){
 				prod.status = factory.STATUS_ERROR;
 				 factory.setGlobalStatus(prod.status);
 				 factory.warningProd = $.grep(factory.warningProd,function(a){return a !== prod.idUnitMeasureProduct});
 				 factory.errorProd.push(prod.idUnitMeasureProduct);
+				 factory.msg.alertMessage("Errore inserimento prodotto");
 			});
 		}
 		
 	}
 	factory.quantityChange = function(prod){
-		
-		 if (isNaN(prod.quantity)) 
-		  {
-			 prod.status = factory.STATUS_ERROR;
-			 factory.setGlobalStatus(prod.status);
-			 factory.warningProd = $.grep(factory.warningProd,function(a){return a !== prod.idUnitMeasureProduct});
-			 factory.errorProd.push(prod.idUnitMeasureProduct);
-		  }else{
-			  prod.status = factory.STATUS_WARNING ;
-			  factory.setGlobalStatus(prod.status);
-			  factory.errorProd = $.grep(factory.errorProd,function(a){return a !== prod.idUnitMeasureProduct});
-			  factory.warningProd.push(prod.idUnitMeasureProduct);
+		if (isNaN(prod.quantity)) 
+			  {
+				 prod.status = factory.STATUS_ERROR;
+				 factory.setGlobalStatus(prod.status);
+				 factory.warningProd = $.grep(factory.warningProd,function(a){return a !== prod.idUnitMeasureProduct});
+				 factory.errorProd.push(prod.idUnitMeasureProduct);
+			  }else{
+				  prod.status = factory.STATUS_WARNING ;
+				  factory.setGlobalStatus(prod.status);
+				  factory.errorProd = $.grep(factory.errorProd,function(a){return a !== prod.idUnitMeasureProduct});
+				  factory.warningProd.push(prod.idUnitMeasureProduct);
 			  if(factory.errorProd.length == 0 ){
 					factory.globalstatus = factory.STATUS_WARNING;
 			  }
 		  }
 	}
-	factory.saveHead = function(){
+	factory.saveHead = function(type){
 		var deferred = $q.defer();
-		$http.put(AppConfig.ServiceUrls.AddRow,factory.head).then(function(result){
+		$http.put(AppConfig.ServiceUrls.AddRow+type,factory.head).then(function(result){
 			factory.head = result.data.success;
 			deferred.resolve();
+			makedisabletabs();
+			factory.deleteDraft();
+			factory.msg.successMessage("Documento registrato con successo");
+		},function(error){
+			factory.msg.alertMessage("Errore nella registrazione dell'ordine");
+		});
+		return deferred.promise;
+	}
+	factory.saveDraftHead = function(type){
+		var deferred = $q.defer();
+		var head = angular.fromJson(factory.storage.draft);
+		$http.put(AppConfig.ServiceUrls.AddRow+type,head).then(function(result){
+			factory.ignoreDraft = false;
+			factory.showDraftManage = false;
+			factory.deleteDraft();
+			factory.msg.successMessage("Documento registrato con successo");
+		},function(error){
+			factory.msg.alertMessage("Errore nella registrazione del documento");
 		});
 		return deferred.promise;
 	}
@@ -184,7 +274,7 @@ angular.module("rocchi.documents")
 	}
 	factory.closeChart = function(){
 		if (factory.head.idHead > 0){
-			factory.initialize(factory.tabs)
+			factory.initialize(factory.tabs);
 		}
 		factory.opencart = false;
 	}
@@ -222,25 +312,13 @@ angular.module("rocchi.documents")
 				row.taxamount = totrow.taxamount;
 				factory.calculateTotal();
 			});
-			/*$.ajax({
-					url:"rest/documenthelp/rowtotal",
-					type:"POST",
-					data:"row="+JSON.stringify($scope.totrowobj),
-					success:function(data){
-						$scope.totrow = $.parseJSON(data);
-						row.total = $scope.totrow.total;
-						row.amount = $scope.totrow.amount;
-						row.taxamount = $scope.totrow.taxamount;
-						$scope.$apply();
-						$scope.calculateTotal();
-					}	
-				});*/
+			
 		}
 	}
 	factory.deleteElement = function(row){
 		if (row.idRow == 0){
 			factory.head.rows = $.grep(factory.head.rows,function(a){  return a.idRow != row.idRow && a.productcode != row.productcode ;})
-			
+			factory.updateDraft();
 			$scope.$apply();
 		}else{
 			$http.delete(AppConfig.ServiceUrls.DeleteRow+row.idRow).then(function(result){
@@ -251,22 +329,16 @@ angular.module("rocchi.documents")
 					alert("Errore: "+result.data.errorName+" Messaggio:"+result.data.errorMessage);
 				}
 			});
-			/*$.ajax({
-				url:AppConfig.ServiceUrls.DeleteRow+row.idRow,
-				type:"DELETE",
-				success:function(data){
-					result = JSON.parse(data);
-					if (result.type == "success"){	
-							$scope.head.rows = $.grep($scope.head.rows,function(a){  return a != $rootScope.deleteObj;})
-							$scope.currentRow = null;
-							$scope.$apply();
-							
-						}else{
-							alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
-						}
-				}	
-			});*/
+			
 		}
+	}
+	factory.deleteAll = function(){
+		factory.head.rows =[];
+		factory.storage.draft = angular.toJson(factory.head);
+		angular.forEach(factory.productlist,function(item){
+			item.status = 0;
+			item.quantity = 0;
+		});
 	}
 	factory.calculateTotal = function(){
 		var totrowobj = {};
@@ -285,31 +357,36 @@ angular.module("rocchi.documents")
 			factory.head.taxamount4 =totrow.taxamount4;
 			factory.head.taxamount10 =totrow.taxamount10;
 			factory.head.taxamount20 =totrow.taxamount20;
+			factory.updateDraft();
 		});
-		/*$.ajax({
-				url:"rest/documenthelp/headtotal",
-				type:"POST",
-				data:"head="+JSON.stringify($scope.totrowobj),
-				success:function(data){
-					$scope.totrow = $.parseJSON(data);
-					$scope.head.total =$scope.totrow.total;
-					$scope.head.total4 =$scope.totrow.total4;
-					$scope.head.total10 =$scope.totrow.total10;
-					$scope.head.total20 =$scope.totrow.total20;
-					$scope.head.amount =$scope.totrow.amount;
-					$scope.head.amount4 =$scope.totrow.amount4;
-					$scope.head.amount10 =$scope.totrow.amount10;
-					$scope.head.amount20 =$scope.totrow.amount20;
-					$scope.head.taxamount =$scope.totrow.taxamount;
-					$scope.head.taxamount4 =$scope.totrow.taxamount4;
-					$scope.head.taxamount10 =$scope.totrow.taxamount10;
-					$scope.head.taxamount20 =$scope.totrow.taxamount20;
-					$scope.addRow=true;
-					$scope.$apply();
-				}	
-			})*/
+		
+	}
+	factory.resetDraft = function(){
+		factory.deleteDraft();
+		factory.msg.initialize();
+		factory.showDraftManage = false;
+	}
+	factory.restoreDraft = function(){
+		factory.showDraftManage = false;
+		factory.head = angular.fromJson(factory.storage.draft);
+		factory.head.list = factory.head.customer.lists[0].list;
+		factory.goToStep(1);
+		factory.msg.initialize();
+	}
+	factory.deleteDraft = function(){
+		if(!factory.ignoreDraft)
+		factory.storage.$reset({draft:null});
+	}
+	factory.updateDraft = function(){
+		if(!factory.ignoreDraft)
+		factory.storage.draft = angular.toJson(factory.head);
+	}
+	factory.mantainDraft = function(){
+		factory.ignoreDraft = true;
+		factory.showDraftManage = false;
+		factory.msg.initialize();
 	}
 	return factory;
 	
-}]);
+});
 

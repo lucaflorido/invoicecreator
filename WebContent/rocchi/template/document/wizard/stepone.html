@@ -7,7 +7,7 @@
 
                     <div class="large-12 columns">
                       <label>Seleziona un Cliente 
-                        <select  name="customerSelect" ng-options="c.customername for c in wiz.customerlist" ng-model="currentCustomer" ng-change="$parent.changeCustomer(currentCustomer)" >
+                        <select  name="customerSelect" ng-options="c.customername for c in wiz.customerlist | orderBy:'customername'" ng-model="currentCustomer" ng-change="$parent.changeCustomer(currentCustomer)" >
            		 	<option value=""></option>
             	</select> 
                       </label>
@@ -57,7 +57,7 @@
 
                         <div>
                           <ul class="button-group">
-                            <li><a ng-click="$parent.gotoStep2()" class="button">Procedi con l'ordine</a></li>
+                            <li><button ng-click="$parent.gotoStep2()" ng-disabled="wiz.showDraftManage" class="button">Procedi con l'ordine</button></li>
                           </ul>
                         </div>
 

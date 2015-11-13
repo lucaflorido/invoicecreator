@@ -2,6 +2,8 @@ package it.progess.invoicecreator.vo;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import it.progess.invoicecreator.hibernate.DataUtilConverter;
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblProduct;
@@ -30,6 +32,38 @@ public class Row implements Ivo{
 	private String expiredate;
 	private boolean generate;
 	private double necks;
+	private float conversion;
+	private String usercreate;
+	private String userupdate;
+	private String dateupdate;
+	private String dateinsert;
+	
+	
+
+	public String getUsercreate() {
+		return usercreate;
+	}
+	public void setUsercreate(String usercreate) {
+		this.usercreate = usercreate;
+	}
+	public String getUserupdate() {
+		return userupdate;
+	}
+	public void setUserupdate(String userupdate) {
+		this.userupdate = userupdate;
+	}
+	public String getDateupdate() {
+		return dateupdate;
+	}
+	public void setDateupdate(String dateupdate) {
+		this.dateupdate = dateupdate;
+	}
+	public String getDateinsert() {
+		return dateinsert;
+	}
+	public void setDateinsert(String dateinsert) {
+		this.dateinsert = dateinsert;
+	}
 	public double getNecks() {
 		return necks;
 	}
@@ -138,6 +172,13 @@ public class Row implements Ivo{
 	public void setUm(UnitMeasure um) {
 		this.um = um;
 	}
+	
+	public float getConversion() {
+		return conversion;
+	}
+	public void setConversion(float conversion) {
+		this.conversion = conversion;
+	}
 	public void convertFromTable(Itbl obj){
 		TblRow h = (TblRow)obj;
 		this.amount = h.getAmount();
@@ -153,6 +194,7 @@ public class Row implements Ivo{
 		this.serialnumber = h.getSerialnumber();
 		this.expiredate = DataUtilConverter.convertStringFromDate(h.getExpiredate());
 		this.necks = h.getNecks();
+		this.conversion = h.getConversion();
 		if (h.getProduct()!= null){
 			this.product = new Product();
 			this.product.convertFromTable(h.getProduct());
@@ -165,6 +207,10 @@ public class Row implements Ivo{
 			this.um = new UnitMeasure();
 			this.um.convertFromTable(h.getUm());
 		}
+		this.usercreate = h.getUsercreate();
+		this.userupdate = h.getUserupdate();
+		this.dateinsert = DataUtilConverter.convertStringFromDate(h.getDateinsert());
+		this.dateupdate = DataUtilConverter.convertStringFromDate(h.getDateupdate());
 	}
 	public void copy(Row h){
 		this.idRow = h.getIdRow();
@@ -196,7 +242,7 @@ public class Row implements Ivo{
 		this.setUm(um.getUm());
 		this.setProductum(um.getUm().getCode());
 		this.setQuantity(um.getQuantity());
-		this.setPrice(p.getListprice());
+		this.setPrice(p.getListprice()* um.getConversion());
 		this.setType("V");
 		this.setTaxrate(p.getTaxrate());
 	}

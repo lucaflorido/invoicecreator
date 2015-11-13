@@ -6,6 +6,7 @@ import it.progess.invoicecreator.pojo.TblGroupProduct;
 import it.progess.invoicecreator.pojo.TblRegion;
 import it.progess.invoicecreator.pojo.TblSubCategoryProduct;
 import it.progess.invoicecreator.pojo.TblSupplier;
+import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.filter.PagesFilter;
 import it.progess.invoicecreator.vo.helpobject.ProductBasicPricesCalculation;
 
@@ -18,8 +19,17 @@ public class SelectProductsFilter {
 	private TblRegion region;
 	private float increment;
 	private boolean isPercentage;
+	private boolean isUmPref;
+	private boolean isnotUmPref;
 	private String searchstring;
+	private Head h;
 	
+	public Head getH() {
+		return h;
+	}
+	public void setH(Head h) {
+		this.h = h;
+	}
 	public TblRegion getRegion() {
 		return region;
 	}
@@ -82,6 +92,18 @@ public class SelectProductsFilter {
 	}
 	public void setPercentage(boolean isPercentage) {
 		this.isPercentage = isPercentage;
+	}
+	public boolean isUmPref() {
+		return isUmPref;
+	}
+	public void setUmPref(boolean isUmPref) {
+		this.isUmPref = isUmPref;
+	}
+	public boolean isIsnotUmPref() {
+		return isnotUmPref;
+	}
+	public void setIsnotUmPref(boolean isnotUmPref) {
+		this.isnotUmPref = isnotUmPref;
 	}
 	
 }

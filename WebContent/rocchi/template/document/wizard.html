@@ -1,3 +1,19 @@
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="wiz.msg.type != ''">
+		<alert  class="{{wiz.msg.type}}" close="wiz.msg.initialize()">{{wiz.msg.message}}</alert>
+	</div>
+</div>
+<div class="row" ng-show="wiz.showDraftManage">
+	<div class="large-12 columns">
+		<div class="button-group">
+			<button class="button tiny warning" ng-click="wiz.restoreDraft()">Ripristina</button>
+			<button class="button tiny warning" ng-click="wiz.resetDraft()">Cancella</button>
+			<button class="button tiny warning" ng-click="wiz.mantainDraft()">Mantieni</button>
+			<button class="button tiny warning" ng-click="wiz.saveDraftHead('time')">Crea Preventivo</button>
+			<button class="button tiny warning" ng-click="wiz.saveDraftHead('normal')">Crea Ordine</button>
+		</div>
+	</div>
+</div>
 <div class="large-12 columns">
 	<div class="row">
 		<div class="button-group">

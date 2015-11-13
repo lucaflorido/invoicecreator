@@ -4,7 +4,7 @@ import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblUnitMeasureProduct;
 import it.progess.invoicecreator.properties.GECOParameter;
 
-public class UnitMeasureProduct implements Ivo {
+public class UnitMeasureProduct implements Ivo,Comparable<UnitMeasureProduct> {
 	private int idUnitMeasureProduct;
 	private boolean preference;
 	private float conversion;
@@ -61,6 +61,10 @@ public class UnitMeasureProduct implements Ivo {
 	}
 	public void setUm(UnitMeasure um) {
 		this.um = um;
+	}
+	@Override
+	public int compareTo(UnitMeasureProduct p){
+		return this.code.compareTo(p.getCode());
 	}
 	public void convertFromTable(Itbl obj){
 		TblUnitMeasureProduct um = (TblUnitMeasureProduct)obj;

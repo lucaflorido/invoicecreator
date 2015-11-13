@@ -236,14 +236,14 @@ public class DocumentService {
 		return gson.toJson(dao.addRow(addr.getUm(), addr.getH()));
 	  }
 	  @PUT
-	  @Path("addrow")
+	  @Path("addrow/{type}")
 	  @Produces(MediaType.APPLICATION_JSON)
 	  @Consumes(MediaType.APPLICATION_JSON) 
-	  public String saveWizardHead(@Context HttpServletRequest request,String data) {
+	  public String saveWizardHead(@Context HttpServletRequest request,String data,@PathParam("type") String type) {
 		Gson gson = new Gson();
 		DocumentDao dao = new DocumentDao();
 		Head h = gson.fromJson(data,Head.class);
 		User loggeduser = HibernateUtils.getUserFromSession(request);
-		return gson.toJson(dao.saveWizardHead(loggeduser, h));
+		return gson.toJson(dao.saveWizardHead(loggeduser, h,type));
 	  }
 }

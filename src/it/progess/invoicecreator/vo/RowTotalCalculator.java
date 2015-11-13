@@ -51,6 +51,11 @@ public class RowTotalCalculator {
 		this.taxamount =HibernateUtils.roundfloat( this.amount / 100 * this.taxrate);
 		this.total = HibernateUtils.roundfloat(this.amount + this.taxamount);
 	}
+	public void singlecalculation(){
+		this.amount = HibernateUtils.roundfloat(  this.price);
+		this.taxamount =HibernateUtils.roundfloat( this.amount / 100 * this.taxrate);
+		this.total = HibernateUtils.roundfloat(this.amount + this.taxamount);
+	}
 	public void rowCalculation(Row row){
 		if (row.getType().equals("V")){
 			this.qta = row.getQuantity();
@@ -60,6 +65,31 @@ public class RowTotalCalculator {
 			row.setTotal(total);
 			row.setAmount(amount);
 			row.setTaxamount(taxamount);
+		}else{
+			row.setTotal(0);
+			row.setAmount(0);
+			row.setTaxamount(0);
+		}
+	}
+	public void addRowCalculation(Row row,UnitMeasureProduct ump){
+		Product p = ump.getProduct();
+		row.setProduct(p);
+		row.setProductcode(ump.getCode());
+		row.setProductdescription(p.getDescription());
+		row.setUm(ump.getUm());
+		row.setProductum(ump.getUm().getCode());
+		row.setQuantity(ump.getQuantity());
+		row.setPrice(p.getListprice());
+		row.setType("V");
+		row.setTaxrate(p.getTaxrate());
+		if (row.getType().equals("V")){
+			this.qta = row.getQuantity();
+			this.price = row.getPrice();
+			this.taxrate = Float.parseFloat(String.valueOf(row.getTaxrate().getValue()));
+			this.singlecalculation();
+			row.setTotal(HibernateUtils.roundfloat( total * ump.getConversion() * (float)this.qta));
+			row.setAmount(HibernateUtils.roundfloat(amount * ump.getConversion() * (float)this.qta));
+			row.setTaxamount(HibernateUtils.roundfloat(taxamount * ump.getConversion() * (float)this.qta));
 		}else{
 			row.setTotal(0);
 			row.setAmount(0);

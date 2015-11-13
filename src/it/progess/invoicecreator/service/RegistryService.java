@@ -180,6 +180,17 @@ public class RegistryService {
 		return gson.toJson(dao.getProductList(filter,loggeduser));
 	  }
 	  @POST
+	  @Path("productslistprice/{idlist}")
+ 	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String getProductListPrice(@Context HttpServletRequest request, String data,@PathParam("idlist") int idlist){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		SelectProductsFilter filter = gson.fromJson(data, SelectProductsFilter.class);
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getProductListPrice(filter,loggeduser));
+	  }
+	  @POST
 	  @Path("public/products/{key}")
  	  @Produces(MediaType.APPLICATION_JSON)
 	  @Consumes(MediaType.APPLICATION_JSON) 
@@ -218,6 +229,17 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getListPagesNumber(size,loggeduser));
+	  }
+	  @POST
+	  @Path("product/pages/{size}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON)
+	  public String productPages(@Context HttpServletRequest request,@PathParam("size") int size,String data) {
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		SelectProductsFilter sf = gson.fromJson(data, SelectProductsFilter.class);
+		return gson.toJson(dao.getListPagesNumberPrice(size,loggeduser,sf));
 	  }
 	  @GET
 	  @Path("public/product/pages/{size}/{key}")
