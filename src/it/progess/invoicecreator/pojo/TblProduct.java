@@ -1,6 +1,7 @@
 package it.progess.invoicecreator.pojo;
 
 
+import it.progess.invoicecreator.vo.CompositionProduct;
 import it.progess.invoicecreator.vo.Ivo;
 import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.Product;
@@ -100,6 +101,16 @@ public class TblProduct implements Itbl{
 	private String shortdescription;
 	@Column(name="longdescription")
 	private String longdescription;
+	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
+	private Set<TblCompositionProduct> compositions;
+	
+	public Set<TblCompositionProduct> getCompositions() {
+		return compositions;
+	}
+	public void setCompositions(Set<TblCompositionProduct> compositions) {
+		this.compositions = compositions;
+	}
 	public String getShortdescription() {
 		return shortdescription;
 	}
@@ -315,6 +326,19 @@ public class TblProduct implements Itbl{
 		}else{
 			this.ums = null;
 		}
+		if (pd.getCompositions() != null){
+			this.compositions = new HashSet<TblCompositionProduct>();
+			for(Iterator<CompositionProduct> itcomp = pd.getCompositions().iterator(); itcomp.hasNext();){
+				CompositionProduct cp = itcomp.next();
+				TblCompositionProduct tcp = new TblCompositionProduct();
+				tcp.convertToTable(cp);
+				tcp.setProduct(this);
+				this.compositions.add(tcp);
+			}
+		}else{
+			this.compositions = null;
+		}
+			
 		if (pd.getListproduct() != null){
 			this.listproduct = new HashSet<TblListProduct>();
 			for (Iterator<ListProduct> iterator = pd.getListproduct().iterator(); iterator.hasNext();){

@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row">
+	<div class="large-6 medium-6 small-12 columns">
+		<h4 >FLUSSI DOCUMENTALI</h4>
+	</div>
+	<div class="large-6 medium-6 small-12 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="addFlow()" class="button small progess_uppercase">Nuovo</a></li>
+		 </ul>
+	</div>
+</div>
+<div class="row" ng-repeat="flow in flows">
+	<div class="large-2 medium-2 columns">
+		<button class="button tiny"  ng-click="updateFlow(flow)" ng-disabled="flow.update" >Modifica</button>&nbsp;
+		
+	</div>
+	<div class="large-3 medium-3 columns" ng-hide="flow.update">
+		{{flow.documentSource.description}}
+	</div>
+	<div class="large-3 medium-3 columns" ng-show="flow.update">
+		<select  name="document" ng-options="doc.description for doc in documents" ng-model="flow.documentSource"  >
+        </select> 
+       
+	</div>
+	<div class="large-3 medium-3 columns" ng-hide="flow.update">
+		{{flow.documentResult.description}}
+	</div>
+	<div class="large-3 medium-3 columns" ng-show="flow.update">
+		<select  name="document" ng-options="doc.description for doc in documents" ng-model="flow.documentResult"  >
+        </select> 
+        
+	</div>
+	<div class="large-2 medium-2 columns">
+		<button class="button tiny" ng-click="saveFlow(flow)" ng-disabled="!flow.update" >Registra</button>
+	</div>
+	<div class="large-2 medium-2 columns">
+		<button class="button alert tiny" ng-click="deleteElement(flow)" >Cancella</button>
+	</div>
+</div>

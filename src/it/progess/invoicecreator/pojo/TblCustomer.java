@@ -7,9 +7,11 @@ import it.progess.invoicecreator.vo.ListCustomer;
 
 
 
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -82,6 +84,15 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	private TblEcPayment ecpayment;
 	@Column(name="isprivate")
 	private boolean isprivate;
+	@Column(name="code")
+	private String code;
+	
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public boolean isIsprivate() {
 		return isprivate;
 	}
@@ -230,6 +241,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 		this.alternativecode1 = c.getAlternativecode1();
 		this.alternativecode2 = c.getAlternativecode2();
 		this.isprivate = c.isIsprivate();
+		this.code = c.getCode();
 		if (c.getAddress() != null){
 			this.address = new TblAddress();
 			this.address.convertToTable(c.getAddress());
@@ -277,6 +289,12 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	public void convertToTableSingle(Ivo obj){
 		Customer c = (Customer)obj;
 		this.convertToTable(obj);
+		if (c.getCode() == null || c.getCode().isEmpty() ==  true){
+			UUID ui = UUID.randomUUID();
+			this.code = ui.toString();
+		}else{
+			this.code = c.getCode();
+		}
 		if (c.getLists() != null){
 			this.lists = new HashSet<TblListCustomer>();
 			for (Iterator<ListCustomer> iterator = c.getLists().iterator(); iterator.hasNext();){
@@ -299,6 +317,12 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	public void convertToTableSingle(Ivo obj,Itbl tbl){
 		Customer c = (Customer)obj;
 		this.convertToTable(obj);
+		if (c.getCode() == null || c.getCode().isEmpty() ==  true){
+			UUID ui = UUID.randomUUID();
+			this.code = ui.toString();
+		}else{
+			this.code = c.getCode();
+		}
 		if (c.getEcpayment() != null){
 			this.ecpayment = new TblEcPayment();
 			this.ecpayment.convertToTable(c.getEcpayment());

@@ -143,6 +143,7 @@ public class UserDao {
 		
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction t = session.beginTransaction();
+		ProgessObject obj = null;
 		try{
 			
 			Criteria cr = session.createCriteria(TblUser.class,"user");
@@ -158,23 +159,24 @@ public class UserDao {
 				u.convertFromTable(tu);
 				new DocumentDao().checkExpiredDoxuments(u);
 				if (u.getActive() == true){
-					return new ProgessSuccess(u);
+					obj =  new ProgessSuccess(u);
 				}else{
-					return new ProgessError("CRWR", "Utente non attivo.Controlla la tua mail e clicca il link per confermare il tuo account");
+					obj = new ProgessError("CRWR", "Utente non attivo.Controlla la tua mail e clicca il link per confermare il tuo account");
 				}
 				
 			}else{
-			    return new ProgessError("CRWR", "Username o Password errati");
+				obj = new  ProgessError("CRWR", "Username o Password errati");
 			}
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			e.printStackTrace();
 			t.rollback();
-			throw new ExceptionInInitializerError(e);
+			obj = new ProgessError("CRWR", "Errore di sistema");
 			
 		}finally{
 			session.close();
 		}
+		return obj;
 		/**/
 	}
 	/***

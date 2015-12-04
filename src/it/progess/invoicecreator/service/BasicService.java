@@ -9,8 +9,10 @@ import it.progess.invoicecreator.vo.CategoryCustomer;
 import it.progess.invoicecreator.vo.CategoryProduct;
 import it.progess.invoicecreator.vo.CategorySupplier;
 import it.progess.invoicecreator.vo.Company;
+import it.progess.invoicecreator.vo.Composition;
 import it.progess.invoicecreator.vo.Counter;
 import it.progess.invoicecreator.vo.Document;
+import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GroupCustomer;
 import it.progess.invoicecreator.vo.GroupProduct;
 import it.progess.invoicecreator.vo.GroupSupplier;
@@ -29,6 +31,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -64,17 +67,16 @@ public class BasicService {
 	Delete user 
    */
 
-	  @DELETE
-	  @Path("taxrate")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteTaxRate(@FormParam("taxrateobj") String taxrateobj){
+	  @POST
+	  @Path("taxrate/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteTaxRate(String data){
 		  Gson gson = new Gson();
 		  try{
-			  TaxRate taxrate = gson.fromJson(taxrateobj,TaxRate.class);
+			  TaxRate taxrate = gson.fromJson(data,TaxRate.class);
 			  BasicDao taxratedao = new BasicDao();
-			  taxratedao.deleteTaxRate(taxrate);
-			  return gson.toJson(true);
+			  return gson.toJson(taxratedao.deleteTaxRate(taxrate));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -108,17 +110,16 @@ public class BasicService {
 		Delete user 
 	   */
 
-		  @DELETE
-		  @Path("unitmeasure")
-		  @Produces(MediaType.TEXT_PLAIN)
-		  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-		  public String deleteUm(@FormParam("umobj") String umobj){
+		  @POST
+		  @Path("unitmeasure/delete")
+		  @Produces(MediaType.APPLICATION_JSON)
+		  @Consumes(MediaType.APPLICATION_JSON) 
+		  public String deleteUm( String data){
 			  Gson gson = new Gson();
 			  try{
-				  UnitMeasure um = gson.fromJson(umobj,UnitMeasure.class);
+				  UnitMeasure um = gson.fromJson(data,UnitMeasure.class);
 				  BasicDao dao = new BasicDao();
-				  dao.deleteUM(um);
-				  return gson.toJson(true);
+				  return gson.toJson(dao.deleteUM(um));
 			  }catch(Exception e){
 				  return gson.toJson("");
 			  }
@@ -185,7 +186,7 @@ public class BasicService {
 			return gson.toJson(dao.getCounterList(loggeduser));
 		}
 	  }
-	  @PUT
+	    @PUT
 		@Path("counter")
 	    @Produces(MediaType.TEXT_PLAIN)
 	    @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
@@ -194,6 +195,17 @@ public class BasicService {
 		  Counter[] smsarray = gson.fromJson(counters,Counter[].class);
 		  BasicDao dao = new BasicDao();
 		  return gson.toJson(dao.saveUpdatesCounter(smsarray));
+		}
+	    @PUT
+		@Path("countercompany")
+	    @Produces(MediaType.TEXT_PLAIN)
+	    @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+		public String saveCounterCompany(@FormParam("counters") String counters,@Context HttpServletRequest request){
+		  Gson gson = new Gson();
+		  Counter[] smsarray = gson.fromJson(counters,Counter[].class);
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  BasicDao dao = new BasicDao();
+		  return gson.toJson(dao.saveUpdatesCounter(smsarray, loggeduser));
 		}
 		/***
 		Delete user 
@@ -208,8 +220,7 @@ public class BasicService {
 			  try{
 				  Counter sm = gson.fromJson(counterobj,Counter.class);
 				  BasicDao dao = new BasicDao();
-				  dao.deleteCounter(sm);
-				  return gson.toJson(true);
+				  return gson.toJson(dao.deleteCounter(sm));
 			  }catch(Exception e){
 				  return gson.toJson("");
 			  }
@@ -280,10 +291,14 @@ public class BasicService {
 	  @Path("document")
 	  @Produces(MediaType.TEXT_PLAIN)
 	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveDocument(@FormParam("documents") String documents){
+	  public String saveDocument(@FormParam("documents") String documents,@Context HttpServletRequest request){
 		  Gson gson = new Gson();
 		  Document[] smsarray = gson.fromJson(documents,Document[].class);
 		  BasicDao dao = new BasicDao();
+		  User user = HibernateUtils.getUserFromSession(request);
+		  if (user.getCompany() != null && user.getCompany().getIdCompany() != 0){
+			  return gson.toJson(dao.saveUpdatesDocument(smsarray,user));
+		  }
 		  return gson.toJson(dao.saveUpdatesDocument(smsarray));
 	  }
 		/***
@@ -299,8 +314,7 @@ public class BasicService {
 		  try{
 			  Document sm = gson.fromJson(documentobj,Document.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteDocument(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteDocument(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -356,17 +370,16 @@ public class BasicService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("groupproduct")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteGroupProduct(@FormParam("groupproductobj") String groupproductobj){
+	  @POST
+	  @Path("groupproduct/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteGroupProduct( String data){
 		  Gson gson = new Gson();
 		  try{
-			  GroupProduct sm = gson.fromJson(groupproductobj,GroupProduct.class);
+			  GroupProduct sm = gson.fromJson(data,GroupProduct.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteGroupProduct(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteGroupProduct(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -412,8 +425,8 @@ public class BasicService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("categoryproduct")
+	  @POST
+	  @Path("categoryproduct/delete")
 	  @Produces(MediaType.APPLICATION_JSON)
 	  @Consumes(MediaType.APPLICATION_JSON) 
 	  public String deleteCategoryProduct( String data){
@@ -421,23 +434,34 @@ public class BasicService {
 		  try{
 			  CategoryProduct sm = gson.fromJson(data,CategoryProduct.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteCategoryProduct(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteCategoryProduct(sm));
+		  }catch(Exception e){
+			  return gson.toJson(new GECOError("err",e.getMessage()));
+		  }
+	  }
+	  @POST
+	  @Path("composition/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteComposition( String data){
+		  Gson gson = new Gson();
+		  try{
+			  Composition sm = gson.fromJson(data,Composition.class);
+			  BasicDao dao = new BasicDao();
+			  return gson.toJson(dao.deleteComposition(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
 	  }
-	  
-	  @DELETE
-	  @Path("subcategoryproduct")
+	  @POST
+	  @Path("subcategoryproduct/delete")
 	  @Produces(MediaType.APPLICATION_JSON)
 	  public String deleteSubCategoryProduct( String data){
 		  Gson gson = new Gson();
 		  try{
 			  SubCategoryProduct sm = gson.fromJson(data,SubCategoryProduct.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteSubCategoryProduct(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteSubCategoryProduct(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -457,6 +481,27 @@ public class BasicService {
 		
 		return gson.toJson(dao.getCategoryCustomerList(loggeduser));
 	  }
+	  @GET
+	  @Path("composition")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getCompositionList(@Context HttpServletRequest request){
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  Gson gson = new Gson();
+		BasicDao dao = new BasicDao();
+		
+		return gson.toJson(dao.getComposition(loggeduser));
+	  }
+	  @PUT
+	  @Path("composition")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String saveComposition( String data,@Context HttpServletRequest request){
+		  Gson gson = new Gson();
+		  Composition[] smsarray = gson.fromJson(data,Composition[].class);
+		  BasicDao dao = new BasicDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.saveUpdatesComposition(smsarray,loggeduser));
+	  }
 	  @PUT
 	  @Path("categorycustomer")
 	  @Produces(MediaType.TEXT_PLAIN)
@@ -472,17 +517,16 @@ public class BasicService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("categorycustomer")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteCategoryCustomer(@FormParam("categorycustomerobj") String categorycustomerobj){
+	  @POST
+	  @Path("categorycustomer/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteCategoryCustomer( String data){
 		  Gson gson = new Gson();
 		  try{
-			  CategoryCustomer sm = gson.fromJson(categorycustomerobj,CategoryCustomer.class);
+			  CategoryCustomer sm = gson.fromJson(data,CategoryCustomer.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteCategoryCustomer(sm);
-			  return gson.toJson(true);
+			  return gson.toJson( dao.deleteCategoryCustomer(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -520,17 +564,16 @@ public class BasicService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("groupcustomer")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteGroupCustomer(@FormParam("groupcustomerobj") String groupcustomerobj){
+	  @POST
+	  @Path("groupcustomer/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteGroupCustomer( String data){
 		  Gson gson = new Gson();
 		  try{
-			  GroupCustomer sm = gson.fromJson(groupcustomerobj,GroupCustomer.class);
+			  GroupCustomer sm = gson.fromJson(data,GroupCustomer.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteGroupCustomer(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteGroupCustomer(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -665,17 +708,16 @@ public class BasicService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("brand")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteBrand(@FormParam("brandobj") String brandobj){
+	  @POST
+	  @Path("brand/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteBrand(String data){
 		  Gson gson = new Gson();
 		  try{
-			  Brand sm = gson.fromJson(brandobj,Brand.class);
+			  Brand sm = gson.fromJson(data,Brand.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteBrand(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteBrand(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -721,17 +763,16 @@ public class BasicService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("region")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteRegion(@FormParam("regionobj") String regionobj){
+	  @POST
+	  @Path("region/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteRegion( String data){
 		  Gson gson = new Gson();
 		  try{
-			  Region sm = gson.fromJson(regionobj,Region.class);
+			  Region sm = gson.fromJson(data,Region.class);
 			  BasicDao dao = new BasicDao();
-			  dao.deleteRegion(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteRegion(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }

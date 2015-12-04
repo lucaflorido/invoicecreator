@@ -5,23 +5,34 @@
 </div>
 <div class="row">
 	<div class="large-4 medium-4 small-4 columns">
-		<h4 >Documento</h4>
+		<h4 >Documento: {{head.document.description}}</h4>
 	</div>
 	<div class="large-7 medium-7 small-7 columns">
 		<ul class="button-group">
-		  	<li><a ng-click="saveHead()" class="button small progess_uppercase">Salva</a></li>
+		  	<li><a ng-click="saveHead()" ng-hide="head.generateTo" class="button small progess_uppercase">Salva</a></li>
 		  	<li><a ng-click="mainPage()" class="button small progess_uppercase">Elenco</a></li>
 		  	<li><a  ng-click="newProduct()" class="button small progess_uppercase">Nuovo</a></li>
 		  	<li ng-show="head.idHead"><a  ng-click="printElements()" class="button small progess_uppercase">Stampa</a></li>
-		  	<li><a  ng-click="newProduct()" class="button small progess_uppercase" >Annulla/Elimina</a></li>
+		  	<li><a  ng-click="newProduct()"  ng-hide="head.generateTo" class="button small progess_uppercase" >Annulla/Elimina</a></li>
 		  	
 		</ul>
+	</div>
+</div>
+<div class="row" ng-show="head.document.flows.length > 0 && !head.generateTo">
+	<div class="large-4 medium-4 small-4 columns">
+		<h4 >Esporta</h4>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group" >
+		  	<li ng-repeat="flow in head.document.flows" ><a  class="button tiny progess_uppercase" ng-click="generateDocument(flow.documentResult)" >{{flow.documentResult.description}}</a></li>
+		 </ul>
 	</div>
 </div>
 <div class="row ">
 	<form>
 		<fieldset>
 			<legend>Testata  <i ng-show="head.document" class="fi-small fi-button "  ng-class="{'fi-arrows-in ':headDetailsView,'fi-arrows-out':!headDetailsView}" ng-click="headDetailsView = !headDetailsView"></i></legend>
+			<div class="row ">
 			<div class="large-3 small-12 medium-6 columns">
 				<label>Tipologia
 					<select ng-model="head.document" ng-options="document.description for  document in documents"  ng-change="calculateNumber()">
@@ -89,6 +100,7 @@
 					</select>
 				</label>
 			</div> -->
+			</div>
 		</fieldset>
 	</form>
 </div>
@@ -154,7 +166,7 @@
 		   </thead>
 		  <tbody>
 		    <tr ng-repeat="row in rowsToDisplay ">
-		      <td><a  class="matita" ng-click="updateRow(row)" ></a> </td>
+		      <td><a  class="matita" ng-click="updateRow(row)" ng-show="head.document.expireday == 0 || row.idRow == 0 " ></a> </td>
 		      <td >{{row.productcode}}</td>
 		      <td>{{row.productdescription}}</td>
 		      <td >{{row.productum}}</td>
@@ -260,7 +272,7 @@
 			</div>
 			<div class="large-12 medium-12 small-12 columns"  ng-show="headTotalView" >
 				Note:
-				<textarea >
+				<textarea rows="5" cols="10" ng-model="wiz.head.note">
 				
 				</textarea>
 			</div>

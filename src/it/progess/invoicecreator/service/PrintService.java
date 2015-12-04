@@ -118,18 +118,28 @@ public class PrintService {
 		return gson.toJson(dao.printProductList(context,f,loggeduser));
 	}
 	@POST
-	@Path("list/{idlist}")
-	@Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	public String printList(@PathParam("idlist") String ids,@Context HttpServletRequest request) {
+	@Path("list/{code}")
+	@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON) 
+	public String printList(@PathParam("code") String code,@Context HttpServletRequest request) {
+		PrinterDao dao = new PrinterDao();
+		Gson gson = new Gson();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.printList(context, code,loggeduser));
+	}
+	@POST
+	@Path("customer/list/{code}")
+	@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON) 
+	public String printCustomerList(@PathParam("code") String code,@Context HttpServletRequest request) {
 		PrinterDao dao = new PrinterDao();
 		Gson gson = new Gson();
 		//DocumentDao dao = new DocumentDao();
 		//Head head = new Head();
 		//head = dao.getSingleHead(id);
-		int id = Integer.parseInt(ids);
+		
 		User loggeduser = HibernateUtils.getUserFromSession(request);
-		return gson.toJson(dao.printList(context, id,loggeduser));
+		return gson.toJson(dao.printCustomerList(context, code,loggeduser));
 	}
 	@POST
 	@Path("reportorder")

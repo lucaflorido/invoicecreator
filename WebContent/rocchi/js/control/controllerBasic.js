@@ -3,7 +3,7 @@ var gecoBasicControllers = angular.module("gecoBasicControllers",[]);
 /*****
 TAXRATE
 ***/
-gecoBasicControllers.controller('TaxrateCtrl',["$scope","$http","$rootScope",function($scope,$http,$rootScope){
+gecoBasicControllers.controller('TaxrateCtrl',function($scope,$http,$modal,$rootScope){
     $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
 	$scope.taxratesaved = true;
 	$http.get('rest/basic/taxrate').success(function(data){
@@ -64,9 +64,24 @@ gecoBasicControllers.controller('TaxrateCtrl',["$scope","$http","$rootScope",fun
 		})
 		
 	}
+	$scope.deleteElement = function (id) {
+
+	    var modalInstance = $modal.open({
+	      templateUrl: 'template/alert/cancelalert.html',
+	      controller: 'ModalCancelCtrl',
+	      resolve: {
+	    	  cancelObj: function () {
+	          return id;
+	        }
+	      }
+	    });
+
+	    modalInstance.result.then(function (id) {
+	    	$scope.deleteTaxrateElement(id);
+	    });
+	  };
 	
-	
-}]);
+});
 /*****
 Store Movement
 ***/
@@ -136,12 +151,13 @@ gecoBasicControllers.controller('StoreMovementCtrl',["$scope","$http",function($
 /*****
 Counter
 ***/
-gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,$http){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
-	$scope.countersaved = true;
+gecoBasicControllers.controller('CounterCtrl',function($scope,$http,AppConfig,AlertsFactory){
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
+    $scope.countersaved = true;
 	$scope.orderYear="year";
-	$(".detailview").css("display","none")
-	$http.get('rest/basic/counter').success(function(data){
+	
+	$http.get(AppConfig.ServiceUrls.Counter).success(function(data){
 		$scope.counters= data;
 	});
 	$scope.modifyid = 0;
@@ -163,11 +179,11 @@ gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,
 			if (id == $scope.counters[i].idCounter){
 				$scope.deletecounter = $scope.counters[i];
 				$.ajax({
-						url:"rest/basic/counter/",
+						url:AppConfig.ServiceUrls.Counter,
 						type:"DELETE",
 						data:"counterobj="+JSON.stringify($scope.deletecounter),
 						success:function(data){
-								$http.get('rest/basic/counter').success(function(data){
+								$http.get(AppConfig.ServiceUrls.Counter).success(function(data){
 										$scope.counters= data;
 								});
 								
@@ -178,7 +194,7 @@ gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,
 	}
 	$scope.savecounters = function(){
 		$.ajax({
-			url:"rest/basic/counter",
+			url:AppConfig.ServiceUrls.CounterSave,
 			type:"PUT",
 			data:"counters="+JSON.stringify($scope.counters),
 			success:function(data){
@@ -187,20 +203,15 @@ gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,
 					$scope.countersaved = true;
 					$scope.modifyid = 0;
 					$scope.$apply();
-					$http.get('rest/basic/counter').success(function(data){
+					$http.get(AppConfig.ServiceUrls.Counter).success(function(data){
 										$scope.counters= data;
 								});
 
 				}else{
 					alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
 				}
-					
-					
-					
-										
 			}	
 		})
-		
 	}
 	$scope.detailView = function(id){
 		
@@ -223,7 +234,7 @@ gecoBasicControllers.controller('CounterCtrl',["$scope","$http",function($scope,
 	$scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     	$(".detailview").css("display","none")
 	});
-}]);
+});
 /*****
 Payment
 ***/
@@ -324,18 +335,19 @@ gecoBasicControllers.controller('PaymentCtrl',["$scope","$http",function($scope,
 /*****
 Document
 ***/
-gecoBasicControllers.controller('DocumentCtrl',["$scope","$http",function($scope,$http){
-    $scope.loginuser = GECO_LOGGEDUSER.checkloginuser();
-	$scope.documentsaved = true;
+gecoBasicControllers.controller('DocumentCtrl',function($scope,$http,AppConfig,AlertsFactory){
+	$scope.msg = AlertsFactory;
+	$scope.msg.initialize();
+    $scope.documentsaved = true;
 	$scope.currentStore = null;
 	$scope.currentCounter = null;
-	$http.get('rest/basic/counter').success(function(data){
+	$http.get(AppConfig.ServiceUrls.Counter).success(function(data){
 		$scope.counters= data;
 	});
-	$http.get('rest/basic/storemovement').success(function(data){
+	$http.get(AppConfig.ServiceUrls.StoreMovement).success(function(data){
 		$scope.storemovements= data;
 	});
-	$http.get('rest/basic/document').success(function(data){
+	$http.get(AppConfig.ServiceUrls.Document).success(function(data){
 		$scope.documents= data;
 	});
 	$scope.modifyid = 0;
@@ -376,11 +388,11 @@ gecoBasicControllers.controller('DocumentCtrl',["$scope","$http",function($scope
 			if (id == $scope.documents[i].idDocument){
 				$scope.deletedocument = $scope.documents[i];
 				$.ajax({
-						url:"rest/basic/document/",
+						url:AppConfig.ServiceUrls.Document,
 						type:"DELETE",
 						data:"documentobj="+JSON.stringify($scope.deletedocument),
 						success:function(data){
-								$http.get('rest/basic/document').success(function(data){
+								$http.get(AppConfig.ServiceUrls.Document).success(function(data){
 										$scope.documents= data;
 								});
 								
@@ -393,7 +405,7 @@ gecoBasicControllers.controller('DocumentCtrl',["$scope","$http",function($scope
 	$scope.savedocuments = function(){
 		
 		$.ajax({
-			url:"rest/basic/document",
+			url:AppConfig.ServiceUrls.Document,
 			type:"PUT",
 			data:"documents="+JSON.stringify($scope.documents),
 			success:function(data){
@@ -402,7 +414,7 @@ gecoBasicControllers.controller('DocumentCtrl',["$scope","$http",function($scope
 					$scope.documentsaved = true;
 					$scope.modifyid = 0;
 					$scope.$apply();
-					$http.get('rest/basic/document').success(function(data){
+					$http.get(AppConfig.ServiceUrls.Document).success(function(data){
 							$scope.documents= data;
 					});
 				}else{
@@ -416,7 +428,7 @@ gecoBasicControllers.controller('DocumentCtrl',["$scope","$http",function($scope
 	}
 	
 	
-}]);
+});
 /*****
 Unit Measure
 ***/
@@ -636,6 +648,11 @@ gecoBasicControllers.controller('CategoryProductCtrl',["$scope","$http",function
 			$("#detailview"+id).css("display","none");
 	}
 }]);
+
+
+
+
+
 
 /*****
 Customer Category

@@ -21,7 +21,7 @@ public class TblMailConfigCompany implements Itbl{
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="idmailconfig_company")
 	private int idMailConfigCompany;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "idCompany")
 	private TblCompany company;
 	@ManyToOne(cascade = CascadeType.ALL)

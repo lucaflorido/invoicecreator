@@ -5,6 +5,7 @@ angular.module("rocchi.transporter",[]);
 angular.module("rocchi.documents",[]);
 angular.module("rocchi.parameters",[]);
 angular.module("rocchi.promoter",[]);
+angular.module("rocchi.config",[]);
 var gecoApp = angular.module("gecoApp",
 [   "ui.router",
 	"gecoControllers",
@@ -15,13 +16,14 @@ var gecoApp = angular.module("gecoApp",
 	"rocchi.product",
 	"rocchi.transporter",
 	"rocchi.documents",
-	"rocchi.parameters",
 	"rocchi.promoter",
 	"rocchi.list",
 	'modules.common.shared',
 	'ngCookies',
 	'ngStorage',
 	"geco.ecommerce",
+	"angularSpinner",
+	"rocchi.config",
 "gecoBasicControllers","gecoRegistryControllers","gecoDocumentControllers","gecoStoreControllers","gecoAccountingControllers"])
 .provider('AppConfig', function ()
 		{
@@ -34,14 +36,21 @@ var gecoApp = angular.module("gecoApp",
 	            		CheckUser:main_domain+ "/rest/user/loggedinuser/",
 	            		CustomerCategory:main_domain+ "/rest/basic/categorycustomer",
 	            		CustomerGroup:main_domain+ "/rest/basic/groupcustomer",
+	            		CustomerCategoryDelete:main_domain+ "/rest/basic/categorycustomer/delete",
+	            		CustomerGroupDelete:main_domain+ "/rest/basic/groupcustomer/delete",
 	            		CustomerUser:main_domain+ "/rest/registry/customer/user/",
 	            		Company:main_domain+ "/rest/registry/company/",
+	            		CompanyMailConfigDelete:main_domain+ "/rest/registry/companymailconfig/",
 	            		Country:main_domain+ "/rest/geo/countries/",
+	            		Counter:main_domain+ "/rest/basic/counter/",
+	            		CounterSave:main_domain+ "/rest/basic/countercompany/",
 	            		Currency:main_domain+"/rest/basic/currency/",
 	            		Zone:main_domain+ "/rest/geo/zones/",
 	            		City:main_domain+ "/rest/geo/cities/",
 	            		CityCountry:main_domain+ "/rest/geo/cities/country/",
 	            		CityZone:main_domain+ "/rest/geo/cities/zone/",
+	            		Composition:main_domain+ "/rest/basic/composition/",
+	            		CompositionDelete:main_domain+ "/rest/basic/composition/delete",
 	            		DetailsOfCustomer:main_domain+ "/rest/registry/customer/",
 	            		DocumentList:main_domain+ '/rest/basic/document',
 	            		DraftInit:main_domain+ '/rest/draft/init/',
@@ -52,11 +61,17 @@ var gecoApp = angular.module("gecoApp",
 	            		DraftConfirm:main_domain+ '/rest/draft/confirmdraft/',
 	            		Delivery:main_domain+ "/rest/delivery/ecdelivery/",
 	            		DeliveryCost:main_domain+ "/rest/delivery/costs/",
+	            		DocumentFlow:main_domain+ "/rest/config/documentflow/",
+	            		DocumentFlowDelete:main_domain+ "/rest/config/documentflow/delete/",
 	            		HeadPaging:main_domain+ '/rest/head/head',
+	            		HeadNumber:main_domain+ '/rest/head/pages/',
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
+		                ListOfCustomerDelete:main_domain+ "/rest/registry/customer/delete/",
+		                ListOfCustomerSoft:main_domain+ "/rest/registry/customersoft/",
 		                ListOfCustomerDestinations:main_domain+ "/rest/registry/destination/customer/",
 		                PrintHead:main_domain+ "/rest/print/head/",
 		                Product:main_domain+ "/rest/registry/product/",
+		                ProductDelete:main_domain+ "/rest/registry/product/delete",
 		                ProductPublic:main_domain+ "/rest/registry/public/product/",
 		                SaveCustomer:main_domain+ "/rest/registry/customer/",
 		                ProductMainList:main_domain+ "/rest/registry/products/",
@@ -66,14 +81,20 @@ var gecoApp = angular.module("gecoApp",
 		                ProductBasicPrice:main_domain+ "/rest/util/prodbasicprice/",
 		                ProductBasicPriceList:main_domain+ "/rest/util/prodbasicprice/list",
 		                ProductCategory:main_domain+ "/rest/basic/categoryproduct/",
+		                ProductCategoryDelete:main_domain+ "/rest/basic/categoryproduct/delete",
 		                ProductSubCategory:main_domain+ "/rest/basic/subcategoryproduct/",
+		                ProductSubCategoryDelete:main_domain+ "/rest/basic/subcategoryproduct/delete/",
 		                ProductGroup:main_domain+ "/rest/basic/groupproduct/",
+		                ProductGroupDelete:main_domain+ "/rest/basic/groupproduct/delete/",
 		                ProductIncrement:main_domain+ "/rest/registry/product/increment/",
 		                Brand:main_domain+ "/rest/basic/brand/",
+		                BrandDelete:main_domain+ "/rest/basic/brand/delete",
 		                HeadTotal:main_domain+"/rest/documenthelp/headtotal",
 		                RowTotal:main_domain+"/rest/documenthelp/rowtotal",
 		                HeadAllTotal:main_domain+"/rest/documenthelp/headalltotal",
 		                List:main_domain+ "/rest/registry/list/",
+		                ListPublic:main_domain+ "/rest/registry/list/public/",
+		                AddProductToList:main_domain+ "/rest/registry/addtolist/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
 		                Login:main_domain+ "/rest/user/",
 		                LoginEc:main_domain+ "/rest/user/ec/",
@@ -86,9 +107,13 @@ var gecoApp = angular.module("gecoApp",
 		                Transporter:main_domain+ "/rest/registry/transporter/",
 	                    HeadList:main_domain+"/rest/head/head/",
 		                DocumentDetails:main_domain+"",
+		                Document:main_domain+"/rest/basic/document/",
+		                StoreMovement:main_domain+"/rest/basic/storemovement/",
 		                ProductUniteMeasure:main_domain+"/rest/registry/productum/",
 		                ProductList:main_domain+ "/rest/registry/productlist/",
+		                ProductListDelete:main_domain+ "/rest/registry/productlist/delete",
 		                UniteMeasure:main_domain+"/rest/basic/unitmeasure/",
+		                UniteMeasureDelete:main_domain+"/rest/basic/unitmeasure/delete",
 		                UtilPricePercentage:main_domain+"/rest/util/prodbasicprice/percentage/",
 		                UtilPricePrice:main_domain+"/rest/util/prodbasicprice/sellprice/",
 		                UtilPriceEndPrice:main_domain+"/rest/util/prodbasicprice/endprice/",
@@ -100,11 +125,14 @@ var gecoApp = angular.module("gecoApp",
 
 		                Role:main_domain+"/rest/role/",
 		                Region:main_domain+"/rest/basic/region/",
+		                RegionDelete:main_domain+"/rest/basic/region/delete/",
 		                ExportHeads:main_domain+"/rest/export/heads/",
+		                GenerateHeads:main_domain+"/rest/head/generationdocs/objectdocs",
 		                ImportProducts:main_domain+"/rest/import/products/",
 		                ImportCustomers:main_domain+"/rest/import/customers/",
 		                Upload:main_domain+"/rest/upload/file",
 		                TaxRate:main_domain+"/rest/basic/taxrate/",
+		                TaxRateDelete:main_domain+"/rest/basic/taxrate/delete/",
 		                DeleteRow:main_domain+"/rest/head/removerow/",
 		                Role:main_domain+"/rest/role/",
 		                ListIncrement:main_domain+"/rest/util/incrementlist",
@@ -114,6 +142,8 @@ var gecoApp = angular.module("gecoApp",
 		                SearchProductCode:main_domain+"/rest/registry/product/code/",
 		                CheckHead:main_domain+"/rest/head/checkhead",
 		                PrintHead:main_domain+"/rest/print/head/",
+		                PrintList:main_domain+"/rest/print/list/",
+		                PrintCustomerList:main_domain+"/rest/print/customer/list/",
 		                UserSave:main_domain+ "/rest/user/saveuser",
 		                UserRefresh:main_domain+ "/rest/user/refreshuser/",
 		                UserChangePassword:main_domain+ "/rest/user/changepassword"
@@ -127,6 +157,10 @@ var gecoApp = angular.module("gecoApp",
 		            	CompanyId:"94579938-e847-46b2-9063-4692f15aa8b6",
 		            	PaypalURL:"https://www.sandbox.paypal.com/cgi-bin/webscr"
 
+		            },Messages:{
+		            	SaveSuccessMessage:"SALVATAGGIO EFFETTUATO",
+		            	DeleteSuccessMessage:"ELIMINAZIONE EFFETTUATA",
+		            	GeneralErrorMessage:"OPERAZIONE FALLITA"
 		            }
 		        };
 		    };
@@ -227,13 +261,15 @@ var gecoApp = angular.module("gecoApp",
         }
     }
 });
-
+gecoApp.config(['usSpinnerConfigProvider', function (usSpinnerConfigProvider) {
+    usSpinnerConfigProvider.setDefaults({color: 'blue'});
+}]);
 gecoApp.config(['$stateProvider', '$urlRouterProvider',
 function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise("login");
 	
 	$stateProvider.state('userlist', {
-			url:'/userlist',
+			url:'/userlist', //USER
 			templateUrl: 'template/userlist.htm',
 			controller: 'UserListCtrl'
 		}).state('welcome', {
@@ -248,14 +284,30 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/role',
 			templateUrl: 'template/rolelist.htm',
 			controller: 'RoleCtrl'
+		}).state('customer', { //CUSTOMER
+			url:'/customer',
+			templateUrl: 'template/customer/customerlist.htm',
+			controller: 'RocchiCustomerListCtrl'
+		}).state('customer_details', {
+			url:'/customer/:idcustomer',
+			templateUrl: 'template/customer/customerdetail.htm',
+			controller: 'RocchiCustomerDetailCtrl'
+		}).state('customercategory', {
+			url:'/customercategory',
+			templateUrl: 'template/customer/customercategorylist.htm',
+			controller: 'RocchiCustomerCategoryListCtrl'
+		}).state('customergroup', {
+			url:'/customergroup',
+			templateUrl: 'template/customer/customergrouplist.htm',
+			controller: 'RocchiCustomerGroupListCtrl'
 		}).state('taxrate', {
 			url:'/taxrate',
-			templateUrl: 'template/basic/taxratelist.htm',
+			templateUrl: 'template/product/taxratelist.htm',
 			controller: 'RocchiTaxrateCtrl'
 		}).state('counter', {
 			url:'/counter',
 			templateUrl: 'template/basic/counterlist.htm',
-			controller: 'CounterCtrl'
+			controller: 'RocchiCounterCtrl'
 		}).state('storemovement_list', {
 			url:'/storemovement',
 			templateUrl: 'template/basic/storemovementlist.htm',
@@ -267,22 +319,22 @@ function($stateProvider, $urlRouterProvider) {
 		}).state('document', {
 			url:'/document',
 			templateUrl: 'template/basic/documentlist.htm',
-			controller: 'DocumentCtrl'
+			controller: 'RocchiDocumentCtrl'
 		}).state('groupproduct', {
 			url:'/groupproduct',
-			templateUrl: 'template/basic/groupproductlist.htm',
+			templateUrl: 'template/product/groupproductlist.htm',
 			controller: 'RocchiGroupProductCtrl'
 		}).state('categoryproduct', {
 			url:'/categoryproduct',
-			templateUrl: 'template/basic/categoryproductlist.htm',
+			templateUrl: 'template/product/categoryproductlist.htm',
 			controller: 'RocchiCategoryProductCtrl'
 		}).state('region', {
 			url:'/region',
-			templateUrl: 'template/basic/regionlist.htm',
+			templateUrl: 'template/product/regionlist.htm',
 			controller: 'RocchiRegionCtrl'
 		}).state('unitmeasure', {
 			url:'/unitmeasure',
-			templateUrl: 'template/basic/unitmeasurelist.htm',
+			templateUrl: 'template/product/unitmeasurelist.htm',
 			controller: 'RocchiUnitmeasureCtrl'
 		}).state('company', {
 			url:'/company',
@@ -306,11 +358,11 @@ function($stateProvider, $urlRouterProvider) {
 			controller: 'BankDetailCtrl'
 		}).state('product', {
 			url:'/product',
-			templateUrl: 'template/registry/productlist.htm',
+			templateUrl: 'template/product/productlist.htm',
 			controller: 'RocchiProductListCtrl'
 		}).state('product_details', {
 			url:'/product/:idproduct',
-			templateUrl: 'template/registry/productdetail.htm',
+			templateUrl: 'template/product/productdetail.htm',
 			controller: 'RocchiProductDetailCtrl'
 		}).state('list', {
 			url:'/list',
@@ -320,14 +372,6 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/list/:idlist',
 			templateUrl: 'template/registry/listdetail.htm',
 			controller: 'RocchiListDetailCtrl'
-		}).state('customer', {
-			url:'/customer',
-			templateUrl: 'template/registry/customerlist.htm',
-			controller: 'RocchiCustomerListCtrl'
-		}).state('customer_details', {
-			url:'/customer/:idcustomer',
-			templateUrl: 'template/registry/customerdetail.htm',
-			controller: 'RocchiCustomerDetailCtrl'
 		}).state('destination', {
 			url:'/destination',
 			templateUrl: 'template/registry/destinationlist.htm',
@@ -384,14 +428,6 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/head/:idhead/:rows',
 			templateUrl: 'template/document/headdetail.htm',
 			controller: 'RocchiHeadDetailCtrl'
-		}).state('customercategory', {
-			url:'/customercategory',
-			templateUrl: 'template/basic/customercategorylist.htm',
-			controller: 'RocchiCustomerCategoryListCtrl'
-		}).state('customergroup', {
-			url:'/customergroup',
-			templateUrl: 'template/basic/customergrouplist.htm',
-			controller: 'RocchiCustomerGroupListCtrl'
 		}).state('suppliercategory', {
 			url:'/suppliercategory',
 			templateUrl: 'template/basic/suppliercategorylist.htm',
@@ -434,7 +470,7 @@ function($stateProvider, $urlRouterProvider) {
 			controller: 'StoreCtrl'
 		}).state('brand', {
 			url:'/brand',
-			templateUrl: 'template/basic/brandlist.htm',
+			templateUrl: 'template/product/brandlist.htm',
 			controller: 'RocchiBrandCtrl'
 		}).state('storeneeded', {
 			url:'/storeneeded',
@@ -477,6 +513,18 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/promoter/:idpromoter',
 			templateUrl: 'template/registry/promoterdetail.htm',
 			controller: 'RocchiPromoterDetailCtrl'
+		}).state('documentflow', {
+			url:'/documentflow',
+			templateUrl: 'template/config/documentflow.html',
+			controller: 'DocumentFlowCtrl'
+		}).state('publiclist', {
+			url:'/publiclist',
+			templateUrl: 'template/public/PublicList.html',
+			controller: 'PublicListCtrl'
+		}).state('composition', {
+			url:'/composition',
+			templateUrl: 'template/product/composition.html',
+			controller: 'RocchiCompositionCtrl'
 		});
 }]);
 gecoApp.factory('ScopeFactory', function ($http, $q) {
@@ -486,8 +534,8 @@ gecoApp.factory('ScopeFactory', function ($http, $q) {
 	}
 });
 gecoApp.run(function($rootScope) {
-	$rootScope.$on('$routeChangeStart', function(next, current) { 
-		$(document).unbind("keydown");
+	$rootScope.$on('$stateChangeStart', function(next, current) { 
+		//$(document).unbind("keydown");
 		
 	});
 	$rootScope.user = {};

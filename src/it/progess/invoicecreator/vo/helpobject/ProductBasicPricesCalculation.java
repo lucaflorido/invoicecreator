@@ -62,14 +62,14 @@ public class ProductBasicPricesCalculation {
         bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.sellprice= bd.floatValue();
         float taxdiff = HibernateUtils.calculatePercentage(sellprice, this.taxrate);
-        this.endprice = this.sellprice+taxdiff;
+        this.endprice = HibernateUtils.roundfloat(this.sellprice+taxdiff);
 	}
 	public void calculateFromTotalPrice(){
 		this.sellprice =HibernateUtils.calculateFromPercentage(this.endprice, this.taxrate);
 		BigDecimal bd = new BigDecimal(this.sellprice);
         bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.sellprice= bd.floatValue();
-        float inc = this.sellprice - this.purchaseprice;
+        float inc = HibernateUtils.roundfloat(this.sellprice - this.purchaseprice);
 		if (inc > 0){
 			this.percentage =inc*100/this.purchaseprice;
 			BigDecimal bdr = new BigDecimal(this.percentage);
@@ -83,14 +83,14 @@ public class ProductBasicPricesCalculation {
 	public void percentageIncrement(float inc,Product prod){
 		copyFromProd(prod);
 		calculatePercentage();
-		this.purchaseprice =(this.purchaseprice/100*inc)+this.purchaseprice;
+		this.purchaseprice =HibernateUtils.roundfloat((this.purchaseprice/100*inc)+this.purchaseprice);
 		calculateSellPrice();
 		copyToProd(prod);
 	}
 	public void amountIncrement(float inc,Product prod){
 		copyFromProd(prod);
-		this.sellprice = this.sellprice + inc;
-		this.purchaseprice = this.purchaseprice + inc;
+		this.sellprice =HibernateUtils.roundfloat( this.sellprice + inc);
+		this.purchaseprice =HibernateUtils.roundfloat( this.purchaseprice + inc);
 		copyToProd(prod);
 	}
 	private void copyToProd(Product prod){

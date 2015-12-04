@@ -5,13 +5,16 @@
  * 
  */
 angular.module("rocchi.product")
-.controller('RocchiBrandCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
+.controller('RocchiBrandCtrl',function($scope,$http,$modal,AppConfig,AlertsFactory,CommonFunction){
 	$scope.msg = AlertsFactory;
     $scope.msg.initialize();
 	$scope.brandsaved = true;
-	$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
-		$scope.brands= data;
-	});
+	var loadList = function(){
+		$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
+			$scope.brands= data;
+		});
+	}
+	loadList();
 	$scope.modifyid = 0;
 	$scope.modifybrandElement = function(id){
 		if ($scope.modifyid != id){
@@ -47,6 +50,9 @@ angular.module("rocchi.product")
 			}	
 		}
 	}
+	$scope.deleteElement = function (obj) {
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.BrandDelete,obj,loadList);
+	 };
 	$scope.savebrands = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.Brand,
@@ -92,4 +98,4 @@ angular.module("rocchi.product")
 			$("#detail"+id).addClass("open");
 			$("#detailview"+id).css("display","none");
 	}
-}]);
+});

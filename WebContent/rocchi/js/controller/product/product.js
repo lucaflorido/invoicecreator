@@ -1,5 +1,5 @@
 angular.module("rocchi.product")
-.controller('RocchiProductListCtrl',["$scope","$rootScope","$http","ScopeFactory","$location","AppConfig","AlertsFactory","LoaderFactory",function($scope,$rootScope,$http,ScopeFactory,$location,AppConfig,AlertsFactory,LoaderFactory){
+.controller('RocchiProductListCtrl',function($scope,$rootScope,$http,ScopeFactory,$location,AppConfig,AlertsFactory,LoaderFactory,CommonFunction){
     $scope.importview = false;	
 	$scope.location = $location;
 	$scope.url = AppConfig.ServiceUrls;
@@ -48,6 +48,9 @@ angular.module("rocchi.product")
 		});
 		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
 			$scope.regions= data;
+		});
+		$http.get(AppConfig.ServiceUrls.Composition).success(function(data){
+			$scope.compositions= data;
 		});
 	};
 	$scope.subcategories = [];
@@ -106,8 +109,8 @@ angular.module("rocchi.product")
 	}
 	$scope.getProductsNumber();
 	
-	$scope.deleteElement = function(id){
-		for(var i=0;i<$scope.products.length;i++){
+	$scope.deleteElement = function(obj){
+		/*for(var i=0;i<$scope.products.length;i++){
 			if (id == $scope.products[i].idProduct){
 				$scope.deleteproduct = $scope.products[i];
 				$.ajax({
@@ -122,7 +125,8 @@ angular.module("rocchi.product")
 						}	
 					})
 			}	
-		}
+		}*/
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.ProductDelete,obj,$scope.getProductsNumber);
 	}
 	$scope.printElements = function(){
 		$.ajax({
@@ -193,8 +197,8 @@ angular.module("rocchi.product")
 	 $scope.addNew = function(){
 		 $location.path("/product/0");
 	 };
-}])
-.controller('RocchiProductDetailCtrl',["$scope","$http","$stateParams","$location","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$stateParams,$location,$rootScope,AppConfig,AlertsFactory){
+})
+.controller('RocchiProductDetailCtrl',function($scope,$http,$stateParams,$location,$rootScope,$q,AppConfig,AlertsFactory,CommonFunction){
     
 	GECO_validator.startupvalidator();
 	$scope.msg = AlertsFactory;
@@ -232,85 +236,97 @@ angular.module("rocchi.product")
 	}else{
 		$scope.isNew = false;
 	}
-	var getProduct = function(){
-		$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
-			$scope.ums= data;
-						$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
-							$scope.product= data;
-							$scope.imageProduct = $scope.product.photo;
-					             
-							if ($rootScope.newProductToAdd != null)
-								$scope.product.code = $rootScope.newProductToAdd;
-							if ($scope.product.idProduct == 0){
-								$scope.product.ums = [];
-								$scope.product.ums.push({idUnitMeasureProduct:0,preference:true,um:$scope.ums[0],conversion:1});
-							}
-							$http.get(AppConfig.ServiceUrls.ProductGroup).success(function(data){
-								$scope.groups= data;
-									if($scope.product.group){
-										for (var i=0;i<$scope.groups.length;i++){
-											if ($scope.product.group.idGroupProduct == $scope.groups[i].idGroupProduct){
-												$scope.currentGroup = $scope.groups[i]; 
-											}
-										}
-									}
-							});
-							$http.get(AppConfig.ServiceUrls.Region).success(function(data){
-								$scope.regions= data;
-									if($scope.product.region){
-										for (var i=0;i<$scope.regions.length;i++){
-											if ($scope.product.region.idRegion == $scope.regions[i].idRegion){
-												$scope.currentRegion = $scope.regions[i]; 
-											}
-										}
-									}
-							});
-							
-							$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
-					$scope.taxrates= data;
-							for (var itx=0;itx<$scope.taxrates.length;itx++){
-								if($scope.product.taxrate){
-									if ($scope.product.taxrate.idtaxrate == $scope.taxrates[itx].idtaxrate){
-										$scope.currentTaxRate = $scope.taxrates[itx]; 
-									}
-								}
-							}
-							});
-							$http.get(AppConfig.ServiceUrls.ProductCategory).success(function(data){
-								$scope.categorys= data;
-								if($scope.product.category){
-									for (var ig=0;ig<$scope.categorys.length;ig++){
-										if ($scope.product.category.idCategoryProduct == $scope.categorys[ig].idCategoryProduct){
-											$scope.currentCategory = $scope.categorys[ig];
-											$scope.subcategories = $scope.currentCategory.subcategories		
-											$scope.currentSubCategory = null;
-										}
-									}
-									for (var igs=0;igs<$scope.subcategories.length;igs++){
-										if ($scope.product.subcategory == null){
-											$scope.product.subcategory = {};
-										}
-										if ($scope.product.subcategory.idSubCategoryProduct == $scope.subcategories[igs].idSubCategoryProduct){
-											$scope.currentSubCategory = $scope.subcategories[igs]; 
-										}
-									}
-								}
-							});
-							if ($scope.product.ecconfig){
-								if ($scope.product.ecconfig.umproduct){
-									angular.forEach($scope.product.ums, function(value, key) {
-										  if (value.idUnitMeasureProduct == $scope.product.ecconfig.umproduct.idUnitMeasureProduct){
-											  $scope.product.ecconfig.umproduct = value;
-										  }
-										});
-								}else{
-									$scope.product.ecconfig.umproduct = null;
-								}
-							}
-				});
-		});
+	$http.get(AppConfig.ServiceUrls.Composition).success(function(data){
+		$scope.compositions= data;
+	});
+	$http.get(AppConfig.ServiceUrls.Brand).success(function(data){
+		$scope.brands= data;
+	});
+	var initMasterData = function(){
+		$q.all([$http.get(AppConfig.ServiceUrls.UniteMeasure),
+		        $http.get(AppConfig.ServiceUrls.ProductGroup),
+		        $http.get(AppConfig.ServiceUrls.Region),
+		        $http.get(AppConfig.ServiceUrls.Brand),
+		        $http.get(AppConfig.ServiceUrls.TaxRate),
+		        $http.get(AppConfig.ServiceUrls.ProductCategory)
+		        ]).then(function(data){
+		        	$scope.ums= data[0].data;
+		        	$scope.groups= data[1].data;
+		        	$scope.regions= data[2].data;
+		        	$scope.brands= data[3].data;
+		        	$scope.taxrates= data[4].data;
+		        	$scope.categorys= data[5].data;
+		        	getProduct();
+		        });
 	}
-	getProduct();
+var getProduct = function(){
+	$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
+		$scope.product= data;
+		$scope.imageProduct = $scope.product.photo;
+		if ($rootScope.newProductToAdd != null)
+			$scope.product.code = $rootScope.newProductToAdd;
+		if ($scope.product.idProduct == 0){
+			$scope.product.ums = [];
+			$scope.product.ums.push({idUnitMeasureProduct:0,preference:true,um:$scope.ums[0],conversion:1});
+		}
+		if($scope.product.group){
+			for (var i=0;i<$scope.groups.length;i++){
+				if ($scope.product.group.idGroupProduct == $scope.groups[i].idGroupProduct){
+					$scope.product.group = $scope.groups[i]; 
+				}
+			}
+		}
+		if($scope.product.region){
+			for (var i=0;i<$scope.regions.length;i++){
+				if ($scope.product.region.idRegion == $scope.regions[i].idRegion){
+					$scope.product.region = $scope.regions[i]; 
+				}
+			}
+		}
+		if($scope.product.brand){
+			for (var i=0;i<$scope.brands.length;i++){
+				if ($scope.product.brand.idBrand == $scope.brands[i].idBrand){
+					$scope.product.brand = $scope.brands[i]; 
+				}
+			}
+		}
+		for (var itx=0;itx<$scope.taxrates.length;itx++){
+			if($scope.product.taxrate){
+				if ($scope.product.taxrate.idtaxrate == $scope.taxrates[itx].idtaxrate){
+					$scope.product.taxrate = $scope.taxrates[itx]; 
+				}
+			}
+		}
+		if($scope.product.category){
+			for (var ig=0;ig<$scope.categorys.length;ig++){
+				if ($scope.product.category.idCategoryProduct == $scope.categorys[ig].idCategoryProduct){
+					$scope.product.category = $scope.categorys[ig];
+    				$scope.subcategories = $scope.product.category.subcategories		
+					$scope.currentSubCategory = null;
+				}
+			}
+			for (var igs=0;igs<$scope.subcategories.length;igs++){
+				if ($scope.product.subcategory != null){
+					if ($scope.product.subcategory.idSubCategoryProduct == $scope.subcategories[igs].idSubCategoryProduct){
+						$scope.product.subcategory = $scope.subcategories[igs]; 
+					}
+				}
+			}
+		}
+		if ($scope.product.ecconfig){
+			if ($scope.product.ecconfig.umproduct){
+				angular.forEach($scope.product.ums, function(value, key) {
+	 			    if (value.idUnitMeasureProduct == $scope.product.ecconfig.umproduct.idUnitMeasureProduct){
+	 				    $scope.product.ecconfig.umproduct = value;
+	    		    }
+				});
+			}else{
+				$scope.product.ecconfig.umproduct = null;
+			}
+		}
+	});
+}
+	initMasterData();
 	$scope.changeCategory = function(){
 		$scope.subcategories = $scope.currentCategory.subcategories		
 		$scope.currentSubCategory = null;
@@ -319,9 +335,12 @@ angular.module("rocchi.product")
 		product.ums.push({idUnitMeasureProduct:0});
 		$scope.umpid = product.ums.length-1 ;
 	}
-	
-	$scope.deleteListElement = function(prod){
-		$.ajax({
+	$scope.addCompositionElement = function(product){
+		product.compositions.push({idCompositionProduct:0});
+		$scope.compid = product.compositions.length-1 ;
+	}
+	$scope.deleteListElement = function(obj){
+		/*$.ajax({
 				url:AppConfig.ServiceUrls.ProductList,
 				type:"DELETE",
 				data:"productobj="+JSON.stringify(prod),
@@ -330,7 +349,8 @@ angular.module("rocchi.product")
 					getProduct();
 					
 				}	
-			});
+			});*/
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.ProductListDelete,obj,getProduct);
 	}
 	$scope.deleteUMElement = function(um){
 		$.ajax({
@@ -344,6 +364,18 @@ angular.module("rocchi.product")
 				}	
 			});
 	}
+	/*$scope.deleteCompositionElement = function(um){
+		$.ajax({
+				url:AppConfig.ServiceUrls.Compos,
+				type:"DELETE",
+				data:"productobj="+JSON.stringify(um),
+				success:function(data){
+					$scope.msg.successMessage("UNITA' DI MISURA ELIMINATA CON SUCCESSO");
+					getProduct();
+					
+				}	
+			});
+	}*/
 	$scope.addListElement = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.ListNoProduct,
@@ -369,11 +401,12 @@ angular.module("rocchi.product")
 	}
 	
 	$scope.saveProduct = function(){
-		$scope.product.taxrate = $scope.currentTaxRate;
+		/*$scope.product.taxrate = $scope.currentTaxRate;
 		$scope.product.group = $scope.currentGroup;
 		$scope.product.region = $scope.currentRegion;
 		$scope.product.category = $scope.currentCategory;
 		$scope.product.subcategory = $scope.currentSubCategory;
+		$scope.product.brand = $scope.currentBrand;*/
 		$scope.product.isProduct = true;
 		$http.put(AppConfig.ServiceUrls.Product,$scope.product).success(function(data){
 			
@@ -390,7 +423,7 @@ angular.module("rocchi.product")
 					$scope.isNew = false;
 					//$location.path("/product/"+$scope.product.idProduct);
 				}
-				$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
+				/*$http.get(AppConfig.ServiceUrls.Product+$scope.idproduct).success(function(data){
 					$scope.product= data;
 					$scope.umpid = -1;
 					$scope.listid = -1;
@@ -405,7 +438,8 @@ angular.module("rocchi.product")
 							$scope.product.ecconfig.umproduct = null;
 						}
 					}
-				});
+				});*/
+				getProduct();
 				$scope.msg.successMessage("PRODOTTO SALVATO CON SUCCESSO");
 			}else{
 				$scope.msg.alertMessage(result.errorMessage);
@@ -580,4 +614,4 @@ angular.module("rocchi.product")
             console.log('error status: ' + status);
         })
     };
-}]);
+});

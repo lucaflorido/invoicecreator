@@ -125,4 +125,100 @@ angular.module('modules.common.shared', [])
 
     };
     return factory;
+}).factory("CommonFunction", function ($http, $q,$modal, AppConfig,AlertsFactory,LoaderFactory){
+	var factory = {}
+	var deleteElementCallback = function(url,obj,callback){
+		LoaderFactory.loader = true;
+		$http.post(url,obj)
+		.success(function(result){
+			if (result.type == "success"){
+				AlertsFactory.successMessage(AppConfig.Messages.DeleteSuccessMessage);
+			}else{
+				AlertsFactory.alertMessage(result.errorMessage);
+			}
+			if(callback)
+				callback();
+			LoaderFactory.loader = false;
+		})
+		.error(function(error){
+			LoaderFactory.loader = false;
+			AlertsFactory.alertMessage(AppConfig.Messages.GeneralErrorMessage);
+		});	
+	}
+	factory.deleteElement = function (url,obj,callback) {
+
+	    var modalInstance = $modal.open({
+	      templateUrl: 'template/alert/cancelalert.html',
+	      controller: 'ModalCancelCtrl',
+	      resolve: {
+	    	  cancelObj: function () {
+	          return obj;
+	        }
+	      }
+	    });
+
+	    modalInstance.result.then(function (obj) {
+	    	deleteElementCallback(url,obj,callback);
+	    });
+	  };
+	factory.printPDF = function(url){
+		LoaderFactory.loader = true;
+		$http.get(url).then(function(result){
+			var deviceAgent = navigator.userAgent;
+			var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad|android|webos|blackberry|iemobile|opera mini)/);
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+				// some code..
+			}
+			if (ios) {
+				// This is the line that matters
+				var a = window.document.createElement("a");
+				a.target = '_blank';
+				a.href = url;
+			 
+				// Dispatch fake click
+				var e = window.document.createEvent("MouseEvents");
+				e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+				a.dispatchEvent(e);
+			} else {
+				// Your code that works for desktop browsers
+				var url = result.data.url;
+				window.open(url);
+			}
+			LoaderFactory.loader = false;
+		},function(error){
+			LoaderFactory.loader = false;
+			AlertsFactory.alertMessage(AppConfig.Messages.GeneralErrorMessage);
+		});
+	}
+	factory.printPDFPost = function(url){
+		LoaderFactory.loader = true;
+		$http.post(url).then(function(result){
+			var deviceAgent = navigator.userAgent;
+			var ios = deviceAgent.toLowerCase().match(/(iphone|ipod|ipad|android|webos|blackberry|iemobile|opera mini)/);
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+				// some code..
+			}
+			if (ios) {
+				// This is the line that matters
+				var a = window.document.createElement("a");
+				a.target = '_blank';
+				a.href = url;
+			 
+				// Dispatch fake click
+				var e = window.document.createEvent("MouseEvents");
+				e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+				a.dispatchEvent(e);
+			} else {
+				// Your code that works for desktop browsers
+				var url = result.data.url;
+				window.open(url);
+			}
+			LoaderFactory.loader = false;
+		},function(error){
+			LoaderFactory.loader = false;
+			AlertsFactory.alertMessage(AppConfig.Messages.GeneralErrorMessage);
+		});
+	}
+	return factory;
+	
 });

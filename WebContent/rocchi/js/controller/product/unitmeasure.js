@@ -2,13 +2,16 @@
  * 
  */
 angular.module("rocchi.product")
-.controller('RocchiUnitmeasureCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
+.controller('RocchiUnitmeasureCtrl',function($scope,$http,$modal,AppConfig,AlertsFactory,CommonFunction){
     $scope.msg = AlertsFactory;
     $scope.msg.initialize();
 	$scope.umsaved = true;
-	$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
-		$scope.ums= data;
-	});
+	var loadList = function(){
+		$http.get(AppConfig.ServiceUrls.UniteMeasure).success(function(data){
+			$scope.ums= data;
+		});
+	}
+	loadList();
 	$scope.modifyid = 0;
 	$scope.modifyUmElement = function(id){
 		$scope.modifyid = id;
@@ -36,6 +39,9 @@ angular.module("rocchi.product")
 			}	
 		}
 	}
+	$scope.deleteElement = function (obj) {
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.UniteMeasureDelete,obj,loadList);
+	};
 	$scope.saveUms = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.UniteMeasure,
@@ -60,4 +66,4 @@ angular.module("rocchi.product")
 	}
 	
 	
-}]);
+});

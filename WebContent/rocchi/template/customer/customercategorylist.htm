@@ -30,12 +30,12 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="customercategory in customercategorysToDisplay ">
-					<td ><div class="matita" ng-click="modifycustomercategoryElement(customercategory.idCategoryCustomer)" ></div></td>
+					<td ><i class="icon_setup fi-pencil"  ng-click="modifycustomercategoryElement(customercategory.idCategoryCustomer)" ></i></td>
 					<td   ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.code}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.code"  value="{{customercategory.code}}" />  </div></td>
 					<td   ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.name}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.name"  value="{{customercategory.name}}" />  </div></td>
 					<td  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.description}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.description"  value="{{customercategory.description}}" />  </div></td>
 					<td  ><div ng-if="modifyid != customercategory.idCategoryCustomer">&nbsp;{{customercategory.note}}</div><div><input class="input_field"  ng-if="modifyid == customercategory.idCategoryCustomer" ng-model="customercategory.note"  value="{{customercategory.note}}" />  </div></td>
-					<td ><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletecustomercategoryElement(customercategory.idCategoryCustomer)" ></div></td>
+					<td ><i class="icon_setup fi-x-circle"  id="del{{role.idrole}}" ng-click="deleteElement(customercategory)" ></i></td>
 				</tr>
 			</tbody>
 		</table>

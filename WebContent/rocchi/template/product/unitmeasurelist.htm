@@ -32,12 +32,12 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="um in umsToDisplay" >
-					<td><div class="matita" ng-click="modifyUmElement(um.idUnitMeasure)"></div></td>
+					<td><i class="icon_setup fi-pencil"  ng-click="modifyUmElement(um.idUnitMeasure)"></i></td>
 					<td><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.code}}</div><div><input class="input_field"  ng-if="modifyid == um.idUnitMeasure" ng-model="um.code"  value="{{um.code}}" />  </div></td>
 					<td><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.name}}</div><div><input class="input_field"  ng-if="modifyid == um.idUnitMeasure" ng-model="um.name"  value="{{um.name}}" />  </div></td>
 					<td><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.description}}</div><div><input class="input_field"  ng-if="modifyid == um.idUnitMeasure" ng-model="um.description"  value="{{um.description}}" />  </div></td>
 					<td><div ng-if="modifyid != um.idUnitMeasure">&nbsp;{{um.note}}</div><div><input class="input_field"  ng-if="modifyid == um.idUnitMeasure" ng-model="um.note"  value="{{um.note}}" />  </div></td>
-					<td><a class="x" ng-click="deleteUmElement(um.idUnitMeasure)"></a></td>
+					<td><i class="icon_setup fi-x-circle"  ng-click="deleteElement(um)"></i></td>
 				</tr>
 			</tbody>
 		</table>

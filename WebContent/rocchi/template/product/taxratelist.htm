@@ -28,10 +28,10 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="taxrate in taxratesToDisplay ">
-					<td ><div class="matita" ng-click="modifyTaxrateElement(taxrate.idtaxrate)" ></div></td>
+					<td ><i class="icon_setup fi-pencil"  ng-click="modifyTaxrateElement(taxrate.idtaxrate)" ></i></td>
 					<td   ><div ng-if="modifyid != taxrate.idtaxrate">&nbsp;{{taxrate.description}}</div><div><input class="input_field"  ng-if="modifyid == taxrate.idtaxrate" ng-model="taxrate.description"  value="{{taxrate.description}}" />  </div></td>
 					<td   ><div ng-if="modifyid != taxrate.idtaxrate">&nbsp;{{taxrate.value}}</div><div><input class="input_field"  ng-if="modifyid == taxrate.idtaxrate" ng-model="taxrate.value"  value="{{taxrate.value}}" />  </div></td>
-					<td ><div class="deleteicon" id="del{{role.idrole}}" ng-click="deleteTaxrateElement(taxrate.idtaxrate)" ></div></td>
+					<td ><i class="icon_setup fi-x-circle"  id="del{{role.idrole}}" ng-click="deleteElement(taxrate)" ></i></td>
 				</tr>
 			</tbody>
 		</table>

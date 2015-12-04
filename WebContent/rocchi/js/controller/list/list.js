@@ -1,12 +1,13 @@
 angular.module("rocchi.list")
-.controller('RocchiListListCtrl',["$scope","$http","AppConfig",function($scope,$http,AppConfig){
+.controller('RocchiListListCtrl',function($scope,$http,$modal,AppConfig,AlertsFactory){
     
-	
+	$scope.msg = AlertsFactory;
+    $scope.msg.initialize()
 	
 	$http.get(AppConfig.ServiceUrls.List).success(function(data){
 		$scope.lists= data;
 	});
-	$scope.deleteElement = function(id){
+	$scope.deleteListElement = function(id){
 		for(var i=0;i<$scope.lists.length;i++){
 			if (id == $scope.lists[i].idList){
 				$scope.deletelist = $scope.lists[i];
@@ -15,7 +16,7 @@ angular.module("rocchi.list")
 						type:"DELETE",
 						data:"listobj="+JSON.stringify($scope.deletelist),
 						success:function(data){
-							alert("Utente eliminato con successo");
+							$scope.msg.successMessage("ELIMINAZIONE RIUSCITA CON SUCCESSO");
 							$http.get(AppConfig.ServiceUrls.List).success(function(data){
 								$scope.lists= data;
 							});
@@ -24,6 +25,22 @@ angular.module("rocchi.list")
 			}	
 		}
 	}
+	$scope.deleteElement = function (id) {
+
+	    var modalInstance = $modal.open({
+	      templateUrl: 'template/alert/cancelalert.html',
+	      controller: 'ModalCancelCtrl',
+	      resolve: {
+	    	  cancelObj: function () {
+	          return id;
+	        }
+	      }
+	    });
+
+	    modalInstance.result.then(function (id) {
+	    	$scope.deleteListElement(id);
+	    });
+	  };
 	$scope.printElement = function(id){
 		$.ajax({
 						url:"rest/print/list/"+id,
@@ -38,14 +55,13 @@ angular.module("rocchi.list")
 		var date = list.startdate.split("/");
 		return date[2]+date[1]+date[0];
 	};
-}])
-.controller('RocchiListDetailCtrl',["$scope","$http","$stateParams","ScopeFactory","AppConfig","AlertsFactory",function($scope,$http,$stateParams,ScopeFactory,AppConfig,AlertsFactory){
+})
+.controller('RocchiListDetailCtrl',function($scope,$http,$stateParams,ScopeFactory,AppConfig,AlertsFactory,CommonFunction){
     
-	GECO_validator.startupvalidator();
 	$scope.newList = {isPercentage:true};
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
-$scope.idlist= $stateParams.idlist;
+    $scope.idlist= $stateParams.idlist;
 
 	$scope.menuselected = "";
 	$scope.filter = {"pagefilter":{}};
@@ -117,9 +133,9 @@ $scope.idlist= $stateParams.idlist;
 	$scope.changeProdElement = function(ump){
 	    
 		if (ump.product != null){
-			for(var i=0;i<$scope.products.length;i++){
-				if (ump.product.idProduct == $scope.products[i].idProduct){
-					$scope.currentProd = $scope.products[i];
+			for(var i=0;i<$scope.list.listproduct.length;i++){
+				if (ump.product.idProduct == $scope.list.listproduct[i].product.idProduct){
+					$scope.currentProd = $scope.list.listproduct[i].product;
 				}
 			}
 		}
@@ -216,9 +232,10 @@ $scope.idlist= $stateParams.idlist;
 						$scope.list.idList = result.success;
 						$scope.idlist = result.success;
 						$scope.msg.successMessage("LISTINO SALVATO CON SUCCESSO");
-						$http.get(AppConfig.ServiceUrls.List+$scope.idlist).success(function(data){
+						/*$http.get(AppConfig.ServiceUrls.List+$scope.idlist).success(function(data){
 							$scope.list= data;
-						});
+						});*/
+						$scope.getProductsNumber();
 					}else{
 						$scope.msg.alertMessage(result.errorMessage);
 					}	
@@ -242,4 +259,26 @@ $scope.idlist= $stateParams.idlist;
 			
 		})
 	}
-}]);
+	$scope.addProductsFiltered = function(){
+		//$scope.filterToAdd = angular.copy($scope.filter);
+		if (!$scope.filterToAdd)
+			$scope.filterToAdd = {};	
+		$scope.filterToAdd.pagefilter = null;
+		$http.post(AppConfig.ServiceUrls.AddProductToList+$scope.idlist,$scope.filterToAdd).success(function(results){
+			if (results.type == "success"){	
+				$scope.getProductsNumber();
+				$scope.msg.successMessage("PRODOTTI AGGIUNTI CON SUCCESSO");
+				
+			}else{
+				$scope.msg.alertMessage(results.errorMessage);
+			}	
+			
+		})
+	}
+	$scope.deleteElement = function(obj){
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.ProductListDelete,obj,$scope.getProductsNumber);
+	}
+	$scope.printList = function(code){
+		CommonFunction.printPDFPost(AppConfig.ServiceUrls.PrintList+code);
+	}
+});

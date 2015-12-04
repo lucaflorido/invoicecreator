@@ -32,12 +32,12 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="region in regionsToDisplay" >
-					<td><div class="matita" ng-click="modifyregionElement(region.idRegion)"></div></td>
+					<td><i class="icon_setup fi-pencil"  ng-click="modifyregionElement(region.idRegion)"></i></td>
 					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.code}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.code"  value="{{region.code}}" />  </div></td>
 					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.name}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.name"  value="{{region.name}}" />  </div></td>
 					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.description}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.description"  value="{{region.description}}" />  </div></td>
 					<td><div ng-if="modifyid != region.idRegion">&nbsp;{{region.note}}</div><div><input class="input_field"  ng-if="modifyid == region.idRegion" ng-model="region.note"  value="{{region.note}}" />  </div></td>
-					<td><a class="x" ng-click="deleteregionElement(region.idRegion)"></a></td>
+					<td><i class="icon_setup fi-x-circle"  ng-click="deleteElement(region)"></i></td>
 				</tr>
 			</tbody>
 		</table>

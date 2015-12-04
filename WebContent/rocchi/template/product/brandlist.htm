@@ -33,13 +33,13 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="brand in brandsToDisplay" >
-					<td  ><div class="matita" ng-click= "modifybrandElement(brand.idBrand)"></div></td>
+					<td  ><i class="icon_setup fi-pencil"  ng-click= "modifybrandElement(brand.idBrand)"></i></td>
 					<td   ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.code}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.code"  value="{{brand.code}}" />  </div></td>
 					<td  ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.name}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.name"  value="{{brand.name}}" />  </div></td>
 					<td   ><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.description}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.description"  value="{{brand.description}}" />  </div></td>
 					<td><div ng-if="modifyid != brand.idBrand">&nbsp;{{brand.note}}</div><div><input class="input_field"  ng-if="modifyid == brand.idBrand" ng-model="brand.note"  value="{{brand.note}}" />  </div></td>
 					
-				    <td ><a class="x" ng-click="deletebrandElement(brand.idBrand)"></a></td>
+				    <td ><i class="icon_setup fi-x-circle"  ng-click="deleteElement(brand)"></i></td>
 				</tr>
 			</tbody>
 		</table>

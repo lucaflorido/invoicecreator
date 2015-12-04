@@ -43,6 +43,14 @@ public class Customer extends RegistryVO   {
 	private boolean hasuser;
 	private EcPayment ecpayment;
 	private boolean isprivate;
+    private String code;
+	
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public Customer(){
 		super();
 	}
@@ -208,6 +216,7 @@ public class Customer extends RegistryVO   {
 	 public void convertFromTable(Itbl obj){
 		TblCustomer c = (TblCustomer)obj;
 		this.active = c.isActive();
+		this.code = c.getCode();
 		this.suspended = c.getSuspended();
 		this.alternativecode1 = c.getAlternativecode1();
 		this.alternativecode2 = c.getAlternativecode2();
@@ -265,6 +274,13 @@ public class Customer extends RegistryVO   {
 		this.lists = new HashSet<ListCustomer>();
 		this.commission = c.getCommission();
 	}
+	public void convertFromTableSoft(Itbl obj){
+		TblCustomer c = (TblCustomer)obj;
+		this.idCustomer = c.getIdCustomer();
+		this.customercode = c.getCustomercode();
+		this.customername = c.getCustomername();
+		this.code = c.getCode();
+	}
 	public void convertFromTableSingle(Itbl obj){
 		TblCustomer c = (TblCustomer)obj;
 		this.convertFromTable(obj);
@@ -317,5 +333,10 @@ public class Customer extends RegistryVO   {
 		
 		
 		return er;
+	}
+	public void checkOwner(User user) {
+		if (user.getEntity() != null && user.getEntity() instanceof Promoter){
+			this.promoter = (Promoter)user.getEntity();
+		}
 	}
 }

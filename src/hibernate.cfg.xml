@@ -119,6 +119,9 @@
   		<mapping class="it.progess.invoicecreator.pojo.TblDeliveryCity"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblMailText"></mapping>
   		<mapping class="it.progess.invoicecreator.pojo.TblCurrency"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblDocumentFlow"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblComposition"></mapping>
+  		<mapping class="it.progess.invoicecreator.pojo.TblCompositionProduct"></mapping>
   	</session-factory>  
   
 </hibernate-configuration>  

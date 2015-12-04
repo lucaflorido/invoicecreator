@@ -1,19 +1,16 @@
 package it.progess.invoicecreator.service;
 
-import it.progess.invoicecreator.dao.BasicDao;
+
 import it.progess.invoicecreator.dao.DeliveryDao;
-import it.progess.invoicecreator.hibernate.HibernateUtils;
+
 import it.progess.invoicecreator.vo.Address;
 import it.progess.invoicecreator.vo.Company;
-import it.progess.invoicecreator.vo.User;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
+
 import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;

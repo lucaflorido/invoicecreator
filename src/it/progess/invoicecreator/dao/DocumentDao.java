@@ -32,6 +32,7 @@ import it.progess.invoicecreator.vo.GenerateObject;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.HeadTotalCalculation;
 import it.progess.invoicecreator.vo.NeededObject;
+import it.progess.invoicecreator.vo.PaginationObject;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.Row;
 import it.progess.invoicecreator.vo.RowTotalCalculator;
@@ -72,13 +73,14 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 public class DocumentDao {
-	public int getPagesNumber(int size,HeadFilter filter,User user){
+	public PaginationObject getPagesNumber(int size,HeadFilter filter,User user){
 		int pages = 0;
+		int counters = 0;
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
 			Criteria cr = session.createCriteria(TblHead.class,"head");
 			setCriteriaHead(cr, filter,user);
-			pages = ((Long) cr.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+			counters = ((Long) cr.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			e.printStackTrace();
@@ -86,12 +88,15 @@ public class DocumentDao {
 		}finally{
 			session.close();
 		}
-		if (pages > size){
-			pages = pages / size;
+		if (counters > size){
+			pages = counters / size;
 		}else{
 			pages = 0;
 		}
-		return pages;
+		PaginationObject po = new PaginationObject();
+		po.setPages(pages);
+		po.setTotalitems(counters);
+		return po;
 	}
 	
 	/*****
@@ -124,7 +129,6 @@ public class DocumentDao {
 		return list;
 	}
 	private void setCriteriaHead(Criteria cr,HeadFilter filter,User user){
-		
 		cr.addOrder(Order.desc("date"));
 		cr.addOrder(Order.desc("number"));
 		cr.createAlias("head.document", "document");
@@ -159,7 +163,7 @@ public class DocumentDao {
 			cr.add(Restrictions.eq("supplier.idSupplier", filter.supplier.getIdSupplier()));
 		}
 		if (filter.doc != null){
-			cr.createAlias("head.document", "document");
+			//scr.createAlias("head.document", "document");
 			cr.add(Restrictions.eq("document.idDocument", filter.doc.getIdDocument()));
 		}
 		if (filter.fromDate != null && filter.fromDate.equals("") != true && filter.toDate != null &&   filter.toDate.equals("") != true  ){

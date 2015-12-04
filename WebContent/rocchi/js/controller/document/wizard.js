@@ -5,7 +5,7 @@
  * 
  */
 angular.module("rocchi.documents")
- .controller('RocchiWizardCtrl',function($scope,$http,$stateParams,$location,$rootScope,$state,$localStorage,AppConfig,WizardFactory,AlertsFactory){
+ .controller('RocchiWizardCtrl',function($scope,$http,$stateParams,$location,$rootScope,$state,$localStorage,AppConfig,WizardFactory,AlertsFactory,LoaderFactory){
 	 $scope.tabs=[{title:"Cliente",template:"template/document/wizard/stepone.html",name:"step1",active:true,disable:false},
 		             {title:"Prodotti",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true},
 	 {title:"Resoconto",template:"template/document/wizard/draft.html",name:"step3",active:false,disable:true}
@@ -41,7 +41,7 @@ angular.module("rocchi.documents")
 }).controller("WizardStepsCtrl",["$scope","WizardFactory",function($scope,WizardFactory){
 	$scope.wiz = WizardFactory;
 	//factory.wiz.getCustomers();
-}]).factory("WizardFactory",function($http, $q,AppConfig,$state,$localStorage,AlertsFactory){
+}]).factory("WizardFactory",function($http, $q,AppConfig,$state,$filter,$localStorage,AlertsFactory,LoaderFactory){
 	var factory = {};
 	factory.customerlist = [];
 	factory.productlist = [];
@@ -83,6 +83,7 @@ angular.module("rocchi.documents")
 	factory.getProductsNumber = function(){
 		
 		//if ($scope.products.length != $scope.pagesize){
+		LoaderFactory.loader = true;
 		factory.pages = [];
 		factory.totalitems = 0;
 		factory.pageArray = [];
@@ -151,6 +152,9 @@ angular.module("rocchi.documents")
 		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
 			factory.regions= data;
 		});
+		$http.get(AppConfig.ServiceUrls.Composition).success(function(data){
+			factory.compositions= data;
+		});
 	}
 	factory.changeCategory = function(){
 		factory.subcategories = [];
@@ -175,9 +179,13 @@ angular.module("rocchi.documents")
 	}
 	factory.getCustomers = function(){
 		var deferred = $q.defer();
+		LoaderFactory.loader = true;
 		$http.get(AppConfig.ServiceUrls.ListOfCustomer).then(function(result){
 			factory.customerlist = result.data;
+			LoaderFactory.loader = false;
 			deferred.resolve();
+		},function(error){
+			LoaderFactory.loader = false;
 		});
 		return deferred.promise;
 	}
@@ -187,12 +195,15 @@ angular.module("rocchi.documents")
 		factory.filter.h = factory.head;
 		$http.post(AppConfig.ServiceUrls.ProductMainListPrice+"1",factory.filter).then(function(result){
 			factory.productlist = result.data.success;
+			LoaderFactory.loader = false;
 			if (factory.head.rows && factory.head.rows.length > 0){
 				factory.globalstatus = 1;
 			}else{
 				factory.globalstatus = 0;
 			}
 			factory.errorProd = [];
+		},function(error){
+			LoaderFactory.loader = false;
 		})
 		
 }
@@ -240,13 +251,16 @@ angular.module("rocchi.documents")
 	}
 	factory.saveHead = function(type){
 		var deferred = $q.defer();
+		LoaderFactory.loader = true;
 		$http.put(AppConfig.ServiceUrls.AddRow+type,factory.head).then(function(result){
 			factory.head = result.data.success;
 			deferred.resolve();
 			makedisabletabs();
 			factory.deleteDraft();
+			LoaderFactory.loader = false;
 			factory.msg.successMessage("Documento registrato con successo");
 		},function(error){
+			LoaderFactory.loader = false;
 			factory.msg.alertMessage("Errore nella registrazione dell'ordine");
 		});
 		return deferred.promise;
@@ -254,12 +268,15 @@ angular.module("rocchi.documents")
 	factory.saveDraftHead = function(type){
 		var deferred = $q.defer();
 		var head = angular.fromJson(factory.storage.draft);
+		LoaderFactory.loader = true;
 		$http.put(AppConfig.ServiceUrls.AddRow+type,head).then(function(result){
 			factory.ignoreDraft = false;
 			factory.showDraftManage = false;
 			factory.deleteDraft();
+			LoaderFactory.loader = false;
 			factory.msg.successMessage("Documento registrato con successo");
 		},function(error){
+			LoaderFactory.loader = false;
 			factory.msg.alertMessage("Errore nella registrazione del documento");
 		});
 		return deferred.promise;
@@ -386,6 +403,8 @@ angular.module("rocchi.documents")
 		factory.showDraftManage = false;
 		factory.msg.initialize();
 	}
+	factory.reverse = false;
+	
 	return factory;
 	
 });

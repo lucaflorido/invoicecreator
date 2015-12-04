@@ -21,10 +21,10 @@
 	</div>
 </div>
 <div class="row" >
-	<div class="large-3 small-12 medium-4 columns">
+	<div class="large-2 small-12 medium-4 columns">
 		Email
 	</div>
-	<div class="large-3 small-12 medium-4 columns">
+	<div class="large-2 small-12 medium-4 columns">
 		Host
 	</div>
 	<div class="large-1 small-12 medium-4 columns">
@@ -37,14 +37,21 @@
 		Pec
 	</div>
 	<div class="large-1 small-12 medium-4 columns">
+		auth
+	</div>
+	<div class="large-1 small-12 medium-4 columns">
 		Tls
+	</div>
+	<div class="large-1 small-12 medium-4 columns">
+		&nbsp;
 	</div>
 </div>
 <div class="row" ng-repeat="mail in company.mailconfig">
-	<div class="large-3 small-12 medium-4 columns">
+	
+	<div class="large-2 small-12 medium-4 columns">
 		<input type="text" ng-model="mail.mailconfig.email" value="{{mail.mailconfig.email}}"  />
 	</div>
-	<div class="large-3 small-12 medium-4 columns">
+	<div class="large-2 small-12 medium-4 columns">
 		<input type="text" ng-model="mail.mailconfig.host" value="{{mail.mailconfig.host}}" />
 	</div>
 	<div class="large-1 small-12 medium-4 columns">
@@ -61,5 +68,8 @@
 	</div>
 	<div class="large-1 small-12 medium-4 columns">
 		<input type="checkbox" ng-model="mail.mailconfig.starttls" value="{{mail.mailconfig.starttls}}" />
+	</div>
+	<div class="large-1 small-12 medium-4 columns">
+		<i class="icon_setup fi-x-circle" ng-click="deleteElement(mail)" ></i>
 	</div>
 </div>

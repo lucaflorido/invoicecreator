@@ -197,6 +197,7 @@
       <th width="50">Telefono</th>
       <th width="50">Cellulare</th>
       <th width="150" class="hidden_cell">Fax</th>
+      <th width="50">Listino</th>
       <th width="50"></th>
     </tr>
         <tr>
@@ -205,14 +206,15 @@
   </thead>
   <tbody>
     <tr ng-repeat="customer in customersToDisplay ">
-      <td><a  class="matita" ng-click="location.path('/customer/'+customer.idCustomer)" ></a> </td>
+      <td><i class="icon_setup fi-pencil"  ng-click="location.path('/customer/'+customer.idCustomer)" ></i> </td>
       <td class="hidden_cell">{{customer.customercode}}</td>
       <td>{{customer.customername}}</td>
       <td class="hidden_cell">{{customer.address.address}}</td>
       <td>{{customer.contact.phone1}}</td>
       <td>{{customer.contact.mobile1}}</td>
       <td class="hidden_cell">{{customer.contact.fax}}</td>
-      <td><a class="x" ng-click="deleteElement(customer.idCustomer)"></a></td>
+      <td> <i class="icon_setup fi-print"  ng-click="printList(customer.code)"></i></td>
+      <td><i class="icon_setup fi-x-circle"  ng-click="deleteElement(customer)"></i></td>
 	</tr>
   
   

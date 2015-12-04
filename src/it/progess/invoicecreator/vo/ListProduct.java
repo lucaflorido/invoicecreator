@@ -114,13 +114,13 @@ public class ListProduct implements Ivo,Comparable<ListProduct> {
 			BigDecimal bd = new BigDecimal(diff);
 	        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 	        diff= bd.floatValue();
-	        this.endprice = diff+this.price;
+	        this.endprice =HibernateUtils.roundfloat( diff+this.price);
 		}else{
-			this.endprice = this.price;
+			this.endprice = HibernateUtils.roundfloat(this.price);
 		}
 	}
 	public void calculatePrices(float taxrate){
-		float increment = HibernateUtils.calculatePercentage(this.getProduct().getPurchaseprice(), this.getPercentage());
+		float increment =HibernateUtils.roundfloat( HibernateUtils.calculatePercentage(this.getProduct().getPurchaseprice(), this.getPercentage()));
 		this.price = this.getProduct().getPurchaseprice()+increment;
 		setEndPrice(taxrate);
 	}

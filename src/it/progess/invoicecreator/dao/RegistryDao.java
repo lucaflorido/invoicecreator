@@ -12,6 +12,7 @@ import it.progess.invoicecreator.pojo.TblHead;
 import it.progess.invoicecreator.pojo.TblList;
 import it.progess.invoicecreator.pojo.TblListCustomer;
 import it.progess.invoicecreator.pojo.TblListProduct;
+import it.progess.invoicecreator.pojo.TblMailConfigCompany;
 import it.progess.invoicecreator.pojo.TblPaymentSolution;
 import it.progess.invoicecreator.pojo.TblProduct;
 import it.progess.invoicecreator.pojo.TblPromoter;
@@ -37,6 +38,7 @@ import it.progess.invoicecreator.vo.GroupCustomer;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.ListCustomer;
 import it.progess.invoicecreator.vo.ListProduct;
+import it.progess.invoicecreator.vo.MailConfigCompany;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.PaginationObject;
 import it.progess.invoicecreator.vo.PaymentSolution;
@@ -88,6 +90,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 
 
@@ -178,7 +181,8 @@ public class RegistryDao {
 			tx = session.beginTransaction();
 				if (sms.control() == null ){
 					TblCompany tblsm = new TblCompany();
-					tblsm.convertToTable(sms);
+					tblsm.convertToTableSave(sms);
+					//tblsm.convertToTable(sms);
 					if (tblsm.getCode() == null || tblsm.getCode() == ""){
 						UUID ui = UUID.randomUUID();
 						tblsm.setCode(ui.toString());
@@ -256,6 +260,27 @@ public class RegistryDao {
 			session.close();
 		}
 		return true;
+		
+	}
+	public GECOObject deleteMailConfigCompany(MailConfigCompany sm){
+		TblMailConfigCompany tblsm = new TblMailConfigCompany();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			return  new GECOError("ERR", e.getMessage());
+		}finally{
+			session.close();
+		}
+		return new GECOSuccess();
 		
 	}
 	/*****
@@ -439,6 +464,13 @@ public class RegistryDao {
 		
 		return obj;
 	}
+	private void setCustomerUserCriteria(Criteria cr,User user){
+		user = new UserDao().getSingleUserVO(user.get_iduser());
+		if (user.getEntity() != null && user.getEntity() instanceof Promoter){
+			cr.add(Restrictions.eq("customer.promoter.idPromoter", ((Promoter)user.getEntity()).getIdPromoter()));
+		}
+		
+	}
 	private Criteria setProductCriteria(SelectProductsFilter filter,Session session,User user){
 		Criteria cr = session.createCriteria(TblProduct.class,"product");
 		cr =  setProductCriteria(cr,filter,session,user.getCompany().getCode(),"product");
@@ -464,9 +496,10 @@ public class RegistryDao {
 		//cr.add(Restrictions.eq("product.company.code",key ));
 		cr.createAlias("product.company", "company");
 		cr.add(Restrictions.eq("company.code",key ));
-
-		cr.setFirstResult(filter.getPagefilter().startelement);
-		cr.setMaxResults(filter.getPagefilter().pageSize);
+		if (filter.getPagefilter() != null){
+			cr.setFirstResult(filter.getPagefilter().startelement);
+			cr.setMaxResults(filter.getPagefilter().pageSize);
+		}
 		if (filter.getBrand() != null){
 			cr.add(Restrictions.eq(table_name+".brand.idBrand", filter.getBrand().getIdBrand()));
 			
@@ -491,7 +524,18 @@ public class RegistryDao {
 		if (filter.getSearchstring() != null && filter.getSearchstring().equals("") == false){
 			cr.add(Restrictions.disjunction(Restrictions.like(table_name+".code","%"+  filter.getSearchstring()+"%"),Restrictions.like(table_name+".description","%"+ filter.getSearchstring()+"%")));
 		}
-
+		if (filter.getComposition() != null ){
+			cr.createAlias(table_name+".compositions", "composition");
+			cr.add(Restrictions.eq("composition.composition.idComposition", filter.getComposition().getIdComposition()));
+		}
+		if (filter.getOrderBy() != null &&  !filter.getOrderBy().isEmpty()){
+			if (filter.getOrderdirection().equals("asc")){
+				cr.addOrder(Order.asc(filter.getOrderBy()));
+			}else if (filter.getOrderdirection().equals("desc")){
+				cr.addOrder(Order.desc(filter.getOrderBy()));
+			}
+			
+		}
 		/*cr.addOrder(Order.asc(table_name+".code"));
 		cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);*/
 		return cr;
@@ -530,6 +574,18 @@ public class RegistryDao {
 		}
 		if (filter.isIsnotUmPref() == false){
 			cr.add(Restrictions.eq(table_name+".preference",true ));
+		}
+		if (filter.getComposition() != null ){
+			cr.createAlias("product.compositions", "composition");
+			cr.add(Restrictions.eq("composition.composition.idComposition", filter.getComposition().getIdComposition()));
+		}
+		if (filter.getOrderdirection() != null &&  !filter.getOrderdirection().isEmpty()){
+			if (filter.getOrderdirection().equals("asc")){
+				cr.addOrder(Order.asc(filter.getOrderBy()));
+			}else if (filter.getOrderdirection().equals("desc")){
+				cr.addOrder(Order.desc(filter.getOrderBy()));
+			}
+			
 		}
 		
 		/*cr.addOrder(Order.asc(table_name+".code"));
@@ -927,25 +983,30 @@ public class RegistryDao {
 	/***
 	 * DELETE A SINGLE Tblproduct
 	 * **/
-	public Boolean deleteProduct(Product sm){
+	public GECOObject deleteProduct(Product sm){
 		TblProduct tblsm = new TblProduct();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	public Boolean deleteUMProduct(UnitMeasureProduct sm){
@@ -969,25 +1030,30 @@ public class RegistryDao {
 		return true;
 		
 	}
-	public Boolean deleteListProduct(ListProduct sm){
+	public GECOObject deleteListProduct(ListProduct sm){
 		TblListProduct tblsm = new TblListProduct();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	/**
@@ -1420,10 +1486,11 @@ public class RegistryDao {
 			ListProduct lp = new ListProduct();
 			lp.setProduct(p);
 			float pricediff = p.getPurchaseprice() / 100f * l.getIncrement(); 
-			lp.setPrice(p.getPurchaseprice() + pricediff);
+			lp.setPrice(HibernateUtils.roundfloat(p.getPurchaseprice() + pricediff));
 			l.getListproduct().add(lp);
 		}
 	}
+	
 	public Date getDate(int idList){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		try{
@@ -1519,6 +1586,28 @@ public class RegistryDao {
 		}
 		return list;
 	}
+	public it.progess.invoicecreator.vo.List getSingleList(String key){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		it.progess.invoicecreator.vo.List list = new it.progess.invoicecreator.vo.List();
+		try{
+			
+			Criteria cr = session.createCriteria(TblList.class,"list");
+			cr.add(Restrictions.eq("list.key", key));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List lists = cr.list();
+			if (lists.size() > 0){
+				list.convertFromTableSingle((TblList)lists.get(0));
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+			
+		}finally{
+			session.close();
+		}
+		return list;
+	}
 	public it.progess.invoicecreator.vo.List getSingleListByCode(String code,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		it.progess.invoicecreator.vo.List list = new it.progess.invoicecreator.vo.List();
@@ -1540,6 +1629,7 @@ public class RegistryDao {
 		}finally{
 			session.close();
 		}
+		list.setListproduct(getSingleProductList(list.getIdList(),null,user));
 		return list;
 	}
 	public it.progess.invoicecreator.vo.List getSingleList(int idlist, SelectProductsFilter filter,User user){
@@ -1574,8 +1664,9 @@ public class RegistryDao {
 			Criteria cr = session.createCriteria(TblListProduct.class,"listproduct");
 			cr.add(Restrictions.eq("listproduct.list.idList", idlist));
 			cr.createAlias("listproduct.product", "product");
-			cr = setProductCriteria(cr, filter, session, user.getCompany().getCode(), "product");
-
+			if (filter != null){
+				cr = setProductCriteria(cr, filter, session, user.getCompany().getCode(), "product");
+			}
 			cr.addOrder(Order.asc("product.code"));
 			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List list = cr.list();
@@ -1600,6 +1691,59 @@ public class RegistryDao {
 			session.close();
 		}
 		return lists;
+	}
+	/**
+	 * add products within list
+	 * @param idlist
+	 * @param filter
+	 * @param user
+	 * @return
+	 */
+	public GECOObject addProductsToList(int idlist, SelectProductsFilter filter,User user){
+		it.progess.invoicecreator.vo.List l = getSingleList(idlist);
+		GECOObject obj = getProductList(filter, user);
+		Set<Product> products = null;
+		if (obj.type.equals(GECOParameter.SUCCESS_TYPE) == true){
+			products = (Set<Product>)((GECOSuccess)obj).success;
+		}else {
+			return obj;
+		}
+		Set<ListProduct> listproducts = getSingleProductList(idlist,filter,user);
+		if (listproducts == null){
+			listproducts = new HashSet<ListProduct>();
+		}
+		l.setListproduct(listproducts);
+		return setSearchedProductsInList(l,products,listproducts,user);
+	}
+	private GECOObject setSearchedProductsInList(it.progess.invoicecreator.vo.List l,Set<Product> prods,Set<ListProduct> listproducts,User user){
+		try{
+			for (Iterator<Product> itp = prods.iterator();itp.hasNext();){
+				Product p = itp.next();
+				if (listproducts == null || checkProductInList(listproducts,p) == false){
+					ListProduct lp = new ListProduct();
+					lp.setProduct(p);
+					float pricediff = p.getPurchaseprice() / 100f * l.getIncrement(); 
+					lp.setPrice(HibernateUtils.roundfloat(p.getPurchaseprice() + pricediff));
+					l.getListproduct().add(lp);
+				}
+			}
+			NewList nlist = new NewList();
+			nlist.setList(l);
+			return saveUpdatesList(nlist, user);
+		}catch(Exception e){
+			return new GECOError("Error",e.getMessage());
+		}
+		
+	
+	}
+	private boolean checkProductInList(Set<ListProduct> listproducts,Product p){
+		for (Iterator<ListProduct> itpl = listproducts.iterator();itpl.hasNext();){
+			ListProduct lp = itpl.next();
+			if (lp.getProduct().getIdProduct() == p.getIdProduct()){
+				return true;
+			}
+		}
+		return false;
 	}
 	/*****
 	 * Get List of List for Customer 
@@ -1639,6 +1783,7 @@ public class RegistryDao {
 		try{
 			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
 			cr.add(Restrictions.eq("customer.company.idCompany", loggeduser.getCompany().getIdCompany()));
+			setCustomerUserCriteria(cr,loggeduser);
 			List<TblCustomer> customers = cr.list();
 			if (customers.size() > 0){
 				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
@@ -1646,6 +1791,32 @@ public class RegistryDao {
 					Customer customer = new Customer();
 					//customer = getMockCustomer();
 					customer.convertFromTable(tblcustomer);
+					list.add(customer);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public ArrayList<Customer> getCustomerSoftList(User loggeduser){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Customer> list = new ArrayList<Customer>();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.company.idCompany", loggeduser.getCompany().getIdCompany()));
+			setCustomerUserCriteria(cr,loggeduser);
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
+					TblCustomer tblcustomer = iterator.next();
+					Customer customer = new Customer();
+					//customer = getMockCustomer();
+					customer.convertFromTableSoft(tblcustomer);
 					list.add(customer);
 				}
 			}
@@ -1688,11 +1859,13 @@ public class RegistryDao {
 	 * Get List of Customer 
 	 */
 	public ArrayList<Customer> getCustomerList(SelectCustomerList filter,User loggeduser){
+		loggeduser = new UserDao().getSingleUserVO(loggeduser.get_iduser());
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
 		try{
 			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
 			cr.add(Restrictions.eq("customer.company.idCompany", loggeduser.getCompany().getIdCompany()));
+			setCustomerUserCriteria(cr,loggeduser);
 			if (filter.getGroup() != null)
 				cr.add(Restrictions.eq("customer.group.idGroupCustomer", filter.getGroup().getIdGroupCustomer()));
 			if (filter.getCategory() != null)
@@ -1752,12 +1925,14 @@ public class RegistryDao {
 	 * **/
 	public GECOObject saveUpdatesCustomer(Customer sm,User user){
 		int id=0;
+		user = new UserDao().getSingleUserVO(user.get_iduser());
 		if (sm.control() == null){
 			GECOObject control = ControlDao.checkCustomer(sm, user);
 			if (control.type.equals(GECOParameter.SUCCESS_TYPE)){
 				Session session = HibernateUtils.getSessionFactory().openSession();
 				Transaction tx = null;
 				sm.setCompany(user.getCompany());
+				sm.checkOwner(user);
 				try{
 					tx = session.beginTransaction();
 					
@@ -1894,25 +2069,30 @@ public class RegistryDao {
 	/***
 	 * DELETE A SINGLE Tblcustomer
 	 * **/
-	public Boolean deleteCustomer(Customer sm){
+	public GECOObject deleteCustomer(Customer sm){
 		TblCustomer tblsm = new TblCustomer();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	/**
@@ -1984,7 +2164,28 @@ public class RegistryDao {
 		}
 		return customer;
 	}
-	
+	public Customer getSingleCustomerKeyCode(String code,User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Customer customer = new Customer();
+		//customer = getMockCustomer();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.code", code));
+			cr.add(Restrictions.eq("customer.company.idCompany", user.getCompany().getIdCompany()));
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List customers = cr.list();
+			if (customers.size() > 0){
+				customer.convertFromTableSingle((TblCustomer)customers.get(0));
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return customer;
+	}
 	/*****
 	 * Get List of Destination 
 	 */

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,6 +54,15 @@ public class TblList implements Itbl {
 	private float increment;
 	@Column(name="publish")
 	private boolean publish;
+	@Column(name="key_code")
+    private String key;
+	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
 	public boolean isPublish() {
 		return publish;
 	}
@@ -129,7 +139,12 @@ public class TblList implements Itbl {
 		this.increment = lt.getIncrement();
 		this.active = lt.isActive();
 		this.publish = lt.isPublish();
-		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
+		this.key = lt.getKey();
+		if (lt.getStartdate() != null){
+			this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
+		}else{
+			this.startdate = new Date();
+		}
 		if (lt.getCompany() != null){
 			this.company = new TblCompany();
 			this.company.convertToTable(lt.getCompany());
@@ -142,10 +157,16 @@ public class TblList implements Itbl {
 		this.idList = lt.getIdList();
 		this.name  = lt.getName();
 		this.publish = lt.isPublish();
-		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
+		if (lt.getStartdate() != null){
+			this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
+		}else{
+			this.startdate = new Date();
+		}
+		
 		this.active = lt.isActive();
 		this.isPercentage = lt.isPercentage();
 		this.increment = lt.getIncrement();
+		this.key = lt.getKey();
 		this.listproduct = new HashSet<TblListProduct>();
 		if (lt.getCompany() != null){
 			this.company = new TblCompany();
@@ -168,10 +189,21 @@ public class TblList implements Itbl {
 		this.name  = lt.getName();
 		this.active = lt.isActive();
 		this.publish = lt.isPublish();
-		this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
+		if (lt.getStartdate() != null){
+			this.startdate = DataUtilConverter.convertDateFromString(lt.getStartdate());
+		}else{
+			this.startdate = new Date();
+		}
 		this.listproduct = new HashSet<TblListProduct>();
 		this.isPercentage = lt.isPercentage();
 		this.increment = lt.getIncrement();
+		if (lt.getKey() == null || lt.getKey().isEmpty() ==  true){
+			UUID ui = UUID.randomUUID();
+			this.key = ui.toString();
+		}else{
+			this.key = lt.getKey();
+		}
+		
 		if (lt.getListproduct() != null){
 			for (Iterator<ListProduct> iterator = lt.getListproduct().iterator(); iterator.hasNext();){
 				ListProduct listproduct = iterator.next();

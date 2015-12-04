@@ -278,21 +278,15 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 			type:"PUT",
 			data:"roles="+JSON.stringify($scope.roles),
 			success:function(data){
-					$http.get('rest/role').success(function(data){
-										$scope.roles= data;
-										$scope.rolesaved = true;
-										$scope.modifyid = 0;
-								});
-					
+				$http.get('rest/role').success(function(data){
+						$scope.roles= data;
+						$scope.rolesaved = true;
+						$scope.modifyid = 0;
+				});
 			}	
 		})
-		
 	}
-	
-	
 }]);
-
-
 /*****
 LOGOUT
 ***/
@@ -310,7 +304,6 @@ gecoControllers.controller('StartupCtrl',function($scope,$rootScope,$http,$locat
 					$location.path('/login');
 				}
 		);
-		
 	}
 	$http.get(AppConfig.ServiceUrls.CheckUser).then(
 			function(result){
@@ -318,11 +311,9 @@ gecoControllers.controller('StartupCtrl',function($scope,$rootScope,$http,$locat
 					//checkrole(result);
 					$rootScope.viewheader = true;
 				}else{
-					if ($location.path() != "/ec" && $location.path() != "/ecpassword" ){
+					if ($location.path() != "/ec" && $location.path() != "/ecpassword" && $location.path() != "/publiclist"  ){
 						$location.path('/login');
 					}
-					
-					
 				}
 			}
 	);

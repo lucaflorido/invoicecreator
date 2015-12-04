@@ -2,6 +2,7 @@ package it.progess.invoicecreator.vo.filter.product;
 
 import it.progess.invoicecreator.pojo.TblBrand;
 import it.progess.invoicecreator.pojo.TblCategoryProduct;
+import it.progess.invoicecreator.pojo.TblComposition;
 import it.progess.invoicecreator.pojo.TblGroupProduct;
 import it.progess.invoicecreator.pojo.TblRegion;
 import it.progess.invoicecreator.pojo.TblSubCategoryProduct;
@@ -22,8 +23,43 @@ public class SelectProductsFilter {
 	private boolean isUmPref;
 	private boolean isnotUmPref;
 	private String searchstring;
+	private TblComposition composition;
+	private float minprice;
+	private float maxprice;
+	private String orderBy;
+	private String orderdirection;
 	private Head h;
 	
+	public String getOrderBy() {
+		return orderBy;
+	}
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+	public String getOrderdirection() {
+		return orderdirection;
+	}
+	public void setOrderdirection(String orderdirection) {
+		this.orderdirection = orderdirection;
+	}
+	public float getMinprice() {
+		return minprice;
+	}
+	public void setMinprice(float minprice) {
+		this.minprice = minprice;
+	}
+	public float getMaxprice() {
+		return maxprice;
+	}
+	public void setMaxprice(float maxprice) {
+		this.maxprice = maxprice;
+	}
+	public TblComposition getComposition() {
+		return composition;
+	}
+	public void setComposition(TblComposition composition) {
+		this.composition = composition;
+	}
 	public Head getH() {
 		return h;
 	}

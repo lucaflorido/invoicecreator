@@ -1,5 +1,10 @@
 package it.progess.invoicecreator.pojo;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,12 +12,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
 
+
+
+
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import it.progess.invoicecreator.vo.Document;
+import it.progess.invoicecreator.vo.DocumentFlow;
 import it.progess.invoicecreator.vo.Ivo;
+import it.progess.invoicecreator.vo.ListProduct;
 
 
 @Entity
@@ -54,6 +69,9 @@ public class TblDocument implements Itbl{
 	private int expireday;
 	@Column(name="online")
 	private boolean online;
+	@OneToMany(mappedBy = "documentSource")
+	@Fetch(FetchMode.SELECT)
+	private Set<TblDocumentFlow> flows;
 	public boolean isOnline() {
 		return online;
 	}
@@ -149,6 +167,26 @@ public class TblDocument implements Itbl{
 	}
 	public void setInternal(boolean internal) {
 		this.internal = internal;
+	}
+	
+	public Set<TblDocumentFlow> getFlows() {
+		return flows;
+	}
+	public void setFlows(Set<TblDocumentFlow> flows) {
+		this.flows = flows;
+	}
+	public void convertToTableWithSources(Ivo obj){
+		Document dc = (Document)obj;
+		this.convertToTable(obj);
+		if (dc.getFlows() != null){
+			this.flows = new HashSet<TblDocumentFlow>();
+			for (Iterator<DocumentFlow> iterator = dc.getFlows().iterator(); iterator.hasNext();){
+				DocumentFlow df = iterator.next();
+				TblDocumentFlow tdf = new TblDocumentFlow();
+				tdf.convertToTable(df);
+				this.flows.add(tdf);
+			}
+		}
 	}
 	public void convertToTable(Ivo obj){
 		Document dc = (Document)obj;

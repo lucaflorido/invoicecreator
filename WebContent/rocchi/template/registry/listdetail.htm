@@ -9,29 +9,30 @@
 	</div>
 	<div class="large-7 medium-7 small-7 columns">
 		<ul class="button-group">
-		  	<li><a ng-click="saveProduct()" class="button">Salva</a></li>
+		  	<li><button ng-disabled="list_form.$invalid" ng-click="saveProduct()" class="button">Salva</button></li>
+		  	<li><button ng-disabled="list_form.$invalid && list.idList <=0" ng-click="printList(list.code)" class="button">Stampa</button></li>
 		</ul>
 	</div>
 </div>
 <div class="row">
-<form>
+<form name="list_form" validate>
 	<fieldset>
 		
 		<div class="row">
-			<div class="large-4 columns">
-				<label>Codice<input type="text"
-					 ng-model="list.code"
-					value="{{list.code}}" capitalize />
+			<div class="large-4 columns" ng-class="{'has-error':list_form.code.$invalid}">
+				<label>Codice *<input type="text"
+					 ng-model="list.code" name ="code"
+					value="{{list.code}}" capitalize  required/>
+				</label>
+			</div>
+			<div class="large-4 columns" ng-class="{'has-error':list_form.description.$invalid}">
+				<label>Name *<input type="text"
+					 ng-model="list.name" name="description"
+					value="{{list.name}}" capitalize required />
 				</label>
 			</div>
 			<div class="large-4 columns">
-				<label>Name<input type="text"
-					 ng-model="list.name"
-					value="{{list.name}}" capitalize />
-				</label>
-			</div>
-			<div class="large-4 columns">
-				<label>Validità<input type="text"
+				<label>Validità <input type="text"
 					 ng-model="list.startdate"
 					value="{{list.startdate}}" capitalize f-datepicker />
 				</label>
@@ -45,36 +46,36 @@
 				</label>
 			</div>
 			<div class="large-4 columns">
-				<label>Percentuale<input type="checkbox"
+				<label>Pubblico<input type="checkbox"
 					 ng-model="list.publish"
 					value="{{list.publish}}" capitalize />
 				</label>
 			</div>
 		</div>
 		<div class="row">
-			<div class="large-4 columns">
-				<label>Incremento<input type="text"
-					 ng-model="list.increment"
-					value="{{list.increment}}" capitalize />
+			<div class="large-4 columns" ng-class="{'has-error':list_form.increment.$invalid || list.increment == 0}">
+				<label>Incremento<input type="number"
+					 ng-model="list.increment" name="increment"
+					value="{{list.increment}}"  required />
 				</label>
 			</div>
 			<div class="large-4 columns">
-				<label>Percentuale<input type="checkbox"
+				<label>Incremeno Percentuale<input type="checkbox"
 					 ng-model="list.isPercentage"
-					value="{{list.isPercentage}}" capitalize />
+					value="{{list.isPercentage}}"  />
 				</label>
 			</div>
-			<div class="large-4 columns">
-				<label>Forza Prodotti<input type="checkbox"
+			<div class="large-4 columns" ng-hide="list.idList > 0">
+				<label>Inserisci tutti i Prodotti<input type="checkbox"
 					 ng-model="list.fill"
-					value="{{list.fill}}" capitalize />
+					value="{{list.fill}}"  />
 				</label>
 			</div>
 		</div>
 	</fieldset>
 </form>
 </div>	
-<div	class="row">
+<div class="row" ng-show="list.idList > 0">
 	<div class="large-2 medium-2 small-2 columns">
 		<h3>PRODOTTI</h3>
 	</div>
@@ -82,11 +83,12 @@
 		<ul class="button-group">
 			<li><div class="button" ng-click="filterMenu('filter')">Filtra </div></li>
 			<li><div class="button" ng-click="filterMenu('increment')">Incrementa Prezzi </div></li>
+			<li><div class="button" ng-click="filterMenu('addproducts')">Aggiungi Articoli </div></li>
 		</ul>
 	
 	</div>
 </div>
-<div class="row" ng-show="menuselected == 'filter' || menuselected == 'increment'">
+<div class="row" ng-show="menuselected == 'filter' || menuselected == 'increment' ">
 	<form>
 	<fieldset>
 		<legend>FILTRAGGIO DATI</legend>
@@ -135,6 +137,59 @@
 	</fieldset>
 	</form>
 </div>
+<div class="row" ng-show=" menuselected == 'addproducts'">
+	<form>
+	<fieldset>
+		<legend>AGGIUNGI ARTICOLI</legend>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Codice o Descrizione
+				  <input type="text"
+					 ng-model="filterToAdd.searchstring"
+					value="{{filterToAdd.searchstring}}" capitalize />
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Regione <select  name="region" ng-options="region.code for region in regions" ng-model="filterToAdd.region"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Gruppo <select  name="group" ng-options="group.code for group in groups" ng-model="filterToAdd.group"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-4 columns">
+				<label>Categoria <select  name="category" ng-options="category.code for category in categories" ng-model="filterToAdd.category" ng-change="changeCategory()" >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Sottocategoria <select  name="subcategory" ng-options="subcategory.code for subcategory in subcategories" ng-model="filterToAdd.subcategory"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+			<div class="large-4 columns">
+				<label>Marca <select  name="brand" ng-options="brand.code for brand in brands" ng-model="filterToAdd.brand"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
+		</div>
+		<div class="row" >
+			<div class="large-3 columns">
+				<button class="button" ng-click="addProductsFiltered()"   >Aggiungi</button>
+			</div>
+		</div>
+	</fieldset>
+	</form>
+</div>
 <div class="row" ng-show="menuselected == 'increment'">
 	<form>
 		<fieldset>
@@ -145,21 +200,21 @@
 				<label>Incremento
 				  <input type="text"
 					 ng-model="increment.increment"
-					value="{{increment.increment}}" capitalize />
+					value="{{increment.increment}}"  />
 				</label>
 			</div>
 			<div class="large-3 columns">
 				<label>Percentuale
 				  <input type="checkbox"
 					 ng-model="increment.isPercentage"
-					value="{{increment.isPercentage}}" capitalize />
+					value="{{increment.isPercentage}}"  />
 				</label>
 			</div>
 			<div class="large-3 columns">
 				<label>Prezzo Finale
 				  <input type="checkbox"
 					 ng-model="increment.isEndPrice"
-					value="{{increment.isEndPrice}}" capitalize />
+					value="{{increment.isEndPrice}}"  />
 				</label>
 			</div>
 			<div class="large-3 columns">
@@ -171,16 +226,17 @@
 		</fieldset>
 	</form>
 </div>
-<div class="row">
+<div class="row" ng-show="list.idList > 0">
 	<div class="small-8 columns ">
 		<pagination total-items="totalitems" items-per-page="pagesize_confirmed" page="page" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pages" ng-click="getProducts(page)"></pagination>
 	</div>
 	<div class="small-4 columns ">
 		<input ng-model="pagesize" value="{{pagesize}}">
 		<div class="button"  ng-click="getProductsNumber()">Applica </div>
+		
 	</div>
 </div>
-<div	class="row">
+<div	class="row" ng-show="list.idList > 0">
 <table st-table="prodsToDisplay" class="table table-striped" st-safe-src="list.listproduct">
   <thead>
     <tr>
@@ -200,7 +256,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="prod in prodsToDisplay ">
-      <td><a  class="matita" ng-click="changeProdElement(prod)"></a> </td>
+      <td><i  class="icon_setup fi-pencil" ng-click="changeProdElement(prod)"></i> </td>
       <td class="hidden_cell">{{prod.product.code}}</td>
       <td >{{prod.product.description}}</td>
       <td >{{prod.product.umselected.code}}</td>
@@ -208,7 +264,7 @@
       <td ><div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.percentage}}</div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.percentage"  value="{{prod.percentage}}" ng-blur="calculateSellPrice(prod)" /> </td>
       <td >{{prod.product.taxrate.value}}</td>
       <td ><div ng-if="prodid != prod.idListProduct">&nbsp;{{prod.endprice}}</div><input ng-if="prodid == prod.idListProduct"  ng-model="prod.endprice"  value="{{prod.endprice}}" ng-blur="calculateEndPrice(prod)" /> </td>
-      <td><a class="x" ></a></td>
+      <td><i class="icon_setup fi-x-circle" ng-click="deleteElement(prod)" ></i></td>
 
     </tr>
   

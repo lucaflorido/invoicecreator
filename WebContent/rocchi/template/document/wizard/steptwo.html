@@ -12,7 +12,7 @@
 <div class="row "><!-- main row  -->
      <div class=" small-12 columns" ng-class="{'large-8 medium-6':showDraft,'large-12 medium-12':!showDraft}"> <!-- filter -->
 	      <form>
-               <fieldset  ng-class="{'height-200 ':morefilters,'height-75':!morefilters}">
+               <fieldset  ng-class="{'height-400 ':morefilters,'height-75':!morefilters}">
                     <legend>Codice o Nome Prodotto <i  class="fi-small fi-button "  ng-class="{'fi-arrows-in ':morefilters,'fi-arrows-out':!morefilters}" ng-click="morefilters = !morefilters"></i></legend>
                          <div class="row">
                                 <div class="large-12 medium-12 small-12 columns">
@@ -59,11 +59,41 @@
 				            	       </select> 
 								  </label>
 							 </div>
+							  <div class="large-4 medium-8 small-12  columns">
+						          <label>Uvaggio 
+						               <select  name="composition" ng-options="composition.description for composition in wiz.compositions" ng-model="wiz.filter.composition"  >
+				           		 	        <option value=""></option>
+				            	       </select> 
+								  </label>
+							 </div>
 							 <div class="large-4 medium-8 small-12  columns">
 								  <label>U.M. Secondarie 
 								       <input type="checkbox" ng-model="wiz.filter.isnotUmPref" />
 								  </label>
 					         </div>
+					         
+					         <div class="large-8 medium-8 small-12  columns">
+					         	 <div class="row">
+					          	  <div class="large-2 medium-2 small-2 columns">
+										Ordina per
+								  </div>
+								  <div class="large-10 medium-10 small-10 columns">
+									  <ul >
+										<li><input type="radio" value="code" ng-model="wiz.filter.orderBy" name="Order" />Codice</li>
+										<li><input type="radio" value="product.description" ng-model="wiz.filter.orderBy" name="Order" />Descrizione</li>
+										</ul>
+								  </div>
+					          </div>
+					         </div>
+					        
+					          <div class="large-4 medium-8 small-12  columns">
+					          	  <label>Ordinamento 
+								       <select  name="ordir"  ng-model="wiz.filter.orderdirection"  >
+				           		 	        <option value="asc">Dal basso verso l'alto</option>
+				           		 	        <option value="desc">Dall'alto verso il basso</option>
+				            	       </select> 
+								  </label>
+					          </div>
 					    </div>
                    </fieldset>
               </form> 
@@ -83,6 +113,7 @@
 				        <pagination total-items="wiz.totalitems" items-per-page="wiz.pagesize_confirmed" page="wiz.page" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="wiz.pages" ng-click="wiz.getProducts(wiz.page)"></pagination>
 			       </div>
 	          </div>
+	          
 	          <div class="row "><!-- product list -->
 			       <div class="small-12 columns" >
               	        <div class="row" ng-repeat="prod in wiz.productlist">

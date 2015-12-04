@@ -11,6 +11,7 @@ import it.progess.invoicecreator.vo.Destination;
 import it.progess.invoicecreator.vo.Head;
 import it.progess.invoicecreator.vo.List;
 import it.progess.invoicecreator.vo.ListProduct;
+import it.progess.invoicecreator.vo.MailConfigCompany;
 import it.progess.invoicecreator.vo.NewList;
 import it.progess.invoicecreator.vo.Product;
 import it.progess.invoicecreator.vo.Promoter;
@@ -101,6 +102,20 @@ public class RegistryService {
 			  RegistryDao dao = new RegistryDao();
 			  dao.deleteCompany(sm);
 			  return gson.toJson(true);
+		  }catch(Exception e){
+			  return gson.toJson("");
+		  }
+	  }
+	  @POST
+	  @Path("companymailconfig")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteMailConfigCompany( String data){
+		  Gson gson = new Gson();
+		  try{
+			  MailConfigCompany sm = gson.fromJson(data,MailConfigCompany.class);
+			  RegistryDao dao = new RegistryDao();
+			  return gson.toJson(dao.deleteMailConfigCompany(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -349,17 +364,16 @@ public class RegistryService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("product")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteProduct(@FormParam("productobj") String productobj){
+	  @POST
+	  @Path("product/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteProduct( String data){
 		  Gson gson = new Gson();
 		  try{
-			  Product sm = gson.fromJson(productobj,Product.class);
+			  Product sm = gson.fromJson(data,Product.class);
 			  RegistryDao dao = new RegistryDao();
-			  dao.deleteProduct(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteProduct(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -380,17 +394,16 @@ public class RegistryService {
 			  return gson.toJson("");
 		  }
 	  }
-	  @DELETE
-	  @Path("productlist")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteListProduct(@FormParam("productobj") String productobj){
+	  @POST
+	  @Path("productlist/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteListProduct( String data){
 		  Gson gson = new Gson();
 		  try{
-			  ListProduct sm = gson.fromJson(productobj,ListProduct.class);
+			  ListProduct sm = gson.fromJson(data,ListProduct.class);
 			  RegistryDao dao = new RegistryDao();
-			  dao.deleteListProduct(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteListProduct(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }
@@ -432,6 +445,16 @@ public class RegistryService {
 		list = dao.getSingleList(id);
 		return gson.toJson(list);
 	  }
+	  @GET
+	  @Path("list/public/{key}")
+	  @Produces(MediaType.TEXT_HTML)
+	  public String singlePublicList(@PathParam("key") String key) {
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		List list = new List();
+		list = dao.getSingleList(key);
+		return gson.toJson(list);
+	  }
 	  @POST
 	  @Path("list/{idlist}")
 	  @Produces(MediaType.APPLICATION_JSON)
@@ -443,6 +466,17 @@ public class RegistryService {
 		  SelectProductsFilter filter = gson.fromJson(data, SelectProductsFilter.class);
 		  list = dao.getSingleList(id, filter, loggeduser);
 		  return gson.toJson(list);
+	  }
+	  @POST
+	  @Path("addtolist/{idlist}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON)
+	  public String addProductsToListFiltered(@PathParam("idlist") int id,String data,@Context HttpServletRequest request) {
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  Gson gson = new Gson();
+		  RegistryDao dao = new RegistryDao();
+		  SelectProductsFilter filter = gson.fromJson(data, SelectProductsFilter.class);
+		  return gson.toJson(dao.addProductsToList(id, filter, loggeduser));
 	  }
 	  @PUT
 	  @Path("list")
@@ -497,6 +531,15 @@ public class RegistryService {
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getCustomerList(loggeduser));
 	  }
+	  @GET
+	  @Path("customersoft")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getCustomerSoftList(@Context HttpServletRequest request){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getCustomerSoftList(loggeduser));
+	  }
 	  @POST
 	  @Path("customer")
  	  @Produces(MediaType.TEXT_PLAIN)
@@ -534,11 +577,11 @@ public class RegistryService {
 	  }
 	  @PUT
 	  @Path("customer")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String saveCustomer(@Context HttpServletRequest request,@FormParam("customers") String customer){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String saveCustomer(@Context HttpServletRequest request, String data){
 		  Gson gson = new Gson();
-		  Customer sms = gson.fromJson(customer,Customer.class);
+		  Customer sms = gson.fromJson(data,Customer.class);
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
 		  return gson.toJson(dao.saveUpdatesCustomer(sms,loggeduser));
@@ -547,17 +590,16 @@ public class RegistryService {
 		Delete user 
 	   */
 
-	  @DELETE
-	  @Path("customer")
-	  @Produces(MediaType.TEXT_PLAIN)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String deleteCustomer(@FormParam("customerobj") String customerobj){
+	  @POST
+	  @Path("customer/delete")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String deleteCustomer(String data){
 		  Gson gson = new Gson();
 		  try{
-			  Customer sm = gson.fromJson(customerobj,Customer.class);
+			  Customer sm = gson.fromJson(data,Customer.class);
 			  RegistryDao dao = new RegistryDao();
-			  dao.deleteCustomer(sm);
-			  return gson.toJson(true);
+			  return gson.toJson(dao.deleteCustomer(sm));
 		  }catch(Exception e){
 			  return gson.toJson("");
 		  }

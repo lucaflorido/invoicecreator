@@ -21,6 +21,7 @@ h1{
 	padding-top: 75px;
 	text-transform: uppercase;
 }
+
 @font-face {
     font-family: 'england_hand_dbregular';
     src: url('england-webfont.eot');
@@ -185,7 +186,11 @@ border: 2px solid  #00ABF4;
 	background-size: cover;
 
 }
-
+.icon_setup{
+	color:#008abd;
+	font-size: 24px;
+	cursor:pointer;
+}
 .height-90{
 	height: 90px;
 	text-align: 90px;
@@ -501,7 +506,20 @@ background-color: white;
 .pr_total{
 	font-weight: 700;
 }
-
+.has-error input{
+	color: #E7A7B7;
+        border-color: #E7A7B7;
+        background-color: rgba(231,167,183,0.3);
+}
+.has-error select{
+	color: #E7A7B7;
+        border-color: #E7A7B7;
+        background-color: rgba(231,167,183,0.3);
+}
+.has-error label,.has-error span{
+	color: #E7A7B7;
+       
+}
 @media only screen and (max-width: 900px){
 	.height-250 {
 		height: 200px;

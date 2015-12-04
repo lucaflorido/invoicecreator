@@ -332,7 +332,7 @@ public class Head implements Ivo {
 		}
 		if (h.getDocument() != null){
 			this.document = new Document();
-			this.document.convertFromTable(h.getDocument());
+			this.document.convertFromTableWithSources(h.getDocument());
 		}
 		if (h.getList() != null){
 			this.list = new List();

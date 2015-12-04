@@ -39,23 +39,23 @@ public class DocumentService {
 	   */
 	  @POST
 	  @Path("pages/{size}")
-	  @Produces(MediaType.TEXT_HTML)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	  public String pages(@Context HttpServletRequest request,@PathParam("size") int size,@FormParam("filter") String filter) {
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON)
+	  public String pages(@Context HttpServletRequest request,@PathParam("size") int size, String data) {
 		Gson gson = new Gson();
 		DocumentDao dao = new DocumentDao();
-		HeadFilter filterDoc = gson.fromJson(filter,HeadFilter.class);
+		HeadFilter filterDoc = gson.fromJson(data,HeadFilter.class);
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getPagesNumber(size,filterDoc,loggeduser));
 	  }
 	  @POST
 	  @Path("head")
-	  @Produces(MediaType.TEXT_HTML)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String getHeadList(@Context HttpServletRequest request,@FormParam("filter") String filter){
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String getHeadList(@Context HttpServletRequest request, String data){
 		Gson gson = new Gson();
 		DocumentDao dao = new DocumentDao();
-		HeadFilter filterDoc = gson.fromJson(filter,HeadFilter.class);
+		HeadFilter filterDoc = gson.fromJson(data,HeadFilter.class);
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getHeadList(filterDoc,loggeduser));
 	  }
@@ -119,12 +119,12 @@ public class DocumentService {
 	  }
 	  @POST
 	  @Path("generationdocs/objectdocs")
-	  @Produces(MediaType.TEXT_HTML)
-	  @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	  public String generateHeads(@Context HttpServletRequest request,@FormParam("generateobj") String generateobj) {
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String generateHeads(@Context HttpServletRequest request,String data) {
 		Gson gson = new Gson();
 		DocumentDao dao = new DocumentDao();
-		GenerateDocsObject generateDoc = gson.fromJson(generateobj,GenerateDocsObject.class);
+		GenerateDocsObject generateDoc = gson.fromJson(data,GenerateDocsObject.class);
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.createHeadRowsGenerateList(generateDoc,loggeduser));
 	  }

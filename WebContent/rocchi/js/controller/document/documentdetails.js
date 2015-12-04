@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.documents")
- .controller('RocchiHeadDetailCtrl',["$scope","$http","$q","$stateParams","$location","$rootScope","$state","$modal","AppConfig","AlertsFactory",function($scope,$http,$q,$stateParams,$location,$rootScope,$state,$modal,AppConfig,AlertsFactory){
+ .controller('RocchiHeadDetailCtrl',function($scope,$http,$q,$stateParams,$location,$rootScope,$state,$modal,AppConfig,AlertsFactory,LoaderFactory){
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
 	$rootScope.issaved = true;
@@ -52,10 +52,13 @@ angular.module("rocchi.documents")
 		$scope.fillCustomer();
 		for (var i=0;i<$scope.documents.length;i++){
 			if ($scope.head.document != null && $scope.head.document.idDocument == $scope.documents[i].idDocument){
+				var flow = angular.copy($scope.head.document.flows)
 				$scope.head.document = $scope.documents[i]; 
+				$scope.head.document.flows = flow;
 			}
 		}
 	}
+	LoaderFactory.loader = true;
 	$q.all([$http.get(AppConfig.ServiceUrls.ListOfCustomer),
 	        $http.get(AppConfig.ServiceUrls.DocumentList),
 	        $http.get(AppConfig.ServiceUrls.Promoter)])
@@ -65,18 +68,8 @@ angular.module("rocchi.documents")
 		$scope.promoters= data[2].data;
 		$http.get(AppConfig.ServiceUrls.HeadList+$scope.idhead).success(function(data){
 			$scope.head= data;
-			//$http.get(AppConfig.ServiceUrls.ListOfCustomer).success(function(data){
-				//$scope.customers= data; 
-				
-			//});
-			//$http.get(AppConfig.ServiceUrls.DocumentList).success(function(data){
-				//$scope.documents= data;
-				
-			//});	
-			//$http.get(AppConfig.ServiceUrls.Promoter).success(function(data){
-			//	$scope.promoters= data;
-			//});	
-			//$scope.setTransporter();
+			LoaderFactory.loader = false;
+			
 			$scope.fillHead();
 			if ($rootScope.headScope == null){
 				$scope.isSaving = false;
@@ -305,19 +298,6 @@ angular.module("rocchi.documents")
 			$scope.totrowobj.qta = parseFloat(row.quantity);
 			$scope.totrowobj.taxrate = parseFloat(row.product.taxrate.value);
 			$scope.totrowobj.price = parseFloat(row.price);
-			/*$.ajax({
-					url:AppConfig.ServiceUrls.RowTotal,
-					type:"POST",
-					data:JSON.stringify($scope.totrowobj),
-					success:function(data){
-						$scope.totrow = $.parseJSON(data);
-						row.total = $scope.totrow.total;
-						row.amount = $scope.totrow.amount;
-						row.taxamount = $scope.totrow.taxamount;
-						$scope.$apply();
-						$scope.calculateTotal();
-					}	
-				});*/
 		}
 		$http.post(AppConfig.ServiceUrls.RowTotal,$scope.totrowobj).success(function(result){
 			
@@ -356,6 +336,7 @@ angular.module("rocchi.documents")
 		$scope.checkHead();
 	};
 	$scope.checkHead = function(){
+		
 		$.ajax({
 			url:AppConfig.ServiceUrls.CheckHead,
 			type:"POST",
@@ -390,6 +371,7 @@ angular.module("rocchi.documents")
 	}
 	
 	$scope.saveHeadChecked = function(){
+		LoaderFactory.loader = true;
 		$scope.head.payment = $scope.currentPayment;
 		if ($scope.head.withholdingtax === undefined || $scope.head.withholdingtax === null ){
 			$scope.head.withholdingtax = 0;
@@ -410,8 +392,10 @@ angular.module("rocchi.documents")
 							$scope.$apply();
 							$rootScope.selectedSection = $scope.selectedSection
 							$rootScope.issaved = true;
+							LoaderFactory.loader = false;
 							$scope.msg.successMessage("Documento salvato con successo")
 						}else{
+							LoaderFactory.loader = false;
 							$scope.errorMessage(result.errorMessage);
 						}
                         $scope.isSaving = false;						
@@ -419,6 +403,7 @@ angular.module("rocchi.documents")
 					error:function(data){
 						$scope.isSaving = false;
 						$scope.errorMessage(data);
+						LoaderFactory.loader = false;
 					}		
 				});
 		}
@@ -613,8 +598,23 @@ angular.module("rocchi.documents")
 		$scope.currentRow = row;
 		$scope.showRowDetail = true;
 	}
-	
-}]).controller("ProductSearchCtrl",function($scope,$http,$modalInstance,AppConfig,searchstring,head){
+	$scope.generateDocument = function(document){
+		var generateobj = {};
+		generateobj.generateDoc = document;
+		generateobj.heads=[];
+		generateobj.heads.push($scope.head);
+		generateobj.customer = $scope.head.customer;
+		generateobj.date = $scope.head.date;
+		generateobj.groupByCustomer = document.customer;
+		$scope.head.generate = true;
+		angular.forEach($scope.head.rows,function(value){value.generate = true;})
+		$http.post(AppConfig.ServiceUrls.GenerateHeads,generateobj).success(function(result){
+			$http.get(AppConfig.ServiceUrls.HeadList+$scope.idhead).success(function(data){
+				$scope.head= data;
+			});
+		})
+	}
+}).controller("ProductSearchCtrl",function($scope,$http,$modalInstance,AppConfig,searchstring,head){
 	$scope.search = searchstring;
 	if ($scope.search != "" && $scope.search != undefined){
 		$http.post(AppConfig.ServiceUrls.SearchProduct+$scope.search,head).success(function(data){

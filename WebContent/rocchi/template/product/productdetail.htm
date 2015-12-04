@@ -10,9 +10,9 @@
 	</div>
 	<div class="large-7 medium-7 small-7 columns">
 		<ul class="button-group">
-		  	<li><a ng-click="saveProduct()" class="button">Salva</a></li>
-		  	<li><a ng-click="mainPage()" class="button">Elenco</a></li>
-		  	<li><a ng-show="isNew == false" ng-click="newProduct()" class="button">Nuovo</a></li>
+		  	<li><button ng-disabled="product_form.$invalid" ng-click="saveProduct()" class="button">Salva</button></li>
+		  	<li><button ng-click="mainPage()" class="button">Elenco</button></li>
+		  	<li><button ng-show="isNew == false" ng-click="newProduct()" class="button">Nuovo</button></li>
 		</ul>
 	</div>
 </div>
@@ -24,60 +24,104 @@
   
 
     <div class="login">
-
-      <form name="login" >
-
-            <label>Codice</label>
-            <input type="text" placeholder="Codice" value="{{product.code}}" ng-model="product.code">
-			
-             <label>Descrizione</label>
-            <input type="text" placeholder="Descrizione" value="{{product.description}}" ng-model="product.description">
-			
+		<form name="product_form" >
+			<div class="row">
+    			<div class="large-12 medium-12 small-12 columns"   ng-class="{'has-error':product_form.code.$invalid}" >
+            		<label>Codice *</label>
+            		<input type="text" placeholder="Codice" value="{{product.code}}" ng-model="product.code" name="code" required>
+				</div>
+				<div class="large-12 medium-12 small-12 columns"   ng-class="{'has-error':product_form.description.$invalid}">
+            		 <label>Descrizione *</label>
+           			 <input type="text" placeholder="Descrizione" value="{{product.description}}" name="description" ng-model="product.description" required>
+			</div>
+			<div class="large-12 medium-12 small-12 columns">
 			<label>Titolo</label>
-            <input type="text" placeholder="Titolo" value="{{product.shortdescription}}" ng-model="product.shortdescription">
-			
+            <input type="text" placeholder="Titolo" value="{{product.shortdescription}}" ng-model="product.shortdescription" >
+			</div>
+			<div class="large-12 medium-12 small-12 columns">
 			<label>Descrizione completa</label>
             <textarea  placeholder="Descrizione completa" value="{{product.longdescription}}" ng-model="product.longdescription" ></textarea>
+			</div>
+			<div class="large-12 medium-12 small-12 columns">
 			<label>Categoria</label>
-            <select  name="category" ng-options="category.code for category in categorys" ng-model="currentCategory" ng-change="changeCategory()" >
+            <select  name="category" ng-options="category.code for category in categorys" ng-model="product.category" ng-change="changeCategory()" >
           		 	<option value=""></option>
            	</select> 
-            
+            </div>
+            <div class="large-12 medium-12 small-12 columns">
             <label>Sottocategoria</label>
-            <select  name="subcategory" ng-options="subcategory.code for subcategory in subcategories" ng-model="currentSubCategory"  >
+            <select  name="subcategory" ng-options="subcategory.code for subcategory in subcategories" ng-model="product.subcategory"  >
           		 	<option value=""></option>
            	</select> 
-           		
+           		</div>
+           	<div class="large-12 medium-12 small-12 columns">	
             <label>Gruppo</label>
-            <select  name="group" ng-options="group.code for group in groups" ng-model="currentGroup"  >
+            <select  name="group" ng-options="group.code for group in groups" ng-model="product.group"  >
            		 	<option value=""></option>
             	</select> 
-         
-               <label>Regione</label>
-             <select  name="region" ng-options="region.name for region in regions" ng-model="currentRegion"  >
+         </div>
+         <div class="large-12 medium-12 small-12 columns">
+             <label>Regione</label>
+             <select  name="region" ng-options="region.name for region in regions" ng-model="product.region"  >
            		 	<option value=""></option>
             	</select> 
-         
-
-             <label>Prezzo di Costo</label>
-            <input type="text" placeholder="Codice" value="{{product.purchaseprice}}" ng-model="product.purchaseprice" ng-blur="calculateListPrices();">
+            	</div>
+            	<div class="large-12 medium-12 small-12 columns">
+        	<label>Marca</label>
+             <select  name="brand" ng-options="brand.name for brand in brands" ng-model="product.brand"  >
+           		 	<option value=""></option>
+            	</select> 	
+</div>
+<div class="large-12 medium-12 small-12 columns"  ng-class="{'has-error':product_form.purchaseprice.$invalid || product.purchaseprice == 0}">
+             <label>Prezzo di Costo *</label>
+            <input type="text" placeholder="Codice" value="{{product.purchaseprice}}" name="purchaseprice"  ng-model="product.purchaseprice" ng-blur="calculateListPrices();" required>
+			</div>
+			<div class="large-12 medium-12 small-12 columns">
 			<label>Percentuale Ricarico</label>
-            <input type="text" placeholder="Descrizione" value="{{product.percentage}}" ng-model="product.percentage" ng-blur="calculatePrices('sellprice')">
-			
-			<label>Prezzo di Vendita base</label>
-            <input type="text" placeholder="Codice" value="{{product.sellprice}}" ng-model="product.sellprice" ng-blur="calculatePrices('percentage')">
-			
-			 <label>Aliquota</label>
-            <select name="taxrate" ng-options="taxrate.description for taxrate in taxrates" ng-model="currentTaxRate" ng-change="calculateListPrices();">
+            <input type="text" value="{{product.percentage}}" ng-model="product.percentage" ng-blur="calculatePrices('sellprice')">
+			</div>
+			<div class="large-12 medium-12 small-12 columns"  ng-class="{'has-error':product_form.sellprice.$invalid || product.sellprice == 0}">
+			<label>Prezzo di Vendita base *</label>
+            <input type="text"  value="{{product.sellprice}}" name="sellprice" ng-model="product.sellprice" ng-blur="calculatePrices('percentage')" required>
+			</div>
+			<div class="large-12 medium-12 small-12 columns" ng-class="{'has-error':product_form.taxrate.$invalid}">
+			 <label>Aliquota *</label>
+            <select name="taxrate" ng-options="taxrate.description for taxrate in taxrates" ng-model="product.taxrate" ng-change="calculateListPrices();" required>
            		 <option value=""></option>
             </select> 
+            </div>
+            <div class="large-12 medium-12 small-12 columns">
             <label>Pubblica</label>
             <input type="checkbox" value="{{product.publish}}" ng-model="product.publish" >
-			
+            </div>
+			</div>
       </form>
-
+		
     </div>
-    
+    <div class="row">
+    	<div class="large-6 columns" ><h6>COMPOSIZIONE (Uvaggio)</h6></div>
+    	<div class="small-3 columns" ><button class="button small"  ng-click="addCompositionElement(product)" >Aggiungi</button></div>
+    </div>
+    <div class="row">
+     <table  st-table="cmpsToDisplay" class="table table-striped" st-safe-src="product.compositions" >
+        <thead>
+          <tr>
+            <th width="10%"></th>
+            <th width="50%">Uvaggio</th>
+            <th width="10%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="composition in cmpsToDisplay ">
+            <td><a ng-click="changeUMElement($index)" class="matita"></a> </td>
+            <td><div ng-if="umpid != $index">&nbsp;{{composition.composition.description}}</div>
+										<select ng-if="umpid == $index" id="selcounter"  ng-model="currentComposition"    ng-options="c as c.description for c in compositions" ng-change="composition.composition = currentComposition;" ></select></td>
+            
+            <td><a  class="x" ng-click="deleteUMElement(ump)"></a></td>
+          </tr>     
+        </tbody>
+      </table>
+      </div>
   </div>
 
   <div class="large-6 medium-12 small-12 columns">

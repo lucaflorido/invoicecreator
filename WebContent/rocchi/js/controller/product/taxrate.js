@@ -4,17 +4,19 @@
 /*****
 TAXRATE
 ***/
-angular.module("rocchi.parameters")
-.controller('RocchiTaxrateCtrl',["$scope","$http","$rootScope","AppConfig","AlertsFactory",function($scope,$http,$rootScope,AppConfig,AlertsFactory){
-    
-	$scope.taxratesaved = true;
+angular.module("rocchi.product")
+.controller('RocchiTaxrateCtrl',function($scope,$http,$modal,$rootScope,AppConfig,AlertsFactory,CommonFunction){
+    $scope.taxratesaved = true;
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
-	$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
-		$scope.taxrates= data;
-	}).error(function(message){
-		$scope.msg.alertMessage(message);
-	});
+	var loadList = function(){
+		$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
+			$scope.taxrates= data;
+		}).error(function(message){
+			$scope.msg.alertMessage(message);
+		});
+	}
+	loadList();
 	$scope.modifyid = 0;
 	$scope.modifyTaxrateElement = function(id){
 		if ($scope.modifyid != id){
@@ -27,7 +29,7 @@ angular.module("rocchi.parameters")
 		$scope.taxratesaved = false;
 		$scope.taxrates.push({idtaxrate:0});
 	}
-	$scope.deleteTaxrateElement = function(id){
+	/*$scope.deleteTaxrateElement = function(id){
 		for(var i=0;i<$scope.taxrates.length;i++){
 			if (id == $scope.taxrates[i].idtaxrate){
 				$scope.deleteTaxrate = $scope.taxrates[i];
@@ -49,7 +51,7 @@ angular.module("rocchi.parameters")
 					})
 			}	
 		}
-	}
+	}*/
 	$scope.saveTaxrates = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.TaxRate,
@@ -62,6 +64,11 @@ angular.module("rocchi.parameters")
 					$scope.modifyid = 0;
 					$scope.$apply();
 					$scope.msg.successMessage("ALIQUOTA SALVATA CON SUCCESSO");
+					$http.get(AppConfig.ServiceUrls.TaxRate).success(function(data){
+						$scope.taxrates= data;
+					}).error(function(message){
+						$scope.msg.alertMessage(message);
+					});
 				}else{
 					$scope.msg.alertMessage(result.errorMessage);
 				}	
@@ -74,6 +81,8 @@ angular.module("rocchi.parameters")
 		})
 		
 	}
+	$scope.deleteElement = function (obj) {
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.TaxRateDelete,obj,loadList);
+	};
 	
-	
-}]);
+});

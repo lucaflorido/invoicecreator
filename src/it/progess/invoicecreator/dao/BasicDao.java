@@ -5,6 +5,7 @@ import it.progess.invoicecreator.pojo.TblBrand;
 import it.progess.invoicecreator.pojo.TblCategoryCustomer;
 import it.progess.invoicecreator.pojo.TblCategoryProduct;
 import it.progess.invoicecreator.pojo.TblCategorySupplier;
+import it.progess.invoicecreator.pojo.TblComposition;
 import it.progess.invoicecreator.pojo.TblCounter;
 import it.progess.invoicecreator.pojo.TblCurrency;
 import it.progess.invoicecreator.pojo.TblDocument;
@@ -22,6 +23,7 @@ import it.progess.invoicecreator.vo.Brand;
 import it.progess.invoicecreator.vo.CategoryCustomer;
 import it.progess.invoicecreator.vo.CategoryProduct;
 import it.progess.invoicecreator.vo.CategorySupplier;
+import it.progess.invoicecreator.vo.Composition;
 import it.progess.invoicecreator.vo.Counter;
 import it.progess.invoicecreator.vo.Currency;
 import it.progess.invoicecreator.vo.Document;
@@ -50,6 +52,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 public class BasicDao {
 	/*******
@@ -133,25 +136,30 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE TAXRATE
 	 * **/
-	public Boolean deleteTaxRate(TaxRate taxrate){
+	public GECOObject deleteTaxRate(TaxRate taxrate){
 		TblTaxrate tbltaxrate = new TblTaxrate();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tbltaxrate.convertToTable(taxrate);
 			tx = session.beginTransaction();
 			session.delete(tbltaxrate);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	/*****
@@ -220,25 +228,30 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE UM
 	 * **/
-	public Boolean deleteUM(UnitMeasure um){
+	public GECOObject deleteUM(UnitMeasure um){
 		TblUnitMeasure tblum = new TblUnitMeasure();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblum.convertToTable(um);
 			tx = session.beginTransaction();
 			session.delete(tblum);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	/*****
@@ -414,6 +427,38 @@ public class BasicDao {
 		}
 		return new GECOSuccess();
 	}
+	public GECOObject saveUpdatesCounter(Counter[] sms,User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		try{
+			tx = session.beginTransaction();
+			for(int i =0; i< sms.length;i++){
+				Counter sm = sms[i];
+				sm.setCompany(user.getCompany());
+				if(sm.control() == null){
+					if (sm.getName() != "" && sm.getName() != null ){
+						TblCounter tblsm = new TblCounter();
+						tblsm.convertToTableForSaving(sm);
+						session.saveOrUpdate(tblsm);
+					}
+				}else{
+					if (tx!= null) tx.rollback();
+					//session.close();
+					return sm.control();
+				}
+			}
+			tx.commit();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			session.close();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return new GECOSuccess();
+	}
 	public Counter getCounter(int idCounter){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Counter> list = new ArrayList<Counter>();
@@ -474,25 +519,30 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE counter
 	 * **/
-	public Boolean deleteCounter(Counter sm){
+	public GECOObject deleteCounter(Counter sm){
 		TblCounter tblsm = new TblCounter();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	/*****
@@ -742,7 +792,14 @@ public class BasicDao {
 	/***
 	 * Save update Documents
 	 * **/
+	public GECOObject saveUpdatesDocument(Document[] sms,User user){
+		for (int i =0;i<sms.length;i++){
+			sms[i].setCompany(user.getCompany());
+		}
+		return saveUpdatesDocument(sms);
+	}
 	public GECOObject saveUpdatesDocument(Document[] sms){
+		
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
@@ -775,25 +832,31 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE Tbldocument
 	 * **/
-	public Boolean deleteDocument(Document sm){
+	public GECOObject deleteDocument(Document sm){
 		TblDocument tblsm = new TblDocument();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	
@@ -840,6 +903,7 @@ public class BasicDao {
 	public GECOObject saveUpdatesGroupProduct(GroupProduct[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tx = session.beginTransaction();
 			for(int i =0; i< sms.length;i++){
@@ -855,39 +919,48 @@ public class BasicDao {
 				}
 			}
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return new GECOSuccess();
+		return obj;
 	}
 	/***
 	 * DELETE A SINGLE Tblgroupproduct
 	 * **/
-	public Boolean deleteGroupProduct(GroupProduct sm){
+	public GECOObject deleteGroupProduct(GroupProduct sm){
 		TblGroupProduct tblsm = new TblGroupProduct();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	
@@ -945,8 +1018,7 @@ public class BasicDao {
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			
 		}finally{
 			session.close();
 		}
@@ -955,46 +1027,56 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE Tblcategoryproduct
 	 * **/
-	public Boolean deleteCategoryProduct(CategoryProduct sm){
+	public GECOObject deleteCategoryProduct(CategoryProduct sm){
 		TblCategoryProduct tblsm = new TblCategoryProduct();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
-	public Boolean deleteSubCategoryProduct(SubCategoryProduct sm){
+	public GECOObject deleteSubCategoryProduct(SubCategoryProduct sm){
 		TblSubCategoryProduct tblsm = new TblSubCategoryProduct();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	/*****
@@ -1058,16 +1140,26 @@ public class BasicDao {
 		return new GECOSuccess();
 	}
 	/***
-	 * DELETE A SINGLE Tblcategorycustomer
+	 * Save update Composition
 	 * **/
-	public Boolean deleteCategoryCustomer(CategoryCustomer sm){
-		TblCategoryCustomer tblsm = new TblCategoryCustomer();
+	public GECOObject saveUpdatesComposition(Composition[] sms,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
-			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
-			session.delete(tblsm);
+			for(int i =0; i< sms.length;i++){
+				Composition sm = sms[i];
+				sm.setCompany(user.getCompany());
+				if (sm.control() == null ){
+					TblComposition tblsm = new TblComposition();
+					tblsm.convertToTable(sm);
+					session.saveOrUpdate(tblsm);
+				}else{
+					if (tx!= null) tx.rollback();
+					//session.close();
+					return sm.control();
+				}
+			}
 			tx.commit();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
@@ -1078,7 +1170,35 @@ public class BasicDao {
 		}finally{
 			session.close();
 		}
-		return true;
+		return new GECOSuccess();
+	}
+	/***
+	 * DELETE A SINGLE Tblcategorycustomer
+	 * **/
+	public GECOObject deleteCategoryCustomer(CategoryCustomer sm){
+		TblCategoryCustomer tblsm = new TblCategoryCustomer();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		GECOObject obj = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+			obj = new GECOSuccess();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
+		}finally{
+			session.close();
+		}
+		return obj;
 		
 	}
 	
@@ -1099,6 +1219,34 @@ public class BasicDao {
 					GroupCustomer groupcustomer = new GroupCustomer();
 					groupcustomer.convertFromTable(tblgroupcustomer);
 					list.add(groupcustomer);
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	/*****
+	 * Get List of Composition
+	 */
+	public ArrayList<Composition> getComposition(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Composition> list = new ArrayList<Composition>();
+		try{
+			Criteria cr = session.createCriteria(TblComposition.class,"composition");
+			checkORCompany("composition",user,cr);
+			cr.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TblComposition> compositions = cr.list();
+			if (compositions.size() > 0){
+				for (Iterator<TblComposition> iterator = compositions.iterator(); iterator.hasNext();){
+					TblComposition tblcomposition = iterator.next();
+					Composition composition = new Composition();
+					composition.convertFromTable(tblcomposition);
+					list.add(composition);
 				}
 			}
 		}catch(HibernateException e){
@@ -1145,28 +1293,63 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE Tblgroupcustomer
 	 * **/
-	public Boolean deleteGroupCustomer(GroupCustomer sm){
+	public GECOObject deleteGroupCustomer(GroupCustomer sm){
 		TblGroupCustomer tblsm = new TblGroupCustomer();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	
+	/***
+	 * DELETE A SINGLE TblComposition
+	 * **/
+	public GECOObject deleteComposition(Composition sm){
+		TblComposition tblsm = new TblComposition();
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		Transaction tx = null;
+		GECOObject obj = null;
+		try{
+			tblsm.convertToTable(sm);
+			tx = session.beginTransaction();
+			session.delete(tblsm);
+			tx.commit();
+			obj = new GECOSuccess();
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			if (tx!= null) tx.rollback();
+			e.printStackTrace();
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
+		}finally{
+			session.close();
+		}
+		return obj;
+		
+	}
 	
 	
 	/*****
@@ -1402,50 +1585,60 @@ public class BasicDao {
 	/***
 	 * DELETE A SINGLE Tblgroupsupplier
 	 * **/
-	public Boolean deleteBrand(Brand sm){
+	public GECOObject deleteBrand(Brand sm){
 		TblBrand tblsm = new TblBrand();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblsm.convertToTable(sm);
 			tx = session.beginTransaction();
 			session.delete(tblsm);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	
 	/***
 	 * DELETE A SINGLE REGION
 	 * **/
-	public Boolean deleteRegion(Region re){
+	public GECOObject deleteRegion(Region re){
 		TblRegion tblre = new TblRegion();
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
+		GECOObject obj = null;
 		try{
 			tblre.convertToTable(re);
 			tx = session.beginTransaction();
 			session.delete(tblre);
 			tx.commit();
+			obj = new GECOSuccess();
 		}catch(HibernateException e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			if (tx!= null) tx.rollback();
 			e.printStackTrace();
-			session.close();
-			throw new ExceptionInInitializerError(e);
+			if (e instanceof ConstraintViolationException){
+				obj =  new GECOError("ERR","Non è possibile cancellare l'elemento selezionato");
+			}else{
+				obj =  new GECOError("ERR","Errore nella cancellazione dell'elemento");
+			}
 		}finally{
 			session.close();
 		}
-		return true;
+		return obj;
 		
 	}
 	public ArrayList<Region> getRegionList(User user){

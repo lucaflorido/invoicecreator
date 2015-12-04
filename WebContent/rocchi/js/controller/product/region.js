@@ -2,13 +2,16 @@
  * 
  */
 angular.module("rocchi.product")
-.controller('RocchiRegionCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
+.controller('RocchiRegionCtrl',function($scope,$http,$modal,AppConfig,AlertsFactory,CommonFunction){
     $scope.msg = AlertsFactory;
     $scope.msg.initialize();
 	$scope.regionsaved = true;
-	$http.get(AppConfig.ServiceUrls.Region).success(function(data){
-		$scope.regions= data;
-	});
+	var loadList = function(){
+		$http.get(AppConfig.ServiceUrls.Region).success(function(data){
+			$scope.regions= data;
+		});
+	}
+	loadList();
 	$scope.modifyid = 0;
 	$scope.modifyregionElement = function(id){
 		if ($scope.modifyid != id){
@@ -40,6 +43,9 @@ angular.module("rocchi.product")
 			}	
 		}
 	}
+	$scope.deleteElement = function (obj) {
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.RegionDelete,obj,loadList);
+	};
 	$scope.saveregions = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.Region,
@@ -66,4 +72,4 @@ angular.module("rocchi.product")
 	}
 	
 	
-}]);
+});

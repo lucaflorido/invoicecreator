@@ -2,16 +2,18 @@
  * 
  */
 angular.module("rocchi.customer")
-.controller('RocchiCustomerGroupListCtrl',["$scope","$http","AppConfig","AlertsFactory",function($scope,$http,AppConfig,AlertsFactory){
-    
-	$scope.customergroupsaved = true;
+.controller('RocchiCustomerGroupListCtrl',function($scope,$http,$modal,AppConfig,AlertsFactory){
+    $scope.customergroupsaved = true;
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
-	$http.get(AppConfig.ServiceUrls.CustomerGroup).success(function(data){
-		$scope.customergroups= data;
-	}).error(function(message){
-		$scope.msg.alertMessage(message);
-	});
+	var loadlist = function(){
+		$http.get(AppConfig.ServiceUrls.CustomerGroup).success(function(data){
+			$scope.customergroups= data;
+		}).error(function(message){
+			$scope.msg.alertMessage(message);
+		});
+	}
+	loadlist();
 	$scope.modifyid = 0;
 	$scope.modifycustomergroupElement = function(id){
 		if ($scope.modifyid != id){
@@ -23,28 +25,6 @@ angular.module("rocchi.customer")
 	$scope.addcustomergroupElement = function(id){
 		$scope.customergroupsaved = false;
 		$scope.customergroups.push({idGroupCustomer:0});
-	}
-	$scope.deletecustomergroupElement = function(id){
-		for(var i=0;i<$scope.customergroups.length;i++){
-			if (id == $scope.customergroups[i].idGroupCustomer){
-				$scope.deletecustomergroup = $scope.customergroups[i];
-				$.ajax({
-						url:AppConfig.ServiceUrls.CustomerGroup,
-						type:"DELETE",
-						data:"groupcustomerobj="+JSON.stringify($scope.deletecustomergroup),
-						success:function(data){
-							$scope.msg.successMessage("GRUPPO ELIMINATO CON SUCCESSO");
-								$http.get(AppConfig.ServiceUrls.CustomerGroup).success(function(data){
-										$scope.customergroups= data;
-								});
-								
-						},error:function(error){
-							
-							$scope.msg.alertMessage("ERRORE NELL'ELIMINAZIONE DEL GRUPPO");
-						}	
-					})
-			}	
-		}
 	}
 	$scope.savecustomergroups = function(){
 		$.ajax({
@@ -60,7 +40,7 @@ angular.module("rocchi.customer")
 					$http.get(AppConfig.ServiceUrls.CustomerGroup).success(function(data){
 						$scope.customergroups= data;
 					});
-					$scope.msg.successMessage("GRUPPO SALVATO CON SUCCESSO");
+					$scope.msg.successMessage(AppConfig.Messages.SaveSuccessMessage);
 				}else{
 					$scope.msg.alertMessage(result.errorMessage);
 				}
@@ -68,12 +48,14 @@ angular.module("rocchi.customer")
 					
 			},error:function(error){
 				
-				$scope.msg.alertMessage("ERRORE NEL SALVATAGGIO DEL GRUPPO");
+				$scope.msg.alertMessage(AppConfig.Messages.GeneralErrorMessage);
 			}		
 		})
 		
 	}
+	$scope.deleteElement = function (obj) {
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.CustomerGroupDelete,obj,loadlist);
+	};
 	
-	
-}]);
+});
 

@@ -2,6 +2,7 @@ package it.progess.invoicecreator.vo;
 
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblBrand;
+import it.progess.invoicecreator.pojo.TblCompositionProduct;
 import it.progess.invoicecreator.pojo.TblListProduct;
 import it.progess.invoicecreator.pojo.TblProduct;
 import it.progess.invoicecreator.pojo.TblProductEcConfig;
@@ -50,6 +51,14 @@ public class Product implements Ivo,Comparable<Product>{
 	private ProductEcConfig ecconfig;
 	private String shortdescription;
 	private String longdescription;
+	private Set<CompositionProduct> compositions;
+	
+	public Set<CompositionProduct> getCompositions() {
+		return compositions;
+	}
+	public void setCompositions(Set<CompositionProduct> compositions) {
+		this.compositions = compositions;
+	}
 	public String getShortdescription() {
 		return shortdescription;
 	}
@@ -314,6 +323,17 @@ public class Product implements Ivo,Comparable<Product>{
 				this.ums.add(umpt);
 			}
 		}
+		if (pd.getCompositions() != null){
+			this.compositions = new HashSet<CompositionProduct>();
+			for(Iterator<TblCompositionProduct> itcomp = pd.getCompositions().iterator(); itcomp.hasNext();){
+				TblCompositionProduct cp = itcomp.next();
+				CompositionProduct tcp = new CompositionProduct();
+				tcp.convertFromTable(cp);
+				this.compositions.add(tcp);
+			}
+		}else{
+			this.compositions = null;
+		}
 	}
 	public void convertFromTableSngle(Itbl obj){
 		this.convertFromTable(obj);
@@ -345,6 +365,17 @@ public class Product implements Ivo,Comparable<Product>{
 		this.publish = pd.isPublish();
 		this.shortdescription = pd.getShortdescription();
 		this.longdescription = pd.getLongdescription();
+		if (pd.getCompositions() != null){
+			this.compositions = new HashSet<CompositionProduct>();
+			for(Iterator<TblCompositionProduct> itcomp = pd.getCompositions().iterator(); itcomp.hasNext();){
+				TblCompositionProduct cp = itcomp.next();
+				CompositionProduct tcp = new CompositionProduct();
+				tcp.convertFromTable(cp);
+				this.compositions.add(tcp);
+			}
+		}else{
+			this.compositions = null;
+		}
 		if(pd.getPhoto() != null){
 			
 			this.photo = new String(pd.getPhoto());

@@ -9,6 +9,7 @@ import it.progess.invoicecreator.print.PrintSingleHead;
 import it.progess.invoicecreator.print.TaxRateCollection;
 import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.invoicecreator.vo.Company;
+import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.Document;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOReportOrder;
@@ -16,6 +17,7 @@ import it.progess.invoicecreator.vo.GECOReportOrderCustomerQuantity;
 import it.progess.invoicecreator.vo.GECOReportOrderProduct;
 import it.progess.invoicecreator.vo.GECOSuccess;
 import it.progess.invoicecreator.vo.Head;
+import it.progess.invoicecreator.vo.ListCustomer;
 import it.progess.invoicecreator.vo.ListProduct;
 import it.progess.invoicecreator.vo.PrintUrl;
 import it.progess.invoicecreator.vo.Product;
@@ -37,6 +39,8 @@ import java.util.TreeSet;
 
 import javax.print.attribute.standard.PrinterResolution;
 import javax.servlet.ServletContext;
+
+
 
 
 
@@ -183,7 +187,21 @@ public class PrinterDao {
 		
 		return new PrintUrl("/InvoiceCreator/report/productlist.pdf");
 	}
-	public PrintUrl printList(ServletContext context,int id,User user){
+	public PrintUrl printCustomerList(ServletContext context,String code,User user){
+		Customer c  = new RegistryDao().getSingleCustomerKeyCode(code, user);
+		it.progess.invoicecreator.vo.List l = null;
+		if (c.getLists() != null && c.getLists().isEmpty() == false){
+			ListCustomer lc = c.getLists().iterator().next();
+			l = lc.getList();
+		}
+		l = new RegistryDao().getSingleList(l.getKey());
+		return printList(context, l, user);
+	}
+	public PrintUrl printList(ServletContext context,String code,User user){
+		it.progess.invoicecreator.vo.List list  = new RegistryDao().getSingleListByCode(code, user);
+		return printList(context, list, user);
+	}
+	private PrintUrl printList(ServletContext context,it.progess.invoicecreator.vo.List list,User user){
 		try{
 			//generateAshwinFriends();
 			File f = new File(context.getRealPath("report/pricelist.jasper"));
@@ -192,7 +210,7 @@ public class PrinterDao {
 				JasperCompileManager.compileReportToFile(context.getRealPath("report/pricelist.jrxml"), context.getRealPath("report/pricelist.jasper"));
 			}
 		    Company comp = user.getCompany();
-			it.progess.invoicecreator.vo.List list  = new RegistryDao().getSingleList(id);
+			
 			Collection<PrintPriceList> headcoll = new ArrayList<PrintPriceList>();
 			Map<String, Object> map = new HashMap<String ,Object>();
 			map.put("title","Fattura");

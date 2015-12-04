@@ -62,12 +62,12 @@ public class ProductListPricesCalculation {
 			if (this.isEndPrice == false){
 				float increment = HibernateUtils.calculatePercentage(this.price, this.inc);
 				increment = HibernateUtils.roundfloat(increment);
-				this.price = this.price + increment;
+				this.price = HibernateUtils.roundfloat(this.price + increment);
 				calculateEndPrice();
 			}else{
 				float increment = HibernateUtils.calculatePercentage(this.endprice, this.inc);
 				increment = HibernateUtils.roundfloat(increment);
-				this.endprice = this.endprice + increment;
+				this.endprice = HibernateUtils.roundfloat(this.endprice + increment);
 				this.price = HibernateUtils.calculateFromPercentage(this.endprice, this.taxrate);
 			}
 			
@@ -79,7 +79,7 @@ public class ProductListPricesCalculation {
 				this.price = this.price + this.inc;
 				calculateEndPrice();
 			}else{
-				this.endprice = this.endprice + this.inc;
+				this.endprice =HibernateUtils.roundfloat( this.endprice + this.inc);
 				this.price = HibernateUtils.calculateFromPercentage(this.endprice, this.taxrate);
 			}
 			
@@ -87,10 +87,8 @@ public class ProductListPricesCalculation {
 	}
 	private void calculateEndPrice(){
 		float increment = this.price/100 * this.taxrate;
-		BigDecimal bd = new BigDecimal(increment);
-        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-        increment = bd.floatValue();
-        this.endprice = this.price + increment;
+		
+        this.endprice = HibernateUtils.roundfloat(this.price + increment);
 	}
 	
 	

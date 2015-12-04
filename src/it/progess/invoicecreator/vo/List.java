@@ -25,6 +25,14 @@ public class List implements Ivo {
 	private float increment;
 	private boolean isPercentage;
 	private boolean publish;
+	private String key;
+	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
 	public boolean isPublish() {
 		return publish;
 	}
@@ -109,6 +117,7 @@ public class List implements Ivo {
 		this.isPercentage = lt.isPercentage();
 		this.increment = lt.getIncrement();
 		this.publish = lt.isPublish();
+		this.key = lt.getKey();
 		this.startdate =  DataUtilConverter.convertStringFromDate( lt.getStartdate());
 		if (lt.getCompany() != null){
 			this.company = new Company();
@@ -132,6 +141,7 @@ public class List implements Ivo {
 		this.startdate = DataUtilConverter.convertStringFromDate( lt.getStartdate());
 		this.listproduct = new HashSet<ListProduct>();
 		this.publish = lt.isPublish();
+		this.key = lt.getKey();
 		if (lt.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(lt.getCompany());
@@ -199,9 +209,12 @@ public class List implements Ivo {
 		if (this.name == null || this.name.equals("") == true){
 			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Nome Mancante");
 		}
-		if ((this.startdate == null || this.startdate.equals("") == true) && this.idList != 0 ){
-			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Data validità Mancante");
+		if (this.increment == 0){
+			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Inserire un incremento superiore a zero");
 		}
+		/*if ((this.startdate == null || this.startdate.equals("") == true) && this.idList != 0 ){
+			return new GECOError(GECOParameter.ERROR_VALUE_MISSING,"Data validità Mancante");
+		}*/
 		return null;
 	}
 }

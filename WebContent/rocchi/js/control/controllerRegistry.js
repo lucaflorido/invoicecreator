@@ -3,13 +3,12 @@ var gecoRegistryControllers = angular.module("gecoRegistryControllers",[]);
 /*****
 REGISTRY
 ***/
-gecoRegistryControllers.controller('CompanyCtrl',function($scope,$http,AppConfig,AlertsFactory){
+gecoRegistryControllers.controller('CompanyCtrl',function($scope,$http,$modal,AppConfig,AlertsFactory){
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
 	$scope.companysaved = true;
 	$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
 		$scope.company = result;
-		
 	});
 	$scope.savecompany = function(){
 		$http.post(AppConfig.ServiceUrls.Company,$scope.company).success(function(result){
@@ -31,6 +30,34 @@ gecoRegistryControllers.controller('CompanyCtrl',function($scope,$http,AppConfig
 		}
 		$scope.company.mailconfig.push({});
 	}
+	$scope.deleteMailConfig = function(mc){
+		$http.post(AppConfig.ServiceUrls.CompanyMailConfigDelete,mc).success(function(result){
+			if (result.type == "success"){
+				$scope.msg.successMessage("EMAIL ELIMINATA CON SUCCESSO");
+			}else{
+				$scope.msg.alertMessage(result.errorMessage);
+			}
+			$http.get(AppConfig.ServiceUrls.Company+AppConfig.Const.CompanyId).success(function(result){
+				$scope.company = result;
+			});
+		});
+	}
+	$scope.deleteElement = function (id) {
+
+	    var modalInstance = $modal.open({
+	      templateUrl: 'template/alert/cancelalert.html',
+	      controller: 'ModalCancelCtrl',
+	      resolve: {
+	    	  cancelObj: function () {
+	          return id;
+	        }
+	      }
+	    });
+
+	    modalInstance.result.then(function (id) {
+	    	$scope.deleteMailConfig(id);
+	    });
+	  };
 });
 gecoRegistryControllers.controller('CompanyEcCtrl',function($scope,$http,AppConfig,AlertsFactory){
 	$scope.msg = AlertsFactory;

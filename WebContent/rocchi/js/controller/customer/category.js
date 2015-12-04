@@ -2,13 +2,16 @@
  * 
  */
 angular.module("rocchi.customer")
-.controller('RocchiCustomerCategoryListCtrl',["$scope","$http","AlertsFactory","AppConfig",function($scope,$http,AlertsFactory,AppConfig){
+.controller('RocchiCustomerCategoryListCtrl',function($scope,$http,$modal,AlertsFactory,AppConfig,CommonFunction){
     $scope.msg = AlertsFactory;
     $scope.msg.initialize();
 	$scope.customercategorysaved = true;
-	$http.get(AppConfig.ServiceUrls.CustomerCategory).success(function(data){
-		$scope.customercategorys= data;
-	});
+	var loadList = function(){
+		$http.get(AppConfig.ServiceUrls.CustomerCategory).success(function(data){
+			$scope.customercategorys= data;
+		});
+	}
+	loadList();
 	$scope.modifyid = 0;
 	$scope.modifycustomercategoryElement = function(id){
 		if ($scope.modifyid != id){
@@ -20,28 +23,6 @@ angular.module("rocchi.customer")
 	$scope.addcustomercategoryElement = function(id){
 		$scope.customercategorysaved = false;
 		$scope.customercategorys.push({idCategoryCustomer:0});
-	}
-	$scope.deletecustomercategoryElement = function(id){
-		for(var i=0;i<$scope.customercategorys.length;i++){
-			if (id == $scope.customercategorys[i].idCategoryCustomer){
-				$scope.deletecustomercategory = $scope.customercategorys[i];
-				$.ajax({
-						url:AppConfig.ServiceUrls.CustomerCategory,
-						type:"DELETE",
-						data:"categorycustomerobj="+JSON.stringify($scope.deletecustomercategory),
-						success:function(data){
-							$scope.msg.successMessage("CATEGORIA ELIMINATA CON SUCCESSO");
-								$http.get(AppConfig.ServiceUrls.CustomerCategory).success(function(data){
-										$scope.customercategorys= data;
-								});
-								
-						},error:function(error){
-							
-							$scope.msg.alertMessage("ERRORE NELLA CANCELLAZIONE DELLA CATEGORIA");
-						}	
-					})
-			}	
-		}
 	}
 	$scope.savecustomercategorys = function(){
 		$.ajax({
@@ -70,5 +51,8 @@ angular.module("rocchi.customer")
 		
 	}
 	
+	$scope.deleteElement = function (obj) {
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.CustomerCategoryDelete,obj,loadList);
+	};
 	
-}]);
+});

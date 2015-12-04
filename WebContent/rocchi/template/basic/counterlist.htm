@@ -1,42 +1,31 @@
-<div class="container userlist clearfix">
-	<div class="toolbar_table">
-		<h3>Elenco Contatori</h3>
-		<div class=" buttonmenu addbutton "  >
-			<a ng-click="addcounterElement()" ng-if="countersaved == true">
-				<div class="add">
-				</div>
-				<div class="addlabel">
-					Aggiungi Contatore 
-				</div>
-			</a>
-		</div>
-		<div class="buttonmenu savebutton admin" ng-click="savecounters()">
-			<div class="save buttonicon">
-			</div>
-			<div class="buttonlabel">
-				Salva
-			</div>
-		</div>
-		<div class="filter">
-			<input class="filter" ng-model="query">
-			<div class="label filter">Cerca:</div>
-		</div>
-		<div class="sort">
-		    <select class="sort" ng-model="orderProp">
-				<option value="username">Username</option>
-				<option value="cognome">Cognome</option>
-			</select>
-			<div class="label sort">Ordina:</div> 
-		</div>
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
-	<div class="tablecontainer counter" >
+</div>
+<div class="row">
+	<div class="large-5 medium-5 small-5 columns">
+		<h3>ELENCO CONTATORI</h3>
+	</div>
+	<div class="large-7 medium-7 small-7 columns">
+		<ul class="button-group">
+		  	<li><a ng-click="addcounterElement()" ng-if="countersaved == true" class="button">Aggiungi</a></li>
+		  	<li><a ng-click="savecounters()" class="button">Salva</a></li>
+		</ul>
+	</div>
+	
+</div>
+
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" >
 		<table class="GECO_table three_two clearfix">
 			<tr>
+			<td class="header_table row_table icon half">&nbsp;</td>
 				<td class="header_table row_table first name">Codice</td>
 				<td class="header_table row_table cognome">Nome</td>
 				<td class="header_table row_table cognome">Descrizione</td>
 				<td class="header_table row_table icon half">&nbsp;</td>
-				<td class="header_table row_table icon half">&nbsp;</td>
+				
 				<td class="header_table row_table icon half">&nbsp;</td>
 			</tr>
 		</table>
@@ -44,6 +33,9 @@
 			<table class="GECO_table store_table three_two clearfix">	
 				<tbody>
 					<tr >
+					<td class="row_table half cognome"><a >
+						<a href="#/counter"><div class="  "><i class="icon_setup fi-pencil"  ng-click="modifycounterElement(counter.idCounter)" ></i></div></a>
+						</td>
 						<td class="row_table first cognome">
 							<div ng-if="modifyid != counter.idCounter">&nbsp;{{counter.code}}</div>
 							<div><input ng-if="modifyid == counter.idCounter" ng-model="counter.code"  value="{{counter.code}}" />  </div>
@@ -62,11 +54,9 @@
 								<div class="detailicon open" ng-click="detailView(counter.idCounter)" id="detail{{counter.idCounter}}" ></div>
 							</div>
 						</a></td>
+						
 						<td class="row_table half cognome"><a >
-						<a href="#/counter"><div class="  "><div class="modifyicon" ng-click="modifycounterElement(counter.idCounter)" ></div></div></a>
-						</td>
-						<td class="row_table half cognome"><a >
-							<div class="  "><div class="deleteicon" id="del{{role.idrole}}" ng-click="deletecounterElement(counter.idCounter)" ></div></div>
+							<div class="  "><i class="icon_setup fi-x-circle"  id="del{{role.idrole}}" ng-click="deleteElement(counter.idCounter)" ></i></div>
 						</td>
 						 
 					</tr>
@@ -98,3 +88,4 @@
 		
 	</div>
 </div>
+

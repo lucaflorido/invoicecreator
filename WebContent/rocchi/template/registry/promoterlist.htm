@@ -1,6 +1,11 @@
 <div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row">
 	<div class="large-3 medium-3 small-3 columns">
-		<h3>ELENCO CLIENTI</h3>
+		<h3>ELENCO RAPPRESENTANTI</h3>
 	</div>
 	<div class="large-9 medium-9 small-9 columns">
 		<ul class="button-group">
@@ -32,14 +37,14 @@
   </thead>
   <tbody>
     <tr ng-repeat="promoter in promotersToDisplay ">
-      <td><a  class="matita" ng-click= "location.path('/promoter/'+promoter.idPromoter)"></a> </td>
+      <td><i class="icon_setup fi-pencil"  ng-click= "location.path('/promoter/'+promoter.idPromoter)"></i> </td>
       <td >{{promoter.code}}</td>
       <td>{{promoter.name}}</td>
       <td>{{promoter.surname}}</td>
       <td>{{promoter.contact.phone1}}</td>
       <td>{{promoter.contact.mobile1}}</td>
       <td class="hidden_cell">{{promoter.contact.fax}}</td>
-      <td><a class="x" ng-click="deleteElement(promoter.idPromoter)"></a></td>
+      <td><i class="icon_setup fi-x-circle"  ng-click="deleteElement(promoter.idPromoter)"></i></td>
 
     </tr>
   

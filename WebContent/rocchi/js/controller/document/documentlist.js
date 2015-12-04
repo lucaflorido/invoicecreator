@@ -2,9 +2,9 @@
  * 
  */
 angular.module("rocchi.documents")
-.controller('RocchiHeadListCtrl',["$scope","$http","$stateParams","$rootScope","AppConfig","$location",function($scope,$http,$stateParams,$rootScope,AppConfig,$location){
+.controller('RocchiHeadListCtrl',function($scope,$http,$stateParams,$rootScope,AppConfig,$location,LoaderFactory){
     
-	$scope.pagesize = 1000;
+	$scope.pagesize = 10;
 	$scope.pageArray = [];
 	$scope.headamount = 0;
 	$scope.headtaxamount = 0;
@@ -50,7 +50,7 @@ angular.module("rocchi.documents")
 	/*$http.get('rest/registry/supplier').success(function(data){
 				$scope.suppliers= data;
 	});*/
-	$http.get(AppConfig.ServiceUrls.ListOfCustomer,'').success(function(data){
+	$http.get(AppConfig.ServiceUrls.ListOfCustomerSoft,'').success(function(data){
 		$scope.customers= data;
 	});
 	$http.get(AppConfig.ServiceUrls.DocumentList,'').success(function(data){
@@ -75,56 +75,46 @@ angular.module("rocchi.documents")
 				}
 				})
 	}
+	
 	$scope.getHeads = function(page){
-			$(".pag").removeClass("selected");
-			$("#pag"+page).addClass("selected");
-			$(".checkbox_all").prop('checked',false);
 			$scope.headsToPrint	= [];
 			$scope.headfilter.startelement = (page - 1 ) * $scope.pagesize;
 			$scope.headfilter.pageSize = $scope.pagesize;
 			$rootScope.headfilter = $scope.headfilter;
-			$.ajax({
-				url:AppConfig.ServiceUrls.HeadPaging,
-				type:"POST",
-				data:"filter="+JSON.stringify($scope.headfilter),
-				success:function(data){
-					$scope.heads= JSON.parse(data);
-					for(var i=0;i<$scope.heads.length;i++){
-						$scope.headamount = $scope.headamount + $scope.heads[i].amount;
-						$scope.headtaxamount = $scope.headtaxamount + $scope.heads[i].taxamount;
-						$scope.headtotal = $scope.headtotal + $scope.heads[i].total;
-						$scope.headamount = Math.round($scope.headamount * 100)/100;
-						$scope.headtaxamount = Math.round($scope.headtaxamount * 100)/100;
-						$scope.headtotal = Math.round($scope.headtotal * 100)/100;
-					}
-					$scope.$apply();
-					}	
-				})
+			$http.post(AppConfig.ServiceUrls.HeadPaging,$scope.headfilter).success(function(result){
+				$scope.heads= result;
+				for(var i=0;i<$scope.heads.length;i++){
+					$scope.headamount = $scope.headamount + $scope.heads[i].amount;
+					$scope.headtaxamount = $scope.headtaxamount + $scope.heads[i].taxamount;
+					$scope.headtotal = $scope.headtotal + $scope.heads[i].total;
+					$scope.headamount = Math.round($scope.headamount * 100)/100;
+					$scope.headtaxamount = Math.round($scope.headtaxamount * 100)/100;
+					$scope.headtotal = Math.round($scope.headtotal * 100)/100;
+					LoaderFactory.loader = false;
+				}
+			})
+			
 	}
 	
 	$scope.getHeadsNumber = function(){
-		if ($scope.heads.length != $scope.pagesize){
+		//if ($scope.heads.length != $scope.pagesize){
 		$scope.pages = [];
 		$scope.pageArray = [];
+		LoaderFactory.loader = true;
 		$scope.headfilter.pageSize = $scope.pagesize;
-			$.ajax({
-				url:"rest/head/pages/"+$scope.pagesize,
-				type:"POST",
-				data:"filter="+JSON.stringify($scope.headfilter),
-				success:function(data){
-						$scope.pages= JSON.parse(data);
-						for (var i=0;i<$scope.pages;i++){
-							$scope.pageArray.push(i+1);
-						}
-						$scope.$apply();
-						$scope.getHeads(1);
-					}
-				
-						
-				});
-		}
+		$http.post(AppConfig.ServiceUrls.HeadNumber+$scope.pagesize,$scope.headfilter).success(function(result){
+			$scope.pages = result.pages;
+			$scope.totalitems = result.totalitems;
+			$scope.pagesize_confirmed = $scope.pagesize;
+			/*for (var i=0;i<$scope.pages;i++){
+				$scope.pageArray.push(i+1);
+			}*/
+			$scope.getHeads(1);
+		})
+			
+		//}
 	}
-	$scope.getHeads(1);
+	$scope.getHeadsNumber();
 	$rootScope.deleteElement = function(){
 		$.ajax({
 			url:AppConfig.ServiceUrls.DocumentList,
@@ -268,5 +258,4 @@ angular.module("rocchi.documents")
 				//$scope.openTab(JSON.parse(data));
 			}
 		},function(resolve){})
-	}
-}]);
+	}});

@@ -61,6 +61,12 @@
             	</select> 
 				</label>
 			</div>
+			<div class="large-4 columns">
+				<label>Uvaggio <select  name="composition" ng-options="composition.description for composition in compositions" ng-model="filter.composition"  >
+           		 	<option value=""></option>
+            	</select> 
+				</label>
+			</div>
 		</div>
 		
 	</fieldset>
@@ -202,14 +208,14 @@
 			</thead>
 			<tbody>
 				<tr  ng-repeat="product in products ">
-					<td ><a  class="matita" ng-click= "location.path('/product/'+product.idProduct)"></a></td>
+					<td ><i class="icon_setup fi-pencil"  ng-click= "location.path('/product/'+product.idProduct)"></i></td>
 					<td >{{product.code}}</td>
 					<td >{{product.description}} </td>
 					<td class=>{{product.umselected.code}}</td>
 					<td class="  hidden_cell">{{product.sellprice}}</td>
 					<td class=" hidden_cell">{{product.category.name}}</td>
 					<td class=" hidden_cell">{{product.group.name}}</td>
-					<td ><a class="x" ng-click="deleteElement(customer.idCustomer)"></a></td>
+					<td ><i class="icon_setup fi-x-circle"  ng-click="deleteElement(product)"></i></td>
 				</tr>
 			</tbody>
 		</table>

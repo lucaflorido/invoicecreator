@@ -1,7 +1,12 @@
 package it.progess.invoicecreator.vo;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import it.progess.invoicecreator.pojo.Itbl;
 import it.progess.invoicecreator.pojo.TblDocument;
+import it.progess.invoicecreator.pojo.TblDocumentFlow;
 import it.progess.invoicecreator.properties.GECOParameter;
 
 public class Document  implements Ivo{
@@ -21,6 +26,7 @@ public class Document  implements Ivo{
 	private Company company;
 	private int expireday;
 	private boolean online;
+	private Set<DocumentFlow> flows;
 	public boolean isOnline() {
 		return online;
 	}
@@ -118,6 +124,13 @@ public class Document  implements Ivo{
 	public void setInternal(boolean internal) {
 		this.internal = internal;
 	}
+	
+	public Set<DocumentFlow> getFlows() {
+		return flows;
+	}
+	public void setFlows(Set<DocumentFlow> flows) {
+		this.flows = flows;
+	}
 	public void convertFromTable(Itbl obj){
 		TblDocument dc = (TblDocument)obj;
 		this.code = dc.getCode();
@@ -144,6 +157,19 @@ public class Document  implements Ivo{
 		if (dc.getCompany() != null){
 			this.company = new Company();
 			this.company.convertFromTable(dc.getCompany());
+		}
+	}
+	public void convertFromTableWithSources(Itbl obj){
+		TblDocument dc = (TblDocument)obj;
+		this.convertFromTable(obj);
+		if (dc.getFlows() != null){
+			this.flows = new HashSet<DocumentFlow>();
+			for (Iterator<TblDocumentFlow> iterator = dc.getFlows().iterator(); iterator.hasNext();){
+				TblDocumentFlow df = iterator.next();
+				DocumentFlow tdf = new DocumentFlow();
+				tdf.convertFromTable(df);
+				this.flows.add(tdf);
+			}
 		}
 	}
 	public GECOObject control(){

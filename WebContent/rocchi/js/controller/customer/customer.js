@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.customer")
-.controller('RocchiCustomerListCtrl',["$scope","$http","$rootScope","$location","AppConfig","AlertsFactory","LoaderFactory",function($scope, $http, $rootScope, $location,AppConfig,AlertsFactory,LoaderFactory) {
+.controller('RocchiCustomerListCtrl',function($scope, $http, $rootScope, $location,AppConfig,AlertsFactory,LoaderFactory,CommonFunction) {
 	// $scope.loginuser =
 	// GECO_LOGGEDUSER.checkloginuser();
 	$scope.location = $location;
@@ -91,30 +91,12 @@ angular.module("rocchi.customer")
 	}
 	$scope.getCustomers();
 
-	$scope.deleteElement = function(id) {
-		for (var i = 0; i < $scope.customers.length; i++) {
-			if (id == $scope.customers[i].idCustomer) {
-				$scope.deletecustomer = $scope.customers[i];
-				$.ajax({
-							url : "rest/registry/customer/",
-							type : "DELETE",
-							data : "customerobj="
-									+ JSON
-											.stringify($scope.deletecustomer),
-							success : function(data) {
-								alert("Utente eliminato con successo");
-								$http
-										.get(
-												'rest/registry/customer')
-										.success(
-												function(
-														data) {
-													$scope.customers = data;
-												});
-							}
-						})
-			}
-		}
+	$scope.deleteElement = function(obj) {
+		
+		CommonFunction.deleteElement(AppConfig.ServiceUrls.ListOfCustomerDelete,obj,$scope.getCustomers);
+	}
+	$scope.printList = function(code){
+		CommonFunction.printPDFPost(AppConfig.ServiceUrls.PrintCustomerList+code);
 	}
 	$scope.printElements = function() {
 		$http.get('rest/print').success(function(data) {
@@ -151,15 +133,16 @@ angular.module("rocchi.customer")
 			});
 	};
 	
-} ])
-.controller('RocchiCustomerDetailCtrl',["$scope","$http","$stateParams","AppConfig","AlertsFactory","LoaderFactory",function($scope, $http, $stateParams, AppConfig,AlertsFactory,LoaderFactory) {
+} )
+.controller('RocchiCustomerDetailCtrl',function($scope, $http, $stateParams, AppConfig,AlertsFactory,LoaderFactory,PermissionFactory,CommonFunction) {
 							// GECO_LOGGEDUSER.checkloginuser();
 
 $scope.msg = AlertsFactory;
 $scope.msg.initialize();
 GECO_validator.startupvalidator();
 $scope.idcustomer = $stateParams.idcustomer;
-
+$scope.perm = PermissionFactory;
+$scope.perm_value = AppConfig.Permissions;
 $scope.showuser = false;
 /*
  * $http.get('rest/registry/list').success(function(data){
@@ -186,6 +169,9 @@ $http.get(AppConfig.ServiceUrls.List).success(function(data) {
 	$scope.lists = data;
 	fillList();
 });
+$scope.printList = function(code){
+	CommonFunction.printPDFPost(AppConfig.ServiceUrls.PrintCustomerList+code);
+}
 var fillList = function(){
 	if ($scope.lists && $scope.customer ) {
 		for (var i = 0; i < $scope.lists.length; i++) {
@@ -278,30 +264,19 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 			$scope.customer.lists = [{idListCustomer:0,list:$scope.currentList}];
 		}
 		$scope.msg.initialize();
-		$.ajax({
-					url : AppConfig.ServiceUrls.SaveCustomer,
-					type : "PUT",
-					data : "customers="
-							+ JSON
-									.stringify($scope.customer),
-					success : function(data) {
-						result = JSON.parse(data);
-						if (result.type == "success") {
-							$scope.customer.idCustomer = result.success;
-							$scope.idcustomer = result.success;
-							$scope.msg.successMessage("CLIENTE SALVATO CON SUCCESSO");
-							$scope.$apply();
-						} else {
-							$scope.msg
-									.alertMessage(result.errorMessage);
-						}
-
-					},
-					error : function(data) {
-						$scope.msg.alertMessage(data);
-					}
-				})
-		// }
+		$http.put(AppConfig.ServiceUrls.SaveCustomer,$scope.customer).success(function(result){
+			if (result.type == "success") {
+				$scope.customer.idCustomer = result.success;
+				$scope.idcustomer = result.success;
+				$scope.msg.successMessage("CLIENTE SALVATO CON SUCCESSO");
+				
+			} else {
+				$scope.msg.alertMessage(result.errorMessage);
+			}
+		}).error(function(error){
+			$scope.msg.alertMessage(data);
+		})
+		
 	};
 	$scope.userCustomer = function() {
 		var obj = {};
@@ -322,33 +297,9 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 		},function(error){
 			$scope.msg.alertMessage(error);
 		});
-		/*$.ajax({
-					url : "rest/registry/customer/user",
-					type : "PUT",
-					data : "customers="
-							+ JSON
-									.stringify($scope.customer)
-							+ "&role="
-							+ JSON
-									.stringify($scope.currentRole),
-					success : function(data) {
-						result = JSON.parse(data);
-						if (result.type == "success") {
-							$scope.customer.idCustomer = result.success;
-							$scope.idcustomer = result.success;
-							$scope.confirmSaved();
-							$scope.$apply();
-						} else {
-							alert("Errore: "
-									+ result.errorName
-									+ " Messaggio:"
-									+ result.errorMessage);
-						}
-					}
-				})*/
-		// }
+		
 	};
 	$http.get(AppConfig.ServiceUrls.Role).success(function(data) {
 		$scope.roles = data;
 	});
-} ]);
+});

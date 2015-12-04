@@ -1,4 +1,9 @@
 <div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row">
 	<div class="large-3 medium-3 small-3 columns">
 		<h3>ELENCO LISTINI</h3>
 	</div>
@@ -30,12 +35,12 @@
   </thead>
   <tbody>
     <tr ng-repeat="list in listsToDisplay ">
-      <td><a  class="matita" href="#/list/{{list.idList}}"></a> </td>
+      <td><a href="#/list/{{list.idList}}"><i class="icon_setup fi-pencil"  ></i></a> </td>
       <td >{{list.code}}</td>
       <td>{{list.description}}</td>
       <td class="hidden_cell">{{list.startdate}}</td>
       <td class="hidden_cell">{{list.publish}}</td>
-      <td><a class="x" ng-click="deleteElement(list.idList)"></a></td>
+      <td><i class="icon_setup fi-x-circle"  ng-click="deleteElement(list.idList)"></i></td>
 
     </tr>
   
