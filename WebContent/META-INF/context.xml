@@ -24,6 +24,18 @@
 	  maxIdle="4"
 	  validationQuery="Select 1" 
 	 />
+	 <Resource name="jdbc/invoicecreator/help" 
+	  global="jdbc/invoicecreator/help"
+	  auth="Container"
+	  type="javax.sql.DataSource" 
+	  username="lflorido_2"
+	  password="svnf0rl0s"
+	  driverClassName="com.mysql.jdbc.Driver"
+	  url="jdbc:mysql://5.249.157.108/gecosofttest_2?autoReconnect=true"
+	  maxActive="50"
+	  maxIdle="4"
+	  validationQuery="Select 1" 
+	 />
 	 <Resource name="jdbc/progessDB" 
 	  global="jdbc/progessDB"
 	  auth="Container"
