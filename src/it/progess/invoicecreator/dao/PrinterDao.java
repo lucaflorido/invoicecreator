@@ -11,6 +11,7 @@ import it.progess.invoicecreator.properties.GECOParameter;
 import it.progess.invoicecreator.vo.Company;
 import it.progess.invoicecreator.vo.Customer;
 import it.progess.invoicecreator.vo.Document;
+import it.progess.invoicecreator.vo.GECOError;
 import it.progess.invoicecreator.vo.GECOObject;
 import it.progess.invoicecreator.vo.GECOReportOrder;
 import it.progess.invoicecreator.vo.GECOReportOrderCustomerQuantity;
@@ -39,6 +40,7 @@ import java.util.TreeSet;
 
 import javax.print.attribute.standard.PrinterResolution;
 import javax.servlet.ServletContext;
+
 
 
 
@@ -347,5 +349,20 @@ public class PrinterDao {
 		}
 		
 		return new PrintUrl(context.getRealPath("report/"+filename+".pdf"));
+	}
+	public PrintUrl getCustomerPriceListFromUser(ServletContext context,User user){
+		
+		try{
+			Customer c =new RegistryDao().getCustomerFromUser(user);
+			if (c.getLists() != null && c.getLists().size() > 0){
+				it.progess.invoicecreator.vo.List l = c.getLists().iterator().next().getList();
+				return this.printList(context, l.getCode(), user);
+			}else{
+				return new PrintUrl();
+			}
+		}catch(Exception e){
+			return new PrintUrl();
+		}
+		
 	}
 }

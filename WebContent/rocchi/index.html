@@ -50,6 +50,7 @@
 	<script type="text/javascript" src="js/controller/document/documentlist.js"></script>
 	<script type="text/javascript" src="js/controller/document/documentdetails.js"></script>
 	<script type="text/javascript" src="js/controller/document/wizard.js"></script>
+	<script type="text/javascript" src="js/controller/document/wizard_customer.js"></script>
 	<script type="text/javascript" src="js/controller/transporter/transporter.js"></script>
 	
 	<script type="text/javascript" src="js/controller/promoter/promoterlist.js"></script>
@@ -99,10 +100,11 @@
 								<li ng-if="auth.permission != conf_permission.Promoter" ><a href="#/customergroup" >Gruppi</a></li>  
 							</ul> 
 						</li> 
-						<li class="has-dropdown" ><a >Listini</a>
+						<li class="has-dropdown" ng-if="auth.permission != conf_permission.Promoter" >
+						    <a >Listini</a>
 							<ul class="dropdown"> 
 								<li><a href="#/list">Elenco</a></li>
-								<li ng-if="auth.permission != conf_permission.Promoter" ><a href="#/list/0" >Nuovo</a></li>
+								<li  ><a href="#/list/0" >Nuovo</a></li>
 							</ul> 
 						</li> 
 						<li class="has-dropdown" ng-if="auth.permission != conf_permission.Promoter" ><a >Prodotti</a>
@@ -145,11 +147,12 @@
 						<li><a href="#">Listino altri prodotti rappresentanti</a></li> 
 					</ul> 
 				</li--> 
-				<li class="has-dropdown"> <a >Documenti</a> 
+				<li class="has-dropdown"  ng-if="auth.permission != conf_permission.Customer" > <a >Documenti</a> 
 					<ul class="dropdown"> 
 						<li class="has-dropdown" ><a>Ordini</a>
 							<ul class="dropdown"> 
 								<li><a href="#/head_wizard/0">Nuovo Ordine</a></li> 
+								<li><a href="#/wizard_customer/0">Nuovo Ordine Cliente</a></li>
 								<li><a href="#/headlist/1/1">Elenco Ordini</a></li> 
 								<!-- li><a >Riepilogo ordine e stampa</a></li> 
 								<li><a >Esportazione Ordini</a></li> 

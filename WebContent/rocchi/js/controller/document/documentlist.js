@@ -10,6 +10,9 @@ angular.module("rocchi.documents")
 	$scope.headtaxamount = 0;
 	$scope.headtotal = 0;
 	$scope.location = $location;
+	$scope.goBack = function(){
+    	$location.path("/welcome_customer")
+    }
 	//$scope.headfilter={};
 	$scope.heads = [];
 	if ($scope.headfilter == null){
@@ -90,9 +93,11 @@ angular.module("rocchi.documents")
 					$scope.headamount = Math.round($scope.headamount * 100)/100;
 					$scope.headtaxamount = Math.round($scope.headtaxamount * 100)/100;
 					$scope.headtotal = Math.round($scope.headtotal * 100)/100;
-					LoaderFactory.loader = false;
 				}
-			})
+				LoaderFactory.loader = false;
+			}).error(function(error){
+				LoaderFactory.loader = false;
+			});
 			
 	}
 	

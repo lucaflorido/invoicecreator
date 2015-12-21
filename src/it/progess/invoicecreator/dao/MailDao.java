@@ -112,7 +112,37 @@ public class MailDao {
 		}
 		return new GECOSuccess();
 	}
-	
+	public GECOObject sendNewPromoterUser(User user,User newUser,String param,HttpServletRequest request){
+		/**REAL CONFIGURATION**/
+		/*if (conf == null){
+			return new GECOError("MAIL", "Mail non configurata");
+		}
+		EMailMessage message = new EMailMessage(conf.getEmail(),head.getCustomer().getContact().getEmail1(),"Document","Invio del documento "+head.getDocument().getDescription());
+		SMTPServerConfiguration config = new SMTPServerConfiguration(String.valueOf(conf.isAuth()),String.valueOf(conf.isStarttls()),conf.getHost());
+		if (conf.getPort() != null && conf.getPort().equals("") == false){
+			config.setPort(conf.getPort());
+		}*/
+		/*TODO calculate the main domain*/
+		ArrayList<String> values = new ArrayList<String>();
+		values.add(newUser.getName()+" "+newUser.getSurname());
+		values.add(newUser.getUsername());
+		values.add(newUser.getPassword());
+		values.add(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ICParameter.SECOND_DOMAIN+"activate.html?code="+newUser.getCode());
+		TblMailText tmt = getMailProperties(param,user.getCompany().getCode());
+		if(tmt == null){
+			return new GECOError("MAIL", "Testo Mail non configurato nel sistema");
+		}
+		EMailMessage message = new EMailMessage("lucaflorido@hotmail.com",testResponseEmail,tmt.getObject(),fillMailText(tmt.getText(), values));
+		SMTPServerConfiguration config = new SMTPServerConfiguration("true","true","smtp.live.com");
+		config.setPort("587");
+		try{
+			EMailSender.send(message, config, "svnf0rl0s",true);
+			System.out.println("Email success");
+		}catch(MessagingException ex){
+			System.out.println(ex.getMessage());
+		}
+		return new GECOSuccess();
+	}
 	public GECOObject sendNewCustomerUser(String key,User newUser,String param,HttpServletRequest request){
 		/**REAL CONFIGURATION**/
 		/*if (conf == null){

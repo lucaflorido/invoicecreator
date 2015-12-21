@@ -34,6 +34,7 @@ import it.progess.invoicecreator.vo.HeadTotalCalculation;
 import it.progess.invoicecreator.vo.NeededObject;
 import it.progess.invoicecreator.vo.PaginationObject;
 import it.progess.invoicecreator.vo.Product;
+import it.progess.invoicecreator.vo.Promoter;
 import it.progess.invoicecreator.vo.Row;
 import it.progess.invoicecreator.vo.RowTotalCalculator;
 import it.progess.invoicecreator.vo.Storage;
@@ -129,6 +130,7 @@ public class DocumentDao {
 		return list;
 	}
 	private void setCriteriaHead(Criteria cr,HeadFilter filter,User user){
+		user = new UserDao().getSingleUserVO(user.getIduser());
 		cr.addOrder(Order.desc("date"));
 		cr.addOrder(Order.desc("number"));
 		cr.createAlias("head.document", "document");
@@ -154,9 +156,17 @@ public class DocumentDao {
 				}
 			}
 		}
+		
 		if (filter.customer != null){
 			cr.createAlias("head.customer", "customer");
 			cr.add(Restrictions.eq("customer.idCustomer", filter.customer.getIdCustomer()));
+		}
+		if (user.getEntity() != null && user.getEntity() instanceof Promoter){
+			cr.createAlias("head.customer", "customer_promoter");
+			cr.add(Restrictions.eq("customer_promoter.promoter.idPromoter", ((Promoter)user.getEntity()).getIdPromoter()));
+		} else if (user.getEntity() != null && user.getEntity() instanceof Customer){
+			cr.createAlias("head.customer", "customer_customer");
+			cr.add(Restrictions.eq("customer_customer.idCustomer", ((Customer)user.getEntity()).getIdCustomer()));
 		}
 		if (filter.supplier != null){
 			cr.createAlias("head.supplier", "supplier");

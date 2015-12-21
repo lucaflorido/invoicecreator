@@ -1,11 +1,13 @@
 package it.progess.invoicecreator.service;
 
 import it.progess.invoicecreator.dao.PrinterDao;
+import it.progess.invoicecreator.dao.RegistryDao;
 import it.progess.invoicecreator.dao.UserDao;
 import it.progess.invoicecreator.hibernate.HibernateUtils;
 import it.progess.invoicecreator.pojo.TblUser;
 import it.progess.invoicecreator.vo.GECOReportOrder;
 import it.progess.invoicecreator.vo.User;
+import it.progess.invoicecreator.vo.filter.customer.SelectCustomerList;
 import it.progess.invoicecreator.vo.filter.product.SelectProductsFilter;
 
 import java.io.FileOutputStream;
@@ -127,6 +129,16 @@ public class PrintService {
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.printList(context, code,loggeduser));
 	}
+	@GET
+	@Path("user/customer/list")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	public String getPriceListFromUser(@Context HttpServletRequest request){
+		Gson gson = new Gson();
+		PrinterDao dao = new PrinterDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getCustomerPriceListFromUser(context, loggeduser));
+	  }
 	@POST
 	@Path("customer/list/{code}")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -6,9 +6,9 @@
  */
 angular.module("rocchi.documents")
  .controller('RocchiWizardCtrl',function($scope,$http,$stateParams,$location,$rootScope,$state,$localStorage,AppConfig,WizardFactory,AlertsFactory,LoaderFactory){
-	 $scope.tabs=[{title:"Cliente",template:"template/document/wizard/stepone.html",name:"step1",active:true,disable:false},
-		             {title:"Prodotti",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true},
-	 {title:"Resoconto",template:"template/document/wizard/draft.html",name:"step3",active:false,disable:true}
+	 $scope.tabs=[{title:"fi-torso",template:"template/document/wizard/stepone.html",name:"step1",active:true,disable:false},
+		             {title:"fi-shopping-cart",template:"template/document/wizard/steptwo.html",name:"step2",active:false,disable:true},
+	 {title:"fi-list-bullet",template:"template/document/wizard/draft.html",name:"step3",active:false,disable:true}
 		             ];
 		$scope.wiz = WizardFactory;
 		$scope.wiz.initialize($scope.tabs);
@@ -41,7 +41,7 @@ angular.module("rocchi.documents")
 }).controller("WizardStepsCtrl",["$scope","WizardFactory",function($scope,WizardFactory){
 	$scope.wiz = WizardFactory;
 	//factory.wiz.getCustomers();
-}]).factory("WizardFactory",function($http, $q,AppConfig,$state,$filter,$localStorage,AlertsFactory,LoaderFactory){
+}]).factory("WizardFactory",function($http, $q,AppConfig,$state,$filter,$localStorage,$rootScope,AlertsFactory,LoaderFactory){
 	var factory = {};
 	factory.customerlist = [];
 	factory.productlist = [];
@@ -249,6 +249,19 @@ angular.module("rocchi.documents")
 			  }
 		  }
 	}
+	factory.quantityRowChange = function(row){
+		if (isNaN(row.quantity)) 
+		{
+				 //TODO error messages
+			factory.msg.alertMessage("Valore inserito non valido");
+		}else{
+			angular.forEach(factory.productlist,function(item){
+				if(item.product.idProduct == row.product.idProduct){
+					item.quantity = row.quantity;
+				}
+			});	  
+	    }
+	}
 	factory.saveHead = function(type){
 		var deferred = $q.defer();
 		LoaderFactory.loader = true;
@@ -308,7 +321,7 @@ angular.module("rocchi.documents")
 			}
 			if (ios) {
 				// This is the line that matters
-				$scope.openTab(result.data.url);
+				$rootScope.openTab(result.data.url);
 			} else {
 				// Your code that works for desktop browsers
 				var url = result.data.url;
@@ -336,7 +349,7 @@ angular.module("rocchi.documents")
 		if (row.idRow == 0){
 			factory.head.rows = $.grep(factory.head.rows,function(a){  return a.idRow != row.idRow && a.productcode != row.productcode ;})
 			factory.updateDraft();
-			$scope.$apply();
+			factory.resetDeleteElement(row.product);
 		}else{
 			$http.delete(AppConfig.ServiceUrls.DeleteRow+row.idRow).then(function(result){
 				if (result.data.type == "success"){	
@@ -355,6 +368,16 @@ angular.module("rocchi.documents")
 		angular.forEach(factory.productlist,function(item){
 			item.status = 0;
 			item.quantity = 0;
+		});
+	}
+	factory.resetDeleteElement = function(product){
+		angular.forEach(factory.productlist,function(item){
+			
+			if (item.product.idProduct == product.idProduct){
+				item.quantity = 0;
+				item.status = 0;
+			}
+			
 		});
 	}
 	factory.calculateTotal = function(){

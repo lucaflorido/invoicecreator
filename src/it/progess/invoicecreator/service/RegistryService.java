@@ -551,6 +551,7 @@ public class RegistryService {
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getCustomerList(filterObj,loggeduser));
 	  }
+	  
 	  /***
 		Get Single user
 	   */
@@ -574,6 +575,16 @@ public class RegistryService {
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
 		  return gson.toJson(dao.createUserCustomer(loggeduser,sms,request));
+	  }
+	  @GET
+	  @Path("customer/user")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String getCustomerFromUser(@Context HttpServletRequest request){
+		  Gson gson = new Gson();
+		  RegistryDao dao = new RegistryDao();
+		  User loggeduser = HibernateUtils.getUserFromSession(request);
+		  return gson.toJson(dao.getCustomerFromUserWizard(loggeduser));
 	  }
 	  @PUT
 	  @Path("customer")
@@ -871,7 +882,7 @@ public class RegistryService {
 		  UserPromoter up = gson.fromJson(data,UserPromoter.class);
 		  RegistryDao dao = new RegistryDao();
 		  User loggeduser = HibernateUtils.getUserFromSession(request);
-		  return gson.toJson(dao.createUserPromoter(loggeduser,up));
+		  return gson.toJson(dao.createUserPromoter(loggeduser,up,request));
 	  }
 
 	  @GET

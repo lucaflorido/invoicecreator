@@ -1,35 +1,20 @@
-<!-- 
-<div class="row ">
-     <div class="large-10 medium-12 small-12 columns">
-          <div class="title height-50"><h5>CLIENTE:<strong>{{wiz.head.customer.customername}} ({{wiz.head.customer.customercode}})</strong></h5></div>
-     </div>
-	 <div class="large-2 medium-12 small-12 columns">
-          <div class="shop height-50" ng-class="{'pr_warning':wiz.globalstatus == 2,'pr_error':wiz.globalstatus == 3,'pr_full':wiz.globalstatus == 1}"  >
-	           <div class="anothercart"  ng-class="{'pr_warning':wiz.globalstatus == 2,'pr_error':wiz.globalstatus == 3,'pr_full':wiz.globalstatus == 1}" ng-click="showDraft = !showDraft"></div>
-			   <div class="arrowdown" ng-class="{'pr_warning':wiz.globalstatus == 2,'pr_error':wiz.globalstatus == 3,'pr_full':wiz.globalstatus == 1}" ng-click="$parent.gotoStep3()" ng-show="wiz.head.rows.length > 0"></div>
-	      </div>
-     </div>
-</div>
- -->
-
 <div class="row "><!-- main row  -->
      <div class=" small-12 columns" ng-class="{'large-8 medium-6':showDraft,'large-12 medium-12':!showDraft}"> <!-- filter -->
 	      <form>
-               <fieldset  ng-class="{'height-400 ':morefilters,'height-75':!morefilters}">
+               <fieldset class="search_fieldset"  ng-class="{'height-400 ':morefilters,'height-75':!morefilters}">
                     <legend>Prodotto <i  class="fi-small fi-button "  ng-class="{'fi-arrows-in ':morefilters,'fi-arrows-out':!morefilters}" ng-click="morefilters = !morefilters"></i></legend>
                          <div class="row">
+                              
                                 <div class="large-6 medium-6 small-12 columns">
-                                     <div class="row collapse postfix-round">
+								      <div class="row collapse postfix-round">
 								        <div class="small-9 columns">
-                                          <input  type="text" ng-model="wiz.filter.searchstring">
-                                     </div>
-                                     <div class="small-3 columns">
-								          <a href="#"  class="button postfix" ng-click="wiz.getProductsNumber()" ><i class="fi-magnifying-glass"></i></a>
+								          <input ng-model="wiz.filter.searchstring" type="text" placeholder="Codice o Descrizione">
 								        </div>
-                                     </div>
-                                     
-                                   <!--    <div class="search" ng-class="{'full':!showDraft}" ng-click="wiz.getProductsNumber()" ></div>-->
-                                </div>
+								        <div class="small-3 columns">
+								          <a href="#"  class="button postfix" ng-click="wiz.getProductsNumber()" >Go</a>
+								        </div>
+								      </div>
+							</div>
                          </div>
                          <div class="row" ng-show="morefilters">
 	    				      <div class="large-4 medium-8 small-12 columns"></div>
@@ -106,56 +91,24 @@
 					    </div>
                    </fieldset>
               </form> 
-              <div class="row" ng-show="wiz.productlist.length > 0 &&  wiz.productlist.length > wiz.pagesize_confirmed">
+              <div class="row"  ng-show="wiz.productlist.length > 0 &&  wiz.productlist.length > wiz.pagesize_confirmed">
 		           <div class="small-12 columns ">
 				         Prodotti totali: {{wiz.totalitems}} Prodotti per pagina
 				        <input ng-model="wiz.pagesize" value="{{wiz.pagesize}}">
 		           </div>
               </div>
-	          <div class="row">
+	        <!--    <div class="row"  ng-show="wiz.productlist.length > 0">
 	          	   <div class="small-8 columns ">
 	          	   		&nbsp;
 	          	   </div>
-	          </div>
-               <div class="row"  ng-show="wiz.productlist.length > 0 &&  wiz.productlist.length > wiz.pagesize_confirmed">
+	          </div>-->
+              <div class="row"  ng-show="wiz.productlist.length > 0 &&  wiz.productlist.length > wiz.pagesize_confirmed">
 			       <div class="small-12 columns ">
 				        <pagination total-items="wiz.totalitems" items-per-page="wiz.pagesize_confirmed" page="wiz.page" max-size="3" class="pagination-sm" boundary-links="true" rotate="false" num-pages="wiz.pages" ng-click="wiz.getProducts(wiz.page)" previous-text="<" next-text=">" first-text="<<" last-text=">>"></pagination>
 			       </div>
 	          </div>
 	          
-	         <!-- <div class="row "> product list 
-			       <div class="small-12 columns" >
-              	        <div class="row" ng-repeat="prod in wiz.productlist">
-               		         <div class="small-12 columns">
-                   		          <div class="elements height-100">
-                      		            <div class="small-1 columns">
-                       		 	             <div class="smallwine"></div>
-                      	 	            </div>
-                       		            <div class="small-6 columns">
-                        	 	             <div class="voice height-100">
-			                                      <ul>
-			                                           <li><span>{{prod.code}}</span> {{prod.product.description}}</li>
-			                                           <li>PREZZO <span> {{prod.product.listprice}}</span></li>
-			                          			  </ul>
-                       		                 </div>
-                                        </div>
-		                                <div class="small-2 columns">
-			                                 <div class="howmuch height-100">
-		                        	              <label>
-		                          		               <input class="square" type="text" ng-model="prod.quantity" ng-change="wiz.quantityChange(prod)"> {{prod.um.name}} ({{prod.conversion}})
-		                         	              </label>
-		                                     </div>
-							            </div>
-		                                <div class="small-2 columns">
-		                                     <div ng-click="wiz.addProduct(prod)" class="cart height-50" ng-class="{'pr_warning':prod.status == 2,'pr_error':prod.status == 3,'pr_full':prod.status == 1}">
-		                                     </div>
-		                                </div>
-						           </div>
-                              </div>
-                         </div>
-                    </div>
-               </div> old product list -->
-               <div class="row " ng-show="wiz.productlist.length > 0" ><!-- product list -->
+	          <div class="row " ng-show="wiz.productlist.length > 0" ><!-- product list -->
 			       <div class="small-12 columns" >
               	        <div class="row" ng-repeat="prod in wiz.productlist">
                		         <div class="small-12 columns">
@@ -189,49 +142,10 @@
                               </div>
                          </div>
                     </div>
-               </div> 
+               </div> <!-- product list -->
           </div>  <!-- filter -->
-          <div class="large-4 medium-6 small-12 columns" ng-show="wiz.head.rows.length && showDraft" ><!--  -->
-  		       <table>
-  			        <thead>
-  				         <tr>
-  					          <td>Codice</td>
-  					          <td>Descrizione</td>
-  					          <td>Qta</td>
-  					          <td>UM</td>
-  					          <td>Totale</td>
-  				         </tr>
-  			       </thead>
-  			       <tbody>
-  				         <tr ng-repeat="row in wiz.head.rows">
-  					          <td>{{row.productcode}}</td>
-  					          <td>{{row.productdescription}}</td>
-  					          <td>{{row.quantity}}</td>
-  					          <td>{{row.um.code}}</td>
-  					          <td>{{row.total}}</td>
-  				         </tr>
-  			       </tbody>
-  		      </table>
-   		      <div class="row">
-   			       <div class="small-12 columns">
-   				         Imponibile: {{wiz.head.amount}}
-   			       </div>
-   			       <div class="small-12 columns">
-   				         Imposta: {{wiz.head.taxamount}}
-   			       </div>
-   			       <div class="small-12 columns">
-   				         Totale: {{wiz.head.total}}
-   		 	       </div>
-   		      </div>
-   		      <div class="row">
-   		      	<button ng-click="$parent.gotoStep3()">Conferma</button>
-   		      </div>
-   		      <div class="row">
-   		      	<button ng-click="wiz.deleteAll()" >Azzera</button>
-   		      </div>
-         </div>
-     
-    </div> <!-- main row  -->
-<div class="row show-for-small-only heads_list_item">
+         
+    </div> 
+    <div class="row show-for-small-only heads_list_item">
 
 </div>

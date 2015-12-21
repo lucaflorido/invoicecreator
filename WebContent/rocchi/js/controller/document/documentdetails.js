@@ -6,6 +6,9 @@ angular.module("rocchi.documents")
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
 	$rootScope.issaved = true;
+	$scope.headDetailsView = false;
+	$scope.headTotalView = false;
+	$scope.location = $location;
 	$(document).unbind("keydown");
 	$(document).keydown(function(e){
       //ALT + N
@@ -41,8 +44,7 @@ angular.module("rocchi.documents")
 		}
 		
 	});
-	$scope.headDetailsView = true;
-	$scope.headTotalView = true;
+	
 	$scope.show_qta = false;
 	$scope.isOrder = false;
 	$scope.isLoadSerialN = false;
@@ -503,6 +505,9 @@ angular.module("rocchi.documents")
 	$scope.closeSearch = function(){
 		$scope.showSearch = false;
 	}
+	$scope.goBack = function(){
+    	$location.path("/welcome_customer")
+    }
 	$scope.forceSerialNumbers = function(){
 		var serialnumber = $("#forceserial").val();
 		var expireddate = $("#forceexpiredate").val();

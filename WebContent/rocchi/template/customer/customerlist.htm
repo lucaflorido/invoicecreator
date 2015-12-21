@@ -1,3 +1,65 @@
+<div class="row  header_reserved_area  show-for-small-only">
+	<div class="large-3 medium-3 small-12 logo columns">
+		<img src="assets/rocchilogo.png" />
+	</div>
+	<div class="large-9 medium-9  small-12 columns">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h5 class="title" >Elenco Clienti</h5>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div class="row show-for-small-only draft_display btn_status"   >
+	<i class="fi-arrow-left" go-back ></i>
+</div>
+<div class="row show-for-small-only draft_display_pos1 btn_status"   >
+	<i class="fi-plus" ng-click="location.path('/customer/0')" ></i>
+</div>
+<!-- 
+<div class="row show-for-small-only draft_display_pos2 btn_status"  >
+	<i class="fi-magnifying-glass" ng-click="showfilter = !showfilter" ></i>
+</div>
+ -->
+
+<div class="row show-for-small-only draft_display_pos3 btn_status" ng-if="auth.permission != conf_permission.Promoter" >
+	<i class="fi-page-add" ng-click="filterMenu('import')" ></i>
+</div>
+<!--  TODO
+<div class="row show-for-small-only draft_display_pos4 btn_status"  >
+	<i class="fi-print" ng-click="printMassElements()" ></i>
+</div>
+-->
+<div class="row show-for-medium-up" >
+	<div class="large-4 medium-4 small-12 logo columns">
+		<img src="assets/rocchilogo.png" />
+	</div>
+	<div class="large-8 medium-8  small-12 columns">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h3 class="title" >Elenco Clienti</h3>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div class="row show-for-medium-up" >
+	<div class="large-8 medium-8 small-8 columns">
+		<ul class="button-group header_menu_button">
+		    <li><a  class="button" go-back><i class="fi-arrow-left"  ></i></a></li>
+		  	<li ><a  ng-click="location.path('/customer/0')" class="button"><i class="fi-plus" ></i></a></li>
+		  	
+		  <!--  	<li><a href="#" class="button" ng-click="showfilter = !showfilter"><i class="fi-magnifying-glass"  ></i></a></li>-->
+		  	<li ng-if="auth.permission != conf_permission.Promoter"><a ng-click="filterMenu('import')" class="button"><i class="fi-arrow-left"  ></i></a></li>
+		 	<!-- <li><a ng-click="printMassElements()" class="button"><i class="fi-print"  ></i></a></li> -->
+		</ul>
+	</div>
+</div>
+<!--  
+
 <div class="row">
 	<div class="large-3 medium-3 small-3 columns">
 		<h3>ELENCO CLIENTI</h3>
@@ -10,15 +72,8 @@
 		</ul>
 	</div>
 </div>
-<div class="row">
-	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
-		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}
-		<div ng-repeat="info in infos">
-			{{info}}
-		</div>
-		</alert>
-	</div>
-</div>
+-->
+
 <div class="row" ng-show="menuselected == 'import'">
 	<form>
 	<fieldset>
@@ -175,29 +230,33 @@
 	</form>
 	
 </div>
-<div class="large-12 ">
+
 	<div class="row">
-		<div class="small-8 columns ">
+		<div class="small-12 columns ">
 			<!-- pagination total-items="totalitems" items-per-page="pagesize_confirmed" page="page" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" num-pages="pages" ng-click="getProducts(page)"></pagination-->
 		</div>
-		<div class="small-4 columns ">
+		</div>
+		
+<div class="row">
+	<div class="small-12 columns ">
 			<input ng-model="pagesize" value="{{pagesize}}">
-			<div class="button"  ng-click="getCustomers()">Applica </div>
+			<div class="button  tiny"  ng-click="getCustomers()">Applica </div>
 		</div>
 	</div>
-	<div class="row collapse">
- 	
- 	<table st-table="customersToDisplay" class="table table-striped" st-safe-src="customers">
+<div class="row collapse">
+ 	<div class="large-12 ">
+ 	<table st-table="customersToDisplay" class="table table-striped expand_table show-for-medium-up" st-safe-src="customers">
   <thead>
     <tr>
       <th width="50"></th>
+      <th width="50">Listino</th>
       <th width="150" class="hidden_cell" st-sort="customercode" st-sort-default="reverse" st-skip-natural="true">Codice</th>
       <th width="250" st-sort="customername"  st-skip-natural="true">Ragione sociale</th>
       <th width="150" class="hidden_cell">Indirizzo</th>
       <th width="50">Telefono</th>
       <th width="50">Cellulare</th>
       <th width="150" class="hidden_cell">Fax</th>
-      <th width="50">Listino</th>
+      
       <th width="50"></th>
     </tr>
         <tr>
@@ -207,13 +266,14 @@
   <tbody>
     <tr ng-repeat="customer in customersToDisplay ">
       <td><i class="icon_setup fi-pencil"  ng-click="location.path('/customer/'+customer.idCustomer)" ></i> </td>
+      <td> <i class="icon_setup fi-print"  ng-click="printList(customer.code)"></i></td>
       <td class="hidden_cell">{{customer.customercode}}</td>
       <td>{{customer.customername}}</td>
       <td class="hidden_cell">{{customer.address.address}}</td>
       <td>{{customer.contact.phone1}}</td>
       <td>{{customer.contact.mobile1}}</td>
       <td class="hidden_cell">{{customer.contact.fax}}</td>
-      <td> <i class="icon_setup fi-print"  ng-click="printList(customer.code)"></i></td>
+      
       <td><i class="icon_setup fi-x-circle"  ng-click="deleteElement(customer)"></i></td>
 	</tr>
   
@@ -224,4 +284,30 @@
      
    </div>
 </div>
-		  
+<div class="row elements show-for-small-only heads_list_item" ng-repeat="customer in customers " >
+               		         <!-- --> 
+                   		
+                      		            <div class="small-2 small-collapse columns">
+                       		 	             <i class="icon_setup fi-pencil"  ng-click= "location.path('/customer/'+customer.idCustomer)"></i> 
+                      	 	            </div>
+                      	 	            <div class="small-2 small-collapse columns">
+                       		 	             <i class="icon_setup fi-print"  ng-click="printList(customer.code)" ></i> 
+                      	 	            </div>
+                       		            <div class="small-6  small-collapse columns">
+                        	 	             <div class="voice height-100">
+			                                      <ul>
+			                                           <li><span>{{customer.customercode}} {{customer.customername}} </span> </li>
+			                                          <!--   <li><span> {{customer.address.address}} {{customer.address.number}} {{customer.address.zipcode}} {{customer.address.zone}}</span> </li>-->
+			                                           <li><span>Tel: {{customer.contact.phone1}} email: {{customer.contact.email1}} </span> </li>
+			                          			  </ul>
+                       		                 </div>
+                                        </div>
+		                                <div class="small-2 small-collapse  columns">
+		                                     <!-- <div ng-click="wiz.addProduct(prod)" class="cart height-50" ng-class="{'pr_warning':prod.status == 2,'pr_error':prod.status == 3,'pr_full':prod.status == 1}">
+		                                     </div>-->
+		                                     <i class="icon_setup fi-x-circle"  ng-click="deleteElement(customer)"></i> <!-- <button class="button tiny round" ng-class="{'warning':prod.status == 2,'error':prod.status == 3}"></button>-->
+		                                </div>
+						           </div>
+	<div class="row show-for-small-only heads_list_item">
+
+</div>	  

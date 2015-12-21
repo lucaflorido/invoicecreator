@@ -173,7 +173,7 @@ angular.module('modules.common.shared', [])
 				// This is the line that matters
 				var a = window.document.createElement("a");
 				a.target = '_blank';
-				a.href = url;
+				a.href = result.data.url;
 			 
 				// Dispatch fake click
 				var e = window.document.createEvent("MouseEvents");
@@ -202,7 +202,7 @@ angular.module('modules.common.shared', [])
 				// This is the line that matters
 				var a = window.document.createElement("a");
 				a.target = '_blank';
-				a.href = url;
+				a.href = result.data.url;
 			 
 				// Dispatch fake click
 				var e = window.document.createEvent("MouseEvents");

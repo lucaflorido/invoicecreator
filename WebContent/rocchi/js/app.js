@@ -143,6 +143,7 @@ var gecoApp = angular.module("gecoApp",
 		                CheckHead:main_domain+"/rest/head/checkhead",
 		                PrintHead:main_domain+"/rest/print/head/",
 		                PrintList:main_domain+"/rest/print/list/",
+		                PrintListFromUser:main_domain+"/rest/print/user/customer/list",
 		                PrintCustomerList:main_domain+"/rest/print/customer/list/",
 		                UserSave:main_domain+ "/rest/user/saveuser",
 		                UserRefresh:main_domain+ "/rest/user/refreshuser/",
@@ -275,6 +276,10 @@ function($stateProvider, $urlRouterProvider) {
 		}).state('welcome', {
 			url:'/welcome',
 			templateUrl: 'template/home.htm',
+			controller: 'WelcomeCtrl'
+		}).state('welcome_customer', {
+			url:'/welcome_customer',
+			templateUrl: 'template/welcome_customer.html',
 			controller: 'WelcomeCtrl'
 		}).state('userlist_details', {
 			url:'/userlist/:userId',
@@ -424,6 +429,10 @@ function($stateProvider, $urlRouterProvider) {
 			url:'/head_wizard/:idhead',
 			templateUrl: 'template/document/wizard.html',
 			controller: 'RocchiWizardCtrl'
+		}).state('wizard_customer', {
+			url:'/wizard_customer/:idhead',
+			templateUrl: 'template/document/wizard_customer.html',
+			controller: 'RocchiWizardCustomerCtrl'
 		}).state('head_details_rows', {
 			url:'/head/:idhead/:rows',
 			templateUrl: 'template/document/headdetail.htm',
@@ -645,4 +654,24 @@ gecoApp.run(function($rootScope) {
     function(a){  
       $rootScope.orderArray = [];
     });
+}).directive('selectOnClick',function($window){
+	return {
+		restrict:'A',
+		link:function(scope,element,attrs){
+			element.on('click',function(){
+				if(!$window.getSelection().toString()){
+					this.setSelectionRange(0,this.value.length);
+				}
+			})
+		}
+	}
+}).directive('goBack',function($window){
+	return {
+		restrict:'A',
+		link:function(scope,element,attrs){
+			element.on('click',function(){
+				 $window.history.back();
+			})
+		}
+	}
 });

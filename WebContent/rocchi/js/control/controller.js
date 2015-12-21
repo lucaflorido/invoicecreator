@@ -31,7 +31,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 			if (result.type == 'success'){
 				result = result.success;
 				if (result.username !== null && result.username != ""){
-					$(".myprofilelabel").html(result.username);
+					
 					$rootScope.user = result;
 					$rootScope.path = result.path;
 					PermissionFactory.setupPermission(result.path);
@@ -41,6 +41,8 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 					$scope.msg.initialize();
 					if (PermissionFactory.permission != AppConfig.Permissions.Customer){
 						$location.path('/welcome');
+					}else{
+						$location.path('/welcome_customer');
 					}
 					$scope.ecpayments = DraftFactory.checkPayments(PermissionFactory.user);
 				}else{
@@ -77,7 +79,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 
 	
 }]);
-gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope','$location',function($scope,$rootScope,$location){
+gecoControllers.controller('WelcomeCtrl',function($scope,$rootScope,$location,CommonFunction,AppConfig){
 	GECO_LOGGEDUSER.checkloginuser();
 	$scope.location = $location;
 	$scope.logout = function(){
@@ -85,13 +87,17 @@ gecoControllers.controller('WelcomeCtrl',['$scope','$rootScope','$location',func
 			url:"rest/user/logout/",
 			type:"GET",
 			success:function(data){
-					$(".header").css("display","none");
+					
 					$location.path('/login');
 			}	
 		})
 	}
+	
+	$scope.printPriceList = function(){
+		CommonFunction.printPDF(AppConfig.ServiceUrls.PrintListFromUser);
+	}
 
-}]);
+});
 gecoControllers.controller('ParametersCtrl',['$scope','$rootScope','$location',function($scope,$rootScope,$location){
 	
 }]);
@@ -290,7 +296,7 @@ gecoControllers.controller('RoleCtrl',["$scope","$http",function($scope,$http){
 /*****
 LOGOUT
 ***/
-gecoControllers.controller('StartupCtrl',function($scope,$rootScope,$http,$location,AppConfig,PermissionFactory,LoaderFactory,MenuFactory){
+gecoControllers.controller('StartupCtrl',function($scope,$rootScope,$http,$location,AppConfig,PermissionFactory,DraftFactory,LoaderFactory,MenuFactory){
     $rootScope.viewheader = false;
     $scope.auth = PermissionFactory;
     $scope.loader = LoaderFactory;
@@ -310,6 +316,12 @@ gecoControllers.controller('StartupCtrl',function($scope,$rootScope,$http,$locat
 				if (result && result.data && result.data.username && result.data.username != "" ){
 					//checkrole(result);
 					$rootScope.viewheader = true;
+					$rootScope.user = result.data;
+					$rootScope.path = result.data.path;
+					PermissionFactory.setupPermission(result.data.path);
+					PermissionFactory.user = angular.copy(result.data);
+					DraftFactory.user = angular.copy(PermissionFactory.user);
+					
 				}else{
 					if ($location.path() != "/ec" && $location.path() != "/ecpassword" && $location.path() != "/publiclist"  ){
 						$location.path('/login');

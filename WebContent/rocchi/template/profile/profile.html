@@ -1,8 +1,22 @@
+<div class="row  header_reserved_area  ">
+	<div class="large-3 medium-3 small-12 logo columns">
+		<img src="assets/rocchilogo.png" />
+	</div>
+	<div class="large-9 medium-9  small-12 columns">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h5 class="title" >Profilo</h5>
+			</div>
+			
+		</div>
+	</div>
+</div>
 <div class="row">
 	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
 		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
 </div>
+<!--  
 <div class="row">
 	<div class="large-4 medium-4 small-4 columns">
 		<h4 >PROFILO</h4>
@@ -14,6 +28,7 @@
 		 </ul>
 	</div>
 </div>
+-->
 <div class="row">
 	<form>
 		<fieldset>
@@ -36,7 +51,7 @@
 			</div>
 			<div class="large-4 small-12 medium-6 columns">
 				<label>Email
-					<input type="email" ng-model="cuser.email" value="{{cuser.email}}" /> 
+					{{cuser.email}}
 				</label>
 			</div>
 			<div class="large-4 small-12 medium-6 columns">
@@ -48,6 +63,9 @@
 				<label>Cellulare
 					<input type="text" ng-model="cuser.mobile" value="{{cuser.mobile}}" /> 
 				</label>
+			</div>
+			<div class="large-12 small-12 medium-12 btn_status_list columns">
+				<i class="fi-save" ng-click="saveuser()" ></i>
 			</div>
 		</fieldset>
 	</form>
@@ -75,6 +93,9 @@
 				<label>Conferma password
 					<input type="password" ng-model="cuser.confirmpassword" value="{{cuser.confirmpassword}}" /> 
 				</label>
+			</div>
+			<div class="large-12 small-12 medium-12  btn_status_list columns" ng-show="cuser.oldpassword != '' && cuser.newpassword != '' && cuser.confirmpassword != ''">
+				<i class="fi-check" ng-click="changepassword()" ></i>
 			</div>
 		</fieldset>
 	</form>

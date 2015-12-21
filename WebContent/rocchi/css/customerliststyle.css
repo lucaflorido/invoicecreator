@@ -5,7 +5,8 @@
 }
 html, body {
     margin: 0;
-    height: auto;
+    height: 100%;
+    padding:0;
 }
 body {
 	font-family:"Open Sans Condensed", sans-serif;
@@ -13,7 +14,9 @@ body {
     /* general styles */
     
 }
-
+.maincontainer{
+	height:100%;
+}
 .height-200{
 	height: 200px;
 }
@@ -136,6 +139,10 @@ display: block;
 
 .button {
 background-color: #00adef;
+
+}
+.button.active {
+background-color: #008CBA;
 
 }
 .button-group {
@@ -411,8 +418,9 @@ height: 46px;
 }
 
 .elements{
-border: #dfdfdf 3px solid;
-border-radius: 20px;
+border: #dfdfdf 2px solid;
+border-radius: 10px;
+background-color:#fff;
 }
 
 li h2 {
@@ -527,7 +535,9 @@ li h2 {
 
 
 }
-
+/*
+SAMSUNG GALAXY S4 LANDSCAPE
+*/
 @media only screen and (max-width: 709px){
 	.cart{
 		margin-left: -25px;
@@ -545,8 +555,12 @@ li h2 {
 		margin-left: -25px;
 		
 	}
-
-
+	.height-100 {
+		height: 70px;
+	}
+	.smallwine {
+		height:65px;
+	}
 }
 @media only screen and (max-width: 638px){
 	.cart{
@@ -588,13 +602,13 @@ li h2 {
 	}
 
 	.button-group {
-	margin-top: 16px;
-	margin-left: 33px;
+/*	margin-top: 16px;
+	margin-left: 33px;*/
 	}
 
 	.button {
 		background-color: #00adef;
-		margin-top: -18px;
+		/*margin-top: -18px;*/
 	}
 
 	.hidden_cell{
@@ -688,14 +702,19 @@ li h2 {
 
 	}
 	.smallwine{
-		height:40px;
+		    height: 40px;
+    width: 25px;
+    position: relative;
+    left: -10px;
 	}
 
 	.paddingcell {
 		margin-left: -32px;
 
 	}
-
+	.voice{
+       padding-top:5px;
+    }
 	.height-100 {
 		height: 50px;
 	}
@@ -712,8 +731,10 @@ li h2 {
 		height: 40px;
 	}
 	input.square {
-	  margin-left: -52px;
-	  height: 27px;
-	  width: 60px;
+	     /* margin-left: -10px; */
+    height: 27px;
+    width: 30px;
+    font-size: 12px;
+    padding-left: 2px;
 	}
 	}

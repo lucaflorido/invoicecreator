@@ -77,6 +77,7 @@ import javamailhelper.message.EMailMessage;
 import javamailhelper.runner.EMailSender;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Criteria;
@@ -1803,6 +1804,7 @@ public class RegistryDao {
 		}
 		return list;
 	}
+	
 	public ArrayList<Customer> getCustomerSoftList(User loggeduser){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
@@ -1854,6 +1856,34 @@ public class RegistryDao {
 			session.close();
 		}
 		return list.get(0);
+	}
+	public GECOObject getCustomerFromUserWizard(User user){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Customer> list = new ArrayList<Customer>();
+		GECOObject obj = null; 
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.contact.idcontact", user.getContact().getIdcontact()));
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
+					TblCustomer tblcustomer = iterator.next();
+					Customer customer = new Customer();
+					customer.convertFromTableSingle(tblcustomer);
+					list.add(customer);
+				}
+				obj = new GECOSuccess( list.get(0));
+			}else{
+				obj = new GECOError("ERR", "Nessun cliente per l'utente loggato");
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			obj = new GECOError("ERR", "Errore nella procedura ");
+		}finally{
+			session.close();
+		}
+		return obj;
 	}
 	/*****
 	 * Get List of Customer 
@@ -1964,6 +1994,7 @@ public class RegistryDao {
 		}
 		User user = new User();
 		Customer sm = uc.getCustomer();
+		sm = getSingleCustomer(sm.getIdCustomer());
 		Role r = uc.getRole();
 		user.setActive(false);
 
@@ -2656,20 +2687,20 @@ public class RegistryDao {
 		}
 		return new GECOSuccess(id);
 	}
-	public GECOObject createUserPromoter(User loggeduser,UserPromoter up){
+	public GECOObject createUserPromoter(User loggeduser,UserPromoter up,HttpServletRequest request){
 		User user = new User();
 		user.setActive(false);
-
 		user.setName(up.getPromoter().getName());
 		user.setSurname(up.getPromoter().getSurname());
 		user.setEmail(up.getPromoter().getContact().getEmail1());
-		user.setUsername(up.getPromoter().getSurname());
+		user.setUsername(up.getPromoter().getContact().getEmail1());
 		user.setCompany(loggeduser.getCompany());
 		user.setContact(up.getPromoter().getContact());
 		user.setRole(up.getRole());
 		UserDao usdao = new UserDao();
 		usdao.saveUpdate(user);
-		return new GECOSuccess();
+		user.setPassword(user.getUsername());
+		return new MailDao().sendNewPromoterUser(loggeduser, user,MailParameter.NEW_USER_PROMOTER_MAIL,request);
 	} 
 	public Boolean deletePromoter(Promoter sm){
 		TblPromoter tblsm = new TblPromoter();
