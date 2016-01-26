@@ -15,7 +15,18 @@ gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",'$routeParams
 		}
 	});
 	$scope.saveCompany = function(){
-		$.ajax({
+		$http.post(GECO_LOGGEDUSER.getSecondDomain()+"rest/registry/company",$scope.company).success(function(result){
+			if (result.type == "success"){	
+				/*$http.get(GECO_LOGGEDUSER.getSecondDomain()+'rest/registry/company/'+$scope.idCompany).success(function(data){
+					$scope.company = data;
+					
+				});*/
+				$scope.confirmSaved();
+			}else{
+				alert("Errore: "+result.errorName+" Messaggio:"+result.errorMessage);
+			}
+		})
+		/*$.ajax({
 			url:GECO_LOGGEDUSER.getSecondDomain()+"rest/registry/company",
 			type:"PUT",
 			data:"companys="+JSON.stringify($scope.company),
@@ -31,7 +42,7 @@ gecoRegistryControllers.controller('CompanyCtrl',["$scope","$http",'$routeParams
 					}
 					
 			}	
-		})
+		})*/
 		
 	}
 }]);

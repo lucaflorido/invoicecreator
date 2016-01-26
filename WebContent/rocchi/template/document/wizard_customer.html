@@ -18,6 +18,7 @@
 		<ul class="button-group header_menu_button">
 		    <li><a  class="button" go-back><i class="fi-arrow-left"  ></i></a></li>
 		  	<li ng-show="wiz.head.rows.length > 0 && tabs[0].name == selectedTab "><a ng-click="setSelection(tabs[1])" class="button"><i class="fi-list-bullet" ></i></a></li>
+		  	
 		  	<li ng-show=" tabs[1].name == selectedTab && wiz.head.idHead == 0 " ><a ng-click="setSelection(tabs[0])" class="button"><i class="fi-shopping-cart" ></i></a></li>
 		  	<li ng-show=" tabs[1].name == selectedTab && wiz.head.idHead == 0 " ><a  class="button" ng-click="wiz.saveHead('normal')"><i class="fi-save"  ></i></a></li>
 		  	<li ng-show=" tabs[1].name == selectedTab && wiz.head.idHead != 0 "><a ng-click="wiz.printHead()" class="button"><i class="fi-print"  ></i></a></li>

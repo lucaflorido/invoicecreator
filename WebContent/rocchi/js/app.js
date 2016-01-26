@@ -66,6 +66,7 @@ var gecoApp = angular.module("gecoApp",
 	            		HeadPaging:main_domain+ '/rest/head/head',
 	            		HeadNumber:main_domain+ '/rest/head/pages/',
 		                ListOfCustomer:main_domain+ "/rest/registry/customer/",
+		                ListOfCustomerWithPriceList:main_domain+ "/rest/registry/customerwithpricelist/",
 		                ListOfCustomerDelete:main_domain+ "/rest/registry/customer/delete/",
 		                ListOfCustomerSoft:main_domain+ "/rest/registry/customersoft/",
 		                ListOfCustomerDestinations:main_domain+ "/rest/registry/destination/customer/",
@@ -96,7 +97,7 @@ var gecoApp = angular.module("gecoApp",
 		                ListPublic:main_domain+ "/rest/registry/list/public/",
 		                AddProductToList:main_domain+ "/rest/registry/addtolist/",
 		                ListNoProduct:main_domain+ "/rest/registry/list/noproduct/",
-		                Login:main_domain+ "/rest/user/",
+		                Login:main_domain+ "/rest/user/check/",
 		                LoginEc:main_domain+ "/rest/user/ec/",
 		                CreateEcUser:main_domain+ "/rest/user/ecuser/",
 		                EcRecoverUID:main_domain+ "/rest/user/ecuser/recoverusername/",
@@ -155,7 +156,7 @@ var gecoApp = angular.module("gecoApp",
 		            	Customer:"customer"
 		            },Const:{
 		            	ServerProblem:"Problema con la connessione al server,contattare l'amministrazione del sistema",
-		            	CompanyId:"94579938-e847-46b2-9063-4692f15aa8b6",
+		            	CompanyId:"2bd93e19-985f-4f5f-91a6-eda1b91d4823",//"94579938-e847-46b2-9063-4692f15aa8b6",
 		            	PaypalURL:"https://www.sandbox.paypal.com/cgi-bin/webscr"
 
 		            },Messages:{

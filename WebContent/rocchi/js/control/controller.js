@@ -26,7 +26,7 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 	
 	
 	$scope.loginfunction = function(){
-		$http.post(AppConfig.ServiceUrls.Login,$scope.login).success(function(result){
+		$http.post(AppConfig.ServiceUrls.Login+AppConfig.Const.CompanyId,$scope.login).success(function(result){
 			
 			if (result.type == 'success'){
 				result = result.success;
@@ -79,9 +79,11 @@ gecoControllers.controller('LoginCtrl',["$scope","$http","$rootScope","$location
 
 	
 }]);
-gecoControllers.controller('WelcomeCtrl',function($scope,$rootScope,$location,CommonFunction,AppConfig){
+gecoControllers.controller('WelcomeCtrl',function($scope,$rootScope,$location,CommonFunction,PermissionFactory,AppConfig){
 	GECO_LOGGEDUSER.checkloginuser();
 	$scope.location = $location;
+	$scope.auth = PermissionFactory;
+	$scope.conf_permission = AppConfig.Permissions;
 	$scope.logout = function(){
 		$.ajax({
 			url:"rest/user/logout/",

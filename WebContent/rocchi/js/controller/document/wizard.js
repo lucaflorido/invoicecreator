@@ -180,7 +180,7 @@ angular.module("rocchi.documents")
 	factory.getCustomers = function(){
 		var deferred = $q.defer();
 		LoaderFactory.loader = true;
-		$http.get(AppConfig.ServiceUrls.ListOfCustomer).then(function(result){
+		$http.get(AppConfig.ServiceUrls.ListOfCustomerWithPriceList).then(function(result){
 			factory.customerlist = result.data;
 			LoaderFactory.loader = false;
 			deferred.resolve();

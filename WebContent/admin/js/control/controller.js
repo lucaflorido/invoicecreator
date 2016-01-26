@@ -152,14 +152,17 @@ gecoControllers.controller('UserDetailCtrl',['$scope', '$routeParams','$http',fu
 	$(".savebutton").click(function(e){
 	    if (GECO_validator.requiredFields()== true && GECO_validator.emailFields()==true){
 			$scope.user.role = $scope.currentRole;
-			$.ajax({
+			$http.post(GECO_LOGGEDUSER.getSecondDomain()+"rest/user/saveuser/",$scope.user).success(function(result){
+				alert("success");
+			})
+			/*$.ajax({
 				url:GECO_LOGGEDUSER.getSecondDomain()+"rest/user/",
 				type:"PUT",
 				data:"loginobj="+JSON.stringify($scope.user),
 				success:function(data){
 					alert("success");
 				}	
-			})
+			})*/
 		}
 	} );
 	

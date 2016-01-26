@@ -1804,7 +1804,34 @@ public class RegistryDao {
 		}
 		return list;
 	}
-	
+	public ArrayList<Customer> getCustomerListWithPriceList(User loggeduser){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Customer> list = new ArrayList<Customer>();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.company.idCompany", loggeduser.getCompany().getIdCompany()));
+			setCustomerUserCriteria(cr,loggeduser);
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
+					TblCustomer tblcustomer = iterator.next();
+					if (tblcustomer.getLists() != null &&  tblcustomer.getLists().size()>0){
+						Customer customer = new Customer();
+						//customer = getMockCustomer();
+						customer.convertFromTable(tblcustomer);
+						list.add(customer);
+					}
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
 	public ArrayList<Customer> getCustomerSoftList(User loggeduser){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		ArrayList<Customer> list = new ArrayList<Customer>();
@@ -1816,10 +1843,40 @@ public class RegistryDao {
 			if (customers.size() > 0){
 				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
 					TblCustomer tblcustomer = iterator.next();
-					Customer customer = new Customer();
-					//customer = getMockCustomer();
-					customer.convertFromTableSoft(tblcustomer);
-					list.add(customer);
+					
+						Customer customer = new Customer();
+						//customer = getMockCustomer();
+					    customer.convertFromTableSoft(tblcustomer);
+						list.add(customer);
+					
+				}
+			}
+		}catch(HibernateException e){
+			System.err.println("ERROR IN LIST!!!!!!");
+			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
+		}finally{
+			session.close();
+		}
+		return list;
+	}
+	public ArrayList<Customer> getCustomerSoftListNoPriceList(User loggeduser){
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		ArrayList<Customer> list = new ArrayList<Customer>();
+		try{
+			Criteria cr = session.createCriteria(TblCustomer.class,"customer");
+			cr.add(Restrictions.eq("customer.company.idCompany", loggeduser.getCompany().getIdCompany()));
+			setCustomerUserCriteria(cr,loggeduser);
+			List<TblCustomer> customers = cr.list();
+			if (customers.size() > 0){
+				for (Iterator<TblCustomer> iterator = customers.iterator(); iterator.hasNext();){
+					TblCustomer tblcustomer = iterator.next();
+					if (tblcustomer.getLists() != null &&  tblcustomer.getLists().size()>0){
+						Customer customer = new Customer();
+						//customer = getMockCustomer();
+					    customer.convertFromTableSoft(tblcustomer);
+						list.add(customer);
+					}
 				}
 			}
 		}catch(HibernateException e){

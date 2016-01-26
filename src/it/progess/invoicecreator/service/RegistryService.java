@@ -532,6 +532,15 @@ public class RegistryService {
 		return gson.toJson(dao.getCustomerList(loggeduser));
 	  }
 	  @GET
+	  @Path("customerwithpricelist")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getCustomerListWithPriceList(@Context HttpServletRequest request){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getCustomerListWithPriceList(loggeduser));
+	  }
+	  @GET
 	  @Path("customersoft")
  	  @Produces(MediaType.TEXT_PLAIN)
 	  public String getCustomerSoftList(@Context HttpServletRequest request){
@@ -539,6 +548,15 @@ public class RegistryService {
 		RegistryDao dao = new RegistryDao();
 		User loggeduser = HibernateUtils.getUserFromSession(request);
 		return gson.toJson(dao.getCustomerSoftList(loggeduser));
+	  }
+	  @GET
+	  @Path("customersoftwithlist")
+ 	  @Produces(MediaType.TEXT_PLAIN)
+	  public String getCustomerSoftListWithList(@Context HttpServletRequest request){
+		Gson gson = new Gson();
+		RegistryDao dao = new RegistryDao();
+		User loggeduser = HibernateUtils.getUserFromSession(request);
+		return gson.toJson(dao.getCustomerSoftListNoPriceList(loggeduser));
 	  }
 	  @POST
 	  @Path("customer")

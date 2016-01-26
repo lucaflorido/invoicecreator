@@ -87,6 +87,17 @@ public class UserService {
 		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session,false));
 	  }
 	  @POST
+	  @Path("check/{uid}")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  @Consumes(MediaType.APPLICATION_JSON) 
+	  public String checkCredentials( String data,@Context HttpServletRequest request,@PathParam("uid") String uid){
+		  HttpSession session = request.getSession();
+		  Gson gson = new Gson();
+		  User user = gson.fromJson(data,User.class);
+		  UserDao userdao = new UserDao();
+		  return gson.toJson(userdao.checkCredentials(user.getUsername(), user.getPassword(),session,false,uid));
+	  }
+	  @POST
 	  @Path("ec")
 	  @Produces(MediaType.APPLICATION_JSON)
 	  @Consumes(MediaType.APPLICATION_JSON) 

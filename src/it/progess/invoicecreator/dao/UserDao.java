@@ -139,6 +139,19 @@ public class UserDao {
 		}
 		return obj;
 	}
+	public ProgessObject checkCredentials(String username,String password,HttpSession session,boolean ecommerce,String uid){
+		ProgessObject obj = checkCredentials(username,password,session,ecommerce);
+		if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS)){
+			ProgessSuccess ps = (ProgessSuccess)obj;
+			User u =(User)ps.getSuccess();
+			if (u.getCompany().getCode().equals(uid) == false){
+				session.setAttribute("user",null);
+				obj = new ProgessError("err","Utente non autorizzato");
+			}
+			
+		}
+		return obj;
+	}
 	public ProgessObject checkCredentials(String username,String password){
 		
 		Session session = HibernateUtils.getSessionFactory().openSession();
@@ -324,10 +337,10 @@ public class UserDao {
 			}else{
 			    return new TblUser();
 			}
-		}catch(HibernateException e){
+		}catch(Exception e){
 			System.err.println("ERROR IN LIST!!!!!!");
 			e.printStackTrace();
-			throw new ExceptionInInitializerError(e);
+			return null;
 			
 		}finally{
 			session.close();

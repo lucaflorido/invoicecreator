@@ -3,6 +3,33 @@
 		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
 </div>
+<div class="row show-for-medium-up" >
+	<div class="large-4 medium-4 small-12 logo columns">
+		<img src="assets/rocchilogo.png" />
+	</div>
+	<div class="large-8 medium-8  small-12 columns">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h3 class="title" >Composizione (uvaggio)</h3>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div class="row show-for-medium-up" >
+	<div class="large-8 medium-8 small-8 columns">
+		<ul class="button-group header_menu_button">
+		    <li><a  class="button" go-back><i class="fi-arrow-left"  ></i></a></li>
+		  	<li ><a  ng-click="addcompositionElement()" ng-if="compositionsaved == true" class="button"><i class="fi-plus" ></i></a></li>
+		  	<li ><a  ng-click="savecompositions()" class="button"><i class="fi-save" ></i></a></li>
+		  <!--  	<li><a href="#" class="button" ng-click="showfilter = !showfilter"><i class="fi-magnifying-glass"  ></i></a></li>-->
+		  	
+		 	<!-- <li><a ng-click="printMassElements()" class="button"><i class="fi-print"  ></i></a></li> -->
+		</ul>
+	</div>
+</div>
+<!--  
 <div class="row">
 	<div class="large-5 medium-5 small-5 columns">
 		<h3>COMPOSIZIONE (Uvaggio)</h3>
@@ -15,7 +42,7 @@
 	</div>
 	
 </div>
-
+-->
 <div class="row">
 	<div class="large-12 medium-12 small-12">
 	

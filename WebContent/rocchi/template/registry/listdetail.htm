@@ -3,6 +3,32 @@
 		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
 	</div>
 </div>
+<div class="row show-for-medium-up" >
+	<div class="large-4 medium-4 small-12 logo columns">
+		<img src="assets/rocchilogo.png" />
+	</div>
+	<div class="large-8 medium-8  small-12 columns">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h3 class="title" >Dettaglio listino</h3>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<div class="row show-for-medium-up" >
+	<div class="large-8 medium-8 small-8 columns">
+		<ul class="button-group header_menu_button">
+		    <li><a  class="button" go-back><i class="fi-arrow-left"  ></i></a></li>
+		  	<li ><button ng-disabled="list_form.$invalid" ng-click="saveProduct()" class="button"><i class="fi-save" ></i></button></li>
+		  	<li ><button ng-disabled="list_form.$invalid && list.idList <=0" ng-click="printList(list.code)" class="button"><i class="fi-print" ></i></button></li>
+		   <!--  	<li><a href="#" class="button" ng-click="showfilter = !showfilter"><i class="fi-magnifying-glass"  ></i></a></li>-->
+		  	<!-- <li ng-if="auth.permission != conf_permission.Promoter"><a ng-click="filterMenu('import')" class="button"><i class="fi-arrow-left"  ></i></a></li>-->
+		 	<!-- <li><a ng-click="printMassElements()" class="button"><i class="fi-print"  ></i></a></li> -->
+		</ul>
+	</div>
+</div>
+<!--  
 <div class="row">
 	<div class="large-5 medium-5 small-5 columns">
 		<h3>{{list.name}}</h3>
@@ -13,7 +39,7 @@
 		  	<li><button ng-disabled="list_form.$invalid && list.idList <=0" ng-click="printList(list.code)" class="button">Stampa</button></li>
 		</ul>
 	</div>
-</div>
+</div>-->
 <div class="row">
 <form name="list_form" validate>
 	<fieldset>
@@ -75,6 +101,29 @@
 	</fieldset>
 </form>
 </div>	
+<div class="row show-for-medium-up" >
+	
+	<div class="large-12 medium-12  small-12 columns">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h3 class="title" >Elenco prodotti</h3>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div class="row show-for-medium-up" >
+	<div class="large-8 medium-8 small-8 columns">
+		<ul class="button-group header_menu_button">
+		   
+		  	<li ><button  ng-click="filterMenu('filter')" class="button"><i class="fi-magnifying-glass" ></i></button></li>
+		  	<li ><button ng-click="filterMenu('increment')" class="button"><i class="fi-price-tag"  ></i><i class="fi-plus"  ></i></button></li>
+		  	<li ><button ng-click="filterMenu('addproducts')" class="button"><i class="fi-bookmark"  ></i><i class="fi-plus"  ></i></button></li>
+		 </ul>
+	</div>
+</div>
+<!-- 
 <div class="row" ng-show="list.idList > 0">
 	<div class="large-2 medium-2 small-2 columns">
 		<h3>PRODOTTI</h3>
@@ -87,7 +136,7 @@
 		</ul>
 	
 	</div>
-</div>
+</div>-->
 <div class="row" ng-show="menuselected == 'filter' || menuselected == 'increment' ">
 	<form>
 	<fieldset>

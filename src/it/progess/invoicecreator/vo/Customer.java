@@ -44,7 +44,7 @@ public class Customer extends RegistryVO   {
 	private EcPayment ecpayment;
 	private boolean isprivate;
     private String code;
-	
+	private boolean hasList;
 	public String getCode() {
 		return code;
 	}
@@ -212,6 +212,13 @@ public class Customer extends RegistryVO   {
 	public void setLists(Set<ListCustomer> lists) {
 		this.lists = lists;
 	}
+	
+	public boolean isHasList() {
+		return hasList;
+	}
+	public void setHasList(boolean hasList) {
+		this.hasList = hasList;
+	}
 	@Override
 	 public void convertFromTable(Itbl obj){
 		TblCustomer c = (TblCustomer)obj;
@@ -267,6 +274,11 @@ public class Customer extends RegistryVO   {
 		if (c.getPromoter() !=null){
 			this.promoter = new Promoter();
 			this.promoter.convertFromTable(c.getPromoter());
+		}
+		if (c.getLists() != null && c.getLists().size() > 0){
+			this.hasList = true;
+		}else{
+			this.hasList = false;
 		}
 		this.idCustomer = c.getIdCustomer();
 		this.serialnumber = c.getSerialnumber();

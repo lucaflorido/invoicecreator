@@ -58,7 +58,7 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 	@ManyToOne
 	@JoinColumn(name = "idPayment")
 	private TblPayment payment;
-	@OneToMany(fetch= FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
+	@OneToMany(fetch= FetchType.EAGER,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Set<TblListCustomer> lists;
 	@OneToMany(fetch= FetchType.LAZY,mappedBy = "customer",cascade = CascadeType.ALL)
 	private Set<TblDestination> destinations;
@@ -327,13 +327,15 @@ public class TblCustomer extends it.progess.model.pojo.Customer implements Itbl{
 			this.ecpayment = new TblEcPayment();
 			this.ecpayment.convertToTable(c.getEcpayment());
 		}
-		if (c.getLists() != null){
+		if (c.getLists() != null ){
 			this.lists = new HashSet<TblListCustomer>();
 			for (Iterator<ListCustomer> iterator = c.getLists().iterator(); iterator.hasNext();){
 				ListCustomer listproduct = iterator.next();
+			    if (listproduct.getList() != null && listproduct.getList().getIdList() != 0){
 				TblListCustomer listp = new TblListCustomer();
 				listp.convertToTableForSaving(listproduct,tbl);
 				this.lists.add(listp);
+			    }
 			}
 		}
 		if (c.getDestinations() != null){

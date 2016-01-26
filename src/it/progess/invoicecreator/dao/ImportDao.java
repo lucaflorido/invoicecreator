@@ -88,7 +88,7 @@ public class ImportDao {
 				calculateListPrices(row1,ip,p);
 				
 				GECOObject go = new RegistryDao().saveUpdatesProduct(p, user);
-				if (go.type == GECOParameter.ERROR_TYPE){
+				if (go.type.equals(GECOParameter.ERROR_TYPE) == true){
 					int index = i+1;
 					message.add("Riga:"+ index+ " " +((GECOError)go).getErrorMessage());
 				}

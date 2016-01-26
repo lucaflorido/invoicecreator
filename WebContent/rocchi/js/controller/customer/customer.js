@@ -2,7 +2,7 @@
  * 
  */
 angular.module("rocchi.customer")
-.controller('RocchiCustomerListCtrl',function($scope, $http, $rootScope, $location,AppConfig,AlertsFactory,LoaderFactory,CommonFunction) {
+.controller('RocchiCustomerListCtrl',function($scope, $http, $rootScope, $location,AppConfig,AlertsFactory,LoaderFactory,CommonFunction,PermissionFactory) {
 	// $scope.loginuser =
 	// GECO_LOGGEDUSER.checkloginuser();
 	$scope.location = $location;
@@ -15,6 +15,8 @@ angular.module("rocchi.customer")
 	}
 	$scope.msg = AlertsFactory;
 	$scope.msg.initialize();
+	$scope.perm = PermissionFactory;
+	$scope.perm_value = AppConfig.Permissions;
 	$scope.pageArray = [];
 	$scope.showuser = false;
 	$scope.hasuser = false;
@@ -117,7 +119,16 @@ angular.module("rocchi.customer")
 		LoaderFactory.loader = true;
 		$http.post(AppConfig.ServiceUrls.ImportCustomers,$scope.importobj).then(function(result){
 			if (result.data.type == "success"){
-				$scope.msg.infoMessage("IMPORTAZIONE TERMINATA CON SUCCESSO");
+				if (result.data.success && result.data.success.length > 0){
+					var messages = result.data.success;
+					var msg = ["IMPORTAZIONE TERMINATA  CON SUCCESSO PARZIALE "];
+					angular.forEach(messages,function(item){
+						msg.push(item);
+					});
+					$scope.msg.infoMessage(msg);
+				}else{
+					$scope.msg.infoMessage(["IMPORTAZIONE TERMINATA CON SUCCESSO"]);
+				}
 				$scope.infos = result.data.success;
 				$scope.importview = false;
 				$scope.novalid = true;
@@ -134,7 +145,7 @@ angular.module("rocchi.customer")
 	};
 	
 } )
-.controller('RocchiCustomerDetailCtrl',function($scope, $http, $stateParams, AppConfig,AlertsFactory,LoaderFactory,PermissionFactory,CommonFunction) {
+.controller('RocchiCustomerDetailCtrl',function($scope, $http, $stateParams,$q, AppConfig,AlertsFactory,LoaderFactory,PermissionFactory,CommonFunction) {
 							// GECO_LOGGEDUSER.checkloginuser();
 
 $scope.msg = AlertsFactory;
@@ -144,31 +155,21 @@ $scope.idcustomer = $stateParams.idcustomer;
 $scope.perm = PermissionFactory;
 $scope.perm_value = AppConfig.Permissions;
 $scope.showuser = false;
-/*
- * $http.get('rest/registry/list').success(function(data){
- * $scope.lists= data; });
- * $http.get('rest/basic/payment').success(function(data){
- * $scope.payments= data; if ($scope.customer !=
- * null && $scope.customer.payment != null){ for(var
- * i=0;i<$scope.payments.length;i++ ){ if
- * ($scope.customer.payment.idPayment ==
- * $scope.payments[i].idPayment){
- * $scope.currentPayment = $scope.payments[i]; } } }
- * });
- */ $http.get(AppConfig.ServiceUrls.CustomerCategory).success(function(data){
-  $scope.categorys= data; 
-  });
- 
-$http.get(AppConfig.ServiceUrls.CustomerGroup).success(function(data) {
-			$scope.groups = data;
-		});
-$http.get(AppConfig.ServiceUrls.Promoter).success(function(data) {
-	$scope.promoters = data;
-});
-$http.get(AppConfig.ServiceUrls.List).success(function(data) {
-	$scope.lists = data;
-	fillList();
-});
+
+var initialize = function(){
+$q.all([$http.get(AppConfig.ServiceUrls.CustomerCategory),
+        $http.get(AppConfig.ServiceUrls.CustomerGroup),
+        $http.get(AppConfig.ServiceUrls.Promoter),
+        $http.get(AppConfig.ServiceUrls.List)])
+ .then(function(data){
+	$scope.categorys= data[0].data;
+	$scope.groups= data[1].data;
+	$scope.promoters= data[2].data;
+	$scope.lists= data[3].data;
+	getCustomer();
+ });
+}
+
 $scope.printList = function(code){
 	CommonFunction.printPDFPost(AppConfig.ServiceUrls.PrintCustomerList+code);
 }
@@ -187,6 +188,7 @@ var fillList = function(){
 		}
 	}
 }
+var getCustomer = function(){
 $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(function(data) {
 			$scope.customer = data;
 			if ($scope.customer.contact){
@@ -233,6 +235,10 @@ $http.get(AppConfig.ServiceUrls.DetailsOfCustomer+ $scope.idcustomer).success(fu
 			}
 			fillList();
 		});
+
+};
+initialize();
+
 			$scope.getListName = function(list) {
 				return list.code + ' ' + list.description + ' '
 				+ list.startdate;

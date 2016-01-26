@@ -26,7 +26,7 @@
 	<i class="fi-save" ng-click="saveCustomer()" ></i>
 </div>
 
-<div class="row show-for-small-only draft_display_pos2 btn_status" ng-hide="customer.hasuser || customer.idCustomer == 0 || perm.permission != perm_value.Admin"  >
+<div class="row show-for-small-only draft_display_pos2 btn_status" ng-show="!customer.hasuser    &&  perm.permission != perm_value.Promoter "  >
 	<i class="fi-torso" ng-click="showuser = !showuser"   ng-disabled="customer_form.email.$invalid || !customer.contact.email1" ></i>
 </div>
 
@@ -49,7 +49,7 @@
 		<ul class="button-group header_menu_button">
 			<li><a  class="button" go-back><i class="fi-arrow-left"  ></i></a></li>
 		  	<li ><a ng-click="saveCustomer()"  class="button"><i class="fi-save" ></i></a></li>
-		  	<li ng-if=" auth.permission != conf_permission.Promoter && !customer.hasuser && customer.idCustomer != 0 " ><a ng-click="showuser = !showuser"   ng-disabled="customer_form.email.$invalid || !customer.contact.email1"  class="button"><i class="fi-torso"  ></i></a></li>
+		  	<li ng-show="!customer.hasuser    &&  perm.permission != perm_value.Promoter " ><a ng-click="showuser = !showuser"     class="button"><i class="fi-torso"  ></i></a></li>
 		 	</ul>
 	</div>
 </div>
@@ -207,11 +207,15 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="large-6 columns" ng-class="{'has-error':customer_form.email.$invalid}">
+			<div class="large-6 columns" ng-class="{'has-error':customer_form.email.$invalid}" ng-if="!customer.hasuser">
 				<label>Email 
 					<input type="email" ng-model="customer.contact.email1" value="{{customer.contact.email1}}" name="email" />
 				</label>
 				<span ng-show="customer_form.email.$invalid" >valore non valido</span>
+			</div>
+			<div class="large-6 columns" ng-class="{'has-error':customer_form.email.$invalid}" ng-if="customer.hasuser">
+				<label>Email <br> {{customer.contact.email1}}
+				</label>
 			</div>
 			<div class="large-6 columns">
 				<label>Email Aggiuntiva <input type="text"

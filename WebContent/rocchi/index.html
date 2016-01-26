@@ -8,16 +8,15 @@
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/customerliststyle.css" />
 	<link rel="stylesheet" href="css/larghezze.css" />
-	
-	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/foundation-icons/foundation-icons.css" />
+	<link rel="stylesheet" href="css/foundation-icons/foundation-icons.css" />
     <link rel="stylesheet" href="css/foundation-datepicker.css" />
     <link rel="stylesheet"  href="css/btnUpload.css">
-    <link rel="stylesheet"  href="lib/bower_components/angucomplete/angucomplete.css">
+
     <script src="js/vendor/modernizr.js"></script>
     <script src="js/vendor/jquery.js"></script>
     <script src="js/foundation.min.js"></script>
-    <script src="lib/bower_components/angular/angular.js"></script>
+    <!--  <script src="lib/bower_components/angular/angular.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
     <script src="lib/bower_components/angular-cookies/angular-cookies.js"></script>
 	<script src="lib/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 	<script src="lib/bower_components/angular-upload/angular-upload.min.js"></script>
@@ -90,7 +89,7 @@
 
 			<ul class="left" ng-show="viewheader == true"> 
 
-				<li ng-if="auth.permission != conf_permission.Customer" class="has-dropdown"><a >Anagrafica</a>
+				<li ng-if="auth.permission != conf_permission.Customer && auth.permission != conf_permission.Promoter" class="has-dropdown"><a >Anagrafica</a>
 					<ul class="dropdown"> 
 						<li class="has-dropdown" ><a >Clienti</a>
 							<ul class="dropdown"> 
@@ -147,7 +146,7 @@
 						<li><a href="#">Listino altri prodotti rappresentanti</a></li> 
 					</ul> 
 				</li--> 
-				<li class="has-dropdown"  ng-if="auth.permission != conf_permission.Customer" > <a >Documenti</a> 
+				<li class="has-dropdown"  ng-if="auth.permission != conf_permission.Customer && auth.permission != conf_permission.Promoter" > <a >Documenti</a> 
 					<ul class="dropdown"> 
 						<li class="has-dropdown" ><a>Ordini</a>
 							<ul class="dropdown"> 
@@ -180,10 +179,7 @@
 			    <li ng-show="viewheader == true" > <a ng-click="logout()">Logout</a> </li> 
 			</ul>
 			<ul class="right" ng-hide="menu.ec" > 
-			    <li ><a ng-click="openProfile()"> <i class="fi-torso" ng-show="viewheader == true"></i>{{auth.user.username}}</a></li>
-			</ul>
-			<ul class="right" ng-hide="menu.ec" > 
-			    <li ><a ng-click="openCompany()" ng-if="auth.permission == conf_permission.Admin" > <i class="fi-torso" ng-show="viewheader == true"></i>{{auth.user.company.companyname}}</a></li>
+			    <li ><a ng-click="openCompany()"  ng-if="auth.permission != conf_permission.Customer && auth.permission != conf_permission.Promoter" > <i class="fi-torso" ng-show="viewheader == true"></i>{{auth.user.company.companyname}}</a></li>
 			</ul>
 		</section> 
 	</nav>

@@ -175,7 +175,17 @@ angular.module("rocchi.product")
 		LoaderFactory.loader = true;
 		$http.post(AppConfig.ServiceUrls.ImportProducts,$scope.importobj).then(function(result){
 			if (result.data.type == "success"){
-				$scope.msg.infoMessage("IMPORTAZIONE TERMINATA CON SUCCESSO");
+				if (result.data.success && result.data.success.length > 0){
+					var messages = result.data.success;
+					var msg = ["IMPORTAZIONE TERMINATA  CON SUCCESSO PARZIALE "];
+					angular.forEach(messages,function(item){
+						msg.push(item);
+					});
+					$scope.msg.infoMessage(msg);
+				}else{
+					$scope.msg.infoMessage(["IMPORTAZIONE TERMINATA CON SUCCESSO"]);
+				}
+				
 				$scope.importview = false;
 				$scope.novalid = true;
 				$scope.getProducts();
@@ -480,7 +490,7 @@ var getProduct = function(){
 			})
 	}
 	$scope.calculateListPrices = function(){
-		$scope.product.taxrate = $scope.currentTaxRate;
+		//$scope.product.taxrate = $scope.currentTaxRate;
 		$.ajax({
 				url:AppConfig.ServiceUrls.ProductBasicPriceList,
 				type:"POST",

@@ -25,7 +25,7 @@ var GECO_LOGGEDUSER = function(){
 	
 	var checkloginuser = function(){
 	    var resulttosend;
-		$.ajax({
+		/*$.ajax({
 			url:getSecondDomain()+"rest/user/loggedinuser/",
 			type:"GET",
 			success:function(data){
@@ -43,7 +43,7 @@ var GECO_LOGGEDUSER = function(){
 					
 				}
 			}	
-		})
+		})*/
 	} 
 	var getSecondDomain = function(){
 		return "/InvoiceCreator/";
