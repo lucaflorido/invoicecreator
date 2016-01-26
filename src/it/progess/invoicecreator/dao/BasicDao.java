@@ -105,7 +105,7 @@ public class BasicDao {
 	public GECOObject saveUpdatesTaxrate(TaxRate[] taxrates,User user){
 		Session session = HibernateUtils.getSessionFactory().openSession();
 		Transaction tx = null;
-		try{
+				try{
 			tx = session.beginTransaction();
 			for(int i =0; i< taxrates.length;i++){
 				TaxRate taxrate = taxrates[i];
