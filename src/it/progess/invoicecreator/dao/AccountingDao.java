@@ -47,7 +47,7 @@ public class AccountingDao {
 			e.printStackTrace();
 			throw new ExceptionInInitializerError(e);
 		}
-	}
+	} 
 	public GECOObject savePaid(Paid sm){
 		
 		if (sm.control() == null){
