@@ -7,7 +7,7 @@
     <session-factory>  
   		<!--  property name="connection.datasource">java:/comp/env/jdbc/test</property>
   		<property name="connection.datasource">java:comp/env/jdbc/geco</property-->
-  		<property name="connection.datasource">java:comp/env/jdbc/progessDB</property>
+  		<property name="connection.datasource">java:comp/env/jdbc/geco</property>
 		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		 
 		<!-- Disabilita cache di secondo livello. -->

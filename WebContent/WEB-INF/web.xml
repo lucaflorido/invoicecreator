@@ -12,9 +12,6 @@
   <listener>
     <listener-class>it.progess.invoicecreator.hibernate.HibernateListener</listener-class>
   </listener>
-  <listener>
-    <listener-class>it.progess.invoicecreator.daemon.DraftCleaner</listener-class>
-  </listener>
   <servlet>
     <display-name>Rest Servlet</display-name>
     <servlet-name>RestServlet</servlet-name>

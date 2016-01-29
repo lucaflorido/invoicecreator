@@ -109,6 +109,8 @@ public class UserDao {
 	 */
 	public ProgessObject checkCredentials(String username,String password,HttpSession session,boolean ecommerce){
 		ProgessObject obj = checkCredentials(username,password);
+		DraftDao d = new DraftDao();
+		d.deleteOldDraft();
 		if (obj.type.equals(ProgessParameters.PROGESS_SUCCESS)){
 			ProgessSuccess ps = (ProgessSuccess)obj;
 			User u =(User)ps.getSuccess();
