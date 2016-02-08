@@ -1,21 +1,59 @@
- <div class="container userlist clearfix">
-	
-	<div class="login">
-					<div class="fields loginform">
-						<div class="label">Username</div>
-						<div class="field"><input ng-model="login.username" class="inputfield" /></div>
-					</div>
-					<div class="fields loginform">
-						<div class="label surname">Password</div>
-						<div class="field surnname"><input id="enterpassword" class="inputfield" type="password"  ng-model="login.password" /></div>
-					</div>
-					<div class="buttonbar">
-						<div class="loginbutton" ng-click="loginfunction()">
-							<div class="loginlabel">
-								Accedi
+<div class="row">
+	<div class="large-12 medium-12 small-12 columns" ng-show="msg.type != ''">
+		<alert  class="{{msg.type}}" close="msg.initialize()">{{msg.message}}</alert>
+	</div>
+</div>
+<div class="row  header_reserved_area ">
+		<div class="large-3 medium-3 small-12 logo columns">
+			<img src="assets/rocchilogo.png" />
+		</div>
+		<div class="large-9 medium-9 hide_mobile_view small-12 columns">
+			<div class="row">
+				<div class="large-12 small-12 columns">
+					<h5 class="title" >Enoteca Rocchi</h5>
+				</div>
+				<div class="large-12 small-12 columns">
+					<h3 class="subtitle">A Roma dal 1904</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+ <div class="large-3 medium-6 medium-centered large-centered small-10 small-centered columns columns">
+		<div class="login-box">
+			<div class="row">
+				<div class="large-12 columns">
+					<form>
+					 	<div class="row">
+							<div class="large-12 columns">
+								<h3 class="subtitle">Area Riservata</h3>
 							</div>
 						</div>
-					</div>
-					
+					    <div class="row">
+							<div class="large-12 columns">
+								<input type="text" name="username" placeholder="Username" ng-model="login.username" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<input type="password" name="password" placeholder="Password" ng-model="login.password" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 large-centered columns">
+								<a  class="button header_menu_button expand" ng-click="loginfunction()" ><i class="fi-key" ></i></a></li>
+		  					</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
- </div>
+	 <div class="row show-for-small-only heads_list_item">
+
+</div>
+ <div class="row show-for-small-only heads_list_item">
+
+</div>
+ <div class="row show-for-small-only heads_list_item">
+
+</div>
